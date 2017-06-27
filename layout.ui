@@ -23,14 +23,17 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>27</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="openFile"/>
+    <addaction name="newProject"/>
+    <addaction name="openProject"/>
+    <addaction name="separator"/>
+    <addaction name="openMagicFile"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -46,9 +49,19 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="openFile">
+  <action name="openMagicFile">
    <property name="text">
-    <string>Open...</string>
+    <string>Open Magic File...</string>
+   </property>
+  </action>
+  <action name="openProject">
+   <property name="text">
+    <string>Open Project...</string>
+   </property>
+  </action>
+  <action name="newProject">
+   <property name="text">
+    <string>New Project...</string>
    </property>
   </action>
  </widget>

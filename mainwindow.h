@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "common.h"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -16,14 +18,15 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_quit_clicked();
+    void on_MainWindow_destroyed();
 
-    void on_launch_clicked();
-
-    void on_widgets_currentRowChanged(int currentRow);
+    void on_newProject_triggered();
+    void on_openMagicFile_triggered();
 
 private:
     Ui::MainWindow *ui;
+
+    rects_t loadMagicFile(QString name);
 };
 
 #endif // MAINWINDOW_H

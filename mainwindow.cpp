@@ -1,7 +1,18 @@
+#include <QMainWindow>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "layout.h"
+#include "lexmagic.h"
+#include "magicparser.h"
+#include "templates.h"
+#include "grid.h"
+
+#include <iostream>
+#include <string>
+
+#include <QFileDialog>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,33 +26,34 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_quit_clicked()
+void MainWindow::on_MainWindow_destroyed()
 {
-    this->close();
+
 }
 
-void MainWindow::on_launch_clicked()
+void MainWindow::on_newProject_triggered()
 {
-    switch (ui->widgets->currentRow()) {
-        case 0:
-        {
-            Layout *l = new Layout(this);
-            l->show();
-            break;
-        }
-        default:
-            break;
-    }
+    Templates *t = new Templates();
+    t->show();
 }
 
-void MainWindow::on_widgets_currentRowChanged(int currentRow)
+void MainWindow::on_openMagicFile_triggered()
 {
-    switch (currentRow) {
-        case 0:
-            ui->description->setText("Layouting widget.");
-        break;
-        default:
-        break;
+    QString name = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Magic Files (*.mag)"));
+    std::cout << "Open file: " << name.toStdString() << std::endl;
+    rects_t grid = loadMagicFile(name);
+    Grid *g = new Grid();
+    g->show();
+    g->RenderRectangles(grid);
+    return;
+}
 
-    }
+rects_t MainWindow::loadMagicFile(QString name)
+{
+    QFile file(name);
+    file.open(QFile::ReadOnly);
+    QByteArray content(file.readAll());
+    MagicParser parser(content);
+
+    return parser.getRectangles();
 }

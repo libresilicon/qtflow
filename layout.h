@@ -20,7 +20,8 @@ public:
 private slots:
     void on_Layout_destroyed();
 
-    void on_openFile_triggered();
+    void on_newProject_triggered();
+    void on_openMagicFile_triggered();
 
 private:
     Ui::Layout *ui;

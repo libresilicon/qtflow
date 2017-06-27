@@ -1,11 +1,11 @@
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 
 #include "layout.h"
 #include "ui_layout.h"
 
 #include "lexmagic.h"
-//#include "parser.h"
 #include "magicparser.h"
+#include "templates.h"
 #include "grid.h"
 
 #include <iostream>
@@ -31,7 +31,13 @@ void Layout::on_Layout_destroyed()
 
 }
 
-void Layout::on_openFile_triggered()
+void Layout::on_newProject_triggered()
+{
+    Templates *t = new Templates();
+    t->show();
+}
+
+void Layout::on_openMagicFile_triggered()
 {
     QString name = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Magic Files (*.mag)"));
     std::cout << "Open file: " << name.toStdString() << std::endl;

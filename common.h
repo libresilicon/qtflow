@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 #include <QVector>
 
 typedef struct Rectangle {

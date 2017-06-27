@@ -6,7 +6,7 @@
 
 QT       += core gui script
 
-greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = qtflow
 TEMPLATE = app
@@ -33,17 +33,20 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     layout.cpp \
     magicparser.cpp \
-    grid.cpp
+    grid.cpp \
+    templates.cpp
 
 HEADERS  += mainwindow.h \
     layout.h \
     magicparser.h \
     common.h \
-    grid.h
+    grid.h \
+    templates.h
 
 FORMS    += mainwindow.ui \
     layout.ui \
-    grid.ui
+    grid.ui \
+    templates.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
