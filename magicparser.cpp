@@ -1,6 +1,7 @@
 #include "magicparser.h"
 
 #include <QDebug>
+#include <QFileDialog>
 
 #include "yymagic.h"
 #include "lexmagic.h"

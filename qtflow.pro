@@ -31,20 +31,19 @@ OTHER_FILES +=  \
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    layout.cpp \
     magicparser.cpp \
     grid.cpp \
-    templates.cpp
+    templates.cpp \
+    project.cpp
 
 HEADERS  += mainwindow.h \
-    layout.h \
     magicparser.h \
     common.h \
     grid.h \
-    templates.h
+    templates.h \
+    project.h
 
 FORMS    += mainwindow.ui \
-    layout.ui \
     grid.ui \
     templates.ui
 

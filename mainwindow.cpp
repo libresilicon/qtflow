@@ -48,6 +48,11 @@ void MainWindow::on_openMagicFile_triggered()
     return;
 }
 
+void MainWindow::on_exit_triggered()
+{
+    this->close();
+}
+
 rects_t MainWindow::loadMagicFile(QString name)
 {
     QFile file(name);

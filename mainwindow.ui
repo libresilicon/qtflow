@@ -34,6 +34,8 @@
     <addaction name="openProject"/>
     <addaction name="separator"/>
     <addaction name="openMagicFile"/>
+    <addaction name="separator"/>
+    <addaction name="exit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -62,6 +64,11 @@
   <action name="newProject">
    <property name="text">
     <string>New Project...</string>
+   </property>
+  </action>
+  <action name="exit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>

@@ -1,6 +1,8 @@
 #ifndef TEMPLATES_H
 #define TEMPLATES_H
 
+#include "project.h"
+
 #include <QDialog>
 
 namespace Ui {
@@ -22,6 +24,7 @@ private slots:
 
 private:
     Ui::Templates *ui;
+    Project *project;
 };
 
 #endif // TEMPLATES_H

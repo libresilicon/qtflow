@@ -21,7 +21,10 @@ private slots:
     void on_MainWindow_destroyed();
 
     void on_newProject_triggered();
+
     void on_openMagicFile_triggered();
+
+    void on_exit_triggered();
 
 private:
     Ui::MainWindow *ui;
