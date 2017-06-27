@@ -1,8 +1,10 @@
+#include <QtGui/QMainWindow>
+
 #include "layout.h"
 #include "ui_layout.h"
 
 #include "lexmagic.h"
-#include "parser.h"
+//#include "parser.h"
 #include "magicparser.h"
 #include "grid.h"
 
