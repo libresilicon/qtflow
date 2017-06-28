@@ -8,12 +8,12 @@
 
 extern rects_t parsedElements;
 
-YYBufferGuard::YYBufferGuard(YY_BUFFER_STATE* state) :
+MAGICBufferGuard::MAGICBufferGuard(YY_BUFFER_STATE* state) :
     mState(state)
 {
 }
 
-YYBufferGuard::~YYBufferGuard() {
+MAGICBufferGuard::~MAGICBufferGuard() {
     yy_delete_buffer(*mState);
 }
 
@@ -22,12 +22,12 @@ MagicParser::MagicParser(QByteArray data) :
     rectangles()
 {
     YY_BUFFER_STATE buffer = yy_scan_string(data.constData());
-    YYBufferGuard guard(&buffer);
+    MAGICBufferGuard guard(&buffer);
     Q_UNUSED(guard)
 
     int retcode;
     try {
-        retcode = yyparse();
+        retcode = magicparse();
     } catch(ParserException& e) {
         qWarning() << QString("Parse error near line %1: %2").arg(e.lineNumber).arg(e.what).toUtf8().constData();
         retcode = 1;

@@ -10,7 +10,7 @@ int yylex();
 void yyerror(const char *s);
 
 rects_t parsedElements;
-int lineno;
+int magicline;
 QString title;
 
 %}
@@ -19,6 +19,8 @@ QString title;
 %output "yymagic.cpp"
 %error-verbose
 
+%define api.prefix {magic}
+
 %union {
     int v_int;
     char* v_str;
@@ -26,7 +28,7 @@ QString title;
 
 %initial-action
 {
-    lineno = 1;
+    magicline = 1;
     parsedElements.clear();
 }
 
@@ -109,12 +111,12 @@ endls:
     ;
 
 endl:
-    ENDL    { ++lineno; }
+    ENDL    { ++magicline; }
     ;
 
 %%
 
 void yyerror(const char *s) {
     yyclearin;
-    throw ParserException{lineno, QString(s)};
+    throw ParserException{magicline, QString(s)};
 }

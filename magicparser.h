@@ -6,12 +6,12 @@
 #include "common.h"
 #include "lexmagic.h"
 
-class YYBufferGuard
+class MAGICBufferGuard
 {
     YY_BUFFER_STATE* mState;
 public:
-    YYBufferGuard(YY_BUFFER_STATE *state);
-    ~YYBufferGuard();
+    MAGICBufferGuard(YY_BUFFER_STATE *state);
+    ~MAGICBufferGuard();
 };
 
 class MagicParser

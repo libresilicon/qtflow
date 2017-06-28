@@ -4,14 +4,16 @@
 
 #include <QString>
 
-int yylex();
-void yyerror(const char *s);
+int magiclex();
+void magicerror(const char *s);
 %}
 
 %option header-file="lexmagic.h"
 %option outfile="lexmagic.cpp"
 %option noyywrap
 %option nounput
+%option prefix="magic"
+
 
 %%
 
@@ -29,13 +31,13 @@ rlabel      { return RLABEL; }
 \ \>\>          { return ENDTITLE; }
 \<\<\ end\ \>\> { return END; }
 
-[[:alpha:]][[:alnum:]<>]+      { yylval.v_str = yytext; return IDENT; }
-[0-9-]+      { yylval.v_int = atoi(yytext); return INTEGER; }
+[[:alpha:]][[:alnum:]<>]+      { magiclval.v_str = yytext; return IDENT; }
+[0-9-]+      { magiclval.v_int = atoi(yytext); return INTEGER; }
 
 [ \t]       { return SPACE; }
 \r\n        { return ENDL;  }
 \n          { return ENDL;  }
 
-.           { yyerror("invalid character"); }
+.           { magicerror("invalid character"); }
 
 %%

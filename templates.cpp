@@ -2,6 +2,7 @@
 #include "ui_templates.h"
 
 #include "project.h"
+#include "settings.h"
 
 #include <QFileDialog>
 

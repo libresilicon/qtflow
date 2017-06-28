@@ -14,6 +14,8 @@ typedef struct Rectangle {
 
 typedef QVector<Rectangle> rects_t;
 
+typedef QMap<QString, QString> map_string_t;
+
 typedef struct ParserException {
     int lineNumber;
     QString what;

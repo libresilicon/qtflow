@@ -2,6 +2,7 @@
 #define TEMPLATES_H
 
 #include "project.h"
+#include "settings.h"
 
 #include <QDialog>
 
@@ -25,6 +26,7 @@ private slots:
 private:
     Ui::Templates *ui;
     Project *project;
+    Settings *settings;
 };
 
 #endif // TEMPLATES_H
