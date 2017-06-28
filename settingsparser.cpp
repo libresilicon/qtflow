@@ -14,14 +14,14 @@ SETTINGSBufferGuard::SETTINGSBufferGuard(YY_BUFFER_STATE* state) :
 }
 
 SETTINGSBufferGuard::~SETTINGSBufferGuard() {
-    yy_delete_buffer(*mState);
+    settings_delete_buffer(*mState);
 }
 
 
 SettingsParser::SettingsParser(QByteArray data) :
     variables()
 {
-    YY_BUFFER_STATE buffer = yy_scan_string(data.constData());
+    YY_BUFFER_STATE buffer = settings_scan_string(data.constData());
     SETTINGSBufferGuard guard(&buffer);
     Q_UNUSED(guard)
 

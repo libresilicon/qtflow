@@ -14,14 +14,14 @@ MAGICBufferGuard::MAGICBufferGuard(YY_BUFFER_STATE* state) :
 }
 
 MAGICBufferGuard::~MAGICBufferGuard() {
-    yy_delete_buffer(*mState);
+    magic_delete_buffer(*mState);
 }
 
 
 MagicParser::MagicParser(QByteArray data) :
     rectangles()
 {
-    YY_BUFFER_STATE buffer = yy_scan_string(data.constData());
+    YY_BUFFER_STATE buffer = magic_scan_string(data.constData());
     MAGICBufferGuard guard(&buffer);
     Q_UNUSED(guard)
 
