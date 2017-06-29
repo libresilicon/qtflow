@@ -3,8 +3,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "app.h"
 #include "lexmagic.h"
 #include "magicparser.h"
+#include "session.h"
 #include "templates.h"
 #include "grid.h"
 
@@ -16,9 +18,12 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    App(),
+    ui(new Ui::MainWindow),
+    session(Session::Instance())
 {
     ui->setupUi(this);
+    session.setApp(this);
 }
 
 MainWindow::~MainWindow()
@@ -33,7 +38,7 @@ void MainWindow::on_MainWindow_destroyed()
 
 void MainWindow::on_newProject_triggered()
 {
-    Templates *t = new Templates();
+    Templates *t = new Templates(this);
     t->show();
 }
 
@@ -50,7 +55,19 @@ void MainWindow::on_openMagicFile_triggered()
 
 void MainWindow::on_exit_triggered()
 {
-    this->close();
+    close();
+}
+
+void MainWindow::enableProject()
+{
+    ui->buildAll->setDisabled(false);
+    ui->quickBuild->setDisabled(false);
+}
+
+void MainWindow::disableProject()
+{
+    ui->buildAll->setDisabled(true);
+    ui->quickBuild->setDisabled(true);
 }
 
 rects_t MainWindow::loadMagicFile(QString name)

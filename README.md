@@ -2,8 +2,8 @@
 
 ## Build
 
-$ mkdir build
-$ cd build
-$ qmake ../qtflow.pro
-$ make
+$ mkdir build  
+$ cd build  
+$ qmake ../qtflow.pro  
+$ make  
 

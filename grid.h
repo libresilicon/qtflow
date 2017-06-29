@@ -21,7 +21,7 @@ public:
 
 private:
     Ui::Grid *ui;
-    QGraphicsScene scene;
+    QGraphicsScene *scene;
 
     QColor colorMat(QString m);
 };

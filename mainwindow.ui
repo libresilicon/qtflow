@@ -42,8 +42,16 @@
      <string>Edit</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuBuild">
+    <property name="title">
+     <string>Build</string>
+    </property>
+    <addaction name="buildAll"/>
+    <addaction name="quickBuild"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuBuild"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="windowTitle">
@@ -75,6 +83,27 @@
   <action name="exit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="buildAll">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Build Project...</string>
+   </property>
+  </action>
+  <action name="quickBuild">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Quick Build</string>
+   </property>
+  </action>
+  <action name="actionnew">
+   <property name="text">
+    <string>new</string>
    </property>
   </action>
  </widget>

@@ -17,6 +17,14 @@ void Project::createQflow(QString path)
     dir.mkdir("synthesis");
     dir.mkdir("layout");
 
+    QFile index(path + "/index.v");
+    if (index.open(QIODevice::ReadWrite))
+    {
+        QTextStream stream(&index);
+        stream
+                << endl;
+        index.close();
+    }
 
     QFile project_vars(path + "/project_vars.sh");
     if (project_vars.open(QIODevice::ReadWrite))
@@ -42,6 +50,14 @@ void Project::createQflow(QString path)
                 << "# qflow exec script for project " << path << endl
                 << "#-------------------------------------------" << endl
                 << endl
+                << settings->qflowprefix() << "/scripts/synthesize.sh " << path << " index || exit 1" << endl
+                << "# " << settings->qflowprefix() << "/scripts/placement.sh -d " << path << " index || exit 1" << endl
+                << "# " << settings->qflowprefix() << "/scripts/vesta.sh " << path << " index || exit 1" << endl
+                << "# " << settings->qflowprefix() << "/scripts/router.sh " << path << " index || exit 1" << endl
+                << "# " << settings->qflowprefix() << "/scripts/placement.sh -f -d " << path << " index || exit 1" << endl
+                << "# " << settings->qflowprefix() << "/scripts/router.sh " << path << " index || exit 1 $status" << endl
+                << "# " << settings->qflowprefix() << "/scripts/cleanup.sh " << path << " index || exit 1" << endl
+                << "# " << settings->qflowprefix() << "/scripts/display.sh " << path << " index || exit 1" << endl
                 << endl;
         qflow_exec.close();
     }

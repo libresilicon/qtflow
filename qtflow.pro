@@ -38,7 +38,8 @@ SOURCES += main.cpp\
     templates.cpp \
     project.cpp \
     settings.cpp \
-    settingsparser.cpp
+    settingsparser.cpp \
+    session.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -47,7 +48,9 @@ HEADERS  += mainwindow.h \
     templates.h \
     project.h \
     settings.h \
-    settingsparser.h
+    settingsparser.h \
+    session.h \
+    app.h
 
 FORMS    += mainwindow.ui \
     grid.ui \

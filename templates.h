@@ -3,6 +3,7 @@
 
 #include "project.h"
 #include "settings.h"
+#include "session.h"
 
 #include <QDialog>
 
@@ -27,6 +28,8 @@ private:
     Ui::Templates *ui;
     Project *project;
     Settings *settings;
+
+    Session &session;
 };
 
 #endif // TEMPLATES_H

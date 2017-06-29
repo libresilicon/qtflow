@@ -15,11 +15,12 @@ Grid::Grid(QWidget *parent) :
     scene(new QGraphicsScene)
 {
     ui->setupUi(this);
-    ui->graphicsView->setScene(&scene);
+    ui->graphicsView->setScene(scene);
 }
 
 Grid::~Grid()
 {
+    delete scene;
     delete ui;
 }
 
@@ -37,7 +38,7 @@ void Grid::RenderRectangles(rects_t rectangles)
         rect.setWidth(e.w);
         rect.setHeight(e.h);
 
-        scene.addRect(rect, pen, brush);
+        scene->addRect(rect, pen, brush);
     }
 }
 
