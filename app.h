@@ -5,7 +5,7 @@ class App {
 
 public:
     App() {}
-    ~App() {}
+    virtual ~App() {}
 
     virtual void enableProject() {}
     virtual void disableProject() {}

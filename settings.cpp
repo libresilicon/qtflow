@@ -5,7 +5,8 @@
 #include <QFile>
 #include <QTextStream>
 
-Settings::Settings()
+QtFlowSettings::QtFlowSettings() :
+    ISettings()
 {
     QString home = QDir::homePath();
     QFile rc(home + "/.qtflowrc");
@@ -31,12 +32,40 @@ Settings::Settings()
     rc.close();
 }
 
-QString Settings::setting(QString k)
+QtFlowSettings::~QtFlowSettings()
+{
+}
+
+QString QtFlowSettings::value(QString k)
 {
     return vars.value(k);
 }
 
-QString Settings::qflowprefix()
+
+ProjectSettings::ProjectSettings(QString path) :
+    ISettings()
 {
-    return setting("qflowprefix");
+    QFile rc(path + "/project_vars.sh");
+    if (rc.exists())
+    {
+        rc.open(QIODevice::ReadOnly);
+        QByteArray content(rc.readAll());
+
+        SettingsParser settings(content);
+        vars = settings.getVariables();
+    }
+    else
+    {
+
+    }
+    rc.close();
+}
+
+ProjectSettings::~ProjectSettings()
+{
+}
+
+QString ProjectSettings::value(QString k)
+{
+    return vars.value(k);
 }

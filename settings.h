@@ -4,15 +4,31 @@
 #include "common.h"
 #include <QMap>
 
-class Settings
+class ISettings
 {
 public:
-    Settings();
-    QString setting(QString k);
+    ISettings() {}
+    virtual ~ISettings() {}
+    virtual QString value(QString) {}
+};
 
-    QString qflowprefix();
+class QtFlowSettings : public ISettings
+{
+public:
+    QtFlowSettings();
+    ~QtFlowSettings();
+    QString value(QString);
 private:
     map_string_t vars;
 };
 
+class ProjectSettings : public ISettings
+{
+public:
+    ProjectSettings(QString);
+    ~ProjectSettings();
+    QString value(QString);
+private:
+    map_string_t vars;
+};
 #endif // SETTINGS_H

@@ -3,14 +3,26 @@
 
 #include "settings.h"
 #include <QString>
+#include <QProcess>
 
-class Project
+class IProject
+{
+public:
+    IProject() {}
+    virtual ~IProject() {}
+    virtual void createQflow(QString) {}
+    virtual void executeQflow(QProcess*) {}
+};
+
+class Project : public IProject
 {
 public:
     Project();
-    void createQflow(QString path);
+    ~Project();
+    void createQflow(QString);
+    void executeQflow(QProcess*);
 private:
-    Settings *settings;
+    ISettings *settings;
 };
 
 #endif // PROJECT_H

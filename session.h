@@ -16,6 +16,8 @@ public:
     }
 
     void setProject(QString path);
+    QString getProject();
+    bool isProjectActive();
 
     void setApp(App* window);
     App* getApp();
@@ -24,12 +26,14 @@ private:
     Session()
     {
         projectPath = "";
+        projectActive = false;
         app = NULL;
     }
 
     Session(Session const&);
     void operator=(Session const&);
 
+    bool projectActive;
     QString projectPath;
 
     App *app;

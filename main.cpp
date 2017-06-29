@@ -1,5 +1,4 @@
 #include "mainwindow.h"
-#include "session.h"
 
 #include <QApplication>
 

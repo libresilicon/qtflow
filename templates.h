@@ -26,8 +26,8 @@ private slots:
 
 private:
     Ui::Templates *ui;
-    Project *project;
-    Settings *settings;
+    IProject *project;
+    ISettings *settings;
 
     Session &session;
 };
