@@ -4,6 +4,7 @@
 #include "ui_mainwindow.h"
 
 #include "app.h"
+#include "buildenvironment.h"
 #include "buildsteps.h"
 #include "lexmagic.h"
 #include "magicparser.h"
@@ -96,6 +97,12 @@ void MainWindow::on_buildSteps_triggered()
     w->show();
 }
 
+void MainWindow::on_buildEnvironment_triggered()
+{
+    BuildEnvironment *w = new BuildEnvironment();
+    w->show();
+}
+
 void MainWindow::fireTcsh()
 {
     QByteArray bytes = tcsh->read(4096);
@@ -115,6 +122,7 @@ void MainWindow::enableProject()
     ui->buildAll->setDisabled(false);
     ui->quickBuild->setDisabled(false);
     ui->buildSteps->setDisabled(false);
+    ui->buildEnvironment->setDisabled(false);
 }
 
 void MainWindow::disableProject()
@@ -122,4 +130,5 @@ void MainWindow::disableProject()
     ui->buildAll->setDisabled(true);
     ui->quickBuild->setDisabled(true);
     ui->buildSteps->setDisabled(true);
+    ui->buildEnvironment->setDisabled(true);
 }

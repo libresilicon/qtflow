@@ -3,6 +3,7 @@
 
 #include "common.h"
 #include <QMap>
+#include <QVector>
 
 class ISettings
 {
@@ -11,6 +12,8 @@ public:
     virtual ~ISettings() {}
     virtual QString value(QString) { return ""; }
     virtual void set(QString, QString) {}
+    virtual table_string_t table() { return table_string_t(); }
+    virtual void swap(map_string_t) {}
     virtual void save() {}
 };
 
@@ -21,6 +24,8 @@ public:
     ~QtFlowSettings();
     QString value(QString);
     void set(QString, QString);
+    table_string_t table();
+    void swap(map_string_t);
     void save();
 private:
     map_string_t vars;
@@ -33,9 +38,27 @@ public:
     ~ProjectSettings();
     QString value(QString);
     void set(QString, QString);
+    table_string_t table();
+    void swap(map_string_t);
     void save();
 private:
     QString cwd;
     map_string_t vars;
 };
+
+class QflowSettings : public ISettings
+{
+public:
+    QflowSettings(QString);
+    ~QflowSettings();
+    QString value(QString);
+    void set(QString, QString);
+    table_string_t table();
+    void swap(map_string_t);
+    void save();
+private:
+    QString cwd;
+    map_string_t vars;
+};
+
 #endif // SETTINGS_H

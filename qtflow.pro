@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     settings.cpp \
     settingsparser.cpp \
     session.cpp \
-    buildsteps.cpp
+    buildsteps.cpp \
+    buildenvironment.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -53,12 +54,14 @@ HEADERS  += mainwindow.h \
     session.h \
     app.h \
     buildsteps.h \
-    constants.h
+    constants.h \
+    buildenvironment.h
 
 FORMS    += mainwindow.ui \
     grid.ui \
     templates.ui \
-    buildsteps.ui
+    buildsteps.ui \
+    buildenvironment.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

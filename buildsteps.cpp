@@ -67,15 +67,17 @@ void BuildScript::save()
     {
         QString qflowprefix = qtflow->value("qflowprefix");
         QTextStream stream(&qflow_exec);
-        stream << "#!/bin/tcsh -f" << endl << endl;
+        stream << TCSH_SHEBANG << endl << endl;
         foreach (const QString &step, build)
         {
             if (step == "synthesize")
                 stream << qflowprefix << "/scripts/synthesize.sh " << cwd << " index || exit 1" << endl;
-            if (step == "placement")
+            else if (step == "placement")
                 stream << qflowprefix << "/scripts/placement.sh -d " << cwd << " index || exit 1" << endl;
-            if (step == "router")
+            else if (step == "router")
                 stream << qflowprefix << "/scripts/router.sh " << cwd << " index || exit 1" << endl;
+            else
+                stream << step << endl;
         }
         stream << endl;
         qflow_exec.close();
@@ -95,7 +97,7 @@ QVariant BuildScript::data(const QModelIndex &index, int role) const
     return build.at(index.row());
 }
 
-QVariant BuildScript::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant BuildScript::headerData(int section, Qt::Orientation orientation, int) const
 {
     if (orientation == Qt::Horizontal)
         return QString("Column %1").arg(section);
@@ -125,7 +127,7 @@ Qt::ItemFlags BuildScript::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
-bool BuildScript::insertRows(int position, int rows, const QModelIndex &parent)
+bool BuildScript::insertRows(int position, int rows, const QModelIndex&)
 {
     beginInsertRows(QModelIndex(), position, position + rows - 1);
     for (int row = 0; row < rows; ++row)
@@ -134,7 +136,7 @@ bool BuildScript::insertRows(int position, int rows, const QModelIndex &parent)
     return true;
 }
 
-bool BuildScript::removeRows(int position, int rows, const QModelIndex &parent)
+bool BuildScript::removeRows(int position, int rows, const QModelIndex&)
 {
     beginRemoveRows(QModelIndex(), position, position + rows - 1);
     for (int row = 0; row < rows; ++row)

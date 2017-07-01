@@ -58,6 +58,7 @@
      <string>Build</string>
     </property>
     <addaction name="buildAll"/>
+    <addaction name="buildEnvironment"/>
     <addaction name="buildSteps"/>
     <addaction name="separator"/>
     <addaction name="quickBuild"/>
@@ -125,6 +126,14 @@
    </property>
    <property name="text">
     <string>Build Steps...</string>
+   </property>
+  </action>
+  <action name="buildEnvironment">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Environment...</string>
    </property>
   </action>
  </widget>

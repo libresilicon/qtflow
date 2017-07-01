@@ -52,7 +52,7 @@ void Project::createQflow(QString path)
     {
         QTextStream stream(&project_vars);
         stream
-                << "#!/bin/tcsh -f" << endl
+                << TCSH_SHEBANG << endl
                 << "#-------------------------------------------" << endl
                 << "# project variables for project " << path << endl
                 << "#-------------------------------------------" << endl
@@ -69,7 +69,7 @@ void Project::createQflow(QString path)
     {
         QTextStream stream(&qflow_exec);
         stream
-                << "#!/bin/tcsh -f" << endl
+                << TCSH_SHEBANG << endl
                 << "#-------------------------------------------" << endl
                 << "# qflow exec script for project " << path << endl
                 << "#-------------------------------------------" << endl
@@ -92,12 +92,12 @@ void Project::createQflow(QString path)
     {
         QTextStream stream(&qflow_vars);
         stream
-                << "#!/bin/tcsh -f" << endl
+                << TCSH_SHEBANG << endl
                 << "#-------------------------------------------" << endl
                 << "# qflow variables for project " << path << endl
                 << "#-------------------------------------------" << endl
                 << endl
-                << "set projecpath=" << path << endl
+                << "set projectpath=" << path << endl
                 << "set techdir=" << qflowprefix << "/tech/osu035" << endl
                 << "set sourcedir=" << path << "/source"    << endl
                 << "set synthdir="  << path << "/synthesis" << endl

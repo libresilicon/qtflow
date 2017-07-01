@@ -39,6 +39,7 @@ private slots:
 
     void on_buildAll_triggered();
     void on_buildSteps_triggered();
+    void on_buildEnvironment_triggered();
 
 private:
     Ui::MainWindow *ui;

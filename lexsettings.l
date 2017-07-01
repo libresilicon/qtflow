@@ -24,7 +24,7 @@ set         { return SET; }
 \r\n        { return ENDL;  }
 \n          { return ENDL;  }
 
-[[:alnum:]<>/,]+      { settingslval.v_str = yytext; return STRING; }
+[/[:alnum:]][[:alnum:]<>/,\-\.]+      { settingslval.v_str = yytext; return STRING; }
 
 
 .           { settingserror("invalid character"); }
