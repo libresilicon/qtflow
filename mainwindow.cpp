@@ -11,6 +11,8 @@
 #include "session.h"
 #include "templates.h"
 #include "grid.h"
+#include "mainedit.h"
+#include "mainprojects.h"
 
 #include <iostream>
 #include <string>
@@ -21,6 +23,7 @@
 #include <QScrollBar>
 #include <QString>
 #include <QProcess>
+#include <QStackedWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -28,16 +31,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     project(new Project),
     tcsh(NULL),
+    projectsWidget(new MainProjects),
+    editWidget(new MainEdit),
     session(Session::Instance())
 {
-    ui->setupUi(this);
     session.setApp(this);
+    ui->setupUi(this);
+    ui->tabWidget->tabBar()->hide();
+    ui->tabWidget->insertTab(0, projectsWidget, "Projects");
+    ui->tabWidget->insertTab(1, editWidget, "Edit");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
     delete project;
+    delete projectsWidget;
+    delete editWidget;
 }
 
 void MainWindow::on_MainWindow_destroyed()
@@ -103,6 +113,16 @@ void MainWindow::on_buildEnvironment_triggered()
     w->show();
 }
 
+void MainWindow::on_mainProjects_clicked()
+{
+    ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_mainEdit_clicked()
+{
+    ui->tabWidget->setCurrentIndex(1);
+}
+
 void MainWindow::fireTcsh()
 {
     QByteArray bytes = tcsh->read(4096);
@@ -123,6 +143,9 @@ void MainWindow::enableProject()
     ui->quickBuild->setDisabled(false);
     ui->buildSteps->setDisabled(false);
     ui->buildEnvironment->setDisabled(false);
+
+    ui->mainEdit->setDisabled(false);
+    editWidget->loadProject(session.getProject());
 }
 
 void MainWindow::disableProject()
@@ -131,4 +154,6 @@ void MainWindow::disableProject()
     ui->quickBuild->setDisabled(true);
     ui->buildSteps->setDisabled(true);
     ui->buildEnvironment->setDisabled(true);
+
+    ui->mainEdit->setDisabled(true);
 }

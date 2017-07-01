@@ -5,8 +5,10 @@
 #include "project.h"
 #include "session.h"
 #include "common.h"
+#include "mainedit.h"
 
 #include <QMainWindow>
+#include <QVBoxLayout>
 
 namespace Ui {
 class MainWindow;
@@ -41,10 +43,15 @@ private slots:
     void on_buildSteps_triggered();
     void on_buildEnvironment_triggered();
 
+    void on_mainProjects_clicked();
+    void on_mainEdit_clicked();
+
 private:
     Ui::MainWindow *ui;
     IProject *project;
     QProcess *tcsh;
+    QWidget *projectsWidget;
+    MainEdit *editWidget;
 
     Session &session;
 };

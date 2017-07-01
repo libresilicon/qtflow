@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1040</width>
-    <height>429</height>
+    <width>952</width>
+    <height>621</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -20,10 +20,55 @@
    <widget class="QPlainTextEdit" name="consoleOut">
     <property name="geometry">
      <rect>
+      <x>100</x>
+      <y>430</y>
+      <width>841</width>
+      <height>121</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="mainProjects">
+    <property name="geometry">
+     <rect>
       <x>0</x>
       <y>0</y>
-      <width>1021</width>
-      <height>311</height>
+      <width>101</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Projects</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="mainEdit">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>90</y>
+      <width>101</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Edit</string>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>0</y>
+      <width>841</width>
+      <height>431</height>
      </rect>
     </property>
    </widget>
@@ -33,7 +78,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1040</width>
+     <width>952</width>
      <height>25</height>
     </rect>
    </property>
