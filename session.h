@@ -15,11 +15,11 @@ public:
         return instance;
     }
 
-    void setProject(QString path);
+    void setProject(QString);
     QString getProject();
     bool isProjectActive();
 
-    void setApp(App* window);
+    void setApp(App*);
     App* getApp();
 
 private:

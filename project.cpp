@@ -1,8 +1,11 @@
+
+#include "constants.h"
 #include "project.h"
 
 #include <QString>
 #include <QTextStream>
 #include <QDir>
+#include <QProcess>
 #include <QProcess>
 
 Project::Project() :
@@ -26,16 +29,25 @@ void Project::createQflow(QString path)
 
     QString qflowprefix = settings->value("qflowprefix");
 
-    QFile index(path + "/index.v");
+    QFileDevice::Permissions executable
+            = QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner
+            | QFileDevice::ReadGroup | QFileDevice::WriteGroup | QFileDevice::ExeGroup
+            | QFileDevice::ReadOther
+            ;
+
+    QFile index(path + "/source/index.v");
     if (index.open(QIODevice::ReadWrite))
     {
         QTextStream stream(&index);
         stream
+                << endl
+                << "module index();" << endl
+                << "endmodule" << endl
                 << endl;
         index.close();
     }
 
-    QFile project_vars(path + "/project_vars.sh");
+    QFile project_vars(path + PROJECT_VARS);
     if (project_vars.open(QIODevice::ReadWrite))
     {
         QTextStream stream(&project_vars);
@@ -45,11 +57,14 @@ void Project::createQflow(QString path)
                 << "# project variables for project " << path << endl
                 << "#-------------------------------------------" << endl
                 << endl
+                << "set build=synthesize" << endl
+                << endl
                 << endl;
         project_vars.close();
+        project_vars.setPermissions(executable);
     }
 
-    QFile qflow_exec(path + "/qflow_exec.sh");
+    QFile qflow_exec(path + QFLOW_EXEC);
     if (qflow_exec.open(QIODevice::ReadWrite))
     {
         QTextStream stream(&qflow_exec);
@@ -69,9 +84,10 @@ void Project::createQflow(QString path)
                 << "# " << qflowprefix << "/scripts/display.sh " << path << " index || exit 1" << endl
                 << endl;
         qflow_exec.close();
+        qflow_exec.setPermissions(executable);
     }
 
-    QFile qflow_vars(path + "/qflow_vars.sh");
+    QFile qflow_vars(path + QFLOW_VARS);
     if (qflow_vars.open(QIODevice::ReadWrite))
     {
         QTextStream stream(&qflow_vars);
@@ -94,10 +110,11 @@ void Project::createQflow(QString path)
                 << endl
                 << endl;
         qflow_vars.close();
+        qflow_vars.setPermissions(executable);
     }
 }
 
 void Project::executeQflow(QProcess *exec)
 {
-    exec->start("./qflow_exec.sh");
+    exec->start(QFLOW_EXEC);
 }

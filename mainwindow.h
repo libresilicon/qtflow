@@ -38,6 +38,7 @@ private slots:
     void on_exit_triggered();
 
     void on_buildAll_triggered();
+    void on_buildSteps_triggered();
 
 private:
     Ui::MainWindow *ui;

@@ -58,6 +58,8 @@
      <string>Build</string>
     </property>
     <addaction name="buildAll"/>
+    <addaction name="buildSteps"/>
+    <addaction name="separator"/>
     <addaction name="quickBuild"/>
    </widget>
    <addaction name="menuFile"/>
@@ -115,6 +117,14 @@
   <action name="actionnew">
    <property name="text">
     <string>new</string>
+   </property>
+  </action>
+  <action name="buildSteps">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Build Steps...</string>
    </property>
   </action>
  </widget>

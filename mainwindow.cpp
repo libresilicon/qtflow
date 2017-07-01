@@ -4,6 +4,7 @@
 #include "ui_mainwindow.h"
 
 #include "app.h"
+#include "buildsteps.h"
 #include "lexmagic.h"
 #include "magicparser.h"
 #include "session.h"
@@ -16,6 +17,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QPlainTextEdit>
+#include <QScrollBar>
 #include <QString>
 #include <QProcess>
 
@@ -24,8 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     App(),
     ui(new Ui::MainWindow),
     project(new Project),
-    session(Session::Instance()),
-    tcsh(NULL)
+    tcsh(NULL),
+    session(Session::Instance())
 {
     ui->setupUi(this);
     session.setApp(this);
@@ -34,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete project;
 }
 
 void MainWindow::on_MainWindow_destroyed()
@@ -87,16 +90,23 @@ void MainWindow::on_buildAll_triggered()
     connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 }
 
+void MainWindow::on_buildSteps_triggered()
+{
+    BuildSteps *w = new BuildSteps();
+    w->show();
+}
+
 void MainWindow::fireTcsh()
 {
     QByteArray bytes = tcsh->read(4096);
     ui->consoleOut->insertPlainText(bytes);
+    ui->consoleOut->verticalScrollBar()->setValue(ui->consoleOut->verticalScrollBar()->maximum());
 }
 
 void MainWindow::exitTcsh(int code)
 {
     qDebug() << "Tcsh exited with code" << code;
-    tcsh->close();
+    delete tcsh;
     tcsh = NULL;
 }
 
@@ -104,10 +114,12 @@ void MainWindow::enableProject()
 {
     ui->buildAll->setDisabled(false);
     ui->quickBuild->setDisabled(false);
+    ui->buildSteps->setDisabled(false);
 }
 
 void MainWindow::disableProject()
 {
     ui->buildAll->setDisabled(true);
     ui->quickBuild->setDisabled(true);
+    ui->buildSteps->setDisabled(true);
 }

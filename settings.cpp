@@ -1,3 +1,5 @@
+
+#include "constants.h"
 #include "settings.h"
 #include "settingsparser.h"
 
@@ -9,7 +11,7 @@ QtFlowSettings::QtFlowSettings() :
     ISettings()
 {
     QString home = QDir::homePath();
-    QFile rc(home + "/.qtflowrc");
+    QFile rc(home + QTFLOWRC);
     if (rc.exists())
     {
         rc.open(QIODevice::ReadOnly);
@@ -41,11 +43,30 @@ QString QtFlowSettings::value(QString k)
     return vars.value(k);
 }
 
+void QtFlowSettings::set(QString k, QString v)
+{
+    vars.insert(k, v);
+}
+
+void QtFlowSettings::save()
+{
+    QString home = QDir::homePath();
+    QFile rc(home + QTFLOWRC);
+    if (rc.open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        QTextStream stream(&rc);
+        for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
+            stream << "set " << begin.key() << "=" << begin.value() << endl;
+        rc.close();
+    }
+}
+
 
 ProjectSettings::ProjectSettings(QString path) :
-    ISettings()
+    ISettings(),
+    cwd(path)
 {
-    QFile rc(path + "/project_vars.sh");
+    QFile rc(cwd + PROJECT_VARS);
     if (rc.exists())
     {
         rc.open(QIODevice::ReadOnly);
@@ -68,4 +89,22 @@ ProjectSettings::~ProjectSettings()
 QString ProjectSettings::value(QString k)
 {
     return vars.value(k);
+}
+
+void ProjectSettings::set(QString k, QString v)
+{
+    vars.insert(k, v);
+}
+
+void ProjectSettings::save()
+{
+    QFile project_vars(cwd + PROJECT_VARS);
+    if (project_vars.open(QIODevice::ReadWrite | QIODevice::Truncate))
+    {
+        QTextStream stream(&project_vars);
+        stream << "#!/bin/tcsh -f" << endl;
+        for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
+            stream << "set " << begin.key() << "=" << begin.value() << endl;
+        project_vars.close();
+    }
 }
