@@ -43,7 +43,9 @@ SOURCES += main.cpp\
     buildsteps.cpp \
     buildenvironment.cpp \
     mainedit.cpp \
-    mainprojects.cpp
+    mainprojects.cpp \
+    editor.cpp \
+    verilog.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -59,7 +61,9 @@ HEADERS  += mainwindow.h \
     constants.h \
     buildenvironment.h \
     mainedit.h \
-    mainprojects.h
+    mainprojects.h \
+    editor.h \
+    verilog.h
 
 FORMS    += mainwindow.ui \
     grid.ui \

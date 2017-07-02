@@ -16,6 +16,22 @@ bool Session::isProjectActive()
     return projectActive;
 }
 
+void Session::setFile(QString path)
+{
+    filePath = path;
+    fileActive = true;
+}
+
+QString Session::getFile()
+{
+    return filePath;
+}
+
+bool Session::isFileActive()
+{
+    return fileActive;
+}
+
 void Session::setApp(App *window)
 {
     app = window;

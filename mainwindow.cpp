@@ -23,7 +23,6 @@
 #include <QScrollBar>
 #include <QString>
 #include <QProcess>
-#include <QStackedWidget>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -66,6 +65,11 @@ void MainWindow::on_openProject_triggered()
     QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     session.setProject(path);
     session.getApp()->enableProject();
+}
+
+void MainWindow::on_saveFile_triggered()
+{
+    editWidget->saveFile(session.getFile());
 }
 
 void MainWindow::on_openMagicFile_triggered()
@@ -156,4 +160,14 @@ void MainWindow::disableProject()
     ui->buildEnvironment->setDisabled(true);
 
     ui->mainEdit->setDisabled(true);
+}
+
+void MainWindow::enableFile()
+{
+    ui->saveFile->setDisabled(false);
+}
+
+void MainWindow::disableFile()
+{
+    ui->saveFile->setDisabled(true);
 }

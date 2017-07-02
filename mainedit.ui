@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>636</width>
+    <width>806</width>
     <height>426</height>
    </rect>
   </property>
@@ -20,6 +20,22 @@
      <y>0</y>
      <width>241</width>
      <height>431</height>
+    </rect>
+   </property>
+   <property name="rootIsDecorated">
+    <bool>true</bool>
+   </property>
+   <attribute name="headerVisible">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QTabWidget" name="tabbedEditor">
+   <property name="geometry">
+    <rect>
+     <x>240</x>
+     <y>-10</y>
+     <width>581</width>
+     <height>451</height>
     </rect>
    </property>
   </widget>

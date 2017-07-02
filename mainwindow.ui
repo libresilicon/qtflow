@@ -91,6 +91,8 @@
     <addaction name="separator"/>
     <addaction name="openMagicFile"/>
     <addaction name="separator"/>
+    <addaction name="saveFile"/>
+    <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -179,6 +181,14 @@
    </property>
    <property name="text">
     <string>Environment...</string>
+   </property>
+  </action>
+  <action name="saveFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Save</string>
    </property>
   </action>
  </widget>

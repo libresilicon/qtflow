@@ -9,6 +9,9 @@ public:
 
     virtual void enableProject() {}
     virtual void disableProject() {}
+
+    virtual void enableFile() {}
+    virtual void disableFile() {}
 };
 
 #endif // APP_H

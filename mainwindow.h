@@ -25,6 +25,9 @@ public:
     void enableProject();
     void disableProject();
 
+    void enableFile();
+    void disableFile();
+
 public slots:
     void fireTcsh();
     void exitTcsh(int);
@@ -36,6 +39,8 @@ private slots:
     void on_openProject_triggered();
 
     void on_openMagicFile_triggered();
+
+    void on_saveFile_triggered();
 
     void on_exit_triggered();
 

@@ -19,6 +19,10 @@ public:
     QString getProject();
     bool isProjectActive();
 
+    void setFile(QString);
+    QString getFile();
+    bool isFileActive();
+
     void setApp(App*);
     App* getApp();
 
@@ -27,6 +31,8 @@ private:
     {
         projectPath = "";
         projectActive = false;
+        filePath = "";
+        fileActive = false;
         app = NULL;
     }
 
@@ -35,6 +41,9 @@ private:
 
     bool projectActive;
     QString projectPath;
+
+    bool fileActive;
+    QString filePath;
 
     App *app;
 };
