@@ -6,14 +6,15 @@
 
 #include <QString>
 #include <QMap>
+#include <QStack>
 
 int yylex();
 void yyerror(const char *s);
 
 int settingsline;
 map_string_t parsedVariables;
-QString settingskey;
-QString settingsvalue;
+QStack<QChar> settingskey;
+QStack<QChar> settingsvalue;
 
 %}
 
@@ -25,6 +26,7 @@ QString settingsvalue;
 
 %union {
     char* v_str;
+    char v_char;
 }
 
 %initial-action
@@ -35,12 +37,13 @@ QString settingsvalue;
 
 %token SET
 %token ASSIGN
-%token SPACES
+%token SPACE
 %token ENDL
 %token END
 
-%token STRING
-%type <v_str> STRING
+%token ALPHANUM SPECIAL
+%type <v_char> anychar ALPHANUM SPECIAL SPACE
+
 %%
 
 program:
@@ -50,31 +53,49 @@ program:
 variables:
     variables variable endls
     |
-    variable
+    variable endls
     |
     endls
-    |
-    %empty
+    ;
 
 variable:
-    SET SPACES key spaces ASSIGN spaces value { parsedVariables.insert(settingskey, settingsvalue); }
+    SET spaces key spaces ASSIGN spaces value
+    {
+        QString k;
+        QString v;
+        while (!settingskey.isEmpty())
+            k.prepend(settingskey.pop());
+        while (!settingsvalue.isEmpty())
+            v.prepend(settingsvalue.pop());
+        parsedVariables.insert(k, v);
+    }
     ;
 
 spaces:
-    SPACES spaces
+    spaces SPACE
     |
-    SPACES
+    SPACE
     |
     %empty
     ;
 
 key:
-    STRING { settingskey = QString($1); }
+    key ALPHANUM { settingskey.push(QChar($2)); }
+    |
+    ALPHANUM { settingskey.push(QChar($1)); }
+    |
+    %empty
     ;
 
 value:
-    STRING { settingsvalue = QString($1); }
+    value anychar { settingsvalue.push(QChar($2)); }
+    |
+    anychar { settingsvalue.push(QChar($1)); }
+    |
+    %empty
     ;
+
+anychar: ALPHANUM | SPECIAL | SPACE;
 
 endls:
     endls endl

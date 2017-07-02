@@ -1,6 +1,7 @@
 %{
 #include <cstdlib>
 #include "yysettings.h"
+#include <iostream>
 
 #include <QString>
 
@@ -16,17 +17,18 @@ void settingserror(const char *s);
 
 %%
 
+#!.*        { /* shebang */ }
 #.*         { /* comment */ }
 
 =           { return ASSIGN; }
-set         { return SET; }
-[ \t]*      { return SPACES; }
-\r\n        { return ENDL;  }
-\n          { return ENDL;  }
+set         { return SET;    }
+[ \t]       { return SPACE;  }
+\r\n        { return ENDL;   }
+\n          { return ENDL;   }
 
-[/[:alnum:]][[:alnum:]<>/,\-\.]+      { settingslval.v_str = yytext; return STRING; }
+[[:alnum:]]              { settingslval.v_char = yytext[0]; return ALPHANUM; }
+[[:cntrl:][:punct:]]     { settingslval.v_char = yytext[0]; return SPECIAL; }
 
-
-.           { settingserror("invalid character"); }
+.           { settingserror(yytext); }
 
 %%
