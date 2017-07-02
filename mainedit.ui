@@ -13,35 +13,43 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QTreeView" name="filesView">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>241</width>
-     <height>431</height>
-    </rect>
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,3">
+   <property name="spacing">
+    <number>0</number>
    </property>
-   <property name="rootIsDecorated">
-    <bool>true</bool>
+   <property name="leftMargin">
+    <number>0</number>
    </property>
-   <attribute name="headerVisible">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <widget class="QTabWidget" name="tabbedEditor">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>-10</y>
-     <width>581</width>
-     <height>451</height>
-    </rect>
+   <property name="topMargin">
+    <number>0</number>
    </property>
-   <property name="tabsClosable">
-    <bool>true</bool>
+   <property name="rightMargin">
+    <number>0</number>
    </property>
-  </widget>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTreeView" name="filesView">
+     <property name="rootIsDecorated">
+      <bool>true</bool>
+     </property>
+     <attribute name="headerVisible">
+      <bool>false</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTabWidget" name="tabbedEditor">
+     <property name="styleSheet">
+      <string notr="true">QTabBar::tab { height: 25px; }</string>
+     </property>
+     <property name="tabsClosable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

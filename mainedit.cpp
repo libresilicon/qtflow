@@ -6,6 +6,7 @@
 #include "verilog.h"
 
 #include <QTreeView>
+#include <QTabBar>
 
 MainEdit::MainEdit(QWidget *parent) :
     QWidget(parent),
