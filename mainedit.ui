@@ -38,6 +38,9 @@
      <height>451</height>
     </rect>
    </property>
+   <property name="tabsClosable">
+    <bool>true</bool>
+   </property>
   </widget>
  </widget>
  <resources/>

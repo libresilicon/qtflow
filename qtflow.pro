@@ -45,7 +45,8 @@ SOURCES += main.cpp\
     mainedit.cpp \
     mainprojects.cpp \
     editor.cpp \
-    verilog.cpp
+    verilog.cpp \
+    savechanges.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -63,7 +64,8 @@ HEADERS  += mainwindow.h \
     mainedit.h \
     mainprojects.h \
     editor.h \
-    verilog.h
+    verilog.h \
+    savechanges.h
 
 FORMS    += mainwindow.ui \
     grid.ui \
@@ -71,7 +73,8 @@ FORMS    += mainwindow.ui \
     buildsteps.ui \
     buildenvironment.ui \
     mainedit.ui \
-    mainprojects.ui
+    mainprojects.ui \
+    savechanges.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

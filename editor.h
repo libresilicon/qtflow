@@ -16,9 +16,12 @@ public:
 
     virtual void loadFile(QString) {}
     virtual void saveFile(QString) {}
+    virtual void saveFile() {}
     virtual QString getFilePath() { return ""; }
 
     virtual void setSyntax(QSyntaxHighlighter*) {}
+
+    virtual bool changes() { return false; }
 };
 
 class Editor : public QPlainTextEdit, public IEditor
@@ -34,9 +37,12 @@ public:
 
     void loadFile(QString);
     void saveFile(QString);
+    void saveFile();
     QString getFilePath();
 
     void setSyntax(QSyntaxHighlighter*);
+
+    bool changes();
 
 protected:
     void resizeEvent(QResizeEvent*) override;

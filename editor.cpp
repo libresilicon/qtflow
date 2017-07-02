@@ -1,5 +1,4 @@
 #include "editor.h"
-#include "ui_editor.h"
 
 #include <QPainter>
 #include <QTextBlock>
@@ -48,6 +47,11 @@ void Editor::saveFile(QString path)
     }
 }
 
+void Editor::saveFile()
+{
+    saveFile(filePath);
+}
+
 QString Editor::getFilePath()
 {
     return filePath;
@@ -56,6 +60,17 @@ QString Editor::getFilePath()
 void Editor::setSyntax(QSyntaxHighlighter *syntax)
 {
     highlight = syntax;
+}
+
+bool Editor::changes()
+{
+    QFile file(filePath);
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QByteArray contents = file.readAll();
+        return contents != toPlainText();
+    }
+    return false;
 }
 
 int Editor::lineNumberAreaWidth()

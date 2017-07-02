@@ -24,10 +24,15 @@ public:
     void loadFile(QString path);
     void saveFile(QString path);
 
+public slots:
+    void saveAndExit(int);
+
 private slots:
     void on_filesView_doubleClicked(const QModelIndex &index);
 
     void on_tabbedEditor_currentChanged(int index);
+
+    void on_tabbedEditor_tabCloseRequested(int index);
 
 private:
     Ui::MainEdit *ui;

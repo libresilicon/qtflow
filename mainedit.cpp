@@ -2,6 +2,7 @@
 #include "ui_mainedit.h"
 
 #include "editor.h"
+#include "savechanges.h"
 #include "verilog.h"
 
 #include <QTreeView>
@@ -65,6 +66,13 @@ void MainEdit::saveFile(QString path)
     opened->at(index)->saveFile(path);
 }
 
+void MainEdit::saveAndExit(int index)
+{
+    opened->at(index)->saveFile();
+    ui->tabbedEditor->removeTab(index);
+    opened->removeAt(index);
+}
+
 void MainEdit::on_filesView_doubleClicked(const QModelIndex &index)
 {
     loadFile(filesystem->filePath(index));
@@ -74,4 +82,23 @@ void MainEdit::on_tabbedEditor_currentChanged(int index)
 {
     session.setFile(opened->at(index)->getFilePath());
     session.getApp()->enableFile();
+}
+
+void MainEdit::on_tabbedEditor_tabCloseRequested(int index)
+{
+    if (opened->count() == 1)
+        return;
+
+    IEditor *editor = opened->at(index);
+    if (editor->changes())
+    {
+        SaveChanges *dialog = new SaveChanges(this, index, editor->getFilePath());
+        connect(dialog, SIGNAL(accepted(int)), this, SLOT(saveAndExit(int)));
+        dialog->show();
+    }
+    else
+    {
+        ui->tabbedEditor->removeTab(index);
+        opened->removeAt(index);
+    }
 }
