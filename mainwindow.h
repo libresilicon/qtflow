@@ -5,7 +5,8 @@
 #include "project.h"
 #include "session.h"
 #include "common.h"
-#include "mainedit.h"
+#include "edit.h"
+#include "welcome.h"
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -45,18 +46,17 @@ private slots:
     void on_exit_triggered();
 
     void on_buildAll_triggered();
-    void on_buildSteps_triggered();
     void on_buildEnvironment_triggered();
 
-    void on_mainProjects_clicked();
+    void on_mainWelcome_clicked();
     void on_mainEdit_clicked();
 
 private:
     Ui::MainWindow *ui;
     IProject *project;
     QProcess *tcsh;
-    QWidget *projectsWidget;
-    MainEdit *editWidget;
+    Welcome *welcomeWidget;
+    Edit *editWidget;
 
     Session &session;
 };

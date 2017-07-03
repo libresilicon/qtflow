@@ -1,5 +1,5 @@
-#include "mainedit.h"
-#include "ui_mainedit.h"
+#include "edit.h"
+#include "ui_edit.h"
 
 #include "editor.h"
 #include "savechanges.h"
@@ -8,9 +8,9 @@
 #include <QTreeView>
 #include <QTabBar>
 
-MainEdit::MainEdit(QWidget *parent) :
+Edit::Edit(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MainEdit),
+    ui(new Ui::Edit),
     session(Session::Instance()),
     filesystem(new QFileSystemModel),
     opened(new QList<IEditor *>)
@@ -22,20 +22,20 @@ MainEdit::MainEdit(QWidget *parent) :
     loadProject(QDir::currentPath());
 }
 
-MainEdit::~MainEdit()
+Edit::~Edit()
 {
     delete ui;
     delete filesystem;
     delete opened;
 }
 
-void MainEdit::loadProject(QString path)
+void Edit::loadProject(QString path)
 {
     filesystem->setRootPath(path);
     ui->filesView->setRootIndex(filesystem->index(path));
 }
 
-void MainEdit::loadFile(QString path)
+void Edit::loadFile(QString path)
 {
     QFileInfo info(path);
     int found = -1;
@@ -59,7 +59,7 @@ void MainEdit::loadFile(QString path)
     session.getApp()->enableFile();
 }
 
-void MainEdit::saveFile(QString path)
+void Edit::saveFile(QString path)
 {
     int index = ui->tabbedEditor->currentIndex();
     if (index < 0)
@@ -67,25 +67,25 @@ void MainEdit::saveFile(QString path)
     opened->at(index)->saveFile(path);
 }
 
-void MainEdit::saveAndExit(int index)
+void Edit::saveAndExit(int index)
 {
     opened->at(index)->saveFile();
     ui->tabbedEditor->removeTab(index);
     opened->removeAt(index);
 }
 
-void MainEdit::on_filesView_doubleClicked(const QModelIndex &index)
+void Edit::on_filesView_doubleClicked(const QModelIndex &index)
 {
     loadFile(filesystem->filePath(index));
 }
 
-void MainEdit::on_tabbedEditor_currentChanged(int index)
+void Edit::on_tabbedEditor_currentChanged(int index)
 {
     session.setFile(opened->at(index)->getFilePath());
     session.getApp()->enableFile();
 }
 
-void MainEdit::on_tabbedEditor_tabCloseRequested(int index)
+void Edit::on_tabbedEditor_tabCloseRequested(int index)
 {
     if (opened->count() == 1)
         return;

@@ -1,5 +1,5 @@
-#include "buildenvironment.h"
-#include "ui_buildenvironment.h"
+#include "environment.h"
+#include "ui_environment.h"
 
 #include "constants.h"
 #include "session.h"
@@ -119,9 +119,9 @@ bool QflowEnvironment::removeRows(int position, int rows, const QModelIndex&)
 }
 
 
-BuildEnvironment::BuildEnvironment(QWidget *parent) :
+Environment::Environment(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::BuildEnvironment),
+    ui(new Ui::Environment),
     session(Session::Instance()),
     qflow(new QflowEnvironment(this, session.getProject()))
 {
@@ -130,18 +130,18 @@ BuildEnvironment::BuildEnvironment(QWidget *parent) :
     ui->tableView->resizeColumnsToContents();
 }
 
-BuildEnvironment::~BuildEnvironment()
+Environment::~Environment()
 {
     delete ui;
     delete qflow;
 }
 
-void BuildEnvironment::on_buttonBox_rejected()
+void Environment::on_buttonBox_rejected()
 {
 
 }
 
-void BuildEnvironment::on_buttonBox_accepted()
+void Environment::on_buttonBox_accepted()
 {
     qflow->save();
 }

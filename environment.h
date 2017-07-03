@@ -1,25 +1,24 @@
-#ifndef BUILDSTEPS_H
-#define BUILDSTEPS_H
+#ifndef BUILDENVIRONMENT_H
+#define BUILDENVIRONMENT_H
 
-#include "common.h"
-#include "project.h"
 #include "session.h"
+#include "settings.h"
 
 #include <QDialog>
-#include <QModelIndex>
 #include <QAbstractItemModel>
 
-class BuildScript : public QAbstractListModel
+class QflowEnvironment : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    BuildScript(QObject *parent, QString);
-    ~BuildScript();
+    QflowEnvironment(QObject *parent, QString);
+    ~QflowEnvironment();
 
     void save();
 
     int rowCount(const QModelIndex& = QModelIndex()) const override;
+    int columnCount(const QModelIndex& = QModelIndex()) const override;
     QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const override;
     QVariant headerData(int, Qt::Orientation, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex&, const QVariant&, int role = Qt::EditRole);
@@ -28,26 +27,23 @@ public:
     bool removeRows(int position, int rows, const QModelIndex& = QModelIndex());
 
 private:
-    ProjectSettings *settings;
+    QflowSettings *settings;
     QtFlowSettings *qtflow;
-    QStringList build;
+    table_string_t vars;
     QString cwd;
 };
 
 namespace Ui {
-class BuildSteps;
+class Environment;
 }
 
-class BuildSteps : public QDialog
+class Environment : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit BuildSteps(QWidget *parent = 0);
-    ~BuildSteps();
-
-public slots:
-    void on_contextMenu_requested(const QPoint&);
+    explicit Environment(QWidget *parent = 0);
+    ~Environment();
 
 private slots:
     void on_buttonBox_rejected();
@@ -55,11 +51,11 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::BuildSteps *ui;
+    Ui::Environment *ui;
 
     Session &session;
 
-    BuildScript *build;
+    QflowEnvironment *qflow;
 };
 
-#endif // BUILDSTEPS_H
+#endif // BUILDENVIRONMENT_H

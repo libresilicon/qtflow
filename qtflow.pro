@@ -40,41 +40,39 @@ SOURCES += main.cpp\
     settings.cpp \
     settingsparser.cpp \
     session.cpp \
-    buildsteps.cpp \
-    buildenvironment.cpp \
-    mainedit.cpp \
-    mainprojects.cpp \
+    environment.cpp \
+    edit.cpp \
     editor.cpp \
     verilog.cpp \
-    savechanges.cpp
+    savechanges.cpp \
+    welcome.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
     common.h \
     grid.h \
+    environment.h \
     templates.h \
     project.h \
     settings.h \
     settingsparser.h \
     session.h \
     app.h \
-    buildsteps.h \
     constants.h \
-    buildenvironment.h \
-    mainedit.h \
-    mainprojects.h \
+    denvironment.h \
+    edit.h \
     editor.h \
     verilog.h \
-    savechanges.h
+    savechanges.h \
+    welcome.h
 
 FORMS    += mainwindow.ui \
     grid.ui \
     templates.ui \
-    buildsteps.ui \
-    buildenvironment.ui \
-    mainedit.ui \
-    mainprojects.ui \
-    savechanges.ui
+    environment.ui \
+    edit.ui \
+    savechanges.ui \
+    welcome.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

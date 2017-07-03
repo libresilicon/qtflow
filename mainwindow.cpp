@@ -4,15 +4,14 @@
 #include "ui_mainwindow.h"
 
 #include "app.h"
-#include "buildenvironment.h"
-#include "buildsteps.h"
+#include "environment.h"
 #include "lexmagic.h"
 #include "magicparser.h"
 #include "session.h"
 #include "templates.h"
 #include "grid.h"
-#include "mainedit.h"
-#include "mainprojects.h"
+#include "edit.h"
+#include "welcome.h"
 
 #include <iostream>
 #include <string>
@@ -30,14 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     project(new Project),
     tcsh(NULL),
-    projectsWidget(new MainProjects),
-    editWidget(new MainEdit),
+    welcomeWidget(new Welcome),
+    editWidget(new Edit),
     session(Session::Instance())
 {
     session.setApp(this);
     ui->setupUi(this);
     ui->tabWidget->tabBar()->hide();
-    ui->tabWidget->insertTab(0, projectsWidget, "Projects");
+    ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
     ui->tabWidget->insertTab(1, editWidget, "Edit");
 }
 
@@ -45,7 +44,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete project;
-    delete projectsWidget;
+    delete welcomeWidget;
     delete editWidget;
 }
 
@@ -105,19 +104,13 @@ void MainWindow::on_buildAll_triggered()
     connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 }
 
-void MainWindow::on_buildSteps_triggered()
-{
-    BuildSteps *w = new BuildSteps();
-    w->show();
-}
-
 void MainWindow::on_buildEnvironment_triggered()
 {
-    BuildEnvironment *w = new BuildEnvironment();
+    Environment *w = new Environment();
     w->show();
 }
 
-void MainWindow::on_mainProjects_clicked()
+void MainWindow::on_mainWelcome_clicked()
 {
     ui->tabWidget->setCurrentIndex(0);
 }
@@ -143,13 +136,16 @@ void MainWindow::exitTcsh(int code)
 
 void MainWindow::enableProject()
 {
+    editWidget->loadProject(session.getProject());
+
     ui->buildAll->setDisabled(false);
     ui->quickBuild->setDisabled(false);
     ui->buildSteps->setDisabled(false);
     ui->buildEnvironment->setDisabled(false);
-
     ui->mainEdit->setDisabled(false);
-    editWidget->loadProject(session.getProject());
+    ui->mainTiming->setDisabled(false);
+    ui->mainDesign->setDisabled(false);
+    ui->tabWidget->setCurrentIndex(1);
 }
 
 void MainWindow::disableProject()
@@ -158,8 +154,10 @@ void MainWindow::disableProject()
     ui->quickBuild->setDisabled(true);
     ui->buildSteps->setDisabled(true);
     ui->buildEnvironment->setDisabled(true);
-
     ui->mainEdit->setDisabled(true);
+    ui->mainTiming->setDisabled(true);
+    ui->mainDesign->setDisabled(true);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::enableFile()

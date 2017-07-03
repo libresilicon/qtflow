@@ -8,16 +8,16 @@
 #include <QFileSystemModel>
 
 namespace Ui {
-class MainEdit;
+class Edit;
 }
 
-class MainEdit : public QWidget
+class Edit : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MainEdit(QWidget *parent = 0);
-    ~MainEdit();
+    explicit Edit(QWidget *parent = 0);
+    ~Edit();
 
     void loadProject(QString path);
 
@@ -35,7 +35,7 @@ private slots:
     void on_tabbedEditor_tabCloseRequested(int index);
 
 private:
-    Ui::MainEdit *ui;
+    Ui::Edit *ui;
 
     Session &session;
 

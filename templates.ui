@@ -13,40 +13,30 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>30</y>
-     <width>151</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QListWidget" name="listWidget">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>30</y>
-     <width>301</width>
-     <height>301</height>
-    </rect>
-   </property>
-   <property name="currentRow">
-    <number>0</number>
-   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="4,1">
    <item>
-    <property name="text">
-     <string>Standard Qflow Project</string>
-    </property>
+    <widget class="QListWidget" name="listWidget">
+     <property name="currentRow">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>Standard Qflow Project</string>
+      </property>
+     </item>
+    </widget>
    </item>
-  </widget>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections>
