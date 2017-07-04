@@ -18,10 +18,13 @@ QtFlowSettings::QtFlowSettings() :
         QByteArray content(rc.readAll());
         SettingsParser settings(content);
         vars = settings.getVariables();
+        if (!vars.contains(DEFAULT_VERILOG))
+            set(DEFAULT_VERILOG, DEFAULT_VERILOG);
     }
     else
     {
         set("qflowprefix", "/usr/local/share/qflow");
+        set(DEFAULT_VERILOG, DEFAULT_VERILOG);
         save();
     }
     rc.close();
@@ -138,6 +141,8 @@ QflowSettings::QflowSettings(QString path) :
         vars = settings.getVariables();
         rc.close();
     }
+    if (!vars.contains(DEFAULT_VERILOG))
+        set(DEFAULT_VERILOG, DEFAULT_VERILOG);
 }
 
 QflowSettings::~QflowSettings()

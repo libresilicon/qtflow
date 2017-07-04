@@ -6,6 +6,7 @@
 #include "session.h"
 #include "common.h"
 #include "edit.h"
+#include "environment.h"
 #include "welcome.h"
 
 #include <QMainWindow>
@@ -47,9 +48,14 @@ private slots:
 
     void on_buildAll_triggered();
     void on_buildEnvironment_triggered();
+    void on_menuSynthesis_triggered();
+    void on_menuPlacement_triggered();
+    void on_menuRouting_triggered();
 
     void on_mainWelcome_clicked();
     void on_mainEdit_clicked();
+
+    void on_tcshExpand_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -57,6 +63,7 @@ private:
     QProcess *tcsh;
     Welcome *welcomeWidget;
     Edit *editWidget;
+    Environment *buildEnvironment;
 
     Session &session;
 };

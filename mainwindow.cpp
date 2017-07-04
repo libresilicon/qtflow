@@ -27,10 +27,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     App(),
     ui(new Ui::MainWindow),
-    project(new Project),
-    tcsh(NULL),
+    project(new Qflow),
+    tcsh(new QProcess),
     welcomeWidget(new Welcome),
     editWidget(new Edit),
+    buildEnvironment(new Environment),
     session(Session::Instance())
 {
     session.setApp(this);
@@ -38,6 +39,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->tabBar()->hide();
     ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
     ui->tabWidget->insertTab(1, editWidget, "Edit");
+    ui->tabWidget->insertTab(2, new QWidget, "Timing");
+    ui->tabWidget->insertTab(3, new QWidget, "Design");
+    connect(tcsh, SIGNAL(readyRead()), this, SLOT(fireTcsh()));
+    connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 }
 
 MainWindow::~MainWindow()
@@ -62,6 +67,14 @@ void MainWindow::on_newProject_triggered()
 void MainWindow::on_openProject_triggered()
 {
     QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    if (path == QString())
+        return;
+
+    QFile project_vars(path + PROJECT_VARS);
+    if (!project_vars.exists())
+        return;
+
     session.setProject(path);
     session.getApp()->enableProject();
 }
@@ -74,7 +87,11 @@ void MainWindow::on_saveFile_triggered()
 void MainWindow::on_openMagicFile_triggered()
 {
     QString name = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Magic Files (*.mag)"));
-    qDebug() << "Open file:" << name;
+
+    if (name == QString())
+        return;
+
+    qDebug() << "Open magic file:" << name;
     QFile file(name);
     file.open(QFile::ReadOnly);
     QByteArray content(file.readAll());
@@ -92,32 +109,85 @@ void MainWindow::on_exit_triggered()
 
 void MainWindow::on_buildAll_triggered()
 {
-    if (tcsh != NULL)
+    if (tcsh->state() == QProcess::Running)
         return;
 
+    ui->menuSynthesis->setDisabled(true);
+    ui->menuPlacement->setDisabled(true);
+    ui->menuRouting->setDisabled(true);
+    ui->buildAll->setDisabled(true);
     QString path = session.getProject();
-    ProjectSettings environment(path);
-    tcsh = new QProcess(this);
+    QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
-    project->executeQflow(tcsh);
-    connect(tcsh, SIGNAL(readyRead()), this, SLOT(fireTcsh()));
-    connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
+    project->buildAll(tcsh, env.value(DEFAULT_VERILOG));
 }
 
 void MainWindow::on_buildEnvironment_triggered()
 {
-    Environment *w = new Environment();
-    w->show();
+    buildEnvironment->set(new QflowEnvironment(this, session.getProject()));
+    buildEnvironment->show();
+}
+
+void MainWindow::on_menuSynthesis_triggered()
+{
+    if (tcsh->state() == QProcess::Running)
+        return;
+
+    ui->menuSynthesis->setDisabled(true);
+    ui->menuPlacement->setDisabled(true);
+    ui->menuRouting->setDisabled(true);
+    ui->buildAll->setDisabled(true);
+    QString path = session.getProject();
+    QflowSettings env(path);
+    tcsh->setWorkingDirectory(path);
+    project->synthesis(tcsh, env.value(DEFAULT_VERILOG));
+}
+
+void MainWindow::on_menuPlacement_triggered()
+{
+    if (tcsh->state() == QProcess::Running)
+        return;
+
+    ui->menuSynthesis->setDisabled(true);
+    ui->menuPlacement->setDisabled(true);
+    ui->menuRouting->setDisabled(true);
+    ui->buildAll->setDisabled(true);
+    QString path = session.getProject();
+    QflowSettings env(path);
+    tcsh->setWorkingDirectory(path);
+    project->placement(tcsh, env.value(DEFAULT_VERILOG));
+}
+
+void MainWindow::on_menuRouting_triggered()
+{
+    if (tcsh->state() == QProcess::Running)
+        return;
+
+    ui->menuSynthesis->setDisabled(true);
+    ui->menuPlacement->setDisabled(true);
+    ui->menuRouting->setDisabled(true);
+    ui->buildAll->setDisabled(true);
+    QString path = session.getProject();
+    QflowSettings env(path);
+    tcsh->setWorkingDirectory(path);
+    project->routing(tcsh, env.value(DEFAULT_VERILOG));
 }
 
 void MainWindow::on_mainWelcome_clicked()
 {
+    ui->tabWidget->show();
     ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_mainEdit_clicked()
 {
+    ui->tabWidget->show();
     ui->tabWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_tcshExpand_clicked()
+{
+    ui->tabWidget->hide();
 }
 
 void MainWindow::fireTcsh()
@@ -130,30 +200,38 @@ void MainWindow::fireTcsh()
 void MainWindow::exitTcsh(int code)
 {
     qDebug() << "Tcsh exited with code" << code;
-    delete tcsh;
-    tcsh = NULL;
+    ui->menuSynthesis->setDisabled(false);
+    ui->menuPlacement->setDisabled(false);
+    ui->menuRouting->setDisabled(false);
+    ui->buildAll->setDisabled(false);
 }
 
 void MainWindow::enableProject()
 {
     editWidget->loadProject(session.getProject());
+    ui->tabWidget->show();
 
     ui->buildAll->setDisabled(false);
-    ui->quickBuild->setDisabled(false);
     ui->buildSteps->setDisabled(false);
     ui->buildEnvironment->setDisabled(false);
+    ui->menuSynthesis->setDisabled(false);
+    ui->menuPlacement->setDisabled(false);
+    ui->menuRouting->setDisabled(false);
     ui->mainEdit->setDisabled(false);
-    ui->mainTiming->setDisabled(false);
-    ui->mainDesign->setDisabled(false);
     ui->tabWidget->setCurrentIndex(1);
 }
 
 void MainWindow::disableProject()
 {
+    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->show();
+
     ui->buildAll->setDisabled(true);
-    ui->quickBuild->setDisabled(true);
     ui->buildSteps->setDisabled(true);
     ui->buildEnvironment->setDisabled(true);
+    ui->menuSynthesis->setDisabled(true);
+    ui->menuPlacement->setDisabled(true);
+    ui->menuRouting->setDisabled(true);
     ui->mainEdit->setDisabled(true);
     ui->mainTiming->setDisabled(true);
     ui->mainDesign->setDisabled(true);

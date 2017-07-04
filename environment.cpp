@@ -8,9 +8,8 @@
 #include <QTextStream>
 #include <QTableView>
 
-
 QflowEnvironment::QflowEnvironment(QObject *parent, QString path) :
-    QAbstractTableModel(parent),
+    IEnvironment(parent),
     settings(new QflowSettings(path)),
     qtflow(new QtFlowSettings),
     vars(settings->table()),
@@ -123,25 +122,33 @@ Environment::Environment(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Environment),
     session(Session::Instance()),
-    qflow(new QflowEnvironment(this, session.getProject()))
+    env(NULL)
 {
     ui->setupUi(this);
-    ui->tableView->setModel(qflow);
-    ui->tableView->resizeColumnsToContents();
 }
 
 Environment::~Environment()
 {
     delete ui;
-    delete qflow;
+    delete env;
+}
+
+void Environment::set(IEnvironment* table)
+{
+    if (env != NULL)
+      delete env;
+    env = table;
+    ui->tableView->setModel(table);
+    ui->tableView->resizeColumnsToContents();
 }
 
 void Environment::on_buttonBox_rejected()
 {
-
+    hide();
 }
 
 void Environment::on_buttonBox_accepted()
 {
-    qflow->save();
+    env->save();
+    hide();
 }

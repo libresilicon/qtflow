@@ -94,6 +94,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="mainTiming">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -110,6 +113,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="mainDesign">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -136,6 +142,36 @@
          <property name="title">
           <string/>
          </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QPushButton" name="tcshExpand">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Console</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -201,11 +237,13 @@
     <property name="title">
      <string>Build</string>
     </property>
-    <addaction name="buildAll"/>
     <addaction name="buildEnvironment"/>
-    <addaction name="buildSteps"/>
     <addaction name="separator"/>
-    <addaction name="quickBuild"/>
+    <addaction name="menuSynthesis"/>
+    <addaction name="menuPlacement"/>
+    <addaction name="menuRouting"/>
+    <addaction name="separator"/>
+    <addaction name="buildAll"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
@@ -250,20 +288,20 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="buildAll">
+  <action name="menuSynthesis">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Build Project...</string>
+    <string>Synthesis</string>
    </property>
   </action>
-  <action name="quickBuild">
+  <action name="menuPlacement">
    <property name="enabled">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Quick Build</string>
+    <string>Placement...</string>
    </property>
   </action>
   <action name="actionnew">
@@ -298,6 +336,22 @@
   <action name="menuOptions">
    <property name="text">
     <string>Options...</string>
+   </property>
+  </action>
+  <action name="menuRouting">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Routing...</string>
+   </property>
+  </action>
+  <action name="buildAll">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Local Build All</string>
    </property>
   </action>
  </widget>

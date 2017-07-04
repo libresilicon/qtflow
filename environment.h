@@ -7,7 +7,16 @@
 #include <QDialog>
 #include <QAbstractItemModel>
 
-class QflowEnvironment : public QAbstractTableModel
+class IEnvironment : public QAbstractTableModel
+{
+public:
+    IEnvironment(QObject *parent = 0) : QAbstractTableModel(parent) {}
+    virtual ~IEnvironment() {}
+
+    virtual void save() {}
+};
+
+class QflowEnvironment : public IEnvironment
 {
     Q_OBJECT
 
@@ -45,6 +54,8 @@ public:
     explicit Environment(QWidget *parent = 0);
     ~Environment();
 
+    void set(IEnvironment*);
+
 private slots:
     void on_buttonBox_rejected();
 
@@ -55,7 +66,7 @@ private:
 
     Session &session;
 
-    QflowEnvironment *qflow;
+    IEnvironment *env;
 };
 
 #endif // BUILDENVIRONMENT_H

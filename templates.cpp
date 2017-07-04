@@ -11,7 +11,7 @@
 Templates::Templates(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Templates),
-    project(new Project),
+    project(new Qflow),
     session(Session::Instance())
 {
     ui->setupUi(this);
@@ -26,7 +26,11 @@ Templates::~Templates()
 void Templates::on_buttonBox_accepted()
 {
     QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    project->createQflow(path);
+
+    if (path == QString())
+        return;
+
+    project->create(path);
     session.setProject(path);
     session.getApp()->enableProject();
 }

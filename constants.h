@@ -8,4 +8,6 @@
 
 #define TCSH_SHEBANG "#!/bin/tcsh -f"
 
+#define DEFAULT_VERILOG "index"
+
 #endif // CONSTANTS_H
