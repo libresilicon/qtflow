@@ -8,6 +8,7 @@
 #include "edit.h"
 #include "environment.h"
 #include "dependencies.h"
+#include "modules.h"
 #include "iopads.h"
 #include "welcome.h"
 
@@ -52,6 +53,7 @@ private slots:
 
     void on_buildAll_triggered();
     void on_buildEnvironment_triggered();
+    void on_menuModules_triggered();
     void on_menuSynthesis_triggered();
     void on_menuPlacement_triggered();
     void on_menuRouting_triggered();
@@ -75,6 +77,7 @@ private:
     Edit *editWidget;
     Environment *buildEnvironment;
     IOPads *iopads;
+    Modules *modules;
 
     Session &session;
 };

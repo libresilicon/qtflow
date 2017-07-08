@@ -268,6 +268,7 @@
      <string>Build</string>
     </property>
     <addaction name="buildEnvironment"/>
+    <addaction name="menuModules"/>
     <addaction name="separator"/>
     <addaction name="menuSynthesis"/>
     <addaction name="menuPlacement"/>
@@ -407,6 +408,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="menuModules">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Modules...</string>
    </property>
   </action>
  </widget>

@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     editWidget(new Edit),
     buildEnvironment(new Environment),
     iopads(new IOPads),
+    modules(new Modules),
     session(Session::Instance())
 {
     session.setApp(this);
@@ -193,6 +194,13 @@ void MainWindow::on_menuRouting_triggered()
     project->routing(tcsh, env.value(DEFAULT_VERILOG));
 }
 
+void MainWindow::on_menuModules_triggered()
+{
+    QflowSettings env(session.getProject());
+    modules->show();
+    modules->refresh(env.value("sourcedir"));
+}
+
 void MainWindow::on_menuIOPads_triggered()
 {
     iopads->show();
@@ -259,6 +267,7 @@ void MainWindow::enableProject()
     ui->menuSynthesis->setDisabled(false);
     ui->menuPlacement->setDisabled(false);
     ui->menuRouting->setDisabled(false);
+    ui->menuModules->setDisabled(false);
     ui->mainEdit->setDisabled(false);
     ui->tabWidget->setCurrentIndex(1);
 }
@@ -274,6 +283,7 @@ void MainWindow::disableProject()
     ui->menuSynthesis->setDisabled(true);
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);
+    ui->menuModules->setDisabled(true);
     ui->mainEdit->setDisabled(true);
     ui->mainTiming->setDisabled(true);
     ui->mainDesign->setDisabled(true);
