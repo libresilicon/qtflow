@@ -7,6 +7,7 @@
 #include "common.h"
 #include "edit.h"
 #include "environment.h"
+#include "iopads.h"
 #include "welcome.h"
 
 #include <QMainWindow>
@@ -52,6 +53,8 @@ private slots:
     void on_menuPlacement_triggered();
     void on_menuRouting_triggered();
 
+    void on_menuIOPads_triggered();
+
     void on_mainWelcome_clicked();
     void on_mainEdit_clicked();
 
@@ -64,6 +67,7 @@ private:
     Welcome *welcomeWidget;
     Edit *editWidget;
     Environment *buildEnvironment;
+    IOPads *iopads;
 
     Session &session;
 };

@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     welcomeWidget(new Welcome),
     editWidget(new Edit),
     buildEnvironment(new Environment),
+    iopads(new IOPads),
     session(Session::Instance())
 {
     session.setApp(this);
@@ -171,6 +172,11 @@ void MainWindow::on_menuRouting_triggered()
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
     project->routing(tcsh, env.value(DEFAULT_VERILOG));
+}
+
+void MainWindow::on_menuIOPads_triggered()
+{
+    iopads->show();
 }
 
 void MainWindow::on_mainWelcome_clicked()
