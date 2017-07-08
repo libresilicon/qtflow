@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     verilog.cpp \
     savechanges.cpp \
     welcome.cpp \
-    iopads.cpp
+    iopads.cpp \
+    dependencies.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -66,7 +67,8 @@ HEADERS  += mainwindow.h \
     verilog.h \
     savechanges.h \
     welcome.h \
-    iopads.h
+    iopads.h \
+    dependencies.h
 
 FORMS    += mainwindow.ui \
     grid.ui \

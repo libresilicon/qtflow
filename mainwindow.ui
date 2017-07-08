@@ -158,13 +158,29 @@
           <item row="0" column="0">
            <widget class="QPushButton" name="tcshExpand">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="text">
              <string>Console</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QPushButton" name="tcshErrors">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Errors</string>
             </property>
             <property name="flat">
              <bool>true</bool>
@@ -179,7 +195,7 @@
     </item>
     <item>
      <widget class="QFrame" name="mainArea">
-      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,1">
+      <layout class="QVBoxLayout" name="verticalLayout_2" stretch="3,1,0">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -199,7 +215,21 @@
         <widget class="QTabWidget" name="tabWidget"/>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="consoleOut"/>
+        <widget class="QPlainTextEdit" name="consoleOut">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="consoleError">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

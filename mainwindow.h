@@ -7,11 +7,13 @@
 #include "common.h"
 #include "edit.h"
 #include "environment.h"
+#include "dependencies.h"
 #include "iopads.h"
 #include "welcome.h"
 
 #include <QMainWindow>
 #include <QVBoxLayout>
+#include <QErrorMessage>
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +35,7 @@ public:
 
 public slots:
     void fireTcsh();
+    void errorTcsh();
     void exitTcsh(int);
 
 private slots:
@@ -60,9 +63,13 @@ private slots:
 
     void on_tcshExpand_clicked();
 
+    void on_tcshErrors_clicked();
+
 private:
     Ui::MainWindow *ui;
     IProject *project;
+    IDependencies *dependencies;
+    QErrorMessage *errorMessage;
     QProcess *tcsh;
     Welcome *welcomeWidget;
     Edit *editWidget;

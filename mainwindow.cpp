@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     App(),
     ui(new Ui::MainWindow),
     project(new Qflow),
+    dependencies(new Dependencies),
+    errorMessage(new QErrorMessage),
     tcsh(new QProcess),
     welcomeWidget(new Welcome),
     editWidget(new Edit),
@@ -37,21 +39,38 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     session.setApp(this);
     ui->setupUi(this);
+    ui->consoleError->hide();
     ui->tabWidget->tabBar()->hide();
     ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
     ui->tabWidget->insertTab(1, editWidget, "Edit");
     ui->tabWidget->insertTab(2, new QWidget, "Timing");
     ui->tabWidget->insertTab(3, new QWidget, "Design");
-    connect(tcsh, SIGNAL(readyRead()), this, SLOT(fireTcsh()));
+    connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
+    connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
     connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
+
+    if (dependencies->tcsh() && dependencies->qflow())
+        return;
+
+    if (!dependencies->tcsh())
+        errorMessage->showMessage("tcsh exectuable not found in PATH!");
+
+    if (!dependencies->qflow())
+        errorMessage->showMessage("qflow executable not found / wrong qflowprefix: check ~/.qtflowrc");
+
+    errorMessage->show();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete errorMessage;
     delete project;
+    delete dependencies;
     delete welcomeWidget;
     delete editWidget;
+    delete buildEnvironment;
+    delete iopads;
 }
 
 void MainWindow::on_MainWindow_destroyed()
@@ -194,6 +213,16 @@ void MainWindow::on_mainEdit_clicked()
 void MainWindow::on_tcshExpand_clicked()
 {
     ui->tabWidget->hide();
+    ui->consoleOut->show();
+    ui->consoleError->hide();
+}
+
+
+void MainWindow::on_tcshErrors_clicked()
+{
+    ui->tabWidget->hide();
+    ui->consoleOut->hide();
+    ui->consoleError->show();
 }
 
 void MainWindow::fireTcsh()
@@ -201,6 +230,13 @@ void MainWindow::fireTcsh()
     QByteArray bytes = tcsh->read(4096);
     ui->consoleOut->insertPlainText(bytes);
     ui->consoleOut->verticalScrollBar()->setValue(ui->consoleOut->verticalScrollBar()->maximum());
+}
+
+void MainWindow::errorTcsh()
+{
+    QByteArray bytes = tcsh->readAllStandardError();
+    ui->consoleError->insertPlainText(bytes);
+    ui->consoleError->verticalScrollBar()->setValue(ui->consoleError->verticalScrollBar()->maximum());
 }
 
 void MainWindow::exitTcsh(int code)
