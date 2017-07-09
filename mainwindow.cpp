@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     welcomeWidget(new Welcome),
     editWidget(new Edit),
     buildEnvironment(new Environment),
+    qtflowEnvironment(new Environment),
     iopads(new IOPads),
     modules(new Modules),
     session(Session::Instance())
@@ -66,6 +67,7 @@ MainWindow::~MainWindow()
     delete welcomeWidget;
     delete editWidget;
     delete buildEnvironment;
+    delete qtflowEnvironment;
     delete iopads;
 }
 
@@ -199,6 +201,12 @@ void MainWindow::on_menuModules_triggered()
 void MainWindow::on_menuIOPads_triggered()
 {
     iopads->show();
+}
+
+void MainWindow::on_menuOptions_triggered()
+{
+    qtflowEnvironment->set(new QtFlowEnvironment(this));
+    qtflowEnvironment->show();
 }
 
 void MainWindow::on_mainWelcome_clicked()

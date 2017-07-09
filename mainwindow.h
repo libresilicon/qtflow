@@ -61,6 +61,7 @@ private slots:
     void on_menuRouting_triggered();
 
     void on_menuIOPads_triggered();
+    void on_menuOptions_triggered();
 
     void on_mainWelcome_clicked();
     void on_mainEdit_clicked();
@@ -78,6 +79,7 @@ private:
     Welcome *welcomeWidget;
     Edit *editWidget;
     Environment *buildEnvironment;
+    Environment *qtflowEnvironment;
     IOPads *iopads;
     Modules *modules;
 

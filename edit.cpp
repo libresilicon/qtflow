@@ -17,19 +17,19 @@ Edit::Edit(QWidget *parent) :
     ui(new Ui::Edit),
     session(Session::Instance()),
     opened(new QList<IEditor *>),
-    filesystem(new QFileSystemModel),
-    filesContext(NULL),
-    openTcsh(new QAction("Open tcsh here...", filesContext))
+    filesystem(new QFileSystemModel)
 {
     ui->setupUi(this);
     ui->filesView->setModel(filesystem);
     for (int i = 1; i < filesystem->columnCount(); ++i)
         ui->filesView->hideColumn(i);
-    loadProject(QDir::currentPath());
+    loadProject(session.getProject());
 
     ui->filesView->setContextMenuPolicy(Qt::CustomContextMenu);
     filesContext = new QMenu(ui->filesView);
     connect(ui->filesView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onCustomContextMenu(const QPoint&)));
+
+    openTcsh = new QAction("Open tcsh here...", filesContext);
     filesContext->addAction(openTcsh);
     connect(openTcsh, SIGNAL(triggered(bool)), this, SLOT(onOpenTcsh(bool)));
 }
@@ -39,8 +39,6 @@ Edit::~Edit()
     delete ui;
     delete opened;
     delete filesystem;
-    delete filesContext;
-    delete openTcsh;
 }
 
 void Edit::loadProject(QString path)
@@ -100,9 +98,9 @@ void Edit::onOpenTcsh(bool)
     QtFlowSettings settings;
     QFileInfo info = filesystem->fileInfo(ui->filesView->currentIndex());
     QProcess *exec = new QProcess(this);
+    connect(exec, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(onTcshError(QProcess::ProcessError)));
     exec->setWorkingDirectory(info.absoluteDir().absolutePath());
     exec->start(settings.value("terminal") + " tcsh");
-    connect(exec, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(onTcshError(QProcess::ProcessError)));
 }
 
 void Edit::onTcshError(QProcess::ProcessError)

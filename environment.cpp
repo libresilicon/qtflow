@@ -7,6 +7,114 @@
 #include <QFile>
 #include <QTextStream>
 #include <QTableView>
+#include <QHeaderView>
+
+QtFlowEnvironment::QtFlowEnvironment(QObject *parent) :
+    IEnvironment(parent),
+    qtflow(new QtFlowSettings),
+    vars(qtflow->table())
+{
+
+}
+
+QtFlowEnvironment::~QtFlowEnvironment()
+{
+    delete qtflow;
+}
+
+void QtFlowEnvironment::save()
+{
+    map_string_t acc;
+    foreach (const auto &e, vars)
+        acc.insert(e.first, e.second);
+    qtflow->swap(acc);
+    qtflow->save();
+}
+
+int QtFlowEnvironment::rowCount(const QModelIndex&) const
+{
+    return vars.count();
+}
+
+int QtFlowEnvironment::columnCount(const QModelIndex&) const
+{
+    return 2;
+}
+
+QVariant QtFlowEnvironment::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid() || index.column() >= 2 || index.row() >= vars.size())
+        return QVariant();
+    if (role != Qt::DisplayRole && role != Qt::EditRole)
+        return QVariant();
+
+    if (index.column() == 0)
+        return vars.at(index.row()).first;
+    else
+        return vars.at(index.row()).second;
+
+    return QVariant();
+}
+
+QVariant QtFlowEnvironment::headerData(int section, Qt::Orientation orientation, int) const
+{
+    if (orientation == Qt::Horizontal)
+        return QString("Column %1").arg(section);
+    if (orientation == Qt::Horizontal)
+        return QString("Row %1").arg(section);
+
+    return QVariant();
+}
+
+bool QtFlowEnvironment::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (index.isValid() && role == Qt::EditRole)
+    {
+        QPair<QString, QString> var;
+        if (index.column() == 0)
+        {
+            var.first = value.toString();
+            var.second = vars.at(index.row()).second;
+        }
+        else
+        {
+            var.first = vars.at(index.row()).first;
+            var.second = value.toString();
+        }
+        vars.replace(index.row(), var);
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    return false;
+}
+
+Qt::ItemFlags QtFlowEnvironment::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::ItemIsEnabled;
+
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+}
+
+bool QtFlowEnvironment::insertRows(int position, int rows, const QModelIndex&)
+{
+    beginInsertRows(QModelIndex(), position, position + rows - 1);
+    for (int row = 0; row < rows; ++row)
+        vars.insert(position, QPair<QString, QString>());
+    endInsertRows();
+    return true;
+}
+
+bool QtFlowEnvironment::removeRows(int position, int rows, const QModelIndex&)
+{
+    beginRemoveRows(QModelIndex(), position, position + rows - 1);
+    for (int row = 0; row < rows; ++row)
+        vars.removeAt(position);
+    endRemoveRows();
+    return true;
+}
+
 
 QflowEnvironment::QflowEnvironment(QObject *parent, QString path) :
     IEnvironment(parent),
@@ -125,6 +233,7 @@ Environment::Environment(QWidget *parent) :
     env(NULL)
 {
     ui->setupUi(this);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 Environment::~Environment()
