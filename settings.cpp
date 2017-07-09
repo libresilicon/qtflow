@@ -25,6 +25,7 @@ QtFlowSettings::QtFlowSettings() :
     {
         set("qflowprefix", "/usr/local/share/qflow");
         set(DEFAULT_VERILOG, DEFAULT_VERILOG);
+        set("terminal", "urxvt -e");
         save();
     }
     rc.close();

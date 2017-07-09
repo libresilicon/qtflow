@@ -34,6 +34,8 @@ public:
     void enableFile();
     void disableFile();
 
+    void error(QString);
+
 public slots:
     void fireTcsh();
     void errorTcsh();

@@ -50,16 +50,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
     connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 
-    if (dependencies->tcsh() && dependencies->qflow())
-        return;
-
     if (!dependencies->tcsh())
-        errorMessage->showMessage("tcsh exectuable not found in PATH!");
+        error("tcsh exectuable not found in PATH!");
 
     if (!dependencies->qflow())
-        errorMessage->showMessage("qflow executable not found / wrong qflowprefix: check ~/.qtflowrc");
-
-    errorMessage->show();
+        error("qflow executable not found / wrong qflowprefix: check ~/.qtflowrc");
 }
 
 MainWindow::~MainWindow()
@@ -298,4 +293,10 @@ void MainWindow::enableFile()
 void MainWindow::disableFile()
 {
     ui->saveFile->setDisabled(true);
+}
+
+void MainWindow::error(QString e)
+{
+    errorMessage->showMessage(e);
+    errorMessage->show();
 }

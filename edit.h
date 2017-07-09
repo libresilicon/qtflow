@@ -6,6 +6,7 @@
 
 #include <QWidget>
 #include <QFileSystemModel>
+#include <QProcess>
 
 namespace Ui {
 class Edit;
@@ -26,6 +27,9 @@ public:
 
 public slots:
     void saveAndExit(int);
+    void onCustomContextMenu(const QPoint&);
+    void onOpenTcsh(bool);
+    void onTcshError(QProcess::ProcessError);
 
 private slots:
     void on_filesView_doubleClicked(const QModelIndex &index);
@@ -39,8 +43,10 @@ private:
 
     Session &session;
 
-    QFileSystemModel *filesystem;
     QList<IEditor*> *opened;
+    QFileSystemModel *filesystem;
+    QMenu *filesContext;
+    QAction *openTcsh;
 };
 
 #endif // MAINEDIT_H

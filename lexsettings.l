@@ -22,10 +22,10 @@ void settingserror(const char *s);
 
 =           { return ASSIGN; }
 set         { return SET;    }
-[ \t]       { return SPACE;  }
 \r\n        { return ENDL;   }
 \n          { return ENDL;   }
 
+[ \t]                    { settingslval.v_char = yytext[0]; return SPACE; }
 [[:alnum:]]              { settingslval.v_char = yytext[0]; return ALPHANUM; }
 [[:cntrl:][:punct:]]     { settingslval.v_char = yytext[0]; return SPECIAL; }
 
