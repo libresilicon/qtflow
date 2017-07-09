@@ -13,7 +13,7 @@ Modules::Modules(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Modules),
     path(QString()),
-    modules(new ModulesModel(parent))
+    modules(new ModulesModel(parent, new QflowSettings(path)))
 {
     ui->setupUi(this);
 }
@@ -34,7 +34,7 @@ void Modules::refresh(QString dir)
 {
     path = dir;
     delete modules;
-    modules = new ModulesModel(this, dir);
+    modules = new ModulesModel(this, new QflowSettings(dir));
     ui->listView->setModel(modules);
 }
 
@@ -62,7 +62,7 @@ void Modules::on_setTopModule_clicked()
         }
     }
 
-    QflowSettings qflow(path + "/..");
+    QflowSettings qflow(path);
     qflow.set(DEFAULT_VERILOG, top);
     qflow.save();
     refresh();
@@ -74,37 +74,39 @@ void Modules::on_closeButton_clicked()
 }
 
 
-ModulesModel::ModulesModel(QObject *parent, QString path) :
+ModulesModel::ModulesModel(QObject *parent, QflowSettings* settings) :
     QAbstractListModel(parent),
     modules(QList<QString>()),
     files(QList<QString>()),
     topmodule(-1),
-    qflow(NULL)
+    qflow(settings)
 {
+    QString path  = qflow->value("sourcedir");
     if (path == QString())
         return;
 
-    QRegExp rx("\nmodule ([a-zA-Z0-9]+)");
+    QRegExp rx("^\\s*module ([a-zA-Z0-9]+)");
     QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
         QFile file(it.next());
         QFileInfo info(file);
-        if (file.open(QIODevice::ReadOnly))
+        if (info.completeSuffix() == info.suffix() && file.open(QIODevice::ReadOnly))
         {
-            QString contents(file.readAll());
-            int pos = 0;
-            while ((pos = rx.indexIn(contents, pos)) != -1)
+            QTextStream in(&file);
+            while (!in.atEnd())
             {
-                modules << rx.cap(1);
-                pos += rx.matchedLength();
-                files << info.baseName();
+                QString line = in.readLine();
+                if (rx.indexIn(line, 0) != -1)
+                {
+                    modules << rx.cap(1);
+                    files << info.baseName();
+                }
             }
             file.close();
         }
     }
 
-    qflow = new QflowSettings(path + "/..");
     QString index = qflow->value(DEFAULT_VERILOG);
     QList<QString>::iterator is;
     int at;

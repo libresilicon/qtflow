@@ -193,9 +193,8 @@ void MainWindow::on_menuRouting_triggered()
 
 void MainWindow::on_menuModules_triggered()
 {
-    QflowSettings env(session.getProject());
     modules->show();
-    modules->refresh(env.value("sourcedir"));
+    modules->refresh(session.getProject());
 }
 
 void MainWindow::on_menuIOPads_triggered()

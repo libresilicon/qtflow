@@ -11,7 +11,7 @@ class ModulesModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    ModulesModel(QObject *parent, QString = QString());
+    ModulesModel(QObject *parent, QflowSettings*);
     ~ModulesModel();
 
     int rowCount(const QModelIndex& = QModelIndex()) const override;
