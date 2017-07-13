@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include <QFileSystemWatcher>
+#include <QFileInfo>
 
 class ProjectsItem
 {
@@ -12,12 +13,14 @@ public:
 
     void appendChild(ProjectsItem *child);
 
+    bool setFileData(const QFileInfo &file);
+    QFileInfo fileData() const;
+
     ProjectsItem *child(int row);
     int childCount() const;
     int columnCount() const;
     QVariant data(int column) const;
     bool insertChildren(int position, int count, int columns);
-//    bool insertColumns(int position, int columns);
     int row() const;
     ProjectsItem *parentItem();
     bool removeChildren(int position, int count);
@@ -28,6 +31,7 @@ public:
 private:
     QList<ProjectsItem*> childItems;
     QVector<QVariant> itemData;
+    QFileInfo fileInfoData;
     ProjectsItem *parent;
 };
 
@@ -40,6 +44,7 @@ public:
     ~ProjectsTreeModel();
 
     void addDirectory(const QString &path);
+    QString filePath(const QModelIndex &index);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
@@ -54,6 +59,7 @@ public:
 
 private:
     ProjectsItem *rootItem;
+    ProjectsItem *sourceItem;
 
     QFileSystemWatcher *watcher;
 };

@@ -42,6 +42,8 @@ private slots:
 
     void on_treeSelection_currentIndexChanged(int index);
 
+    void on_projectsView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::Edit *ui;
 

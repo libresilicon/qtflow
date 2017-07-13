@@ -151,3 +151,10 @@ void Edit::on_treeSelection_currentIndexChanged(int index)
 {
     ui->tabbedTree->setCurrentIndex(index);
 }
+
+void Edit::on_projectsView_doubleClicked(const QModelIndex &index)
+{
+    QString path = projects->filePath(index);
+    if (path != QString())
+        loadFile(path);
+}

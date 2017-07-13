@@ -1,6 +1,8 @@
 #include "projectstreemodel.h"
 
 #include <QFile>
+#include <QStack>
+#include <QSet>
 #include <QDirIterator>
 
 ProjectsItem::ProjectsItem(const QVector<QVariant> &data, ProjectsItem *parentItem)
@@ -17,6 +19,17 @@ ProjectsItem::~ProjectsItem()
 void ProjectsItem::appendChild(ProjectsItem *child)
 {
     childItems.append(child);
+}
+
+bool ProjectsItem::setFileData(const QFileInfo &file)
+{
+    fileInfoData = file;
+    return true;
+}
+
+QFileInfo ProjectsItem::fileData() const
+{
+    return fileInfoData;
 }
 
 ProjectsItem *ProjectsItem::child(int row)
@@ -96,6 +109,9 @@ ProjectsTreeModel::ProjectsTreeModel(QObject *parent)
     QVector<QVariant> rootData;
     rootData << "Item";
     rootItem = new ProjectsItem(rootData);
+    rootItem->insertChildren(rootItem->childCount(), 1, rootItem->columnCount());
+    sourceItem = rootItem->child(rootItem->childCount() - 1);
+    sourceItem->setData(0, "Sources");
 }
 
 ProjectsTreeModel::~ProjectsTreeModel()
@@ -109,15 +125,60 @@ void ProjectsTreeModel::addDirectory(const QString &path)
     if (!QDir(path).exists())
         return;
 
+    QStack<QFileInfo> roots;
+    QMap<QString, QVector<QFileInfo>> children;
     QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {
         QFileInfo file(it.next());
+
         watcher->addPath(file.absoluteFilePath());
-        rootItem->insertChildren(rootItem->childCount(), 1, rootItem->columnCount());
-        rootItem->child(rootItem->childCount() - 1)->setData(0, file.fileName());
-        rootItem->child(rootItem->childCount() - 1)->setData(1, QString());
+
+        if (file.completeSuffix() == file.suffix())
+        {
+            roots.push(file);
+        }
+        else
+        {
+            QVector<QFileInfo> infos;
+            if (!children.contains(file.baseName()))
+            {
+                infos << file;
+                children.insert(file.baseName(), infos);
+            }
+            else
+            {
+                children[file.baseName()] << file;
+            }
+        }
     }
+
+    while (!roots.isEmpty())
+    {
+        QFileInfo file = roots.pop();
+        sourceItem->insertChildren(sourceItem->childCount(), 1, sourceItem->columnCount());
+        ProjectsItem *current = sourceItem->child(sourceItem->childCount() - 1);
+        current->setData(0, file.fileName());
+        current->setFileData(file);
+        if (children.contains(file.baseName()))
+        {
+            foreach (const QFileInfo &child, children[file.baseName()])
+            {
+                current->insertChildren(current->childCount(), 1, current->columnCount());
+                current->child(current->childCount() - 1)->setData(0, child.fileName());
+                current->child(current->childCount() - 1)->setFileData(child);
+            }
+        }
+    }
+}
+
+QString ProjectsTreeModel::filePath(const QModelIndex &index)
+{
+    if (!index.isValid())
+        return QString();
+
+    ProjectsItem *item = static_cast<ProjectsItem*>(index.internalPointer());
+    return item->fileData().absoluteFilePath();
 }
 
 QVariant ProjectsTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
