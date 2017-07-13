@@ -1,31 +1,12 @@
 #ifndef MODULES_H
 #define MODULES_H
 
+#include "moduleslistmodel.h"
 #include "settings.h"
 
 #include <QDialog>
 #include <QAbstractListModel>
 
-class ModulesModel : public QAbstractListModel
-{
-    Q_OBJECT
-
-public:
-    ModulesModel(QObject *parent, QflowSettings*);
-    ~ModulesModel();
-
-    int rowCount(const QModelIndex& = QModelIndex()) const override;
-    QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const override;
-
-    QString file(const QModelIndex& = QModelIndex());
-
-private:
-    QList<QString> modules;
-    QList<QString> files;
-    int topmodule;
-
-    QflowSettings *qflow;
-};
 
 namespace Ui {
 class Modules;
@@ -51,7 +32,7 @@ private:
     Ui::Modules *ui;
 
     QString path;
-    ModulesModel *modules;
+    ModulesListModel *modules;
 };
 
 #endif // MODULES_H

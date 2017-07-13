@@ -3,6 +3,8 @@
 
 #include "session.h"
 #include "editor.h"
+#include "projectstreemodel.h"
+#include "modulestreemodel.h"
 
 #include <QWidget>
 #include <QFileSystemModel>
@@ -20,7 +22,7 @@ public:
     explicit Edit(QWidget *parent = 0);
     ~Edit();
 
-    void loadProject(QString path);
+    void loadProject(const QString &path);
 
     void loadFile(QString path);
     void saveFile(QString path);
@@ -38,6 +40,8 @@ private slots:
 
     void on_tabbedEditor_tabCloseRequested(int index);
 
+    void on_treeSelection_currentIndexChanged(int index);
+
 private:
     Ui::Edit *ui;
 
@@ -45,6 +49,8 @@ private:
 
     QList<IEditor*> *opened;
     QFileSystemModel *filesystem;
+    ProjectsTreeModel *projects;
+    ModulesTreeModel *modules;
     QMenu *filesContext;
     QAction *openTcsh;
 };

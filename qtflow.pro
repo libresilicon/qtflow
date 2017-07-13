@@ -48,7 +48,10 @@ SOURCES += main.cpp\
     welcome.cpp \
     iopads.cpp \
     dependencies.cpp \
-    modules.cpp
+    modules.cpp \
+    projectstreemodel.cpp \
+    modulestreemodel.cpp \
+    moduleslistmodel.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -62,7 +65,6 @@ HEADERS  += mainwindow.h \
     session.h \
     app.h \
     constants.h \
-    denvironment.h \
     edit.h \
     editor.h \
     verilog.h \
@@ -70,7 +72,10 @@ HEADERS  += mainwindow.h \
     welcome.h \
     iopads.h \
     dependencies.h \
-    modules.h
+    modules.h \
+    projectstreemodel.h \
+    modulestreemodel.h \
+    moduleslistmodel.h
 
 FORMS    += mainwindow.ui \
     grid.ui \

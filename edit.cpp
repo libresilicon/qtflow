@@ -17,10 +17,15 @@ Edit::Edit(QWidget *parent) :
     ui(new Ui::Edit),
     session(Session::Instance()),
     opened(new QList<IEditor *>),
-    filesystem(new QFileSystemModel)
+    filesystem(new QFileSystemModel),
+    projects(new ProjectsTreeModel(this)),
+    modules(new ModulesTreeModel)
 {
     ui->setupUi(this);
     ui->filesView->setModel(filesystem);
+    ui->projectsView->setModel(projects);
+    ui->modulesView->setModel(modules);
+
     for (int i = 1; i < filesystem->columnCount(); ++i)
         ui->filesView->hideColumn(i);
     loadProject(session.getProject());
@@ -39,12 +44,16 @@ Edit::~Edit()
     delete ui;
     delete opened;
     delete filesystem;
+    delete projects;
+    delete modules;
 }
 
-void Edit::loadProject(QString path)
+void Edit::loadProject(const QString &dir)
 {
-    filesystem->setRootPath(path);
-    ui->filesView->setRootIndex(filesystem->index(path));
+    filesystem->setRootPath(dir);
+    ui->filesView->setRootIndex(filesystem->index(dir));
+
+    projects->addDirectory(dir);
 }
 
 void Edit::loadFile(QString path)
@@ -136,4 +145,9 @@ void Edit::on_tabbedEditor_tabCloseRequested(int index)
         ui->tabbedEditor->removeTab(index);
         opened->removeAt(index);
     }
+}
+
+void Edit::on_treeSelection_currentIndexChanged(int index)
+{
+    ui->tabbedTree->setCurrentIndex(index);
 }
