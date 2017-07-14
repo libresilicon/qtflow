@@ -44,6 +44,8 @@ private slots:
 
     void on_projectsView_doubleClicked(const QModelIndex &index);
 
+    void on_modulesView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::Edit *ui;
 

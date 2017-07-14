@@ -25,6 +25,8 @@ Edit::Edit(QWidget *parent) :
     ui->filesView->setModel(filesystem);
     ui->projectsView->setModel(projects);
     ui->modulesView->setModel(modules);
+    ui->tabbedTree->setCurrentIndex(1);
+    ui->treeSelection->setCurrentIndex(1);
 
     for (int i = 1; i < filesystem->columnCount(); ++i)
         ui->filesView->hideColumn(i);
@@ -53,7 +55,8 @@ void Edit::loadProject(const QString &dir)
     filesystem->setRootPath(dir);
     ui->filesView->setRootIndex(filesystem->index(dir));
 
-    projects->setDirectory(dir);
+    projects->setRootPath(dir);
+    modules->setRootPath(dir);
 }
 
 void Edit::loadFile(QString path)
@@ -155,6 +158,13 @@ void Edit::on_treeSelection_currentIndexChanged(int index)
 void Edit::on_projectsView_doubleClicked(const QModelIndex &index)
 {
     QString path = projects->filePath(index);
+    if (path != QString())
+        loadFile(path);
+}
+
+void Edit::on_modulesView_doubleClicked(const QModelIndex &index)
+{
+    QString path = modules->filePath(index);
     if (path != QString())
         loadFile(path);
 }

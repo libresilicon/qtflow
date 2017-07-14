@@ -95,6 +95,7 @@ void MainWindow::on_openProject_triggered()
 
     session.setProject(path);
     session.getApp()->enableProject();
+    ui->tabWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_saveFile_triggered()
@@ -208,6 +209,11 @@ void MainWindow::on_menuOptions_triggered()
     qtflowEnvironment->show();
 }
 
+void MainWindow::on_toolRefresh_triggered()
+{
+    enableProject();
+}
+
 void MainWindow::on_mainWelcome_clicked()
 {
     ui->tabWidget->show();
@@ -270,8 +276,8 @@ void MainWindow::enableProject()
     ui->menuPlacement->setDisabled(false);
     ui->menuRouting->setDisabled(false);
     ui->menuModules->setDisabled(false);
+    ui->toolRefresh->setDisabled(false);
     ui->mainEdit->setDisabled(false);
-    ui->tabWidget->setCurrentIndex(1);
 }
 
 void MainWindow::disableProject()
@@ -286,6 +292,7 @@ void MainWindow::disableProject()
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);
     ui->menuModules->setDisabled(true);
+    ui->toolRefresh->setDisabled(true);
     ui->mainEdit->setDisabled(true);
     ui->mainTiming->setDisabled(true);
     ui->mainDesign->setDisabled(true);

@@ -299,6 +299,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="toolRefresh"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="openMagicFile">
@@ -416,6 +417,14 @@
    </property>
    <property name="text">
     <string>Modules...</string>
+   </property>
+  </action>
+  <action name="toolRefresh">
+   <property name="text">
+    <string>R</string>
+   </property>
+   <property name="toolTip">
+    <string>Refresh</string>
    </property>
   </action>
  </widget>

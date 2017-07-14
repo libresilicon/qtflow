@@ -122,7 +122,7 @@ ProjectsTreeModel::~ProjectsTreeModel()
     delete watcher;
 }
 
-void ProjectsTreeModel::setDirectory(const QString &path)
+void ProjectsTreeModel::setRootPath(const QString &path)
 {
     if (!QDir(path).exists())
         return;
@@ -290,8 +290,8 @@ Qt::ItemFlags ProjectsTreeModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index);
 }
 
-void ProjectsTreeModel::onChange(const QString &path)
+void ProjectsTreeModel::onChange(const QString&)
 {
     Session &s = Session::Instance();
-    setDirectory(s.getProject());
+    setRootPath(s.getProject());
 }

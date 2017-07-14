@@ -43,7 +43,7 @@ public:
     explicit ProjectsTreeModel(QObject *parent = 0);
     ~ProjectsTreeModel();
 
-    void setDirectory(const QString &path);
+    void setRootPath(const QString &path);
     QString filePath(const QModelIndex &index);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;

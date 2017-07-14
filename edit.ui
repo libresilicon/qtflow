@@ -48,6 +48,9 @@
      </property>
      <item>
       <widget class="QComboBox" name="treeSelection">
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
        <property name="frame">
         <bool>true</bool>
        </property>
@@ -72,6 +75,9 @@
       <widget class="QTabWidget" name="tabbedTree">
        <property name="styleSheet">
         <string notr="true">QTabBar::tab { height: 0px;  }</string>
+       </property>
+       <property name="currentIndex">
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tabFilesystem">
         <attribute name="title">

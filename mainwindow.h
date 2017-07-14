@@ -70,6 +70,8 @@ private slots:
 
     void on_tcshErrors_clicked();
 
+    void on_toolRefresh_triggered();
+
 private:
     Ui::MainWindow *ui;
     IProject *project;
