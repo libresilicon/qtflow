@@ -1,5 +1,7 @@
 #include "projectstreemodel.h"
 
+#include "session.h"
+
 #include <QFile>
 #include <QStack>
 #include <QSet>
@@ -120,10 +122,18 @@ ProjectsTreeModel::~ProjectsTreeModel()
     delete watcher;
 }
 
-void ProjectsTreeModel::addDirectory(const QString &path)
+void ProjectsTreeModel::setDirectory(const QString &path)
 {
     if (!QDir(path).exists())
         return;
+
+    delete watcher;
+    watcher = new QFileSystemWatcher(this);
+    watcher->addPath(path);
+    connect(watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(onChange(const QString&)));
+    connect(watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(onChange(const QString&)));
+
+    removeRows(0, sourceItem->childCount(), createIndex(0, 0, sourceItem));
 
     QStack<QFileInfo> roots;
     QMap<QString, QVector<QFileInfo>> children;
@@ -131,7 +141,6 @@ void ProjectsTreeModel::addDirectory(const QString &path)
     while (it.hasNext())
     {
         QFileInfo file(it.next());
-
         watcher->addPath(file.absoluteFilePath());
 
         if (file.completeSuffix() == file.suffix())
@@ -165,8 +174,9 @@ void ProjectsTreeModel::addDirectory(const QString &path)
             foreach (const QFileInfo &child, children[file.baseName()])
             {
                 current->insertChildren(current->childCount(), 1, current->columnCount());
-                current->child(current->childCount() - 1)->setData(0, child.fileName());
-                current->child(current->childCount() - 1)->setFileData(child);
+                ProjectsItem *sub_current = current->child(current->childCount() - 1);
+                sub_current->setData(0, child.fileName());
+                sub_current->setFileData(child);
             }
         }
     }
@@ -223,6 +233,23 @@ QModelIndex ProjectsTreeModel::parent(const QModelIndex &index) const
     return createIndex(parentItem->row(), 0, parentItem);
 }
 
+
+bool ProjectsTreeModel::removeRows(int position, int rows, const QModelIndex &parent)
+{
+    ProjectsItem *parentItem;
+    if (!parent.isValid())
+        parentItem = rootItem;
+    else
+        parentItem = static_cast<ProjectsItem*>(parent.internalPointer());
+
+    bool success = true;
+    beginRemoveRows(parent, position, position + rows - 1);
+    success = parentItem->removeChildren(position, rows);
+    endRemoveRows();
+
+    return success;
+}
+
 int ProjectsTreeModel::rowCount(const QModelIndex &parent) const
 {
     ProjectsItem *parentItem;
@@ -263,3 +290,8 @@ Qt::ItemFlags ProjectsTreeModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index);
 }
 
+void ProjectsTreeModel::onChange(const QString &path)
+{
+    Session &s = Session::Instance();
+    setDirectory(s.getProject());
+}

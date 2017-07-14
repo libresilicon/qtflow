@@ -53,7 +53,7 @@ void Edit::loadProject(const QString &dir)
     filesystem->setRootPath(dir);
     ui->filesView->setRootIndex(filesystem->index(dir));
 
-    projects->addDirectory(dir);
+    projects->setDirectory(dir);
 }
 
 void Edit::loadFile(QString path)

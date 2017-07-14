@@ -43,7 +43,7 @@ public:
     explicit ProjectsTreeModel(QObject *parent = 0);
     ~ProjectsTreeModel();
 
-    void addDirectory(const QString &path);
+    void setDirectory(const QString &path);
     QString filePath(const QModelIndex &index);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -51,11 +51,16 @@ public:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
 
+    bool removeRows(int position, int rows, const QModelIndex &parent);
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
+
+public slots:
+    void onChange(const QString&);
 
 private:
     ProjectsItem *rootItem;
