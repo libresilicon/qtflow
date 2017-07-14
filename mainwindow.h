@@ -9,6 +9,7 @@
 #include "environment.h"
 #include "dependencies.h"
 #include "modules.h"
+#include "new.h"
 #include "iopads.h"
 #include "welcome.h"
 
@@ -72,12 +73,15 @@ private slots:
 
     void on_toolRefresh_triggered();
 
+    void on_newFile_triggered();
+
 private:
     Ui::MainWindow *ui;
     IProject *project;
     IDependencies *dependencies;
     QErrorMessage *errorMessage;
     QProcess *tcsh;
+    New *createWidget;
     Welcome *welcomeWidget;
     Edit *editWidget;
     Environment *buildEnvironment;

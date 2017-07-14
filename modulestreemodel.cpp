@@ -273,5 +273,5 @@ Qt::ItemFlags ModulesTreeModel::flags(const QModelIndex &index) const
 void ModulesTreeModel::onChange(const QString&)
 {
     Session &s = Session::Instance();
-    setRootPath(s.getProject());
+    setRootPath(s.project());
 }

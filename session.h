@@ -16,11 +16,11 @@ public:
     }
 
     void setProject(QString);
-    QString getProject();
+    QString project();
     bool isProjectActive();
 
     void setFile(QString);
-    QString getFile();
+    QString file();
     bool isFileActive();
 
     void setApp(App*);

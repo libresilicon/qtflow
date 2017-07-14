@@ -252,9 +252,11 @@
     <addaction name="newProject"/>
     <addaction name="openProject"/>
     <addaction name="separator"/>
+    <addaction name="newFile"/>
+    <addaction name="saveFile"/>
+    <addaction name="separator"/>
     <addaction name="openMagicFile"/>
     <addaction name="separator"/>
-    <addaction name="saveFile"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
@@ -425,6 +427,14 @@
    </property>
    <property name="toolTip">
     <string>Refresh</string>
+   </property>
+  </action>
+  <action name="newFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>New File...</string>
    </property>
   </action>
  </widget>

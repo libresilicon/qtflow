@@ -5,6 +5,7 @@
 #include "editor.h"
 #include "projectstreemodel.h"
 #include "modulestreemodel.h"
+#include "new.h"
 
 #include <QWidget>
 #include <QFileSystemModel>
@@ -29,9 +30,15 @@ public:
 
 public slots:
     void saveAndExit(int);
-    void onCustomContextMenu(const QPoint&);
+
+    void onFilesContextMenu(const QPoint&);
     void onOpenTcsh(bool);
     void onTcshError(QProcess::ProcessError);
+
+    void onProjectsContextMenu(const QPoint&);
+    void onCreateTestbench(bool);
+
+    void onLoadFile(QFileInfo&);
 
 private slots:
     void on_filesView_doubleClicked(const QModelIndex &index);
@@ -48,6 +55,7 @@ private slots:
 
 private:
     Ui::Edit *ui;
+    New *createWidget;
 
     Session &session;
 
@@ -55,8 +63,12 @@ private:
     QFileSystemModel *filesystem;
     ProjectsTreeModel *projects;
     ModulesTreeModel *modules;
+
     QMenu *filesContext;
     QAction *openTcsh;
+
+    QMenu *projectsContext;
+    QAction *createTestbench;
 };
 
 #endif // MAINEDIT_H

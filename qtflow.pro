@@ -51,7 +51,8 @@ SOURCES += main.cpp\
     modules.cpp \
     projectstreemodel.cpp \
     modulestreemodel.cpp \
-    moduleslistmodel.cpp
+    moduleslistmodel.cpp \
+    new.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -75,7 +76,8 @@ HEADERS  += mainwindow.h \
     modules.h \
     projectstreemodel.h \
     modulestreemodel.h \
-    moduleslistmodel.h
+    moduleslistmodel.h \
+    new.h
 
 FORMS    += mainwindow.ui \
     grid.ui \
@@ -85,7 +87,8 @@ FORMS    += mainwindow.ui \
     savechanges.ui \
     welcome.ui \
     iopads.ui \
-    modules.ui
+    modules.ui \
+    new.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

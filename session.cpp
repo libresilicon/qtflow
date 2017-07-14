@@ -6,7 +6,7 @@ void Session::setProject(QString path)
     projectActive = true;
 }
 
-QString Session::getProject()
+QString Session::project()
 {
     return projectPath;
 }
@@ -22,7 +22,7 @@ void Session::setFile(QString path)
     fileActive = true;
 }
 
-QString Session::getFile()
+QString Session::file()
 {
     return filePath;
 }

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent) :
     dependencies(new Dependencies),
     errorMessage(new QErrorMessage),
     tcsh(new QProcess),
+    createWidget(new New),
     welcomeWidget(new Welcome),
     editWidget(new Edit),
     buildEnvironment(new Environment),
@@ -51,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
     connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 
+    connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
+
     if (!dependencies->tcsh())
         error("tcsh exectuable not found in PATH!");
 
@@ -64,6 +67,7 @@ MainWindow::~MainWindow()
     delete errorMessage;
     delete project;
     delete dependencies;
+    delete createWidget;
     delete welcomeWidget;
     delete editWidget;
     delete buildEnvironment;
@@ -98,9 +102,15 @@ void MainWindow::on_openProject_triggered()
     ui->tabWidget->setCurrentIndex(1);
 }
 
+void MainWindow::on_newFile_triggered()
+{
+    createWidget->suggest(Verilog, "new");
+    createWidget->show();
+}
+
 void MainWindow::on_saveFile_triggered()
 {
-    editWidget->saveFile(session.getFile());
+    editWidget->saveFile(session.file());
 }
 
 void MainWindow::on_openMagicFile_triggered()
@@ -135,7 +145,7 @@ void MainWindow::on_buildAll_triggered()
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);
     ui->buildAll->setDisabled(true);
-    QString path = session.getProject();
+    QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
     project->buildAll(tcsh, env.value(DEFAULT_VERILOG));
@@ -143,7 +153,7 @@ void MainWindow::on_buildAll_triggered()
 
 void MainWindow::on_buildEnvironment_triggered()
 {
-    buildEnvironment->set(new QflowEnvironment(this, session.getProject()));
+    buildEnvironment->set(new QflowEnvironment(this, session.project()));
     buildEnvironment->show();
 }
 
@@ -156,7 +166,7 @@ void MainWindow::on_menuSynthesis_triggered()
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);
     ui->buildAll->setDisabled(true);
-    QString path = session.getProject();
+    QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
     project->synthesis(tcsh, env.value(DEFAULT_VERILOG));
@@ -171,7 +181,7 @@ void MainWindow::on_menuPlacement_triggered()
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);
     ui->buildAll->setDisabled(true);
-    QString path = session.getProject();
+    QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
     project->placement(tcsh, env.value(DEFAULT_VERILOG));
@@ -186,7 +196,7 @@ void MainWindow::on_menuRouting_triggered()
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);
     ui->buildAll->setDisabled(true);
-    QString path = session.getProject();
+    QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
     project->routing(tcsh, env.value(DEFAULT_VERILOG));
@@ -195,7 +205,7 @@ void MainWindow::on_menuRouting_triggered()
 void MainWindow::on_menuModules_triggered()
 {
     modules->show();
-    modules->refresh(session.getProject());
+    modules->refresh(session.project());
 }
 
 void MainWindow::on_menuIOPads_triggered()
@@ -266,9 +276,10 @@ void MainWindow::exitTcsh(int code)
 
 void MainWindow::enableProject()
 {
-    editWidget->loadProject(session.getProject());
+    editWidget->loadProject(session.project());
     ui->tabWidget->show();
 
+    ui->newFile->setDisabled(false);
     ui->buildAll->setDisabled(false);
     ui->buildSteps->setDisabled(false);
     ui->buildEnvironment->setDisabled(false);
@@ -285,6 +296,7 @@ void MainWindow::disableProject()
     ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->show();
 
+    ui->newFile->setDisabled(true);
     ui->buildAll->setDisabled(true);
     ui->buildSteps->setDisabled(true);
     ui->buildEnvironment->setDisabled(true);

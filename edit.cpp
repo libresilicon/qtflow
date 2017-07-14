@@ -15,6 +15,7 @@
 Edit::Edit(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Edit),
+    createWidget(new New),
     session(Session::Instance()),
     opened(new QList<IEditor *>),
     filesystem(new QFileSystemModel),
@@ -30,20 +31,31 @@ Edit::Edit(QWidget *parent) :
 
     for (int i = 1; i < filesystem->columnCount(); ++i)
         ui->filesView->hideColumn(i);
-    loadProject(session.getProject());
+    loadProject(session.project());
+
+    connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), this, SLOT(onLoadFile(QFileInfo&)));
 
     ui->filesView->setContextMenuPolicy(Qt::CustomContextMenu);
     filesContext = new QMenu(ui->filesView);
-    connect(ui->filesView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onCustomContextMenu(const QPoint&)));
+    connect(ui->filesView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onFilesContextMenu(const QPoint&)));
 
     openTcsh = new QAction("Open tcsh here...", filesContext);
     filesContext->addAction(openTcsh);
     connect(openTcsh, SIGNAL(triggered(bool)), this, SLOT(onOpenTcsh(bool)));
+
+    ui->projectsView->setContextMenuPolicy(Qt::CustomContextMenu);
+    projectsContext = new QMenu(ui->projectsView);
+    connect(ui->projectsView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onProjectsContextMenu(const QPoint&)));
+
+    createTestbench = new QAction("Add Testbench...", projectsContext);
+    projectsContext->addAction(createTestbench);
+    connect(createTestbench, SIGNAL(triggered(bool)), this, SLOT(onCreateTestbench(bool)));
 }
 
 Edit::~Edit()
 {
     delete ui;
+    delete createWidget;
     delete opened;
     delete filesystem;
     delete projects;
@@ -98,11 +110,20 @@ void Edit::saveAndExit(int index)
     opened->removeAt(index);
 }
 
-void Edit::onCustomContextMenu(const QPoint &point)
+void Edit::onFilesContextMenu(const QPoint &point)
 {
     QModelIndex index = ui->filesView->indexAt(point);
     if (index.isValid())
         filesContext->exec(ui->filesView->mapToGlobal(point));
+}
+
+void Edit::onProjectsContextMenu(const QPoint &point)
+{
+    QModelIndex index = ui->projectsView->indexAt(point);
+    if (!index.isValid())
+        return;
+    projectsContext->setDisabled(projects->filePath(index) == QString());
+    projectsContext->exec(ui->filesView->mapToGlobal(point));
 }
 
 void Edit::onOpenTcsh(bool)
@@ -113,6 +134,18 @@ void Edit::onOpenTcsh(bool)
     connect(exec, SIGNAL(errorOccurred(QProcess::ProcessError)), this, SLOT(onTcshError(QProcess::ProcessError)));
     exec->setWorkingDirectory(info.absoluteDir().absolutePath());
     exec->start(settings.value("terminal") + " tcsh");
+}
+
+void Edit::onCreateTestbench(bool)
+{
+    QFileInfo info(projects->filePath(ui->projectsView->currentIndex()));
+    createWidget->suggest(VerilogTestbench, info.baseName());
+    createWidget->show();
+}
+
+void Edit::onLoadFile(QFileInfo &info)
+{
+    loadFile(info.absoluteFilePath());
 }
 
 void Edit::onTcshError(QProcess::ProcessError)
