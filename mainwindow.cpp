@@ -148,13 +148,29 @@ void MainWindow::on_buildAll_triggered()
     QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
-    project->buildAll(tcsh, env.value(DEFAULT_VERILOG));
+    project->buildAll(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_buildEnvironment_triggered()
 {
     buildEnvironment->set(new QflowEnvironment(this, session.project()));
     buildEnvironment->show();
+}
+
+
+void MainWindow::on_buildVcd_triggered()
+{
+    if (tcsh->state() == QProcess::Running)
+        return;
+
+    ui->menuSynthesis->setDisabled(true);
+    ui->menuPlacement->setDisabled(true);
+    ui->menuRouting->setDisabled(true);
+    ui->buildAll->setDisabled(true);
+    QString path = session.project();
+    QflowSettings env(path);
+    tcsh->setWorkingDirectory(path);
+    project->valuedump(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuSynthesis_triggered()
@@ -169,7 +185,7 @@ void MainWindow::on_menuSynthesis_triggered()
     QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
-    project->synthesis(tcsh, env.value(DEFAULT_VERILOG));
+    project->synthesis(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuPlacement_triggered()
@@ -184,7 +200,7 @@ void MainWindow::on_menuPlacement_triggered()
     QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
-    project->placement(tcsh, env.value(DEFAULT_VERILOG));
+    project->placement(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuRouting_triggered()
@@ -199,7 +215,7 @@ void MainWindow::on_menuRouting_triggered()
     QString path = session.project();
     QflowSettings env(path);
     tcsh->setWorkingDirectory(path);
-    project->routing(tcsh, env.value(DEFAULT_VERILOG));
+    project->routing(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuModules_triggered()
@@ -283,6 +299,7 @@ void MainWindow::enableProject()
     ui->buildAll->setDisabled(false);
     ui->buildSteps->setDisabled(false);
     ui->buildEnvironment->setDisabled(false);
+    ui->buildVcd->setDisabled(false);
     ui->menuSynthesis->setDisabled(false);
     ui->menuPlacement->setDisabled(false);
     ui->menuRouting->setDisabled(false);
@@ -300,6 +317,7 @@ void MainWindow::disableProject()
     ui->buildAll->setDisabled(true);
     ui->buildSteps->setDisabled(true);
     ui->buildEnvironment->setDisabled(true);
+    ui->buildVcd->setDisabled(true);
     ui->menuSynthesis->setDisabled(true);
     ui->menuPlacement->setDisabled(true);
     ui->menuRouting->setDisabled(true);

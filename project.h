@@ -13,12 +13,13 @@ class IProject
 public:
     IProject() {}
     virtual ~IProject() {}
-    virtual void create(QString) {}
-    virtual void synthesis(QProcess* = new QProcess, QString = DEFAULT_VERILOG) {}
-    virtual void timing(QProcess* = new QProcess, QString = DEFAULT_VERILOG) {}
-    virtual void placement(QProcess* = new QProcess, QString = DEFAULT_VERILOG) {}
-    virtual void routing(QProcess* = new QProcess, QString = DEFAULT_VERILOG) {}
-    virtual void buildAll(QProcess* = new QProcess, QString = DEFAULT_VERILOG) {}
+    virtual bool create(QString) { return false; }
+    virtual bool valuedump(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
+    virtual bool synthesis(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
+    virtual bool timing(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
+    virtual bool placement(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
+    virtual bool routing(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
+    virtual bool buildAll(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
 };
 
 class Qflow : public IProject
@@ -26,12 +27,13 @@ class Qflow : public IProject
 public:
     Qflow();
     ~Qflow();
-    void create(QString);
-    void synthesis(QProcess* = new QProcess, QString ident = DEFAULT_VERILOG);
-    void timing(QProcess* = new QProcess, QString = DEFAULT_VERILOG);
-    void placement(QProcess* = new QProcess, QString = DEFAULT_VERILOG);
-    void routing(QProcess* = new QProcess, QString = DEFAULT_VERILOG);
-    void buildAll(QProcess* = new QProcess, QString = DEFAULT_VERILOG);
+    bool create(QString);
+    bool valuedump(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
+    bool synthesis(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
+    bool timing(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
+    bool placement(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
+    bool routing(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
+    bool buildAll(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
 private:
     ISettings *settings;
 

@@ -276,6 +276,7 @@
     <addaction name="menuPlacement"/>
     <addaction name="menuRouting"/>
     <addaction name="separator"/>
+    <addaction name="buildVcd"/>
     <addaction name="buildAll"/>
    </widget>
    <widget class="QMenu" name="menuTools">
@@ -435,6 +436,14 @@
    </property>
    <property name="text">
     <string>New File...</string>
+   </property>
+  </action>
+  <action name="buildVcd">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Build VCD</string>
    </property>
   </action>
  </widget>

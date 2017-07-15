@@ -15,7 +15,7 @@ ModulesListModel::ModulesListModel(QObject *parent, ISettings* settings) :
     if (path == QString())
         return;
 
-    QRegExp rx("^\\s*module ([a-zA-Z0-9]+)");
+    QRegExp rx("^\\s*module ([a-zA-Z0-9_]+)");
     QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {

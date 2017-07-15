@@ -23,7 +23,7 @@ Qflow::~Qflow()
     delete settings;
 }
 
-void Qflow::create(QString path)
+bool Qflow::create(QString path)
 {
     QDir dir(path);
     dir.mkdir("source");
@@ -86,9 +86,31 @@ void Qflow::create(QString path)
         qflow_vars.close();
         qflow_vars.setPermissions(executable);
     }
+
+    return true;
 }
 
-void Qflow::synthesis(QProcess *exec, QString ident)
+bool Qflow::valuedump(QString ident, QProcess *exec)
+{
+    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
+    if (file.open(QFile::ReadWrite | QFile::Truncate))
+    {
+        QTextStream stream(&file);
+        stream
+                << TCSH_SHEBANG << endl
+                << "source qflow_vars.sh" << endl
+                << "iverilog -o dsn $sourcedir/" + ident + ".tb.v $sourcedir/" << ident << ".v" << endl
+                << "vvp dsn" << endl
+                << endl;
+        file.close();
+        file.setPermissions(executable);
+    }
+    exec->start(QFLOW_EXEC);
+
+    return true;
+}
+
+bool Qflow::synthesis(QString ident, QProcess *exec)
 {
     QString qflowprefix = settings->value("qflowprefix");
     QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
@@ -106,9 +128,11 @@ void Qflow::synthesis(QProcess *exec, QString ident)
         file.setPermissions(executable);
     }
     exec->start(QFLOW_EXEC);
+
+    return true;
 }
 
-void Qflow::timing(QProcess *exec, QString ident)
+bool Qflow::timing(QString ident, QProcess *exec)
 {
     QString qflowprefix = settings->value("qflowprefix");
     QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
@@ -126,9 +150,11 @@ void Qflow::timing(QProcess *exec, QString ident)
         file.setPermissions(executable);
     }
     exec->start(QFLOW_EXEC);
+
+    return true;
 }
 
-void Qflow::placement(QProcess *exec, QString ident)
+bool Qflow::placement(QString ident, QProcess *exec)
 {
     QString qflowprefix = settings->value("qflowprefix");
     QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
@@ -146,9 +172,11 @@ void Qflow::placement(QProcess *exec, QString ident)
         file.setPermissions(executable);
     }
     exec->start(QFLOW_EXEC);
+
+    return true;
 }
 
-void Qflow::routing(QProcess *exec, QString ident)
+bool Qflow::routing(QString ident, QProcess *exec)
 {
     QString qflowprefix = settings->value("qflowprefix");
     QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
@@ -166,9 +194,11 @@ void Qflow::routing(QProcess *exec, QString ident)
         file.setPermissions(executable);
     }
     exec->start(QFLOW_EXEC);
+
+    return true;
 }
 
-void Qflow::buildAll(QProcess *exec, QString ident)
+bool Qflow::buildAll(QString ident, QProcess *exec)
 {
     QString qflowprefix = settings->value("qflowprefix");
     QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
@@ -198,4 +228,6 @@ void Qflow::buildAll(QProcess *exec, QString ident)
         file.setPermissions(executable);
     }
     exec->start(QFLOW_EXEC);
+
+    return true;
 }

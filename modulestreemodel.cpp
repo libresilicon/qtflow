@@ -132,7 +132,7 @@ void ModulesTreeModel::setRootPath(const QString &path)
 
     removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
 
-    QRegExp rx("^\\s*module ([a-zA-Z0-9]+)");
+    QRegExp rx("^\\s*module ([a-zA-Z0-9_]+)");
     QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext())
     {

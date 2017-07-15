@@ -75,6 +75,8 @@ private slots:
 
     void on_newFile_triggered();
 
+    void on_buildVcd_triggered();
+
 private:
     Ui::MainWindow *ui;
     IProject *project;
