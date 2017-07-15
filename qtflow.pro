@@ -56,7 +56,8 @@ SOURCES += main.cpp\
     moduleslistmodel.cpp \
     new.cpp \
     vcdparser.cpp \
-    wave.cpp
+    wave.cpp \
+    vcdtreemodel.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -83,7 +84,8 @@ HEADERS  += mainwindow.h \
     moduleslistmodel.h \
     new.h \
     vcdparser.h \
-    wave.h
+    wave.h \
+    vcdtreemodel.h
 
 FORMS    += mainwindow.ui \
     grid.ui \

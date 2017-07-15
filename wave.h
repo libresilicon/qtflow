@@ -1,6 +1,8 @@
 #ifndef WAVE_H
 #define WAVE_H
 
+#include "vcdtreemodel.h"
+
 #include <QWidget>
 
 namespace Ui {
@@ -19,6 +21,7 @@ public:
 
 private:
     Ui::Wave *ui;
+    VcdTreeModel *tree;
 };
 
 #endif // WAVE_H

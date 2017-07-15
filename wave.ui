@@ -6,13 +6,39 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>454</height>
+    <width>1000</width>
+    <height>527</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1,3">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTreeView" name="treeView"/>
+   </item>
+   <item>
+    <widget class="QListView" name="listView"/>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="graphicsView"/>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
