@@ -23,9 +23,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 FLEXSOURCES = lexmagic.l \
-    lexsettings.l
+    lexsettings.l \
+    lexvcd.l
 BISONSOURCES = yymagic.y \
-    yysettings.y
+    yysettings.y \
+    yyvcd.y
 
 OTHER_FILES +=  \
     $$FLEXSOURCES \
@@ -52,7 +54,9 @@ SOURCES += main.cpp\
     projectstreemodel.cpp \
     modulestreemodel.cpp \
     moduleslistmodel.cpp \
-    new.cpp
+    new.cpp \
+    vcdparser.cpp \
+    wave.cpp
 
 HEADERS  += mainwindow.h \
     magicparser.h \
@@ -77,7 +81,9 @@ HEADERS  += mainwindow.h \
     projectstreemodel.h \
     modulestreemodel.h \
     moduleslistmodel.h \
-    new.h
+    new.h \
+    vcdparser.h \
+    wave.h
 
 FORMS    += mainwindow.ui \
     grid.ui \
@@ -88,7 +94,8 @@ FORMS    += mainwindow.ui \
     welcome.ui \
     iopads.ui \
     modules.ui \
-    new.ui
+    new.ui \
+    wave.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

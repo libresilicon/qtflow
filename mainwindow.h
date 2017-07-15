@@ -11,6 +11,7 @@
 #include "modules.h"
 #include "new.h"
 #include "iopads.h"
+#include "wave.h"
 #include "welcome.h"
 
 #include <QMainWindow>
@@ -77,6 +78,8 @@ private slots:
 
     void on_buildVcd_triggered();
 
+    void on_mainTiming_clicked();
+
 private:
     Ui::MainWindow *ui;
     IProject *project;
@@ -86,6 +89,7 @@ private:
     New *createWidget;
     Welcome *welcomeWidget;
     Edit *editWidget;
+    Wave *timingWidget;
     Environment *buildEnvironment;
     Environment *qtflowEnvironment;
     IOPads *iopads;

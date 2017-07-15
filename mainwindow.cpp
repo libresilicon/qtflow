@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createWidget(new New),
     welcomeWidget(new Welcome),
     editWidget(new Edit),
+    timingWidget(new Wave),
     buildEnvironment(new Environment),
     qtflowEnvironment(new Environment),
     iopads(new IOPads),
@@ -46,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->tabBar()->hide();
     ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
     ui->tabWidget->insertTab(1, editWidget, "Edit");
-    ui->tabWidget->insertTab(2, new QWidget, "Timing");
+    ui->tabWidget->insertTab(2, timingWidget, "Timing");
     ui->tabWidget->insertTab(3, new QWidget, "Design");
     connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
     connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
@@ -70,6 +71,7 @@ MainWindow::~MainWindow()
     delete createWidget;
     delete welcomeWidget;
     delete editWidget;
+    delete timingWidget;
     delete buildEnvironment;
     delete qtflowEnvironment;
     delete iopads;
@@ -252,13 +254,20 @@ void MainWindow::on_mainEdit_clicked()
     ui->tabWidget->setCurrentIndex(1);
 }
 
+void MainWindow::on_mainTiming_clicked()
+{
+    QflowSettings qflow(session.project());
+    timingWidget->loadVcd(session.project() + "/" + qflow.value(DEFAULT_VERILOG) + ".vcd");
+    ui->tabWidget->show();
+    ui->tabWidget->setCurrentIndex(2);
+}
+
 void MainWindow::on_tcshExpand_clicked()
 {
     ui->tabWidget->hide();
     ui->consoleOut->show();
     ui->consoleError->hide();
 }
-
 
 void MainWindow::on_tcshErrors_clicked()
 {
@@ -306,6 +315,7 @@ void MainWindow::enableProject()
     ui->menuModules->setDisabled(false);
     ui->toolRefresh->setDisabled(false);
     ui->mainEdit->setDisabled(false);
+    ui->mainTiming->setDisabled(false);
 }
 
 void MainWindow::disableProject()
