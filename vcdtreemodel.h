@@ -24,10 +24,13 @@ public:
     bool removeColumns(int position, int columns);
     int childNumber() const;
     bool setData(int column, const QVariant &value);
+    bool setEnum(int num);
+    int getEnum() const;
 
 private:
     QList<VcdItem*> childItems;
     QVector<QVariant> itemData;
+    int itemEnum;
     VcdItem *parent;
 };
 
@@ -55,7 +58,11 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int getEnum(const QModelIndex &index) const;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
+
+    QStringList mimeTypes() const override;
+    QMimeData* mimeData(const QModelIndexList &indexes) const override;
 
 private:
     VcdItem *rootItem;

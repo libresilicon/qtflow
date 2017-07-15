@@ -183,17 +183,34 @@ index:
     ;
 
 value:
-    string
+    word spaces SPECIAL
     {
+        int key = QChar($3).unicode();
+        bool ok;
+        int value = 0;
+
         QString v;
-        vcd_change_t change;
         while (!vcdstring.isEmpty())
             v.prepend(vcdstring.pop());
-        change.first = timeIndex;
-        change.second.first = 0;
-        change.second.second = 0;
-        parsedVcd.changes.append(change);
+
+        if (v.at(0) == 'b')
+            value = v.trimmed().right(v.size() - 1).toInt(&ok, 2);
+        else
+            value = v.toInt(&ok, 10);
+
+        if (parsedVcd.changes.contains(key))
+            parsedVcd.changes[key] << QPair<int, int>(timeIndex, value);
+        else
+            parsedVcd.changes.insert(key, vcd_changes_t() << QPair<int, int>(timeIndex, value));
     }
+    ;
+
+word:
+    word ALPHANUM { vcdstring.push(QChar($2)); }
+    |
+    ALPHANUM { vcdstring.push(QChar($1)); }
+    |
+    %empty
     ;
 
 string:

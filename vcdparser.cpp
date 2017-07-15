@@ -43,7 +43,7 @@ VcdParser::VcdParser(QByteArray data)
                 << "Date:" << vcd.date << endl
                 << "Version:" << vcd.version << endl
                 << "Timescale:" << vcd.timescale << endl
-                << "Changes:" << vcd.changes.count() << endl;
+                << "Distinct signals:" << vcd.changes.count() << endl;
     }
 }
 

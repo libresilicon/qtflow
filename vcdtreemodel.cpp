@@ -5,11 +5,13 @@
 #include <QSet>
 #include <QDirIterator>
 #include <QTextStream>
+#include <QMimeData>
 
 VcdItem::VcdItem(const QVector<QVariant> &data, VcdItem *parentItem)
 {
     parent = parentItem;
     itemData = data;
+    itemEnum = 0;
 }
 
 VcdItem::~VcdItem()
@@ -57,6 +59,17 @@ bool VcdItem::setData(int column, const QVariant &value)
 
     itemData[column] = value;
     return true;
+}
+
+bool VcdItem::setEnum(int num)
+{
+    itemEnum = num;
+    return true;
+}
+
+int VcdItem::getEnum() const
+{
+    return itemEnum;
 }
 
 VcdItem *VcdItem::parentItem()
@@ -122,6 +135,7 @@ void VcdTreeModel::setScopes(vcd_scopes_t scopes, VcdItem *item)
     for (it = scopes.alias.constBegin(); it != scopes.alias.constEnd(); ++it)
     {
         current->insertChildren(current->childCount(), 1, current->columnCount());
+        current->child(current->childCount() - 1)->setEnum(it.key());
         current->child(current->childCount() - 1)->setData(0, it.value());
     }
 
@@ -226,10 +240,51 @@ QVariant VcdTreeModel::data(const QModelIndex &index, int role) const
     return item->data(index.column());
 }
 
+int VcdTreeModel::getEnum(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return 0;
+
+    VcdItem *item = static_cast<VcdItem*>(index.internalPointer());
+
+    return item->getEnum();
+}
+
 Qt::ItemFlags VcdTreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
 
-    return QAbstractItemModel::flags(index);
+    if (getEnum(index) == 0)
+        return QAbstractItemModel::flags(index);
+
+    return Qt::ItemIsDragEnabled | QAbstractItemModel::flags(index);
+}
+
+QStringList VcdTreeModel::mimeTypes() const
+{
+    QStringList types;
+    types << "application/vnd.text.list";
+    return types;
+}
+
+QMimeData *VcdTreeModel::mimeData(const QModelIndexList &is) const
+{
+    QMimeData *mimeData = new QMimeData();
+    QByteArray encodedData;
+
+    QDataStream stream(&encodedData, QIODevice::WriteOnly);
+
+    foreach (QModelIndex index, is)
+    {
+        if (index.isValid())
+        {
+            QString num = QString::number(getEnum(index));
+            QString text(num + "," + data(index, Qt::DisplayRole).toString());
+            stream << text;
+        }
+    }
+
+    mimeData->setData("application/vnd.text.list", encodedData);
+    return mimeData;
 }

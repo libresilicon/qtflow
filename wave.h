@@ -2,7 +2,9 @@
 #define WAVE_H
 
 #include "vcdtreemodel.h"
+#include "vcdlistmodel.h"
 
+#include <QGraphicsScene>
 #include <QWidget>
 
 namespace Ui {
@@ -22,6 +24,8 @@ public:
 private:
     Ui::Wave *ui;
     VcdTreeModel *tree;
+    VcdListModel *list;
+    QGraphicsScene *scene;
 };
 
 #endif // WAVE_H

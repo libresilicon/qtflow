@@ -25,7 +25,7 @@ struct vcd_scopes_t
     QList<vcd_scopes_t> scopes;
 };
 
-typedef QPair<int, QPair<int, int>> vcd_change_t;
+typedef QVector<QPair<int, int>> vcd_changes_t;
 
 struct vcd_t
 {
@@ -33,7 +33,7 @@ struct vcd_t
     QString version;
     int timescale;
     vcd_scopes_t scopes;
-    QList<vcd_change_t> changes;
+    QHash<int, vcd_changes_t> changes;
 };
 
 typedef struct ParserException {
