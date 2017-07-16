@@ -12,6 +12,8 @@ public:
     virtual void enableProject() {}
     virtual void disableProject() {}
 
+    virtual void enableTopModule() {}
+
     virtual void enableFile() {}
     virtual void disableFile() {}
 

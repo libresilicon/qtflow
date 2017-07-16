@@ -33,6 +33,8 @@ public:
     void enableProject();
     void disableProject();
 
+    void enableTopModule();
+
     void enableFile();
     void disableFile();
 

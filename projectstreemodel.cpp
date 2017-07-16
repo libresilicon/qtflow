@@ -1,6 +1,8 @@
 #include "projectstreemodel.h"
 
+#include "constants.h"
 #include "session.h"
+#include "settings.h"
 
 #include <QFile>
 #include <QStack>
@@ -134,6 +136,9 @@ void ProjectsTreeModel::setRootPath(const QString &path)
     connect(watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(onChange(const QString&)));
 
     removeRows(0, sourceItem->childCount(), createIndex(0, 0, sourceItem));
+
+    QflowSettings env(path);
+    setTopModule(env.value(DEFAULT_VERILOG));
 
     QStack<QFileInfo> roots;
     QMap<QString, QVector<QFileInfo>> children;
@@ -269,10 +274,29 @@ int ProjectsTreeModel::columnCount(const QModelIndex &parent) const
         return rootItem->columnCount();
 }
 
+bool ProjectsTreeModel::topModule(const QModelIndex &index) const
+{
+    return data(index, Qt::DisplayRole) == QVariant(top + ".v");
+}
+
+void ProjectsTreeModel::setTopModule(QString t)
+{
+    top = t;
+}
+
 QVariant ProjectsTreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+
+    if (role == Qt::FontRole)
+    {
+        QFont font;
+        if (!topModule(index))
+            return font;
+        font.setBold(true);
+        return font;
+    }
 
     if (role != Qt::DisplayRole)
         return QVariant();

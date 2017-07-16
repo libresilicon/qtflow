@@ -1,5 +1,7 @@
 #include "modulestreemodel.h"
 
+#include "constants.h"
+#include "settings.h"
 #include "session.h"
 
 #include <QFile>
@@ -123,6 +125,9 @@ void ModulesTreeModel::setRootPath(const QString &path)
 {
     if (!QDir(path).exists())
         return;
+
+    QflowSettings env(path);
+    setTopModule(env.value(DEFAULT_VERILOG));
 
     delete watcher;
     watcher = new QFileSystemWatcher(this);
@@ -249,10 +254,29 @@ int ModulesTreeModel::columnCount(const QModelIndex &parent) const
         return rootItem->columnCount();
 }
 
+bool ModulesTreeModel::topModule(const QModelIndex &index) const
+{
+    return data(index, Qt::DisplayRole) == QVariant(top);
+}
+
+void ModulesTreeModel::setTopModule(QString t)
+{
+    top = t;
+}
+
 QVariant ModulesTreeModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
+
+    if (role == Qt::FontRole)
+    {
+        QFont font;
+        if (!topModule(index))
+            return font;
+        font.setBold(true);
+        return font;
+    }
 
     if (role != Qt::DisplayRole)
         return QVariant();

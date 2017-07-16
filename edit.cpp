@@ -1,6 +1,7 @@
 #include "edit.h"
 #include "ui_edit.h"
 
+#include "constants.h"
 #include "editor.h"
 #include "savechanges.h"
 #include "settings.h"
@@ -47,9 +48,24 @@ Edit::Edit(QWidget *parent) :
     projectsContext = new QMenu(ui->projectsView);
     connect(ui->projectsView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onProjectsContextMenu(const QPoint&)));
 
+    setProjectsTopModule = new QAction("Set as Top Module", projectsContext);
+    projectsContext->addAction(setProjectsTopModule);
+    connect(setProjectsTopModule, SIGNAL(triggered(bool)), this, SLOT(onProjectsSetTopModule(bool)));
+    projectsContext->addSeparator();
     createTestbench = new QAction("Add Testbench...", projectsContext);
     projectsContext->addAction(createTestbench);
     connect(createTestbench, SIGNAL(triggered(bool)), this, SLOT(onCreateTestbench(bool)));
+    createVerilogModule = new QAction("Add Verilog Module...", projectsContext);
+    projectsContext->addAction(createVerilogModule);
+    connect(createVerilogModule, SIGNAL(triggered(bool)), this, SLOT(onCreateVerilogModule(bool)));
+
+    ui->modulesView->setContextMenuPolicy(Qt::CustomContextMenu);
+    modulesContext = new QMenu(ui->modulesView);
+    connect(ui->modulesView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onModulesContextMenu(const QPoint&)));
+
+    setModulesTopModule = new QAction("Set as Top Module", modulesContext);
+    modulesContext->addAction(setModulesTopModule);
+    connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(onModulesSetTopModule(bool)));
 }
 
 Edit::~Edit()
@@ -120,10 +136,25 @@ void Edit::onFilesContextMenu(const QPoint &point)
 void Edit::onProjectsContextMenu(const QPoint &point)
 {
     QModelIndex index = ui->projectsView->indexAt(point);
+
     if (!index.isValid())
         return;
-    projectsContext->setDisabled(projects->filePath(index) == QString());
-    projectsContext->exec(ui->filesView->mapToGlobal(point));
+
+    QFileInfo info(projects->filePath(index));
+    QFile tb(info.absoluteDir().absolutePath() + "/" + info.baseName() + ".tb.v");
+    setProjectsTopModule->setDisabled(projects->filePath(index) == QString() || projects->topModule(index) || info.completeSuffix() != info.suffix());
+    createTestbench->setDisabled(projects->filePath(index) == QString() || info.completeSuffix() != info.suffix() || tb.exists());
+    projectsContext->exec(ui->projectsView->mapToGlobal(point));
+}
+
+void Edit::onModulesContextMenu(const QPoint &point)
+{
+    QModelIndex index = ui->modulesView->indexAt(point);
+
+    if (!index.isValid())
+        return;
+    setModulesTopModule->setDisabled(modules->topModule(index));
+    modulesContext->exec(ui->modulesView->mapToGlobal(point));
 }
 
 void Edit::onOpenTcsh(bool)
@@ -136,10 +167,38 @@ void Edit::onOpenTcsh(bool)
     exec->start(settings.value("terminal") + " tcsh");
 }
 
+void Edit::onModulesSetTopModule(bool)
+{
+    QString index = modules->data(ui->modulesView->currentIndex()).toString();
+    QflowSettings env(session.project());
+    env.set(DEFAULT_VERILOG, index);
+    env.save();
+    projects->setTopModule(index);
+    modules->setTopModule(index);
+    session.getApp()->enableTopModule();
+}
+
+void Edit::onProjectsSetTopModule(bool)
+{
+    QFileInfo info(projects->filePath(ui->projectsView->currentIndex()));
+    QflowSettings env(session.project());
+    env.set(DEFAULT_VERILOG, info.baseName());
+    env.save();
+    projects->setTopModule(info.baseName());
+    modules->setTopModule(info.baseName());
+    session.getApp()->enableTopModule();
+}
+
 void Edit::onCreateTestbench(bool)
 {
     QFileInfo info(projects->filePath(ui->projectsView->currentIndex()));
     createWidget->suggest(VerilogTestbench, info.baseName());
+    createWidget->show();
+}
+
+void Edit::onCreateVerilogModule(bool)
+{
+    createWidget->suggest(Verilog, "new");
     createWidget->show();
 }
 

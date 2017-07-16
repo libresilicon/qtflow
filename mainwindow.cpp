@@ -256,8 +256,6 @@ void MainWindow::on_mainEdit_clicked()
 
 void MainWindow::on_mainTiming_clicked()
 {
-    QflowSettings qflow(session.project());
-    timingWidget->loadVcd(session.project() + "/" + qflow.value(DEFAULT_VERILOG) + ".vcd");
     ui->tabWidget->show();
     ui->tabWidget->setCurrentIndex(2);
 }
@@ -301,6 +299,7 @@ void MainWindow::exitTcsh(int code)
 
 void MainWindow::enableProject()
 {
+    enableTopModule();
     editWidget->loadProject(session.project());
     ui->tabWidget->show();
 
@@ -315,7 +314,6 @@ void MainWindow::enableProject()
     ui->menuModules->setDisabled(false);
     ui->toolRefresh->setDisabled(false);
     ui->mainEdit->setDisabled(false);
-    ui->mainTiming->setDisabled(false);
 }
 
 void MainWindow::disableProject()
@@ -334,9 +332,24 @@ void MainWindow::disableProject()
     ui->menuModules->setDisabled(true);
     ui->toolRefresh->setDisabled(true);
     ui->mainEdit->setDisabled(true);
-    ui->mainTiming->setDisabled(true);
     ui->mainDesign->setDisabled(true);
     ui->tabWidget->setCurrentIndex(0);
+}
+
+void MainWindow::enableTopModule()
+{
+    QflowSettings env(session.project());
+    QString path = env.value("sourcedir") + "/" + env.value(DEFAULT_VERILOG) + ".vcd";
+    QFile file(path);
+
+    if (!file.exists())
+    {
+        ui->mainTiming->setDisabled(true);
+        return;
+    }
+
+    timingWidget->loadVcd(path);
+    ui->mainTiming->setDisabled(false);
 }
 
 void MainWindow::enableFile()

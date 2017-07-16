@@ -36,7 +36,12 @@ public slots:
     void onTcshError(QProcess::ProcessError);
 
     void onProjectsContextMenu(const QPoint&);
+    void onProjectsSetTopModule(bool);
     void onCreateTestbench(bool);
+    void onCreateVerilogModule(bool);
+
+    void onModulesContextMenu(const QPoint&);
+    void onModulesSetTopModule(bool);
 
     void onLoadFile(QFileInfo&);
 
@@ -68,7 +73,12 @@ private:
     QAction *openTcsh;
 
     QMenu *projectsContext;
+    QAction *setProjectsTopModule;
     QAction *createTestbench;
+    QAction *createVerilogModule;
+
+    QMenu *modulesContext;
+    QAction *setModulesTopModule;
 };
 
 #endif // MAINEDIT_H
