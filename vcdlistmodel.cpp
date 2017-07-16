@@ -12,6 +12,11 @@ VcdListModel::~VcdListModel()
 {
 }
 
+void VcdListModel::reset()
+{
+    _signals.clear();
+}
+
 QList<int> VcdListModel::getSignals()
 {
     QList<int> result;

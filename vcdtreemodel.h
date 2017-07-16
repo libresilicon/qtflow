@@ -42,6 +42,8 @@ public:
     explicit VcdTreeModel(QObject *parent = 0);
     ~VcdTreeModel();
 
+    void reset();
+
     void setVcd(vcd_t);
     vcd_t& vcd();
 

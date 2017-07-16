@@ -43,6 +43,8 @@ public:
     explicit ProjectsTreeModel(QObject *parent = 0);
     ~ProjectsTreeModel();
 
+    void reset();
+
     void setRootPath(const QString &path);
     QString filePath(const QModelIndex &index);
 

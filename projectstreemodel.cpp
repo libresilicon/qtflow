@@ -124,6 +124,16 @@ ProjectsTreeModel::~ProjectsTreeModel()
     delete watcher;
 }
 
+void ProjectsTreeModel::reset()
+{
+    beginResetModel();
+    removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
+    rootItem->insertChildren(0, 1, rootItem->columnCount());
+    sourceItem = rootItem->child(0);
+    sourceItem->setData(0, "Sources");
+    endResetModel();
+}
+
 void ProjectsTreeModel::setRootPath(const QString &path)
 {
     if (!QDir(path).exists())
@@ -135,7 +145,7 @@ void ProjectsTreeModel::setRootPath(const QString &path)
     connect(watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(onChange(const QString&)));
     connect(watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(onChange(const QString&)));
 
-    removeRows(0, sourceItem->childCount(), createIndex(0, 0, sourceItem));
+    reset();
 
     QflowSettings env(path);
     setTopModule(env.value(DEFAULT_VERILOG));

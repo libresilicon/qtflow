@@ -66,6 +66,7 @@ void Modules::on_setTopModule_clicked()
     QflowSettings qflow(path);
     qflow.set(DEFAULT_VERILOG, top);
     qflow.save();
+    emit topModuleChanged();
     refresh();
 }
 

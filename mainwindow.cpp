@@ -55,6 +55,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
+    connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
+
     if (!dependencies->tcsh())
         error("tcsh exectuable not found in PATH!");
 
@@ -92,15 +94,18 @@ void MainWindow::on_openProject_triggered()
 {
     QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-    if (path == QString())
+    if (path == QString() || path == session.project())
         return;
 
     QFile project_vars(path + PROJECT_VARS);
     if (!project_vars.exists())
+    {
+        error("Could not find project files.");
         return;
+    }
 
     session.setProject(path);
-    session.getApp()->enableProject();
+    enableProject();
     ui->tabWidget->setCurrentIndex(1);
 }
 
@@ -295,6 +300,12 @@ void MainWindow::exitTcsh(int code)
     ui->menuPlacement->setDisabled(false);
     ui->menuRouting->setDisabled(false);
     ui->buildAll->setDisabled(false);
+    enableTopModule();
+}
+
+void MainWindow::onTopModuleChanged()
+{
+    enableTopModule();
 }
 
 void MainWindow::enableProject()

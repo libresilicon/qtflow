@@ -43,6 +43,8 @@ public:
     explicit ModulesTreeModel(QObject *parent = 0);
     ~ModulesTreeModel();
 
+    void reset();
+
     void setRootPath(const QString &path);
     QString filePath(const QModelIndex &index);
 

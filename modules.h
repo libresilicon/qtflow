@@ -23,6 +23,9 @@ public:
     void refresh();
     void refresh(QString);
 
+signals:
+    void topModuleChanged();
+
 private slots:
     void on_setTopModule_clicked();
 

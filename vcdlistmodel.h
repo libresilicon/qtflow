@@ -17,6 +17,7 @@ public:
     explicit VcdListModel(QObject *parent = 0);
     ~VcdListModel();
 
+    void reset();
     QList<int> getSignals();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

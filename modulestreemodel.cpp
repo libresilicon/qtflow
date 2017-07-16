@@ -121,6 +121,16 @@ ModulesTreeModel::~ModulesTreeModel()
     delete watcher;
 }
 
+void ModulesTreeModel::reset()
+{
+    beginResetModel();
+    removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
+    QVector<QVariant> rootData;
+    rootData << "Item";
+    rootItem = new ModulesItem(rootData);
+    endResetModel();
+}
+
 void ModulesTreeModel::setRootPath(const QString &path)
 {
     if (!QDir(path).exists())
@@ -135,7 +145,7 @@ void ModulesTreeModel::setRootPath(const QString &path)
     connect(watcher, SIGNAL(fileChanged(const QString&)), this, SLOT(onChange(const QString&)));
     connect(watcher, SIGNAL(directoryChanged(const QString&)), this, SLOT(onChange(const QString&)));
 
-    removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
+    reset();
 
     QRegExp rx("^\\s*module ([a-zA-Z0-9_]+)");
     QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);

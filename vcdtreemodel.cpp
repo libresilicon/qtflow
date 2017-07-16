@@ -118,10 +118,20 @@ VcdTreeModel::~VcdTreeModel()
     delete rootItem;
 }
 
+void VcdTreeModel::reset()
+{
+    beginResetModel();
+    removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
+    QVector<QVariant> rootData;
+    rootData << "Scopes";
+    rootItem = new VcdItem(rootData);
+    endResetModel();
+}
+
 void VcdTreeModel::setVcd(vcd_t v)
 {
     values = v;
-    //removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
+    reset();
     setScopes(values.scopes, rootItem);
 }
 

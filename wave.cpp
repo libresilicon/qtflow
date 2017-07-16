@@ -60,7 +60,10 @@ void Wave::loadVcd(QString path)
     VcdParser parser(content);
 
     file.close();
+
+    list->reset();
     tree->setVcd(parser.getVcd());
+    scene->clear();
 }
 
 void Wave::onSignalsChanged()

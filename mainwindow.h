@@ -45,6 +45,8 @@ public slots:
     void errorTcsh();
     void exitTcsh(int);
 
+    void onTopModuleChanged();
+
 private slots:
     void on_MainWindow_destroyed();
 
