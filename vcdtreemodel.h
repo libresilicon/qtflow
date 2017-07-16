@@ -45,6 +45,8 @@ public:
     void setVcd(vcd_t);
     vcd_t& vcd();
 
+    vcd_changes_t getValues(int);
+
     void setScopes(vcd_scopes_t scopes, VcdItem *item);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -62,7 +64,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     QStringList mimeTypes() const override;
-    QMimeData* mimeData(const QModelIndexList &indexes) const override;
+    QMimeData* mimeData(const QModelIndexList &is) const override;
 
 private:
     VcdItem *rootItem;

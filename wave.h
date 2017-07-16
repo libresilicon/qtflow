@@ -21,11 +21,16 @@ public:
 
     void loadVcd(QString);
 
+public slots:
+    void onSignalsChanged();
+
 private:
     Ui::Wave *ui;
     VcdTreeModel *tree;
     VcdListModel *list;
     QGraphicsScene *scene;
+
+    void drawSignals();
 };
 
 #endif // WAVE_H

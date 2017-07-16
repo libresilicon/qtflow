@@ -1,7 +1,10 @@
 #ifndef VCDLISTMODEL_H
 #define VCDLISTMODEL_H
 
+#include "constants.h"
+
 #include <QAbstractListModel>
+#include <QItemDelegate>
 #include <QList>
 #include <QPair>
 #include <QString>
@@ -13,6 +16,8 @@ class VcdListModel : public QAbstractListModel
 public:
     explicit VcdListModel(QObject *parent = 0);
     ~VcdListModel();
+
+    QList<int> getSignals();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
@@ -27,8 +32,26 @@ public:
     QStringList mimeTypes() const override;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
+signals:
+    void signalsChanged();
+
 private:
     QList<QPair<int, QString>> _signals;
+};
+
+class VcdListDelegate : public QItemDelegate
+{
+    Q_OBJECT
+
+public:
+    VcdListDelegate(QObject *parent) : QItemDelegate(parent) {}
+
+    QSize sizeHint (const QStyleOptionViewItem &option, const QModelIndex &index) const
+    {
+         QSize result = QItemDelegate::sizeHint(option, index);
+         result.setHeight(WAVE_ITEM_HEIGHT);
+         return result;
+    }
 };
 
 #endif // VCDLISTMODEL_H

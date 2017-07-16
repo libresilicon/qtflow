@@ -10,4 +10,7 @@
 
 #define DEFAULT_VERILOG "index"
 
+#define WAVE_ITEM_HEIGHT 40
+#define WAVE_STRETCH 40
+
 #endif // CONSTANTS_H

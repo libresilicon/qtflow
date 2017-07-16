@@ -12,6 +12,14 @@ VcdListModel::~VcdListModel()
 {
 }
 
+QList<int> VcdListModel::getSignals()
+{
+    QList<int> result;
+    foreach (const auto &s, _signals)
+        result << s.first;
+    return result;
+}
+
 int VcdListModel::rowCount(const QModelIndex&) const
 {
     return _signals.size();
@@ -57,6 +65,7 @@ bool VcdListModel::setEnum(const QModelIndex &index, int num)
         return false;
 
     _signals[index.row()].first = num;
+    emit signalsChanged();
     return true;
 }
 

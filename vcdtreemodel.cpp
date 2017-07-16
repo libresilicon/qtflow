@@ -121,8 +121,15 @@ VcdTreeModel::~VcdTreeModel()
 void VcdTreeModel::setVcd(vcd_t v)
 {
     values = v;
-    removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
+    //removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
     setScopes(values.scopes, rootItem);
+}
+
+vcd_changes_t VcdTreeModel::getValues(int index)
+{
+    if (values.changes.contains(index))
+        return values.changes[index];
+    return vcd_changes_t();
 }
 
 void VcdTreeModel::setScopes(vcd_scopes_t scopes, VcdItem *item)
@@ -139,9 +146,8 @@ void VcdTreeModel::setScopes(vcd_scopes_t scopes, VcdItem *item)
         current->child(current->childCount() - 1)->setData(0, it.value());
     }
 
-    QList<vcd_scopes_t>::const_iterator is;
-    for (is = scopes.scopes.constBegin(); is != scopes.scopes.constEnd(); ++is)
-        setScopes(*is, current);
+    foreach (const vcd_scopes_t &s, scopes.scopes)
+        setScopes(s, current);
 }
 
 vcd_t& VcdTreeModel::vcd()
