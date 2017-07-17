@@ -296,7 +296,7 @@ QMimeData *VcdTreeModel::mimeData(const QModelIndexList &is) const
         if (index.isValid())
         {
             QString num = QString::number(getEnum(index));
-            QString text(num + "," + data(index, Qt::DisplayRole).toString());
+            QString text(num + ",-1," + data(index, Qt::DisplayRole).toString());
             stream << text;
         }
     }

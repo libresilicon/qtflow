@@ -28,9 +28,13 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     bool setEnum(const QModelIndex &index, int num);
+    int getEnum(const QModelIndex&) const;
     bool insertRows(int row, int count, const QModelIndex &parent) override;
+    bool removeRows(int row, int count, const QModelIndex &parent) override;
+    bool moveRow(const QModelIndex &sourceParent, int sourceRow, const QModelIndex &destinationParent, int destinationChild);
 
     QStringList mimeTypes() const override;
+    QMimeData* mimeData(const QModelIndexList &is) const override;
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
 signals:

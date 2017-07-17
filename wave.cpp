@@ -29,8 +29,9 @@ Wave::Wave(QWidget *parent) :
     ui->treeView->setDragDropMode(QAbstractItemView::DragOnly);
     ui->treeView->setDefaultDropAction(Qt::CopyAction);
     ui->listView->setAcceptDrops(true);
-    ui->listView->setDragDropMode(QAbstractItemView::DropOnly);
-    ui->listView->setDefaultDropAction(Qt::CopyAction);
+    ui->listView->setDragDropMode(QAbstractItemView::DragDrop);
+    ui->listView->setDefaultDropAction(Qt::MoveAction);
+    ui->listView->setDragDropOverwriteMode(true);
 
     ui->listView->setItemDelegate(new VcdListDelegate(ui->listView));
 
@@ -80,7 +81,7 @@ void Wave::drawSignals()
         vcd_changes_t::iterator it;
         vcd_changes_t changes = tree->getValues(sig.at(i));
 
-        int high_ = 0;
+        int high_ = 1;
         int long_ = 0;
         for (it = changes.begin(); it != changes.end(); ++it)
         {
