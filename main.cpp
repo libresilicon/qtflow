@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "headlessmainapp.h"
 
 #include <QApplication>
 #include <QCommandLineParser>
@@ -8,7 +9,6 @@ int main(int argc, char *argv[])
 {
 	bool noGraphics;
 	QApplication app(argc, argv);
-	MainWindow w;
 	QCommandLineParser parser;
 	parser.setApplicationDescription("QtFlow: Qt5 based synthesis tool");
 	parser.addHelpOption();
@@ -18,8 +18,10 @@ int main(int argc, char *argv[])
 	parser.process(app);
 	noGraphics = parser.isSet("no-graphics");
 	if(noGraphics) {
-		// do headless stuff
+		HeadlessMainApp a;
+		a.runSynthesis();
 	} else {
+		MainWindow w;
 		w.show();
 		return app.exec();
 	}

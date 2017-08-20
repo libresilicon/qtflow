@@ -24,22 +24,22 @@
 #include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    App(),
-    ui(new Ui::MainWindow),
-    project(new Qflow),
-    dependencies(new Dependencies),
-    errorMessage(new QErrorMessage),
-    tcsh(new QProcess),
-    createWidget(new New),
-    welcomeWidget(new Welcome),
-    editWidget(new Edit),
-    timingWidget(new Wave),
-    buildEnvironment(new Environment),
-    qtflowEnvironment(new Environment),
-    iopads(new IOPads),
-    modules(new Modules),
-    session(Session::Instance())
+	QMainWindow(parent),
+	App(),
+	ui(new Ui::MainWindow),
+	project(new Qflow),
+	dependencies(new Dependencies),
+	errorMessage(new QErrorMessage),
+	tcsh(new QProcess),
+	createWidget(new New),
+	welcomeWidget(new Welcome),
+	editWidget(new Edit),
+	timingWidget(new Wave),
+	buildEnvironment(new Environment),
+	qtflowEnvironment(new Environment),
+	iopads(new IOPads),
+	modules(new Modules),
+	session(Session::Instance())
 {
     session.setApp(this);
     ui->setupUi(this);
