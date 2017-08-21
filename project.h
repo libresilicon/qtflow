@@ -34,6 +34,7 @@ public:
 	bool buildAll(QString ident, QProcess* = new QProcess);
 	bool prepareStep(QString path);
 	void setTechnology(QString tech);
+	void setTopLevel(QString tech);
 
 private:
 	QSettings *settings;

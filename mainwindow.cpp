@@ -38,8 +38,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
 	connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));*/
-		
-	std::cout << "Work path is: " <<  QDir(".").absolutePath().toStdString() << std::endl;
+
+	QTextStream(stdout) << QString("Work path is: ") << QDir(".").absolutePath() << QString("\n");
 }
 
 MainWindow::~MainWindow()

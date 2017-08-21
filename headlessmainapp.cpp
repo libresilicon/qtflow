@@ -11,12 +11,20 @@ HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p ) :
 	iopads(new IOPads),
 	modules(new Modules)
 {
+	QString top;
 	QString path = QDir(".").absolutePath();
 	QTextStream(stdout) << QString("Work path is: ") << path << "\n";
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
-	project = new Project(path);
 	parser = p;
 	if(p) {
+		if(parser->isSet("top-level")) {
+			top = parser->value("top-level");
+			project = new Project(path+'/'+top+".pro");
+			project->setTopLevel(parser->value("top-level"));
+		} else {
+			qErrnoWarning("No top level given!");
+			exit(0);
+		}
 		if(parser->isSet("technology")) project->setTechnology(parser->value("technology"));
 	}
 }

@@ -33,7 +33,6 @@ public:
 	void runSynthesis();
 	void runPlacing();
 	void runRouting();
-	void setTechnology(QString tech);
 
 private:
 	Project *project;

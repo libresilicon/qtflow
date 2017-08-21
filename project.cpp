@@ -34,6 +34,7 @@ Project::Project(QString path) :
 		| QFileDevice::ExeGroup
 		| QFileDevice::ReadOther;
 
+	QTextStream(stdout) << "Opening project: " << path << "\n";
 	project_settings = new QSettings(path);
 }
 
@@ -43,10 +44,18 @@ Project::~Project()
 	delete project_settings;
 }
 
+void Project::setTopLevel(QString top)
+{
+	QTextStream(stdout) << "Setting top level to: " << top << "\n";
+	project_settings->setValue("toplevel",top);
+	project_settings->sync();
+}
+
 void Project::setTechnology(QString tech)
 {
 	QTextStream(stdout) << "Setting technology to: " << tech << "\n";
 	project_settings->setValue("technology",tech);
+	project_settings->sync();
 }
 
 bool Project::prepareStep(QString path)
