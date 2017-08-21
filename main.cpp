@@ -2,7 +2,10 @@
 #include "headlessmainapp.h"
 
 #include <QApplication>
+#include <QtWidgets>
+#include <QMainWindow>
 #include <QCommandLineParser>
+
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -17,12 +20,13 @@ int main(int argc, char *argv[])
 	parser.addOption(doGraphicsO);
 	parser.process(app);
 	noGraphics = parser.isSet("no-graphics");
+
 	if(noGraphics) {
-		HeadlessMainApp a;
+		HeadlessMainApp a(QDir(".").absolutePath());
 		a.runSynthesis();
 	} else {
-		MainWindow w;
-		w.show();
-		return app.exec();
+		MainWindow *w = new MainWindow();
+		w->show();
 	}
+	return app.exec();
 }

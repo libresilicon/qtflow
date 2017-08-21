@@ -26,85 +26,77 @@ QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
 
 FLEXSOURCES = lexmagic.l \
-    lexsettings.l \
     lexvcd.l
 BISONSOURCES = yymagic.y \
-    yysettings.y \
     yyvcd.y
 
 OTHER_FILES +=  \
     $$FLEXSOURCES \
     $$BISONSOURCES
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    magicparser.cpp \
-    grid.cpp \
-    templates.cpp \
-    project.cpp \
-    settings.cpp \
-    settingsparser.cpp \
-    session.cpp \
-    environment.cpp \
-    edit.cpp \
-    editor.cpp \
-    verilog.cpp \
-    savechanges.cpp \
-    welcome.cpp \
-    iopads.cpp \
-    dependencies.cpp \
-    modules.cpp \
-    projectstreemodel.cpp \
-    modulestreemodel.cpp \
-    moduleslistmodel.cpp \
-    new.cpp \
-    vcdparser.cpp \
-    wave.cpp \
-    vcdtreemodel.cpp \
-    vcdlistmodel.cpp \
-    headlessmainapp.cpp
+SOURCES += \
+	main.cpp\
+	mainwindow.cpp \
+	magicparser.cpp \
+	grid.cpp \
+	templates.cpp \
+	project.cpp \
+	edit.cpp \
+	editor.cpp \
+	verilog.cpp \
+	savechanges.cpp \
+	welcome.cpp \
+	iopads.cpp \
+	dependencies.cpp \
+	modules.cpp \
+	projectstreemodel.cpp \
+	modulestreemodel.cpp \
+	moduleslistmodel.cpp \
+	new.cpp \
+	vcdparser.cpp \
+	wave.cpp \
+	vcdtreemodel.cpp \
+	vcdlistmodel.cpp \
+	headlessmainapp.cpp
 
-HEADERS  += mainwindow.h \
-    magicparser.h \
-    common.h \
-    grid.h \
-    environment.h \
-    templates.h \
-    project.h \
-    settings.h \
-    settingsparser.h \
-    session.h \
-    app.h \
-    constants.h \
-    edit.h \
-    editor.h \
-    verilog.h \
-    savechanges.h \
-    welcome.h \
-    iopads.h \
-    dependencies.h \
-    modules.h \
-    projectstreemodel.h \
-    modulestreemodel.h \
-    moduleslistmodel.h \
-    new.h \
-    vcdparser.h \
-    wave.h \
-    vcdtreemodel.h \
-    vcdlistmodel.h \
-    headlessmainapp.h
+HEADERS  += \
+	mainwindow.h \
+	magicparser.h \
+	common.h \
+	grid.h \
+	templates.h \
+	project.h \
+	constants.h \
+	edit.h \
+	editor.h \
+	verilog.h \
+	savechanges.h \
+	welcome.h \
+	iopads.h \
+	dependencies.h \
+	modules.h \
+	projectstreemodel.h \
+	modulestreemodel.h \
+	moduleslistmodel.h \
+	new.h \
+	vcdparser.h \
+	wave.h \
+	vcdtreemodel.h \
+	vcdlistmodel.h \
+	headlessmainapp.h
 
-FORMS    += mainwindow.ui \
-    grid.ui \
-    templates.ui \
-    environment.ui \
-    edit.ui \
-    savechanges.ui \
-    welcome.ui \
-    iopads.ui \
-    modules.ui \
-    new.ui \
-    wave.ui
+FORMS    += \ 
+	mainwindow.ui \
+	grid.ui \
+	templates.ui \
+	environment.ui \
+	edit.ui \
+	savechanges.ui \
+	welcome.ui \
+	iopads.ui \
+	modules.ui \
+	new.ui \
+	wave.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

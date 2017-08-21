@@ -6,228 +6,226 @@
 #include <QTextStream>
 #include <QDir>
 #include <QProcess>
+#include <QSettings>
+#include <iostream>
 
-Qflow::Qflow() :
-    IProject(),
-    settings(new QtFlowSettings)
+Project::Project():
+	IProject()
 {
-    executable
-        = QFileDevice::ReadOwner | QFileDevice::WriteOwner | QFileDevice::ExeOwner
-        | QFileDevice::ReadGroup | QFileDevice::WriteGroup | QFileDevice::ExeGroup
-        | QFileDevice::ReadOther
-        ;
+	executable
+		= QFileDevice::ReadOwner
+		| QFileDevice::WriteOwner
+		| QFileDevice::ExeOwner
+		| QFileDevice::ReadGroup
+		| QFileDevice::WriteGroup
+		| QFileDevice::ExeGroup
+		| QFileDevice::ReadOther;
 }
 
-Qflow::~Qflow()
+Project::Project(QString path) :
+	IProject()
 {
-    delete settings;
+	executable
+		= QFileDevice::ReadOwner
+		| QFileDevice::WriteOwner
+		| QFileDevice::ExeOwner
+		| QFileDevice::ReadGroup
+		| QFileDevice::WriteGroup
+		| QFileDevice::ExeGroup
+		| QFileDevice::ReadOther;
+
+	project_settings = new QSettings(path);
 }
 
-bool Qflow::create(QString path)
+Project::~Project()
 {
-    QDir dir(path);
-    dir.mkdir("source");
-    dir.mkdir("synthesis");
-    dir.mkdir("layout");
-
-    QString qflowprefix = settings->value("qflowprefix");
-    QString index = settings->value(DEFAULT_VERILOG);
-
-    QFile index_file(path + "/source/" + index + ".v");
-    if (index_file.open(QIODevice::ReadWrite))
-    {
-        QTextStream stream(&index_file);
-        stream
-                << endl
-                << "module index();" << endl
-                << "endmodule" << endl
-                << endl;
-        index_file.close();
-    }
-
-    QFile project_vars(path + PROJECT_VARS);
-    if (project_vars.open(QIODevice::ReadWrite))
-    {
-        QTextStream stream(&project_vars);
-        stream
-                << TCSH_SHEBANG << endl
-                << "#-------------------------------------------" << endl
-                << "# project variables for project " << path << endl
-                << "#-------------------------------------------" << endl
-                << endl
-                << endl;
-        project_vars.close();
-        project_vars.setPermissions(executable);
-    }
-
-    QFile qflow_vars(path + QFLOW_VARS);
-    if (qflow_vars.open(QIODevice::ReadWrite))
-    {
-        QTextStream stream(&qflow_vars);
-        stream
-                << TCSH_SHEBANG << endl
-                << "#-------------------------------------------" << endl
-                << "# qflow variables for project " << path << endl
-                << "#-------------------------------------------" << endl
-                << endl
-                << "set projectpath=" << path << endl
-                << "set techdir=" << qflowprefix << "/tech/osu035" << endl
-                << "set sourcedir=" << path << "/source"    << endl
-                << "set synthdir="  << path << "/synthesis" << endl
-                << "set layoutdir=" << path << "/layout"    << endl
-                << "set techname=osu035" << endl
-                << "set scriptdir=" << qflowprefix << "/scripts" << endl
-                << "set bindir=" << qflowprefix << "/bin" << endl
-                << "set synthlog=" << path << "/synth.log" << endl
-                << "set index=" << index << endl
-                << "#-------------------------------------------" << endl
-                << endl
-                << endl;
-        qflow_vars.close();
-        qflow_vars.setPermissions(executable);
-    }
-
-    return true;
+	delete settings;
+	delete project_settings;
 }
 
-bool Qflow::valuedump(QString ident, QProcess *exec)
+bool Project::prepareStep(QString path)
 {
-    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
-    if (file.open(QFile::ReadWrite | QFile::Truncate))
-    {
-        QTextStream stream(&file);
-        stream
-                << TCSH_SHEBANG << endl
-                << "source qflow_vars.sh" << endl
-                << "iverilog -o dsn $sourcedir/" + ident + ".tb.v $sourcedir/" << ident << ".v" << endl
-                << "vvp dsn" << endl
-                << endl;
-        file.close();
-        file.setPermissions(executable);
-    }
-    exec->start(QFLOW_EXEC);
+/*	QString Projectprefix = settings->value("Projectprefix");
+	QString index = settings->value(DEFAULT_VERILOG);
 
-    return true;
+	QFile project_vars(path + PROJECT_VARS);
+	if (project_vars.open(QIODevice::ReadWrite))
+	{
+		QTextStream stream(&project_vars);
+		stream
+		    << TCSH_SHEBANG << endl
+		    << "#-------------------------------------------" << endl
+		    << "# project variables for project " << path << endl
+		    << "#-------------------------------------------" << endl
+		    << endl
+		    << endl;
+		project_vars.close();
+		project_vars.setPermissions(executable);
+	}
+
+	QFile Project_vars(path + Project_VARS);
+	if (Project_vars.open(QIODevice::ReadWrite))
+	{
+		QTextStream stream(&Project_vars);
+		stream
+		    << TCSH_SHEBANG << endl
+		    << "#-------------------------------------------" << endl
+		    << "# Project variables for project " << path << endl
+		    << "#-------------------------------------------" << endl
+		    << endl
+		    << "set projectpath=" << project_settings->value("projectpath","").toString() << endl
+		    << "set techdir=" << project_settings->value("techdir","").toString() << endl
+		    << "set sourcedir=" << project_settings->value("sourcedir","").toString() << endl
+		    << "set synthdir="  << project_settings->value("synthdir","").toString() << endl
+		    << "set layoutdir=" << project_settings->value("layoutdir","").toString()<< endl
+		    << "set techname=" << project_settings->value("techname","osu035").toString() << endl
+		    << "set scriptdir=" << project_settings->value("scriptdir","").toString() << endl
+		    << "set bindir=" << project_settings->value("bindir","").toString() << endl
+		    << "set synthlog=" << project_settings->value("synthlog","").toString() << endl
+		    << "#-------------------------------------------" << endl
+		    << endl
+		    << endl;
+		Project_vars.close();
+		Project_vars.setPermissions(executable);
+	}
+	return true;*/
 }
 
-bool Qflow::synthesis(QString ident, QProcess *exec)
+bool Project::create(QString path)
 {
-    QString qflowprefix = settings->value("qflowprefix");
-    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
-    if (file.open(QFile::ReadWrite | QFile::Truncate))
-    {
-        QTextStream stream(&file);
-        stream
-                << TCSH_SHEBANG << endl
-                << qflowprefix << "/scripts/synthesize.sh"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
-                << endl;
-        file.close();
-        file.setPermissions(executable);
-    }
-    exec->start(QFLOW_EXEC);
+	QDir dir(path);
+	dir.mkdir("source");
+	dir.mkdir("synthesis");
+	dir.mkdir("layout");
 
-    return true;
+	//QString Projectprefix = settings->value("Projectprefix");
+	QStringList path_pieces = path.split( '/' );
+	QString project_name = path + '/' + path_pieces.value( path_pieces.length() - 1 ) + ".pro";
+	std::cout << "Creating project: " << project_name.toStdString() << std::endl;
+	project_settings = new QSettings(project_name, QSettings::NativeFormat);
+	project_settings->setValue("technology", "osu035");
+
+	return true;
 }
 
-bool Qflow::timing(QString ident, QProcess *exec)
+bool Project::synthesis(QString ident, QProcess *exec)
 {
-    QString qflowprefix = settings->value("qflowprefix");
-    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
-    if (file.open(QFile::ReadWrite | QFile::Truncate))
-    {
-        QTextStream stream(&file);
-        stream
-                << TCSH_SHEBANG << endl
-                << qflowprefix << "/scripts/vesta.sh"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
-                << endl;
-        file.close();
-        file.setPermissions(executable);
-    }
-    exec->start(QFLOW_EXEC);
+	/*QString Projectprefix = settings->value("Projectprefix");
+	QFile file(exec->workingDirectory() + "/" + Project_EXEC);
+	if (file.open(QFile::ReadWrite | QFile::Truncate))
+	{
+		QTextStream stream(&file);
+		stream
+				<< TCSH_SHEBANG << endl
+				<< Projectprefix << "/scripts/synthesize.sh"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
+				<< endl;
+		file.close();
+		file.setPermissions(executable);
+	}
+	exec->start(settings->value("yosys_path","/usr/bin/yosys"));*/
 
-    return true;
+	return true;
 }
 
-bool Qflow::placement(QString ident, QProcess *exec)
+bool Project::timing(QString ident, QProcess *exec)
 {
-    QString qflowprefix = settings->value("qflowprefix");
-    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
-    if (file.open(QFile::ReadWrite | QFile::Truncate))
-    {
-        QTextStream stream(&file);
-        stream
-                << TCSH_SHEBANG << endl
-                << qflowprefix << "/scripts/placement.sh"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
-                << endl;
-        file.close();
-        file.setPermissions(executable);
-    }
-    exec->start(QFLOW_EXEC);
+	/*QString Projectprefix = settings->value("Projectprefix");
+	QFile file(exec->workingDirectory() + "/" + Project_EXEC);
+	if (file.open(QFile::ReadWrite | QFile::Truncate))
+	{
+		QTextStream stream(&file);
+		stream
+				<< TCSH_SHEBANG << endl
+				<< Projectprefix << "/scripts/vesta.sh"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
+				<< endl;
+		file.close();
+		file.setPermissions(executable);
+	}
+	exec->start(Project_EXEC);*/
 
-    return true;
+	return true;
 }
 
-bool Qflow::routing(QString ident, QProcess *exec)
+bool Project::placement(QString ident, QProcess *exec)
 {
-    QString qflowprefix = settings->value("qflowprefix");
-    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
-    if (file.open(QFile::ReadWrite | QFile::Truncate))
-    {
-        QTextStream stream(&file);
-        stream
-                << TCSH_SHEBANG << endl
-                << qflowprefix << "/scripts/router.sh"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
-                << endl;
-        file.close();
-        file.setPermissions(executable);
-    }
-    exec->start(QFLOW_EXEC);
+	/*QString Projectprefix = settings->value("Projectprefix");
+	QFile file(exec->workingDirectory() + "/" + Project_EXEC);
+	if (file.open(QFile::ReadWrite | QFile::Truncate))
+	{
+		QTextStream stream(&file);
+		stream
+				<< TCSH_SHEBANG << endl
+				<< Projectprefix << "/scripts/placement.sh"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
+				<< endl;
+		file.close();
+		file.setPermissions(executable);
+	}
+	exec->start(Project_EXEC);*/
 
-    return true;
+	return true;
 }
 
-bool Qflow::buildAll(QString ident, QProcess *exec)
+bool Project::routing(QString ident, QProcess *exec)
 {
-    QString qflowprefix = settings->value("qflowprefix");
-    QFile file(exec->workingDirectory() + "/" + QFLOW_EXEC);
-    if (file.open(QFile::ReadWrite | QFile::Truncate))
-    {
-        QTextStream stream(&file);
-        stream
-                << TCSH_SHEBANG << endl
+	/*QString Projectprefix = settings->value("Projectprefix");
+	QFile file(exec->workingDirectory() + "/" + Project_EXEC);
+	if (file.open(QFile::ReadWrite | QFile::Truncate))
+	{
+		QTextStream stream(&file);
+		stream
+				<< TCSH_SHEBANG << endl
+				<< Projectprefix << "/scripts/router.sh"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
+				<< endl;
+		file.close();
+		file.setPermissions(executable);
+	}
+	exec->start(Project_EXEC);*/
 
-                << qflowprefix << "/scripts/synthesize.sh"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
+	return true;
+}
 
-                << qflowprefix << "/scripts/placement.sh -d"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
+bool Project::buildAll(QString ident, QProcess *exec)
+{
+	/*QString Projectprefix = settings->value("Projectprefix");
+	QFile file(exec->workingDirectory() + "/" + Project_EXEC);
+	if (file.open(QFile::ReadWrite | QFile::Truncate))
+	{
+		QTextStream stream(&file);
+		stream
+				<< TCSH_SHEBANG << endl
 
-                << qflowprefix << "/scripts/router.sh"
-                << " " << exec->workingDirectory()
-                << " " << ident
-                << " " << "|| exit 1" << endl
+				<< Projectprefix << "/scripts/synthesize.sh"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
 
-                << endl;
-        file.close();
-        file.setPermissions(executable);
-    }
-    exec->start(QFLOW_EXEC);
+				<< Projectprefix << "/scripts/placement.sh -d"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
 
-    return true;
+				<< Projectprefix << "/scripts/router.sh"
+				<< " " << exec->workingDirectory()
+				<< " " << ident
+				<< " " << "|| exit 1" << endl
+
+				<< endl;
+		file.close();
+		file.setPermissions(executable);
+	}
+	exec->start(Project_EXEC);*/
+
+	return true;
 }

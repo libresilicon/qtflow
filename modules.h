@@ -2,40 +2,39 @@
 #define MODULES_H
 
 #include "moduleslistmodel.h"
-#include "settings.h"
 
 #include <QDialog>
 #include <QAbstractListModel>
 
 
 namespace Ui {
-class Modules;
+	class Modules;
 }
 
 class Modules : public QDialog
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit Modules(QWidget *parent = 0);
-    ~Modules();
+	explicit Modules(QWidget *parent = 0);
+	~Modules();
 
-    void refresh();
-    void refresh(QString);
+	void refresh();
+	void refresh(QString);
 
 signals:
-    void topModuleChanged();
+	void topModuleChanged();
 
 private slots:
-    void on_setTopModule_clicked();
+	void on_setTopModule_clicked();
 
-    void on_closeButton_clicked();
+	void on_closeButton_clicked();
 
 private:
-    Ui::Modules *ui;
+	Ui::Modules *ui;
 
-    QString path;
-    ModulesListModel *modules;
+	QString path;
+	ModulesListModel *modules;
 };
 
 #endif // MODULES_H

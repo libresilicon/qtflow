@@ -1,12 +1,9 @@
 #ifndef HEADLESSMAINAPP_H
 #define HEADLESSMAINAPP_H
 
-#include "app.h"
 #include "project.h"
-#include "session.h"
 #include "common.h"
 #include "edit.h"
-#include "environment.h"
 #include "dependencies.h"
 #include "modules.h"
 #include "new.h"
@@ -23,25 +20,24 @@
 #include <QScrollBar>
 #include <QString>
 #include <QProcess>
+#include <QSettings>
 
 class HeadlessMainApp
 {
 public:
-	HeadlessMainApp();
+	HeadlessMainApp(QString path);
 	void runSynthesis();
 private:
-	IProject *project;
-	IDependencies *dependencies;
+	Project *project;
+	Dependencies *dependencies;
 	QProcess *tcsh;
 	New *createWidget;
 	Welcome *welcomeWidget;
 	Edit *editWidget;
 	Wave *timingWidget;
-	Environment *buildEnvironment;
-	Environment *qtflowEnvironment;
 	IOPads *iopads;
 	Modules *modules;
-	Session &session;
+	QSettings *settings;
 };
 
 #endif // HEADLESSMAINAPP_H

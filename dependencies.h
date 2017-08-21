@@ -1,29 +1,29 @@
 #ifndef DEPENDENCIES_H
 #define DEPENDENCIES_H
 
-#include "settings.h"
+#include <QSettings>
 
 class IDependencies
 {
 public:
-    IDependencies() {}
-    virtual ~IDependencies() {}
+	IDependencies() {}
+	virtual ~IDependencies() {}
 
-    virtual bool tcsh() { return false; }
-    virtual bool qflow() { return false; }
+	virtual bool tcsh() { return false; }
+	virtual bool qflow() { return false; }
 };
 
 class Dependencies : public IDependencies
 {
 public:
-    Dependencies();
-    ~Dependencies();
+	Dependencies(QSettings*);
+	~Dependencies();
 
-    bool tcsh();
-    bool qflow();
+	bool tcsh();
+	bool qflow();
 
 private:
-    QtFlowSettings *qtflow;
+	QSettings *qtflow;
 };
 
 #endif // DEPENDENCIES_H
