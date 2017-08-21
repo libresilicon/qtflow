@@ -21,12 +21,20 @@
 #include <QString>
 #include <QProcess>
 #include <QSettings>
+#include <QCommandLineParser>
 
-class HeadlessMainApp
+class HeadlessMainApp : public QObject
 {
+	Q_OBJECT
+
 public:
-	HeadlessMainApp(QString path);
+	HeadlessMainApp(QCommandLineParser * parser = nullptr);
+	void run();
 	void runSynthesis();
+	void runPlacing();
+	void runRouting();
+	void setTechnology(QString tech);
+
 private:
 	Project *project;
 	Dependencies *dependencies;
@@ -38,6 +46,10 @@ private:
 	IOPads *iopads;
 	Modules *modules;
 	QSettings *settings;
+	QCommandLineParser * parser;
+
+signals:
+	void finished();
 };
 
 #endif // HEADLESSMAINAPP_H

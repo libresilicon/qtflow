@@ -92,6 +92,8 @@ private:
 	Wave *timingWidget;
 	IOPads *iopads;
 	Modules *modules;
+	QSettings *settings;
+	QSettings *project_settings;
 };
 
 #endif // MAINWINDOW_H

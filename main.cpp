@@ -10,22 +10,27 @@
 
 int main(int argc, char *argv[])
 {
-	bool noGraphics;
 	QApplication app(argc, argv);
-	QCommandLineParser parser;
-	parser.setApplicationDescription("QtFlow: Qt5 based synthesis tool");
-	parser.addHelpOption();
-	parser.addVersionOption();
-	QCommandLineOption doGraphicsO(QStringList() << "n" << "no-graphics", QCoreApplication::translate("main", "Run without graphics"));
-	parser.addOption(doGraphicsO);
-	parser.process(app);
-	noGraphics = parser.isSet("no-graphics");
+	HeadlessMainApp *ha;
+	MainWindow *w;
 
-	if(noGraphics) {
-		HeadlessMainApp a(QDir(".").absolutePath());
-		a.runSynthesis();
+	QCommandLineParser *parser = new QCommandLineParser();
+	parser->setApplicationDescription("QtFlow: Qt5 based synthesis tool");
+	parser->addHelpOption();
+	parser->addVersionOption();
+	parser->addOption(QCommandLineOption(QStringList() << "n" << "no-graphics", QCoreApplication::translate("main", "Run without graphics")));
+	parser->addOption(QCommandLineOption(QStringList() << "m" << "top-level", QCoreApplication::translate("main", "Top level module")));
+	parser->addOption(QCommandLineOption(QStringList() << "s" << "run-synthesis", QCoreApplication::translate("main", "Run synthesis of module")));
+	parser->addOption(QCommandLineOption(QStringList() << "p" << "run-placement", QCoreApplication::translate("main", "Run placement of module")));
+	parser->addOption(QCommandLineOption(QStringList() << "r" << "run-routing", QCoreApplication::translate("main", "Run routing of module")));
+	parser->addOption(QCommandLineOption(QStringList() << "t" << "technology", QCoreApplication::translate("main", "Use specific technology")));
+	parser->process(app);
+
+	if(parser->isSet("no-graphics")) {
+		ha = new HeadlessMainApp(parser);
+		ha->run();
 	} else {
-		MainWindow *w = new MainWindow();
+		w = new MainWindow();
 		w->show();
 	}
 	return app.exec();

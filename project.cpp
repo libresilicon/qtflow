@@ -43,6 +43,12 @@ Project::~Project()
 	delete project_settings;
 }
 
+void Project::setTechnology(QString tech)
+{
+	QTextStream(stdout) << "Setting technology to: " << tech << "\n";
+	project_settings->setValue("technology",tech);
+}
+
 bool Project::prepareStep(QString path)
 {
 /*	QString Projectprefix = settings->value("Projectprefix");
@@ -101,7 +107,7 @@ bool Project::create(QString path)
 	//QString Projectprefix = settings->value("Projectprefix");
 	QStringList path_pieces = path.split( '/' );
 	QString project_name = path + '/' + path_pieces.value( path_pieces.length() - 1 ) + ".pro";
-	std::cout << "Creating project: " << project_name.toStdString() << std::endl;
+	QTextStream(stdout) << QString("Creating project: ") << project_name << "\n";
 	project_settings = new QSettings(project_name, QSettings::NativeFormat);
 	project_settings->setValue("technology", "osu035");
 
