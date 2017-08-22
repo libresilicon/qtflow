@@ -25,7 +25,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	welcomeWidget(new Welcome),
 	editWidget(new Edit),
 	timingWidget(new Wave),
-	modules(new Modules)
+	modules(new Modules),
+	tcsh(new QProcess),
+	createWidget(new New),
+	errorMessage(new QErrorMessage),
+	iopads(new IOPads)
 {
 	ui->setupUi(this);
 	project = NULL;
@@ -35,13 +39,34 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	ui->tabWidget->insertTab(1, editWidget, "Edit");
 	ui->tabWidget->insertTab(2, timingWidget, "Timing");
 	ui->tabWidget->insertTab(3, new QWidget, "Design");
-	//connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
-	//connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
-	//connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 
-	//connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
+
+	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
+	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
+	connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
+
+	connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
 	connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
+
+	//QStringList recentProjectsListTest;
+	//recentProjectsListTest.append("Test 1");
+	//recentProjectsListTest.append("Test 2");
+	//settings->beginGroup("history");
+	//settings->setValue("recentProjects",recentProjectsListTest);
+	//settings->endGroup();
+
+	QMenu *recent;
+	recent = ui->menuRecentProjects;
+
+	settings->beginGroup("history");
+	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
+	settings->endGroup();
+
+	foreach(QString recentProject, recentProjectsList) {
+		recent->addAction(recentProject);
+	}
 
 	QTextStream(stdout) << QString("Work path is: ") << QDir(".").absolutePath() << QString("\n");
 }
@@ -49,14 +74,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 MainWindow::~MainWindow()
 {
 	delete ui;
-	//delete errorMessage;
-	//delete project;
+	delete errorMessage;
+	delete project;
 	//delete dependencies;
-	//delete createWidget;
+	delete createWidget;
 	delete welcomeWidget;
 	delete editWidget;
 	delete timingWidget;
-	//delete iopads;
+	delete iopads;
+	delete tcsh;
 }
 
 void MainWindow::on_MainWindow_destroyed()

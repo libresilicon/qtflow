@@ -242,15 +242,22 @@
      <x>0</x>
      <y>0</y>
      <width>952</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>Fi&amp;le</string>
     </property>
+    <widget class="QMenu" name="menuRecentProjects">
+     <property name="title">
+      <string>Recents &amp;Projects</string>
+     </property>
+    </widget>
     <addaction name="newProject"/>
     <addaction name="openProject"/>
+    <addaction name="separator"/>
+    <addaction name="menuRecentProjects"/>
     <addaction name="separator"/>
     <addaction name="newFile"/>
     <addaction name="saveFile"/>
@@ -267,7 +274,7 @@
    </widget>
    <widget class="QMenu" name="menuBuild">
     <property name="title">
-     <string>Build</string>
+     <string>B&amp;uild</string>
     </property>
     <addaction name="buildEnvironment"/>
     <addaction name="menuModules"/>
@@ -307,12 +314,12 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="openMagicFile">
    <property name="text">
-    <string>Open Magic File...</string>
+    <string>Open &amp;Magic File...</string>
    </property>
   </action>
   <action name="openProject">
    <property name="text">
-    <string>Open Project...</string>
+    <string>&amp;Open Project...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -320,7 +327,7 @@
   </action>
   <action name="newProject">
    <property name="text">
-    <string>New Project...</string>
+    <string>&amp;New Project...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -328,7 +335,7 @@
   </action>
   <action name="exit">
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
@@ -339,7 +346,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Synthesis</string>
+    <string>&amp;Synthesis</string>
    </property>
   </action>
   <action name="menuPlacement">
@@ -347,7 +354,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Placement...</string>
+    <string>&amp;Placement...</string>
    </property>
   </action>
   <action name="actionnew">
@@ -368,7 +375,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Environment...</string>
+    <string>&amp;Environment...</string>
    </property>
   </action>
   <action name="saveFile">
@@ -376,7 +383,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Save</string>
+    <string>&amp;Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -384,7 +391,7 @@
   </action>
   <action name="menuOptions">
    <property name="text">
-    <string>Options...</string>
+    <string>&amp;Options...</string>
    </property>
   </action>
   <action name="menuRouting">
@@ -392,7 +399,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Routing...</string>
+    <string>&amp;Routing...</string>
    </property>
   </action>
   <action name="buildAll">
@@ -400,7 +407,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Local Build All</string>
+    <string>&amp;Local Build All</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
@@ -408,7 +415,7 @@
   </action>
   <action name="menuIOPads">
    <property name="text">
-    <string>I/O Pads</string>
+    <string>&amp;I/O Pads</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+I</string>
@@ -419,7 +426,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Modules...</string>
+    <string>&amp;Modules...</string>
    </property>
   </action>
   <action name="toolRefresh">
@@ -435,7 +442,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>New File...</string>
+    <string>New &amp;File...</string>
    </property>
   </action>
   <action name="buildVcd">
@@ -443,7 +450,22 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Build VCD</string>
+    <string>&amp;Build VCD</string>
+   </property>
+  </action>
+  <action name="actionRecent_Projects">
+   <property name="text">
+    <string>Recent Projects</string>
+   </property>
+  </action>
+  <action name="clearProjectMenu">
+   <property name="text">
+    <string>&amp;Clear Menu</string>
+   </property>
+  </action>
+  <action name="clearFilesMenu">
+   <property name="text">
+    <string>&amp;Clear Menu</string>
    </property>
   </action>
  </widget>

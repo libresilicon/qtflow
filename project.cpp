@@ -20,6 +20,8 @@ Project::Project() :
 		| QFileDevice::WriteGroup
 		| QFileDevice::ExeGroup
 		| QFileDevice::ReadOther;
+
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
 }
 
 Project::Project(QString path) :
@@ -36,6 +38,14 @@ Project::Project(QString path) :
 
 	QTextStream(stdout) << "Opening project: " << path << "\n";
 	project_settings = new QSettings(path);
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
+
+	settings->beginGroup("history");
+	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
+	recentProjectsList.append(path);
+	settings->setValue("recentProjects",recentProjectsList);
+	settings->endGroup();
+	settings->sync();
 }
 
 Project::~Project()
