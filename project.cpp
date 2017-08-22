@@ -7,9 +7,9 @@
 #include <QDir>
 #include <QProcess>
 #include <QSettings>
-#include <iostream>
+#include <QCommandLineParser>
 
-Project::Project():
+Project::Project() :
 	IProject()
 {
 	executable
@@ -42,6 +42,11 @@ Project::~Project()
 {
 	delete settings;
 	delete project_settings;
+}
+
+void Project::setRootDir(QString dir)
+{
+	rootdir = dir;
 }
 
 void Project::setTopLevel(QString top)
@@ -121,6 +126,11 @@ bool Project::create(QString path)
 	project_settings->setValue("technology", "osu035");
 
 	return true;
+}
+
+bool Project::synthesis()
+{
+	QTextStream(stdout) << QString("Running synthesis in ") << rootdir << "\n";
 }
 
 bool Project::synthesis(QString ident, QProcess *exec)

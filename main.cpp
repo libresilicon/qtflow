@@ -32,6 +32,6 @@ int main(int argc, char *argv[])
 	} else {
 		w = new MainWindow();
 		w->show();
+		return app.exec();
 	}
-	return app.exec();
 }
