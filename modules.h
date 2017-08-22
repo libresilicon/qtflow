@@ -16,11 +16,13 @@ class Modules : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Modules(QWidget *parent = 0);
+	explicit Modules(QWidget *parent = 0, QSettings* settings = 0);
 	~Modules();
 
 	void refresh();
 	void refresh(QString);
+
+	void setPath(QString dir);
 
 signals:
 	void topModuleChanged();

@@ -41,7 +41,6 @@ public slots:
 	void fireTcsh();
 	void errorTcsh();
 	void exitTcsh(int);
-
 	void onTopModuleChanged();
 
 private slots:
@@ -80,6 +79,8 @@ private slots:
 
 	void on_mainTiming_clicked();
 
+	void openRecentProject();
+
 private:
 	Ui::MainWindow *ui;
 	Project *project;
@@ -93,7 +94,6 @@ private:
 	IOPads *iopads;
 	Modules *modules;
 	QSettings *settings;
-	QSettings *project_settings;
 };
 
 #endif // MAINWINDOW_H

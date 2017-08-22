@@ -22,17 +22,17 @@
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	welcomeWidget(new Welcome),
-	editWidget(new Edit),
-	timingWidget(new Wave),
-	modules(new Modules),
 	tcsh(new QProcess),
+	welcomeWidget(new Welcome),
+	timingWidget(new Wave),
+	editWidget(new Edit),
 	createWidget(new New),
 	errorMessage(new QErrorMessage),
 	iopads(new IOPads)
 {
 	ui->setupUi(this);
 	project = NULL;
+	modules = NULL;
 	ui->consoleError->hide();
 	ui->tabWidget->tabBar()->hide();
 	ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	//settings->endGroup();
 
 	QMenu *recent;
+	QAction *recent_action;
 	recent = ui->menuRecentProjects;
 
 	settings->beginGroup("history");
@@ -65,17 +66,37 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	settings->endGroup();
 
 	foreach(QString recentProject, recentProjectsList) {
-		recent->addAction(recentProject);
+		recent_action=recent->addAction(recentProject);
+		recent_action->setData(recentProject);
+		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
 	}
 
 	QTextStream(stdout) << QString("Work path is: ") << QDir(".").absolutePath() << QString("\n");
+}
+
+void MainWindow::openRecentProject()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	if(action) {
+		QString path = action->data().toString();
+		QFile project_vars(path);
+		if (project_vars.exists()) {
+			ui->tabWidget->setCurrentIndex(1);
+			if(project) delete project;
+			project = new Project(path);
+			if(modules) delete modules;
+			modules = project->modulesGenerator(this);
+			editWidget->setDirectory(project->getSourceDir());
+		}
+	}
 }
 
 MainWindow::~MainWindow()
 {
 	delete ui;
 	delete errorMessage;
-	delete project;
+	if(project) delete project;
+	if(modules) delete modules;
 	//delete dependencies;
 	delete createWidget;
 	delete welcomeWidget;
@@ -108,6 +129,9 @@ void MainWindow::on_openProject_triggered()
 		//enableProject();
 		if(project) delete project;
 		project = new Project(path);
+		if(modules) delete modules;
+		modules = project->modulesGenerator(this);
+		editWidget->setDirectory(project->getSourceDir());
 	}
 }
 

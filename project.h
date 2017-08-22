@@ -7,6 +7,8 @@
 #include <QFileDevice>
 #include <QCommandLineParser>
 
+#include "modules.h"
+
 class IProject
 {
 public:
@@ -44,6 +46,8 @@ public:
 	void setTechnology(QString tech);
 	void setTopLevel(QString mod);
 	void setRootDir(QString dir);
+	Modules *modulesGenerator(QWidget *parent);
+	QString getSourceDir();
 
 private:
 	QSettings *settings;

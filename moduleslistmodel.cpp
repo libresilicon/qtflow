@@ -9,8 +9,8 @@ ModulesListModel::ModulesListModel(QObject *parent, QSettings* settings) :
 	QAbstractListModel(parent),
 	modules(QList<QString>()),
 	files(QList<QString>()),
-	topmodule(-1),
-	project_settings(settings)
+	project_settings(settings),
+	topmodule(-1)
 {
 	QString path  = project_settings->value("sourcedir","").toString();
 	if (path == QString())

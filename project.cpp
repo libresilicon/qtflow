@@ -1,6 +1,7 @@
 
 #include "constants.h"
 #include "project.h"
+#include "modules.h"
 
 #include <QString>
 #include <QTextStream>
@@ -43,6 +44,7 @@ Project::Project(QString path) :
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
 	recentProjectsList.append(path);
+	recentProjectsList.removeDuplicates();
 	settings->setValue("recentProjects",recentProjectsList);
 	settings->endGroup();
 	settings->sync();
@@ -64,6 +66,22 @@ void Project::setTopLevel(QString top)
 	QTextStream(stdout) << "Setting top level to: " << top << "\n";
 	project_settings->setValue("toplevel",top);
 	project_settings->sync();
+}
+
+QString Project::getSourceDir()
+{
+	QString ret;
+	ret=project_settings->value("sourcedir").toString();
+	if(QString()==ret) {
+		ret=QDir(".").absolutePath()+"/source";
+		project_settings->setValue("sourcedir",ret);
+	} 
+	return ret;
+}
+
+Modules *Project::modulesGenerator(QWidget *parent)
+{
+	return new Modules(parent, settings);
 }
 
 void Project::setTechnology(QString tech)

@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QFileSystemModel>
 #include <QProcess>
+#include <QSettings>
 
 namespace Ui {
 	class Edit;
@@ -22,7 +23,7 @@ public:
 	explicit Edit(QWidget *parent = 0);
 	~Edit();
 
-	void loadProject(const QString &path);
+	void setDirectory(const QString &path);
 
 	void loadFile(QString path);
 	void saveFile(QString path);

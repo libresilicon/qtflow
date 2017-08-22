@@ -1,14 +1,7 @@
 #include "headlessmainapp.h"
 #include "project.h"
 
-HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p ) :
-	tcsh(new QProcess),
-	createWidget(new New),
-	welcomeWidget(new Welcome),
-	editWidget(new Edit),
-	timingWidget(new Wave),
-	iopads(new IOPads),
-	modules(new Modules)
+HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 {
 	QString top;
 	QString technology;

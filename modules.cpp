@@ -8,10 +8,11 @@
 #include <QListView>
 #include <QMessageBox>
 
-Modules::Modules(QWidget *parent) :
+Modules::Modules(QWidget *parent, QSettings* settings) :
 	QDialog(parent),
 	ui(new Ui::Modules),
-	path(QString())
+	path(QString()),
+	modules(new ModulesListModel(parent,settings))
 {
 	ui->setupUi(this);
 }
@@ -28,11 +29,16 @@ void Modules::refresh()
 	refresh(path);
 }
 
+void Modules::setPath(QString dir)
+{
+	path = dir;
+}
+
 void Modules::refresh(QString dir)
 {
 	path = dir;
-	delete modules;
 	QSettings *s = new QSettings(dir);
+	if(modules) delete modules;
 	modules = new ModulesListModel(this, s);
 	ui->listView->setModel(modules);
 }
@@ -61,9 +67,6 @@ void Modules::on_setTopModule_clicked()
 		}
 	}
 
-	//QflowSettings qflow(path);
-	//qflow.set(DEFAULT_VERILOG, top);
-	//qflow.save();
 	emit topModuleChanged();
 	refresh();
 }

@@ -37,13 +37,6 @@ public:
 private:
 	Project *project;
 	Dependencies *dependencies;
-	QProcess *tcsh;
-	New *createWidget;
-	Welcome *welcomeWidget;
-	Edit *editWidget;
-	Wave *timingWidget;
-	IOPads *iopads;
-	Modules *modules;
 	QSettings *settings;
 	QCommandLineParser * parser;
 

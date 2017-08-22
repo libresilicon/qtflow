@@ -11,6 +11,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QProcess>
+#include <QTextStream>
 
 Edit::Edit(QWidget *parent) :
 	QWidget(parent),
@@ -75,8 +76,9 @@ Edit::~Edit()
 	delete modules;
 }
 
-void Edit::loadProject(const QString &dir)
+void Edit::setDirectory(const QString &dir)
 {
+	QTextStream(stdout) << QString("New search path is: ") << dir << '\n';
 	filesystem->setRootPath(dir);
 	ui->filesView->setRootIndex(filesystem->index(dir));
 
