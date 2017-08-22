@@ -21,23 +21,27 @@
 #include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
-	ui(new Ui::MainWindow)
+	ui(new Ui::MainWindow),
+	welcomeWidget(new Welcome),
+	editWidget(new Edit),
+	timingWidget(new Wave),
+	modules(new Modules)
 {
 	ui->setupUi(this);
 	project = NULL;
-	/*ui->consoleError->hide();
+	ui->consoleError->hide();
 	ui->tabWidget->tabBar()->hide();
 	ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
 	ui->tabWidget->insertTab(1, editWidget, "Edit");
 	ui->tabWidget->insertTab(2, timingWidget, "Timing");
 	ui->tabWidget->insertTab(3, new QWidget, "Design");
-	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
-	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
-	connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
+	//connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
+	//connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
+	//connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 
-	connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
+	//connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
-	connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));*/
+	connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
 
 	QTextStream(stdout) << QString("Work path is: ") << QDir(".").absolutePath() << QString("\n");
 }
@@ -49,9 +53,9 @@ MainWindow::~MainWindow()
 	//delete project;
 	//delete dependencies;
 	//delete createWidget;
-	//delete welcomeWidget;
-	//delete editWidget;
-	//delete timingWidget;
+	delete welcomeWidget;
+	delete editWidget;
+	delete timingWidget;
 	//delete iopads;
 }
 
