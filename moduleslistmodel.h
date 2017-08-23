@@ -9,7 +9,7 @@ class ModulesListModel : public QAbstractListModel
 	Q_OBJECT
 
 public:
-	ModulesListModel(QObject *parent, QSettings*);
+	ModulesListModel(QObject *parent);
 	~ModulesListModel();
 
 	int rowCount(const QModelIndex& = QModelIndex()) const override;
@@ -17,12 +17,13 @@ public:
 
 	QString file(const QModelIndex& = QModelIndex());
 
+	void setSourceDir(QString);
+
 private:
 	QList<QString> modules;
 	QList<QString> files;
+	QString sourcedir;
 	int topmodule;
-
-	QSettings *project_settings;
 };
 
 #endif // MODULESLISTMODEL_H

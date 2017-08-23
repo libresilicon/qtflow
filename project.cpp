@@ -1,7 +1,6 @@
 
 #include "constants.h"
 #include "project.h"
-#include "modules.h"
 
 #include <QString>
 #include <QTextStream>
@@ -9,21 +8,6 @@
 #include <QProcess>
 #include <QSettings>
 #include <QCommandLineParser>
-
-Project::Project() :
-	IProject()
-{
-	executable
-		= QFileDevice::ReadOwner
-		| QFileDevice::WriteOwner
-		| QFileDevice::ExeOwner
-		| QFileDevice::ReadGroup
-		| QFileDevice::WriteGroup
-		| QFileDevice::ExeGroup
-		| QFileDevice::ReadOther;
-
-	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
-}
 
 Project::Project(QString path) :
 	IProject()
@@ -37,10 +21,16 @@ Project::Project(QString path) :
 		| QFileDevice::ExeGroup
 		| QFileDevice::ReadOther;
 
-	QTextStream(stdout) << "Opening project: " << path << "\n";
-	project_settings = new QSettings(path);
-	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
+	if(QFile(path).exists()) {
+		project_settings = new QSettings(path, QSettings::NativeFormat);
+		if(project_settings->value("sourcedir","").toString()=="") {
+			QTextStream(stdout) << "No variable called sourcedir set!!\n";
+		}
+	} else {
+		create(path);
+	}
 
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
 	recentProjectsList.append(path);
@@ -56,9 +46,9 @@ Project::~Project()
 	delete project_settings;
 }
 
-void Project::setRootDir(QString dir)
+QString Project::getSourceDir()
 {
-	rootdir = dir;
+	return project_settings->value("sourcedir").toString();
 }
 
 void Project::setTopLevel(QString top)
@@ -66,22 +56,6 @@ void Project::setTopLevel(QString top)
 	QTextStream(stdout) << "Setting top level to: " << top << "\n";
 	project_settings->setValue("toplevel",top);
 	project_settings->sync();
-}
-
-QString Project::getSourceDir()
-{
-	QString ret;
-	ret=project_settings->value("sourcedir").toString();
-	if(QString()==ret) {
-		ret=QDir(".").absolutePath()+"/source";
-		project_settings->setValue("sourcedir",ret);
-	} 
-	return ret;
-}
-
-Modules *Project::modulesGenerator(QWidget *parent)
-{
-	return new Modules(parent, settings);
 }
 
 void Project::setTechnology(QString tech)
@@ -141,17 +115,21 @@ bool Project::prepareStep(QString path)
 
 bool Project::create(QString path)
 {
-	QDir dir(path);
+	QString rootdir;
+
+	project_settings = new QSettings(path, QSettings::NativeFormat);
+	project_settings->setValue("technology", "osu035");
+	project_settings->sync();
+	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
+	project_settings->setValue("sourcedir", rootdir+"/source");
+	project_settings->setValue("synthesis", rootdir+"/synthesis");
+	project_settings->setValue("layout", rootdir+"/layout");
+	project_settings->sync();
+
+	QDir dir(rootdir);
 	dir.mkdir("source");
 	dir.mkdir("synthesis");
 	dir.mkdir("layout");
-
-	//QString Projectprefix = settings->value("Projectprefix");
-	QStringList path_pieces = path.split( '/' );
-	QString project_name = path + '/' + path_pieces.value( path_pieces.length() - 1 ) + ".pro";
-	QTextStream(stdout) << QString("Creating project: ") << project_name << "\n";
-	project_settings = new QSettings(project_name, QSettings::NativeFormat);
-	project_settings->setValue("technology", "osu035");
 
 	return true;
 }

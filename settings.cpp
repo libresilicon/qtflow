@@ -3,7 +3,8 @@
 #include <QTextStream>
 
 Settings::Settings(QWidget *parent, QSettings *s) :
-	QWidget(parent),
+	ui(new Ui::Settings),
+	QDialog(parent),
 	settings(s)
 {
 	ui->setupUi(this);

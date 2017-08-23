@@ -5,12 +5,15 @@
 #include "common.h"
 #include "edit.h"
 #include "dependencies.h"
-#include "modules.h"
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
 #include "welcome.h"
 #include "settings.h"
+
+#include "moduleselector.h"
+#include "fileselector.h"
+#include "projectselector.h"
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -94,9 +97,16 @@ private:
 	Edit *editWidget;
 	Wave *timingWidget;
 	IOPads *iopads;
-	Modules *modules;
+
 	QSettings *settings;
 	Settings *settingsDialog;
+
+	FileSelector *filesWidget;
+	ProjectSelector *projectsWidget;
+	ModuleSelector *modulesWidget;
+
+	QFileSystemModel *filesystem;
+	ProjectsTreeModel *projects;
 };
 
 #endif // MAINWINDOW_H

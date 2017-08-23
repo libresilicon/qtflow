@@ -14,7 +14,7 @@
 #include <QTextStream>
 
 Edit::Edit(QWidget *parent) :
-	QWidget(parent),
+	QDockWidget(parent),
 	ui(new Ui::Edit),
 	createWidget(new New),
 	opened(new QList<IEditor *>),

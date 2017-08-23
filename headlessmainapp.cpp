@@ -3,9 +3,6 @@
 
 HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 {
-	QString top;
-	QString technology;
-	QString project_name;
 	QString path = QDir(".").absolutePath();
 	parser = p;
 
@@ -13,18 +10,7 @@ HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
 	if(parser) {
 		if(parser->isSet("top-level")) {
-			top = parser->value("top-level");
-			technology = parser->isSet("technology")?parser->value("technology"):"osu035";
-			project_name = path+'/'+top+".pro";
-			if(!QFile(project_name).exists()) {
-				QTextStream(stdout) << QString("Creating project: ") << project_name << "\n";
-				QSettings project_settings(project_name, QSettings::NativeFormat);
-				project_settings.setValue("technology", technology);
-				project_settings.setValue("toplevel", top);
-				project_settings.sync();
-			}
-			project = new Project(project_name);
-			project->setRootDir(path);
+			project = new Project(path+'/'+parser->value("top-level")+".pro");
 		} else {
 			qErrnoWarning("No top level given!");
 			exit(0);

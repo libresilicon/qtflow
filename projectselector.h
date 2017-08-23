@@ -1,13 +1,13 @@
 #ifndef PROJECTSELECTOR_H
 #define PROJECTSELECTOR_H
 
-#include <QWidget>
+#include <QDockWidget>
 
-class ProjectSelector : public QWidget
+class ProjectSelector : public QDockWidget
 {
 	Q_OBJECT
 public:
-	explicit ProjectSelector(QWidget *parent = nullptr);
+	ProjectSelector(QWidget *parent);
 
 signals:
 

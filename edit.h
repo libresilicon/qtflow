@@ -6,7 +6,7 @@
 #include "modulestreemodel.h"
 #include "new.h"
 
-#include <QWidget>
+#include <QDockWidget>
 #include <QFileSystemModel>
 #include <QProcess>
 #include <QSettings>
@@ -15,7 +15,7 @@ namespace Ui {
 	class Edit;
 }
 
-class Edit : public QWidget
+class Edit : public QDockWidget
 {
 	Q_OBJECT
 

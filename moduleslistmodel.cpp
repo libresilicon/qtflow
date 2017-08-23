@@ -5,19 +5,17 @@
 #include <QTextStream>
 #include <QFont>
 
-ModulesListModel::ModulesListModel(QObject *parent, QSettings* settings) :
+ModulesListModel::ModulesListModel(QObject *parent) :
 	QAbstractListModel(parent),
 	modules(QList<QString>()),
 	files(QList<QString>()),
-	project_settings(settings),
 	topmodule(-1)
 {
-	QString path  = project_settings->value("sourcedir","").toString();
-	if (path == QString())
+	if (sourcedir == QString())
 		return;
 
 	QRegExp rx("^\\s*module ([a-zA-Z0-9_]+)");
-	QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
+	QDirIterator it(sourcedir, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
 		QFile file(it.next());
@@ -54,6 +52,11 @@ ModulesListModel::~ModulesListModel()
 int ModulesListModel::rowCount(const QModelIndex &) const
 {
 	return modules.count();
+}
+
+void ModulesListModel::setSourceDir(QString path)
+{
+	sourcedir = path;
 }
 
 QVariant ModulesListModel::data(const QModelIndex &index, int role) const

@@ -7,8 +7,7 @@
 
 Templates::Templates(QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::Templates),
-	project(new Project)
+	ui(new Ui::Templates)
 {
 	ui->setupUi(this);
 }
@@ -26,9 +25,7 @@ void Templates::on_buttonBox_accepted()
 	if (path == QString())
 		return;
 
-	project->create(path);
-	//session.setProject(path);
-	//session.getApp()->enableProject();
+	project = new Project(path);
 }
 
 void Templates::on_buttonBox_rejected()

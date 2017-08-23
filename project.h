@@ -7,8 +7,6 @@
 #include <QFileDevice>
 #include <QCommandLineParser>
 
-#include "modules.h"
-
 class IProject
 {
 public:
@@ -32,7 +30,6 @@ public:
 class Project : public IProject
 {
 public:
-	Project();
 	Project(QString path);
 	~Project();
 	bool create(QString);
@@ -45,8 +42,7 @@ public:
 	bool prepareStep(QString path);
 	void setTechnology(QString tech);
 	void setTopLevel(QString mod);
-	void setRootDir(QString dir);
-	Modules *modulesGenerator(QWidget *parent);
+
 	QString getSourceDir();
 
 private:

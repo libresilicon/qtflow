@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>605</width>
-    <height>435</height>
+    <width>1045</width>
+    <height>799</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -35,13 +35,14 @@
     </property>
    </layout>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>605</width>
-     <height>29</height>
+     <width>1045</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -97,16 +98,6 @@
    <addaction name="menuEdit"/>
    <addaction name="menuBuild"/>
    <addaction name="menuTools"/>
-  </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockFileSelect">
-   <property name="features">
-    <set>QDockWidget::AllDockWidgetFeatures</set>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents"/>
   </widget>
   <action name="openMagicFile">
    <property name="text">
@@ -265,6 +256,11 @@
   <action name="clearFilesMenu">
    <property name="text">
     <string>&amp;Clear Menu</string>
+   </property>
+  </action>
+  <action name="actionCode">
+   <property name="text">
+    <string>Code</string>
    </property>
   </action>
  </widget>

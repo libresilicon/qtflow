@@ -1,6 +1,6 @@
 #include "fileselector.h"
 
-FileSelector::FileSelector()
+FileSelector::FileSelector(QWidget *parent):
+	QDockWidget(parent)
 {
-
 }

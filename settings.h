@@ -3,15 +3,14 @@
 
 #include "ui_settings.h"
 
-#include <QWidget>
-#include <QDockWidget>
+#include <QDialog>
 #include <QSettings>
 
 namespace Ui {
 	class Settings;
 }
 
-class Settings : public QWidget
+class Settings : public QDialog
 {
 	Q_OBJECT
 

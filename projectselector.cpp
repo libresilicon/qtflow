@@ -1,6 +1,7 @@
 #include "projectselector.h"
 
-ProjectSelector::ProjectSelector(QWidget *parent) : QWidget(parent)
+ProjectSelector::ProjectSelector(QWidget *parent) :
+	QDockWidget(parent)
 {
 
 }

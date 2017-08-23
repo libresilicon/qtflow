@@ -1,12 +1,18 @@
 #ifndef FILESELECTOR_H
 #define FILESELECTOR_H
 
-#include <QWidget>
+#include <QDockWidget>
+#include <QSettings>
 
-class FileSelector
+#include "ui_files.h"
+
+class FileSelector : public QDockWidget
 {
 public:
-	FileSelector();
+	FileSelector(QWidget *parent);
+
+private:
+	Ui::Files *ui;
 };
 
 #endif // FILESELECTOR_H

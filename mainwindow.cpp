@@ -11,6 +11,10 @@
 #include "welcome.h"
 #include "settings.h"
 
+#include "projectselector.h"
+#include "fileselector.h"
+#include "moduleselector.h"
+
 #include <iostream>
 #include <string>
 
@@ -24,45 +28,56 @@
 #include <QMdiSubWindow>
 #include <QDockWidget>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+MainWindow::MainWindow(QWidget *parent) :
+	QMainWindow(parent),
 	ui(new Ui::MainWindow),
 	tcsh(new QProcess),
 	welcomeWidget(new Welcome),
 	timingWidget(new Wave),
-	editWidget(new Edit),
 	createWidget(new New),
 	errorMessage(new QErrorMessage),
-	iopads(new IOPads)
+	filesystem(new QFileSystemModel),
+	projects(new ProjectsTreeModel(this))
 {
 	ui->setupUi(this);
 	project = NULL;
-	modules = NULL;
 	//ui->consoleError->hide();
 	//ui->tabWidget->tabBar()->hide();
 	//ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
-	//ui->tabWidget->insertTab(1, editWidget, "Edit");
 	//ui->tabWidget->insertTab(2, timingWidget, "Timing");
 	//ui->tabWidget->insertTab(3, new QWidget, "Design");
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
 	settingsDialog = new Settings(this, settings);
 
+	//editWidget = new Edit(this);
+	//editWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	//addDockWidget(Qt::LeftDockWidgetArea, editWidget);
+
+	//iopads = new IOPads(this);
+	//iopads->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	//addDockWidget(Qt::RightDockWidgetArea, iopads);
+
+	filesWidget = new FileSelector(this);
+	filesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::LeftDockWidgetArea, filesWidget);
+
+	projectsWidget = new ProjectSelector(this);
+	projectsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::LeftDockWidgetArea, projectsWidget);
+
+	modulesWidget = new ModuleSelector(this);
+	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
+
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
 	connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 
-	connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
+	//connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
-	//QStringList recentProjectsListTest;
-	//recentProjectsListTest.append("Test 1");
-	//recentProjectsListTest.append("Test 2");
-	//settings->beginGroup("history");
-	//settings->setValue("recentProjects",recentProjectsListTest);
-	//settings->endGroup();
-
-	QMenu *recent;
+	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
-	recent = ui->menuRecentProjects;
 
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
@@ -73,8 +88,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 		recent_action->setData(recentProject);
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
 	}
-
-	QTextStream(stdout) << QString("Work path is: ") << QDir(".").absolutePath() << QString("\n");
 }
 
 void MainWindow::openRecentProject()
@@ -86,11 +99,8 @@ void MainWindow::openRecentProject()
 		if (project_vars.exists()) {
 			if(project) delete project;
 			project = new Project(path);
-			if(modules) delete modules;
-			modules = project->modulesGenerator(this);
-			connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
-			editWidget->setDirectory(project->getSourceDir());
-			enableProject();
+			modulesWidget->setSourceDir(project->getSourceDir());
+			modulesWidget->refresh();
 		}
 	}
 }
@@ -100,7 +110,6 @@ MainWindow::~MainWindow()
 	delete ui;
 	delete errorMessage;
 	if(project) delete project;
-	if(modules) delete modules;
 	//delete dependencies;
 	delete createWidget;
 	delete welcomeWidget;
@@ -136,10 +145,8 @@ void MainWindow::on_openProject_triggered()
 	{
 		if(project) delete project;
 		project = new Project(path);
-		if(modules) delete modules;
-		modules = project->modulesGenerator(this);
-		connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
-		editWidget->setDirectory(project->getSourceDir());
+		modulesWidget->setSourceDir(project->getSourceDir());
+		modulesWidget->refresh();
 		enableProject();
 	}
 }
@@ -255,8 +262,8 @@ void MainWindow::on_menuRouting_triggered()
 
 void MainWindow::on_menuModules_triggered()
 {
-	modules->show();
-	modules->refresh();
+	//modules->show();
+	//modules->refresh();
 }
 
 void MainWindow::on_menuIOPads_triggered()

@@ -5,7 +5,6 @@
 #include "common.h"
 #include "edit.h"
 #include "dependencies.h"
-#include "modules.h"
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
