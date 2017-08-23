@@ -1,17 +1,26 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-#include <QWidget>
+#include "ui_options.h"
 
-class options : public QWidget
+#include <QWidget>
+#include <QDialog>
+
+class Options : public QDialog
 {
-  Q_OBJECT
+	Q_OBJECT
+
 public:
-  explicit options(QWidget *parent = nullptr);
-  
+	explicit Options(QDialog *parent = nullptr);
+
 signals:
-  
+	
+
 public slots:
+	
+private:
+	Ui::Options *ui;
+
 };
 
 #endif // OPTIONS_H
