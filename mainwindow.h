@@ -10,6 +10,7 @@
 #include "iopads.h"
 #include "wave.h"
 #include "welcome.h"
+#include "options.h"
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -62,7 +63,7 @@ private slots:
 	void on_menuRouting_triggered();
 
 	void on_menuIOPads_triggered();
-	//void on_menuOptions_triggered();
+	void on_menuOptions_triggered();
 
 	void on_mainWelcome_clicked();
 	void on_mainEdit_clicked();

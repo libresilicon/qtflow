@@ -9,6 +9,7 @@
 #include "grid.h"
 #include "edit.h"
 #include "welcome.h"
+#include "options.h"
 
 #include <iostream>
 #include <string>
@@ -48,8 +49,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
 	connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
-	connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
-
 	//QStringList recentProjectsListTest;
 	//recentProjectsListTest.append("Test 1");
 	//recentProjectsListTest.append("Test 2");
@@ -86,7 +85,9 @@ void MainWindow::openRecentProject()
 			project = new Project(path);
 			if(modules) delete modules;
 			modules = project->modulesGenerator(this);
+			connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
 			editWidget->setDirectory(project->getSourceDir());
+			enableProject();
 		}
 	}
 }
@@ -117,6 +118,12 @@ void MainWindow::on_newProject_triggered()
 	t->show();
 }
 
+void MainWindow::on_menuOptions_triggered()
+{
+	Options *o = new Options();
+	o->show();
+}
+
 void MainWindow::on_openProject_triggered()
 {
 	QString filter = "File Description (*.pro)";
@@ -131,7 +138,9 @@ void MainWindow::on_openProject_triggered()
 		project = new Project(path);
 		if(modules) delete modules;
 		modules = project->modulesGenerator(this);
+		connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
 		editWidget->setDirectory(project->getSourceDir());
+		enableProject();
 	}
 }
 
@@ -247,7 +256,7 @@ void MainWindow::on_menuRouting_triggered()
 void MainWindow::on_menuModules_triggered()
 {
 	modules->show();
-	//modules->refresh(session.project());
+	modules->refresh();
 }
 
 void MainWindow::on_menuIOPads_triggered()
@@ -326,7 +335,7 @@ void MainWindow::enableProject()
 	enableTopModule();
 	ui->tabWidget->show();
 
-	/*ui->newFile->setDisabled(false);
+	ui->newFile->setDisabled(false);
 	ui->buildAll->setDisabled(false);
 	ui->buildSteps->setDisabled(false);
 	ui->buildEnvironment->setDisabled(false);
@@ -336,7 +345,7 @@ void MainWindow::enableProject()
 	ui->menuRouting->setDisabled(false);
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
-	ui->mainEdit->setDisabled(false);*/
+	ui->mainEdit->setDisabled(false);
 }
 
 void MainWindow::disableProject()
@@ -344,7 +353,7 @@ void MainWindow::disableProject()
 	//ui->tabWidget->setCurrentIndex(0);
 	ui->tabWidget->show();
 
-	/*ui->newFile->setDisabled(true);
+	ui->newFile->setDisabled(true);
 	ui->buildAll->setDisabled(true);
 	ui->buildSteps->setDisabled(true);
 	ui->buildEnvironment->setDisabled(true);
@@ -356,7 +365,7 @@ void MainWindow::disableProject()
 	ui->toolRefresh->setDisabled(true);
 	ui->mainEdit->setDisabled(true);
 	ui->mainDesign->setDisabled(true);
-	ui->tabWidget->setCurrentIndex(0);*/
+	ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::enableTopModule()
@@ -372,7 +381,7 @@ void MainWindow::enableTopModule()
 	//}
 
 	//timingWidget->loadVcd(path);
-	//ui->mainTiming->setDisabled(false);
+	ui->mainTiming->setDisabled(false);
 }
 
 void MainWindow::enableFile()
