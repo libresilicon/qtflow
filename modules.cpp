@@ -46,6 +46,7 @@ void Modules::refresh(QString dir)
 void Modules::on_setTopModule_clicked()
 {
 	QString top = modules->data(ui->listView->currentIndex()).toString();
+	QTextStream(stdout) << "New top module: " << top << '\n';
 	QString origin = modules->file(ui->listView->currentIndex());
 	QFile target(path + "/" + top + ".v");
 	QFile file(path + "/" + origin + ".v");

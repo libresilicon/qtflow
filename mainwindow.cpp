@@ -9,7 +9,7 @@
 #include "grid.h"
 #include "edit.h"
 #include "welcome.h"
-#include "options.h"
+#include "settings.h"
 
 #include <iostream>
 #include <string>
@@ -20,6 +20,9 @@
 #include <QScrollBar>
 #include <QString>
 #include <QProcess>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include <QDockWidget>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	ui(new Ui::MainWindow),
@@ -34,14 +37,15 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	ui->setupUi(this);
 	project = NULL;
 	modules = NULL;
-	ui->consoleError->hide();
-	ui->tabWidget->tabBar()->hide();
-	ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
-	ui->tabWidget->insertTab(1, editWidget, "Edit");
-	ui->tabWidget->insertTab(2, timingWidget, "Timing");
-	ui->tabWidget->insertTab(3, new QWidget, "Design");
+	//ui->consoleError->hide();
+	//ui->tabWidget->tabBar()->hide();
+	//ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
+	//ui->tabWidget->insertTab(1, editWidget, "Edit");
+	//ui->tabWidget->insertTab(2, timingWidget, "Timing");
+	//ui->tabWidget->insertTab(3, new QWidget, "Design");
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
+	settingsDialog = new Settings(this, settings);
 
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
@@ -80,7 +84,6 @@ void MainWindow::openRecentProject()
 		QString path = action->data().toString();
 		QFile project_vars(path);
 		if (project_vars.exists()) {
-			ui->tabWidget->setCurrentIndex(1);
 			if(project) delete project;
 			project = new Project(path);
 			if(modules) delete modules;
@@ -118,10 +121,9 @@ void MainWindow::on_newProject_triggered()
 	t->show();
 }
 
-void MainWindow::on_menuOptions_triggered()
+void MainWindow::on_menuSettings_triggered()
 {
-	Options *o = new Options();
-	o->show();
+	settingsDialog->show();
 }
 
 void MainWindow::on_openProject_triggered()
@@ -132,8 +134,6 @@ void MainWindow::on_openProject_triggered()
 	QFile project_vars(path);
 	if (project_vars.exists())
 	{
-		ui->tabWidget->setCurrentIndex(1);
-		//enableProject();
 		if(project) delete project;
 		project = new Project(path);
 		if(modules) delete modules;
@@ -271,48 +271,48 @@ void MainWindow::on_toolRefresh_triggered()
 
 void MainWindow::on_mainWelcome_clicked()
 {
-	ui->tabWidget->show();
-	ui->tabWidget->setCurrentIndex(0);
+	//ui->tabWidget->show();
+	//ui->tabWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_mainEdit_clicked()
 {
-	ui->tabWidget->show();
-	ui->tabWidget->setCurrentIndex(1);
+	//ui->tabWidget->show();
+	//ui->tabWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_mainTiming_clicked()
 {
-	ui->tabWidget->show();
-	ui->tabWidget->setCurrentIndex(2);
+	//ui->tabWidget->show();
+	//ui->tabWidget->setCurrentIndex(2);
 }
 
 void MainWindow::on_tcshExpand_clicked()
 {
-	ui->tabWidget->hide();
-	ui->consoleOut->show();
-	ui->consoleError->hide();
+	//ui->tabWidget->hide();
+	//ui->consoleOut->show();
+	//ui->consoleError->hide();
 }
 
 void MainWindow::on_tcshErrors_clicked()
 {
-	ui->tabWidget->hide();
-	ui->consoleOut->hide();
-	ui->consoleError->show();
+	//ui->tabWidget->hide();
+	//ui->consoleOut->hide();
+	//ui->consoleError->show();
 }
 
 void MainWindow::fireTcsh()
 {
 	QByteArray bytes = tcsh->read(4096);
-	ui->consoleOut->insertPlainText(bytes);
-	ui->consoleOut->verticalScrollBar()->setValue(ui->consoleOut->verticalScrollBar()->maximum());
+	//ui->consoleOut->insertPlainText(bytes);
+	//ui->consoleOut->verticalScrollBar()->setValue(ui->consoleOut->verticalScrollBar()->maximum());
 }
 
 void MainWindow::errorTcsh()
 {
 	QByteArray bytes = tcsh->readAllStandardError();
-	ui->consoleError->insertPlainText(bytes);
-	ui->consoleError->verticalScrollBar()->setValue(ui->consoleError->verticalScrollBar()->maximum());
+	//ui->consoleError->insertPlainText(bytes);
+	//ui->consoleError->verticalScrollBar()->setValue(ui->consoleError->verticalScrollBar()->maximum());
 }
 
 void MainWindow::exitTcsh(int code)
@@ -333,7 +333,7 @@ void MainWindow::onTopModuleChanged()
 void MainWindow::enableProject()
 {
 	enableTopModule();
-	ui->tabWidget->show();
+	//ui->tabWidget->show();
 
 	ui->newFile->setDisabled(false);
 	ui->buildAll->setDisabled(false);
@@ -345,13 +345,13 @@ void MainWindow::enableProject()
 	ui->menuRouting->setDisabled(false);
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
-	ui->mainEdit->setDisabled(false);
+	//ui->mainEdit->setDisabled(false);
 }
 
 void MainWindow::disableProject()
 {
 	//ui->tabWidget->setCurrentIndex(0);
-	ui->tabWidget->show();
+	//ui->tabWidget->show();
 
 	ui->newFile->setDisabled(true);
 	ui->buildAll->setDisabled(true);
@@ -363,9 +363,8 @@ void MainWindow::disableProject()
 	ui->menuRouting->setDisabled(true);
 	ui->menuModules->setDisabled(true);
 	ui->toolRefresh->setDisabled(true);
-	ui->mainEdit->setDisabled(true);
-	ui->mainDesign->setDisabled(true);
-	ui->tabWidget->setCurrentIndex(0);
+	//ui->mainEdit->setDisabled(true);
+	//ui->mainDesign->setDisabled(true);
 }
 
 void MainWindow::enableTopModule()
@@ -381,7 +380,7 @@ void MainWindow::enableTopModule()
 	//}
 
 	//timingWidget->loadVcd(path);
-	ui->mainTiming->setDisabled(false);
+	//ui->mainTiming->setDisabled(false);
 }
 
 void MainWindow::enableFile()

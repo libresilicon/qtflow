@@ -1,26 +1,35 @@
-#ifndef OPTIONS_H
-#define OPTIONS_H
+#ifndef Settings_H
+#define Settings_H
 
-#include "ui_options.h"
+#include "ui_settings.h"
 
 #include <QWidget>
-#include <QDialog>
+#include <QDockWidget>
+#include <QSettings>
 
-class Options : public QDialog
+namespace Ui {
+	class Settings;
+}
+
+class Settings : public QWidget
 {
 	Q_OBJECT
 
 public:
-	explicit Options(QDialog *parent = nullptr);
+	Settings(QWidget *parent, QSettings *s);
 
 signals:
 	
 
-public slots:
-	
+private slots:
+	void on_selectYosys_triggered();
+	void on_selectGraywolf_triggered();
+	void on_selectQRouter_triggered();
+
 private:
-	Ui::Options *ui;
+	Ui::Settings *ui;
+	QSettings *settings;
 
 };
 
-#endif // OPTIONS_H
+#endif // Settings_H

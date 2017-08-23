@@ -58,7 +58,7 @@ SOURCES += \
 	vcdtreemodel.cpp \
 	vcdlistmodel.cpp \
 	headlessmainapp.cpp \
-    options.cpp
+    settings.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -85,7 +85,7 @@ HEADERS  += \
 	vcdtreemodel.h \
 	vcdlistmodel.h \
 	headlessmainapp.h \
-    options.h
+    settings.h
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -99,7 +99,8 @@ FORMS    += \
 	modules.ui \
 	new.ui \
 	wave.ui \
-    options.ui
+    mainwindow.ui \
+    settings.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
