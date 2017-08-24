@@ -1,11 +1,7 @@
 #include "editor.h"
 
-#include <QPainter>
-#include <QTextBlock>
-#include <QTextStream>
-
 Editor::Editor(QWidget *parent) :
-    QPlainTextEdit(parent),
+	QPlainTextEdit(parent),
     IEditor(),
     lineNumberArea(new LineNumberArea(this)),
     highlight(NULL),
@@ -77,7 +73,7 @@ bool Editor::changes()
 
 int Editor::lineNumberAreaWidth()
 {
-    int digits = 1;
+	int digits = 1;
     int max = qMax(1, blockCount());
     while (max >= 10)
     {
@@ -85,7 +81,7 @@ int Editor::lineNumberAreaWidth()
         ++digits;
     }
     int space = 10 + fontMetrics().width(QLatin1Char('9')) * digits;
-    return space;
+	return space;
 }
 
 void Editor::updateLineNumberAreaWidth(int)
@@ -106,7 +102,7 @@ void Editor::updateLineNumberArea(const QRect &rect, int dy)
 
 void Editor::resizeEvent(QResizeEvent *e)
 {
-    QPlainTextEdit::resizeEvent(e);
+	QPlainTextEdit::resizeEvent(e);
 
     QRect cr = contentsRect();
     lineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
@@ -132,7 +128,7 @@ void Editor::highlightCurrentLine()
 
 void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
-    QPainter painter(lineNumberArea);
+	QPainter painter(lineNumberArea);
     painter.fillRect(event->rect(), Qt::lightGray);
 
     QTextBlock block = firstVisibleBlock();
@@ -152,5 +148,5 @@ void Editor::lineNumberAreaPaintEvent(QPaintEvent *event)
         top = bottom;
         bottom = top + (int) blockBoundingRect(block).height();
         ++blockNumber;
-    }
+	}
 }

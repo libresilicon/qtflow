@@ -3,7 +3,11 @@
 
 #include <QWidget>
 #include <QPlainTextEdit>
+#include <QTextEdit>
 #include <QSyntaxHighlighter>
+#include <QPainter>
+#include <QTextBlock>
+#include <QTextStream>
 
 class IEditor
 {

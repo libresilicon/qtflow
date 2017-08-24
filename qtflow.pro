@@ -57,10 +57,10 @@ SOURCES += \
 	vcdtreemodel.cpp \
 	vcdlistmodel.cpp \
 	headlessmainapp.cpp \
-    settings.cpp \
-    fileselector.cpp \
-    projectselector.cpp \
-    moduleselector.cpp
+	settings.cpp \
+	fileselector.cpp \
+	projectselector.cpp \
+	moduleselector.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -86,10 +86,11 @@ HEADERS  += \
 	vcdtreemodel.h \
 	vcdlistmodel.h \
 	headlessmainapp.h \
-    settings.h \
-    fileselector.h \
-    projectselector.h \
-    moduleselector.h
+	settings.h \
+	fileselector.h \
+	projectselector.h \
+	moduleselector.h
+
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -102,12 +103,12 @@ FORMS    += \
 	iopads.ui \
 	modules.ui \
 	new.ui \
-	wave.ui \
     mainwindow.ui \
     settings.ui \
     modules.ui \
     projects.ui \
-    files.ui
+    files.ui \
+    wave.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

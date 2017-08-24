@@ -3,16 +3,8 @@
 
 #include "vcdparser.h"
 
-#include <QDebug>
-#include <QFile>
-#include <QTreeView>
-#include <QListView>
-#include <QGraphicsView>
-#include <QGraphicsTextItem>
-#include <QMimeData>
-
 Wave::Wave(QWidget *parent) :
-    QWidget(parent),
+	QDockWidget(parent),
     ui(new Ui::Wave),
     tree(new VcdTreeModel),
     list(new VcdListModel),

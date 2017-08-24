@@ -79,7 +79,7 @@
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>E&amp;dit</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuBuild">

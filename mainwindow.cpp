@@ -7,9 +7,11 @@
 #include "magicparser.h"
 #include "templates.h"
 #include "grid.h"
-#include "edit.h"
 #include "welcome.h"
 #include "settings.h"
+
+#include "editor.h"
+#include "verilog.h"
 
 #include "projectselector.h"
 #include "fileselector.h"
@@ -34,7 +36,6 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	ui(new Ui::MainWindow),
 	tcsh(new QProcess),
 	welcomeWidget(new Welcome),
-	timingWidget(new Wave),
 	createWidget(new New),
 	errorMessage(new QErrorMessage)
 {
@@ -48,10 +49,6 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
 	settingsDialog = new Settings(this, settings);
-
-	//editWidget = new Edit(this);
-	//editWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	//addDockWidget(Qt::LeftDockWidgetArea, editWidget);
 
 	//iopads = new IOPads(this);
 	//iopads->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -70,14 +67,17 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
 
+	timingWidget = new Wave(this);
+	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, timingWidget);
+
 	editArea = new QTabWidget(ui->frame);
 	editArea->resize(ui->frame->maximumSize());
+	editArea->setTabsClosable(true);
 
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
 	connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
-
-	//connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
 
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
@@ -92,11 +92,21 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
 	}
 
+	hideAllDockerWidgets();
+
 	if(parser) {
 		if(parser->isSet("top-level")) {
 			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
 		}
 	}
+}
+
+void MainWindow::hideAllDockerWidgets()
+{
+	filesWidget->setVisible(0);
+	projectsWidget->setVisible(0);
+	modulesWidget->setVisible(0);
+	timingWidget->setVisible(0);
 }
 
 void MainWindow::openProject(QString path)
@@ -112,18 +122,38 @@ void MainWindow::openProject(QString path)
 	}
 }
 
+bool MainWindow::isCode(QString suffix)
+{
+	if(suffix=="v") return true;
+	if(suffix=="vs") return true;
+	return false;
+}
+
+bool MainWindow::isSchematic(QString suffix)
+{
+
+}
+
 void MainWindow::openFile(QString file)
 {
 	QString filepath = project->getSourceDir()+'/'+file;
+	QFileInfo info(filepath);
+
 	for(int idx=0; idx<editArea->count(); idx++) {
 		Editor *ed = (Editor *)editArea->widget(idx);
 		if(ed->getFilePath()==filepath) return; // already open
 	}
 
-	QTextStream(stdout) << "Opening: " << filepath << "\n";
-	Editor *editorWidget = new Editor(editArea);
-	editArea->addTab(editorWidget,file);
-	editorWidget->loadFile(filepath);
+	if(isCode(info.suffix())) {
+		QTextStream(stdout) << "Opening: " << filepath << "\n";
+		Editor *editorWidget = new Editor(editArea);
+		editorWidget->loadFile(filepath);
+		if(info.suffix()=="v") {
+			editorWidget->setSyntax(new VerilogHighlight(editorWidget->document()));
+		}
+
+		editArea->addTab(editorWidget,file);
+	}
 }
 
 void MainWindow::openRecentProject()
@@ -140,7 +170,6 @@ MainWindow::~MainWindow()
 	//delete dependencies;
 	delete createWidget;
 	delete welcomeWidget;
-	delete editWidget;
 	delete timingWidget;
 	delete iopads;
 	delete tcsh;
@@ -177,7 +206,6 @@ void MainWindow::on_newFile_triggered()
 
 void MainWindow::on_saveFile_triggered()
 {
-	//editWidget->saveFile(session.file());
 }
 
 void MainWindow::on_openMagicFile_triggered()
@@ -370,14 +398,14 @@ void MainWindow::enableProject()
 	ui->menuRouting->setDisabled(false);
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
-	//ui->mainEdit->setDisabled(false);
+
+	filesWidget->setVisible(1);
+	projectsWidget->setVisible(1);
+	modulesWidget->setVisible(1);
 }
 
 void MainWindow::disableProject()
 {
-	//ui->tabWidget->setCurrentIndex(0);
-	//ui->tabWidget->show();
-
 	ui->newFile->setDisabled(true);
 	ui->buildAll->setDisabled(true);
 	ui->buildSteps->setDisabled(true);
@@ -388,8 +416,6 @@ void MainWindow::disableProject()
 	ui->menuRouting->setDisabled(true);
 	ui->menuModules->setDisabled(true);
 	ui->toolRefresh->setDisabled(true);
-	//ui->mainEdit->setDisabled(true);
-	//ui->mainDesign->setDisabled(true);
 }
 
 void MainWindow::enableTopModule()

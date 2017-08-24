@@ -5,13 +5,20 @@
 #include "vcdlistmodel.h"
 
 #include <QGraphicsScene>
-#include <QWidget>
+#include <QDockWidget>
+#include <QDebug>
+#include <QFile>
+#include <QTreeView>
+#include <QListView>
+#include <QGraphicsView>
+#include <QGraphicsTextItem>
+#include <QMimeData>
 
 namespace Ui {
 class Wave;
 }
 
-class Wave : public QWidget
+class Wave : public QDockWidget
 {
     Q_OBJECT
 

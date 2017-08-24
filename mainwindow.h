@@ -3,7 +3,6 @@
 
 #include "project.h"
 #include "common.h"
-#include "edit.h"
 #include "dependencies.h"
 #include "new.h"
 #include "iopads.h"
@@ -91,15 +90,21 @@ private slots:
 
 	void openFile(QString);
 
+	bool isCode(QString suffix);
+
+	bool isSchematic(QString suffix);
+
+	void hideAllDockerWidgets();
+
 private:
 	Ui::MainWindow *ui;
+
 	Project *project;
 	Dependencies *dependencies;
 	QErrorMessage *errorMessage;
 	QProcess *tcsh;
 	New *createWidget;
 	Welcome *welcomeWidget;
-	Edit *editWidget;
 	Wave *timingWidget;
 	IOPads *iopads;
 
