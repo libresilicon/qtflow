@@ -90,19 +90,24 @@ MainWindow::MainWindow(QWidget *parent) :
 	}
 }
 
+void MainWindow::openProject(QString path)
+{
+	QFile project_vars(path);
+	if (project_vars.exists()) {
+		if(project) delete project;
+		project = new Project(path);
+		QTextStream(stdout) << "File path project->getSourceDir(): " << project->getSourceDir() << "\n";
+		modulesWidget->setSourceDir(project->getSourceDir());
+		filesWidget->setSourceDir(project->getSourceDir());
+		projectsWidget->setSourceDir(project->getSourceDir());
+		enableProject();
+	}
+}
+
 void MainWindow::openRecentProject()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
-	if(action) {
-		QString path = action->data().toString();
-		QFile project_vars(path);
-		if (project_vars.exists()) {
-			if(project) delete project;
-			project = new Project(path);
-			modulesWidget->setSourceDir(project->getSourceDir());
-			modulesWidget->refresh();
-		}
-	}
+	if(action) openProject(action->data().toString());
 }
 
 MainWindow::~MainWindow()
@@ -139,16 +144,7 @@ void MainWindow::on_openProject_triggered()
 {
 	QString filter = "File Description (*.pro)";
 	QString path = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath(), filter);
-
-	QFile project_vars(path);
-	if (project_vars.exists())
-	{
-		if(project) delete project;
-		project = new Project(path);
-		modulesWidget->setSourceDir(project->getSourceDir());
-		modulesWidget->refresh();
-		enableProject();
-	}
+	openProject(path);
 }
 
 void MainWindow::on_newFile_triggered()

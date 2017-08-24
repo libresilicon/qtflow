@@ -322,6 +322,4 @@ Qt::ItemFlags ProjectsTreeModel::flags(const QModelIndex &index) const
 
 void ProjectsTreeModel::onChange(const QString&)
 {
-//	Session &s = Session::Instance();
-//	setRootPath(s.project());
 }

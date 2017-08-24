@@ -13,7 +13,13 @@
   <property name="windowTitle">
    <string>Doc&amp;kWidget</string>
   </property>
-  <widget class="QWidget" name="dockWidgetContents"/>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QListView" name="listView"/>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <resources/>
  <connections/>

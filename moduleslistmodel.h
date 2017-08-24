@@ -9,15 +9,13 @@ class ModulesListModel : public QAbstractListModel
 	Q_OBJECT
 
 public:
-	ModulesListModel(QObject *parent);
+	ModulesListModel(QObject *parent, QString sourcedir);
 	~ModulesListModel();
 
 	int rowCount(const QModelIndex& = QModelIndex()) const override;
 	QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const override;
 
 	QString file(const QModelIndex& = QModelIndex());
-
-	void setSourceDir(QString);
 
 private:
 	QList<QString> modules;

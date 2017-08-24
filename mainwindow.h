@@ -42,6 +42,9 @@ public:
 
 	void error(QString);
 
+private:
+	void openProject(QString file);
+
 public slots:
 	void fireTcsh();
 	void errorTcsh();

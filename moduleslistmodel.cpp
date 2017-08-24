@@ -5,10 +5,11 @@
 #include <QTextStream>
 #include <QFont>
 
-ModulesListModel::ModulesListModel(QObject *parent) :
+ModulesListModel::ModulesListModel(QObject *parent, QString s) :
 	QAbstractListModel(parent),
 	modules(QList<QString>()),
 	files(QList<QString>()),
+	sourcedir(s),
 	topmodule(-1)
 {
 	if (sourcedir == QString())
@@ -52,11 +53,6 @@ ModulesListModel::~ModulesListModel()
 int ModulesListModel::rowCount(const QModelIndex &) const
 {
 	return modules.count();
-}
-
-void ModulesListModel::setSourceDir(QString path)
-{
-	sourcedir = path;
 }
 
 QVariant ModulesListModel::data(const QModelIndex &index, int role) const

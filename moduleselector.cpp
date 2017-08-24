@@ -15,6 +15,7 @@ ModuleSelector::ModuleSelector(QWidget *parent):
 void ModuleSelector::setSourceDir(QString path)
 {
 	sourcedir = path;
+	refresh();
 }
 
 void ModuleSelector::refresh()
@@ -23,8 +24,7 @@ void ModuleSelector::refresh()
 		return;
 
 	if(moduleList) delete moduleList;
-	moduleList = new ModulesListModel(this);
-	moduleList->setSourceDir(sourcedir);
+	moduleList = new ModulesListModel(this,sourcedir);
 	ui->listView->setModel(moduleList);
 }
 
