@@ -10,7 +10,7 @@ FileSelector::FileSelector(QWidget *parent):
 	ui->setupUi(this);
 	filesContext = new QMenu(ui->listView);
 	filesContext->addAction("Test 1");
-	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(customContextMenuRequested(const QPoint&)));
+	this->connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(customContextMenuRequested(const QPoint&)));
 }
 
 void FileSelector::setSourceDir(QString path)

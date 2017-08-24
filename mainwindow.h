@@ -29,7 +29,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit MainWindow(QWidget *parent = 0);
+	explicit MainWindow(QCommandLineParser *parser = 0);
 	~MainWindow();
 
 	void enableProject();
@@ -103,6 +103,7 @@ private:
 
 	QSettings *settings;
 	Settings *settingsDialog;
+	QCommandLineParser *parser;
 
 	FileSelector *filesWidget;
 	ProjectSelector *projectsWidget;

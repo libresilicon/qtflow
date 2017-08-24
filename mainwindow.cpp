@@ -28,8 +28,9 @@
 #include <QMdiSubWindow>
 #include <QDockWidget>
 
-MainWindow::MainWindow(QWidget *parent) :
-	QMainWindow(parent),
+MainWindow::MainWindow(QCommandLineParser *p) :
+	QMainWindow(NULL),
+	parser(p),
 	ui(new Ui::MainWindow),
 	tcsh(new QProcess),
 	welcomeWidget(new Welcome),
@@ -87,6 +88,12 @@ MainWindow::MainWindow(QWidget *parent) :
 		recent_action=recent->addAction(recentProject);
 		recent_action->setData(recentProject);
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
+	}
+
+	if(parser) {
+		if(parser->isSet("top-level")) {
+			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
+		}
 	}
 }
 

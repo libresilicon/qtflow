@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 		ha = new HeadlessMainApp(parser);
 		ha->run();
 	} else {
-		w = new MainWindow();
+		w = new MainWindow(parser);
 		w->show();
 		return app.exec();
 	}
