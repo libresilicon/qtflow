@@ -36,9 +36,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	welcomeWidget(new Welcome),
 	timingWidget(new Wave),
 	createWidget(new New),
-	errorMessage(new QErrorMessage),
-	filesystem(new QFileSystemModel),
-	projects(new ProjectsTreeModel(this))
+	errorMessage(new QErrorMessage)
 {
 	ui->setupUi(this);
 	project = NULL;
@@ -62,6 +60,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	filesWidget = new FileSelector(this);
 	filesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, filesWidget);
+	connect(filesWidget, SIGNAL(openFile(QString)), this, SLOT(openFile(QString)));
 
 	projectsWidget = new ProjectSelector(this);
 	projectsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -70,6 +69,9 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	modulesWidget = new ModuleSelector(this);
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
+
+	editArea = new QTabWidget(ui->frame);
+	editArea->resize(ui->frame->maximumSize());
 
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
@@ -108,6 +110,20 @@ void MainWindow::openProject(QString path)
 		projectsWidget->setSourceDir(project->getSourceDir());
 		enableProject();
 	}
+}
+
+void MainWindow::openFile(QString file)
+{
+	QString filepath = project->getSourceDir()+'/'+file;
+	for(int idx=0; idx<editArea->count(); idx++) {
+		Editor *ed = (Editor *)editArea->widget(idx);
+		if(ed->getFilePath()==filepath) return; // already open
+	}
+
+	QTextStream(stdout) << "Opening: " << filepath << "\n";
+	Editor *editorWidget = new Editor(editArea);
+	editArea->addTab(editorWidget,file);
+	editorWidget->loadFile(filepath);
 }
 
 void MainWindow::openRecentProject()

@@ -9,7 +9,7 @@ Editor::Editor(QWidget *parent) :
     IEditor(),
     lineNumberArea(new LineNumberArea(this)),
     highlight(NULL),
-    filePath("")
+	filePath(QString())
 {
     setWordWrapMode(QTextOption::NoWrap);
 

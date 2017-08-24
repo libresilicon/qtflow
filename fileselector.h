@@ -11,6 +11,8 @@
 
 class FileSelector : public QDockWidget
 {
+	Q_OBJECT
+
 public:
 	FileSelector(QWidget *parent);
 
@@ -19,7 +21,11 @@ public:
 	void setSourceDir(QString path);
 
 public slots:
-	void customContextMenuRequested(const QPoint&);
+	void onFilesContextMenu(const QPoint&);
+	void onFilesOpen(const QModelIndex&);
+
+signals:
+	void openFile(QString);
 
 private:
 	Ui::Files *ui;

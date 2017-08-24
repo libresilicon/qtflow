@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1045</width>
-    <height>799</height>
+    <width>761</width>
+    <height>555</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -33,6 +33,16 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <item>
+     <widget class="QFrame" name="frame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -41,7 +51,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1045</width>
+     <width>761</width>
      <height>22</height>
     </rect>
    </property>

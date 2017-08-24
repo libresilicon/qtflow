@@ -89,6 +89,8 @@ private slots:
 
 	void openRecentProject();
 
+	void openFile(QString);
+
 private:
 	Ui::MainWindow *ui;
 	Project *project;
@@ -109,8 +111,7 @@ private:
 	ProjectSelector *projectsWidget;
 	ModuleSelector *modulesWidget;
 
-	QFileSystemModel *filesystem;
-	ProjectsTreeModel *projects;
+	QTabWidget *editArea;
 };
 
 #endif // MAINWINDOW_H
