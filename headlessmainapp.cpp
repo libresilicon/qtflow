@@ -7,7 +7,7 @@ HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 	parser = p;
 
 	QTextStream(stdout) << QString("Work path is: ") << path << "\n";
-	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	if(parser) {
 		if(parser->isSet("top-level")) {
 			project = new Project(path+'/'+parser->value("top-level")+".pro");

@@ -42,7 +42,7 @@
           <widget class="QLineEdit" name="pathYosys"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="yosysButton">
            <property name="text">
             <string>Select</string>
            </property>
@@ -63,7 +63,7 @@
           <widget class="QLineEdit" name="pathGraywolf"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="graywolfButton">
            <property name="text">
             <string>Select</string>
            </property>
@@ -84,7 +84,7 @@
           <widget class="QLineEdit" name="pathQRouter"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="qrouterButton">
            <property name="text">
             <string>Select</string>
            </property>

@@ -47,7 +47,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	//ui->tabWidget->insertTab(2, timingWidget, "Timing");
 	//ui->tabWidget->insertTab(3, new QWidget, "Design");
 
-	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 
 	//iopads = new IOPads(this);

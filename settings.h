@@ -24,6 +24,8 @@ private slots:
 	void on_selectYosys_triggered();
 	void on_selectGraywolf_triggered();
 	void on_selectQRouter_triggered();
+	void on_buttonBox_save();
+	void on_buttonBox_close();
 
 private:
 	Ui::Settings *ui;
