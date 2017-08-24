@@ -96,7 +96,6 @@ void MainWindow::openProject(QString path)
 	if (project_vars.exists()) {
 		if(project) delete project;
 		project = new Project(path);
-		QTextStream(stdout) << "File path project->getSourceDir(): " << project->getSourceDir() << "\n";
 		modulesWidget->setSourceDir(project->getSourceDir());
 		filesWidget->setSourceDir(project->getSourceDir());
 		projectsWidget->setSourceDir(project->getSourceDir());

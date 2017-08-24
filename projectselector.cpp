@@ -7,6 +7,7 @@ ProjectSelector::ProjectSelector(QWidget *parent) :
 {
 	ui->setupUi(this);
 	ui->treeView->setModel(projects);
+	projectsContext = new QMenu(ui->treeView);
 }
 
 void ProjectSelector::setSourceDir(QString path)

@@ -8,6 +8,7 @@
 #include <QDockWidget>
 #include <QSettings>
 #include <QFile>
+#include <QMenu>
 
 class ModuleSelector : public QDockWidget
 {
@@ -33,6 +34,7 @@ private:
 	ModulesListModel *moduleList;
 	ModulesTreeModel *moduleTree;
 
+	QMenu *modulesContext;
 	QString sourcedir;
 };
 

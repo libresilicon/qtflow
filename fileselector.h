@@ -5,6 +5,7 @@
 #include <QFileSystemModel>
 #include <QProcess>
 #include <QSettings>
+#include <QMenu>
 
 #include "ui_files.h"
 
@@ -17,10 +18,14 @@ public:
 
 	void setSourceDir(QString path);
 
+public slots:
+	void customContextMenuRequested(const QPoint&);
+
 private:
 	Ui::Files *ui;
 
 	QFileSystemModel *filesystem;
+	QMenu *filesContext;
 	QString sourcedir;
 };
 

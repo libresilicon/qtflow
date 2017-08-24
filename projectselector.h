@@ -2,6 +2,8 @@
 #define PROJECTSELECTOR_H
 
 #include <QDockWidget>
+#include <QMenu>
+
 #include "projectstreemodel.h"
 
 #include "ui_projects.h"
@@ -27,6 +29,7 @@ private:
 	QString sourcedir;
 
 	ProjectsTreeModel *projects;
+	QMenu *projectsContext;
 };
 
 #endif // PROJECTSELECTOR_H

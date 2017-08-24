@@ -10,6 +10,7 @@ ModuleSelector::ModuleSelector(QWidget *parent):
 {
 	moduleList = NULL;
 	ui->setupUi(this);
+	modulesContext = new QMenu(ui->listView);
 }
 
 void ModuleSelector::setSourceDir(QString path)
@@ -31,7 +32,6 @@ void ModuleSelector::refresh()
 void ModuleSelector::on_setTopModule_clicked()
 {
 	QString top = moduleList->data(ui->listView->currentIndex()).toString();
-	QTextStream(stdout) << "New top module: " << top << '\n';
 	QString origin = moduleList->file(ui->listView->currentIndex());
 	QFile target(sourcedir + "/" + top + ".v");
 	QFile file(sourcedir + "/" + origin + ".v");

@@ -106,8 +106,8 @@ FORMS    += \
     mainwindow.ui \
     settings.ui \
     modules.ui \
-    files.ui \
-    projects.ui
+    projects.ui \
+    files.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
