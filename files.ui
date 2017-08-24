@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <ui version="4.0">
- <class>Files</class>
- <widget class="QDockWidget" name="Files">
+ <class>DockWidget</class>
+ <widget class="QDockWidget" name="DockWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,16 +11,8 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Doc&amp;kWidget</string>
+   <string>DockWidget</string>
   </property>
-  <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QListView" name="listView"/>
-    </item>
-   </layout>
-  </widget>
+  <widget class="QWidget" name="dockWidgetContents"/>
  </widget>
- <resources/>
- <connections/>
 </ui>
