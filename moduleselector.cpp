@@ -8,9 +8,28 @@ ModuleSelector::ModuleSelector(QWidget *parent):
 	QDockWidget(parent),
 	moduleTree(new ModulesTreeModel)
 {
-	moduleList = NULL;
 	ui->setupUi(this);
-	modulesContext = new QMenu(ui->listView);
+
+	moduleList = NULL;
+
+	context = new QMenu(ui->listView);
+	QAction *setModulesTopModule = new QAction("Set as Top Module", context);
+	context->addAction(setModulesTopModule);
+
+	ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onContextMenu(const QPoint&)));
+	connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(onSetTopModule(bool)));
+}
+
+void ModuleSelector::onContextMenu(const QPoint &point)
+{
+	QModelIndex index = ui->listView->indexAt(point);
+
+	if (!index.isValid())
+		return;
+
+	//setModulesTopModule->setDisabled(modules->topModule(index));
+	context->exec(ui->listView->mapToGlobal(point));
 }
 
 void ModuleSelector::setSourceDir(QString path)
@@ -27,6 +46,15 @@ void ModuleSelector::refresh()
 	if(moduleList) delete moduleList;
 	moduleList = new ModulesListModel(this,sourcedir);
 	ui->listView->setModel(moduleList);
+}
+
+void ModuleSelector::onSetTopModule(bool)
+{
+	QString index = moduleList->data(ui->listView->currentIndex()).toString();
+	//projects->setTopModule(index);
+	//modules->setTopModule(index);
+	moduleTree->setTopModule(index);
+	emit(setTopLevel(index));
 }
 
 void ModuleSelector::on_setTopModule_clicked()

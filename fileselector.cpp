@@ -8,11 +8,11 @@ FileSelector::FileSelector(QWidget *parent):
 	filesystem(new QFileSystemModel)
 {
 	ui->setupUi(this);
-	filesContext = new QMenu(ui->listView);
-	filesContext->addAction("Open");
+	context = new QMenu(ui->listView);
+	context->addAction("Open");
 	ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onFilesContextMenu(const QPoint&)));
-	connect(ui->listView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onFilesOpen(const QModelIndex&)));
+	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onContextMenu(const QPoint&)));
+	connect(ui->listView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onOpen(const QModelIndex&)));
 }
 
 void FileSelector::setSourceDir(QString path)
@@ -30,14 +30,14 @@ void FileSelector::refresh()
 	ui->listView->setRootIndex(filesystem->index(sourcedir));
 }
 
-void FileSelector::onFilesContextMenu(const QPoint &point)
+void FileSelector::onContextMenu(const QPoint &point)
 {
 	QModelIndex index = ui->listView->indexAt(point);
 	if (index.isValid())
-		filesContext->exec(ui->listView->mapToGlobal(point));
+		context->exec(ui->listView->mapToGlobal(point));
 }
 
-void FileSelector::onFilesOpen(const QModelIndex &i)
+void FileSelector::onOpen(const QModelIndex &i)
 {
 	emit(openFile(i.data().toString()));
 }

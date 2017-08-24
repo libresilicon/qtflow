@@ -23,10 +23,13 @@ public:
 
 signals:
 	void topModuleChanged();
+	void setTopLevel(QString);
 
-private slots:
+public slots:
 	void on_setTopModule_clicked();
 	void on_closeButton_clicked();
+	void onSetTopModule(bool);
+	void onContextMenu(const QPoint&);
 
 private:
 	Ui::Modules *ui;
@@ -34,7 +37,7 @@ private:
 	ModulesListModel *moduleList;
 	ModulesTreeModel *moduleTree;
 
-	QMenu *modulesContext;
+	QMenu *context;
 	QString sourcedir;
 };
 

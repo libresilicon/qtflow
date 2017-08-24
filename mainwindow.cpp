@@ -66,6 +66,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	modulesWidget = new ModuleSelector(this);
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
+	connect(modulesWidget, SIGNAL(setTopLevel(QString)), this, SLOT(setTopLevel(QString)));
 
 	timingWidget = new Wave(this);
 	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -420,18 +421,21 @@ void MainWindow::disableProject()
 
 void MainWindow::enableTopModule()
 {
-	//ProjectSettings env(session.project());
-	//QString path = env.value("sourcedir") + "/" + env.value(DEFAULT_VERILOG) + ".vcd";
-	//QFile file(path);
+	QString path = project->getSourceDir()+"/"+project->getTopLevel()+".vcd";
+	QFile file(path);
 
-	//if (!file.exists())
-	//{
-	//	ui->mainTiming->setDisabled(true);
-	//	return;
-	//}
+	if (!file.exists())
+	{
+		timingWidget->setDisabled(true);
+		return;
+	}
+	timingWidget->loadVcd(path);
+	timingWidget->setDisabled(false);
+}
 
-	//timingWidget->loadVcd(path);
-	//ui->mainTiming->setDisabled(false);
+void MainWindow::setTopLevel(QString name)
+{
+	project->setTopLevel(name);
 }
 
 void MainWindow::enableFile()

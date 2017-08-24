@@ -21,8 +21,8 @@ public:
 	void setSourceDir(QString path);
 
 public slots:
-	void onFilesContextMenu(const QPoint&);
-	void onFilesOpen(const QModelIndex&);
+	void onContextMenu(const QPoint&);
+	void onOpen(const QModelIndex&);
 
 signals:
 	void openFile(QString);
@@ -31,7 +31,7 @@ private:
 	Ui::Files *ui;
 
 	QFileSystemModel *filesystem;
-	QMenu *filesContext;
+	QMenu *context;
 	QString sourcedir;
 };
 

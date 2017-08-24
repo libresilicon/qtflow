@@ -43,6 +43,8 @@ public:
 
 private:
 	void openProject(QString file);
+	bool isCode(QString suffix);
+	bool isSchematic(QString suffix);
 
 public slots:
 	void fireTcsh();
@@ -90,9 +92,7 @@ private slots:
 
 	void openFile(QString);
 
-	bool isCode(QString suffix);
-
-	bool isSchematic(QString suffix);
+	void setTopLevel(QString);
 
 	void hideAllDockerWidgets();
 

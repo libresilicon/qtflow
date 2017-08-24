@@ -51,6 +51,11 @@ QString Project::getSourceDir()
 	return project_settings->value("sourcedir").toString();
 }
 
+QString Project::getTopLevel()
+{
+	return project_settings->value("toplevel").toString();
+}
+
 void Project::setTopLevel(QString top)
 {
 	QTextStream(stdout) << "Setting top level to: " << top << "\n";

@@ -44,6 +44,7 @@ public:
 	void setTopLevel(QString mod);
 
 	QString getSourceDir();
+	QString getTopLevel();
 
 private:
 	QSettings *settings;
