@@ -11,6 +11,7 @@ HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 	if(parser) {
 		if(parser->isSet("top-level")) {
 			project = new Project(path+'/'+parser->value("top-level")+".pro");
+			project->setTopLevel(parser->value("top-level"));
 		} else {
 			qErrnoWarning("No top level given!");
 			exit(0);
