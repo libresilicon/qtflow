@@ -12,78 +12,78 @@
 class IEditor
 {
 public:
-    IEditor() {}
-    virtual ~IEditor() {}
+	IEditor() {}
+	virtual ~IEditor() {}
 
-    virtual void lineNumberAreaPaintEvent(QPaintEvent*) {}
-    virtual int lineNumberAreaWidth() { return 0; }
+	virtual void lineNumberAreaPaintEvent(QPaintEvent*) {}
+	virtual int lineNumberAreaWidth() { return 0; }
 
-    virtual void loadFile(QString) {}
-    virtual void saveFile(QString) {}
-    virtual void saveFile() {}
-    virtual QString getFilePath() { return ""; }
+	virtual void loadFile(QString) {}
+	virtual void saveFile(QString) {}
+	virtual void saveFile() {}
+	virtual QString getFilePath() { return ""; }
 
-    virtual void setSyntax(QSyntaxHighlighter*) {}
+	virtual void setSyntax(QSyntaxHighlighter*) {}
 
-    virtual bool changes() { return false; }
+	virtual bool changes() { return false; }
 };
 
 class Editor : public QPlainTextEdit, public IEditor
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    Editor(QWidget *parent = 0);
-    ~Editor();
+	Editor(QWidget *parent = 0);
+	~Editor();
 
-    void lineNumberAreaPaintEvent(QPaintEvent*);
-    int lineNumberAreaWidth();
+	void lineNumberAreaPaintEvent(QPaintEvent*);
+	int lineNumberAreaWidth();
 
-    void loadFile(QString);
-    void saveFile(QString);
-    void saveFile();
-    QString getFilePath();
+	void loadFile(QString);
+	void saveFile(QString);
+	void saveFile();
+	QString getFilePath();
 
-    void setSyntax(QSyntaxHighlighter*);
+	void setSyntax(QSyntaxHighlighter*);
 
-    bool changes();
+	bool changes();
 
 protected:
-    void resizeEvent(QResizeEvent*) override;
+	void resizeEvent(QResizeEvent*) override;
 
 private slots:
-    void updateLineNumberAreaWidth(int);
-    void highlightCurrentLine();
-    void updateLineNumberArea(const QRect&, int);
+	void updateLineNumberAreaWidth(int);
+	void highlightCurrentLine();
+	void updateLineNumberArea(const QRect&, int);
 
 private:
-    QWidget *lineNumberArea;
-    QSyntaxHighlighter *highlight;
-    QString filePath;
+	QWidget *lineNumberArea;
+	QSyntaxHighlighter *highlight;
+	QString filePath;
 };
 
 class LineNumberArea : public QWidget
 {
 private:
-    Editor *codeEditor;
+	Editor *codeEditor;
 
 public:
-    LineNumberArea(Editor *editor) : QWidget(editor)
-    {
-        codeEditor = editor;
-    }
-    ~LineNumberArea() {}
+	LineNumberArea(Editor *editor) : QWidget(editor)
+	{
+		codeEditor = editor;
+	}
+	~LineNumberArea() {}
 
-    QSize sizeHint() const override
-    {
-        return QSize(codeEditor->lineNumberAreaWidth(), 0);
-    }
+	QSize sizeHint() const override
+	{
+		return QSize(codeEditor->lineNumberAreaWidth(), 0);
+	}
 
 protected:
-    void paintEvent(QPaintEvent *event) override
-    {
-        codeEditor->lineNumberAreaPaintEvent(event);
-    }
+	void paintEvent(QPaintEvent *event) override
+	{
+		codeEditor->lineNumberAreaPaintEvent(event);
+	}
 };
 
 #endif // EDITOR_H
