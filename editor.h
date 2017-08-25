@@ -5,28 +5,10 @@
 #include <QPlainTextEdit>
 #include <QTextEdit>
 #include <QSyntaxHighlighter>
-#include <QPainter>
 #include <QTextBlock>
 #include <QTextStream>
 
-class IEditor
-{
-public:
-	IEditor() {}
-	virtual ~IEditor() {}
-
-	virtual void lineNumberAreaPaintEvent(QPaintEvent*) {}
-	virtual int lineNumberAreaWidth() { return 0; }
-
-	virtual void loadFile(QString) {}
-	virtual void saveFile(QString) {}
-	virtual void saveFile() {}
-	virtual QString getFilePath() { return ""; }
-
-	virtual void setSyntax(QSyntaxHighlighter*) {}
-
-	virtual bool changes() { return false; }
-};
+#include "ieditor.h"
 
 class Editor : public QPlainTextEdit, public IEditor
 {

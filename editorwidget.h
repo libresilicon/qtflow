@@ -1,9 +1,6 @@
 #ifndef EDITORWIDGET_H
 #define EDITORWIDGET_H
 
-#include "editor.h"
-#include "verilog.h"
-
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QToolBar>

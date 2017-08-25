@@ -2,6 +2,8 @@
 #define CODEEDITORWIDGET_H
 
 #include "editorwidget.h"
+
+#include "editor.h"
 #include "verilog.h"
 
 #include <QWidget>
