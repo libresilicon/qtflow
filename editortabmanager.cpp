@@ -21,7 +21,7 @@ void EditorTabManager::openFile(QString filepath)
 	}
 
 	if(isCode(info.suffix())) {
-		EditorWidget *editorWidget = new EditorWidget(editArea);
+		CodeEditorWidget *editorWidget = new CodeEditorWidget(editArea);
 		editorWidget->loadFile(filepath);
 		editArea->addTab(editorWidget,info.fileName());
 		connect(editorWidget, SIGNAL(textChanged()), this, SLOT(onTextChanged()));

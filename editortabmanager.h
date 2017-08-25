@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QTabWidget>
-#include "editorwidget.h"
+#include "codeeditorwidget.h"
 
 class EditorTabManager : public QWidget
 {

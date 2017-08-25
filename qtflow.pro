@@ -62,8 +62,9 @@ SOURCES += \
 	fileselector.cpp \
 	projectselector.cpp \
 	moduleselector.cpp \
-    editorwidget.cpp \
-    editortabmanager.cpp
+	editorwidget.cpp \
+	editortabmanager.cpp \
+	codeeditorwidget.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -94,8 +95,9 @@ HEADERS  += \
 	fileselector.h \
 	projectselector.h \
 	moduleselector.h \
-    editorwidget.h \
-    editortabmanager.h
+	editorwidget.h \
+	editortabmanager.h \
+	codeeditorwidget.h
 
 
 FORMS    += \ 
@@ -109,12 +111,12 @@ FORMS    += \
 	iopads.ui \
 	modules.ui \
 	new.ui \
-    mainwindow.ui \
-    settings.ui \
-    modules.ui \
-    projects.ui \
-    files.ui \
-    wave.ui
+	mainwindow.ui \
+	settings.ui \
+	modules.ui \
+	projects.ui \
+	files.ui \
+	wave.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
