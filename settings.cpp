@@ -1,6 +1,7 @@
 #include "settings.h"
 
 #include <QTextStream>
+#include <QFileDialog>
 
 Settings::Settings(QWidget *parent, QSettings *s) :
 	QDialog(parent),
@@ -8,11 +9,11 @@ Settings::Settings(QWidget *parent, QSettings *s) :
 	settings(s)
 {
 	ui->setupUi(this);
-	connect(ui->yosysButton,SIGNAL(clicked(bool)),this,SLOT(on_selectYosys_triggered()));
-	connect(ui->graywolfButton,SIGNAL(clicked(bool)),this,SLOT(on_selectGraywolf_triggered()));
-	connect(ui->qrouterButton,SIGNAL(clicked(bool)),this,SLOT(on_selectQRouter_triggered()));
-	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(on_buttonBox_save()));
-	connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(on_buttonBox_close()));
+	connect(ui->yosysButton,SIGNAL(clicked(bool)),this,SLOT(selectYosys_triggered()));
+	connect(ui->graywolfButton,SIGNAL(clicked(bool)),this,SLOT(selectGraywolf_triggered()));
+	connect(ui->qrouterButton,SIGNAL(clicked(bool)),this,SLOT(selectQRouter_triggered()));
+	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(buttonBox_save()));
+	connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(buttonBox_close()));
 
 	// loading config
 	ui->pathYosys->setText(settings->value("yosys").toString());
@@ -20,29 +21,32 @@ Settings::Settings(QWidget *parent, QSettings *s) :
 	ui->pathQRouter->setText(settings->value("qrouter").toString());
 }
 
-void Settings::on_selectYosys_triggered()
+void Settings::selectYosys_triggered()
 {
-	QTextStream(stdout) << "Miau\n";
+	ui->pathYosys->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-void Settings::on_selectGraywolf_triggered()
+void Settings::selectGraywolf_triggered()
 {
-	QTextStream(stdout) << "Miau\n";
+	ui->pathGraywolf->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-void Settings::on_selectQRouter_triggered()
+void Settings::selectQRouter_triggered()
 {
-	QTextStream(stdout) << "Miau\n";
+	ui->pathQRouter->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-void Settings::on_buttonBox_save()
+void Settings::buttonBox_save()
 {
-	settings->value("yosys",ui->pathYosys->displayText());
-	settings->sync();
-	close();
+	settings->setValue("yosys",ui->pathYosys->displayText());
+	settings->setValue("graywolf",ui->pathGraywolf->displayText());
+	settings->setValue("qrouter",ui->pathQRouter->displayText());
+
+	emit(syncSettings());
+	emit(buttonBox_close());
 }
 
-void Settings::on_buttonBox_close()
+void Settings::buttonBox_close()
 {
 	close();
 }

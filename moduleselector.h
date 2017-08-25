@@ -26,8 +26,8 @@ signals:
 	void setTopLevel(QString);
 
 public slots:
-	void on_setTopModule_clicked();
-	void on_closeButton_clicked();
+	void setTopModule_clicked();
+	void closeButton_clicked();
 	void onSetTopModule(bool);
 	void onContextMenu(const QPoint&);
 

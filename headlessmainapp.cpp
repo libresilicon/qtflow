@@ -10,7 +10,7 @@ HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	if(parser) {
 		if(parser->isSet("top-level")) {
-			project = new Project(path+'/'+parser->value("top-level")+".pro");
+			project = new Project(settings, path+'/'+parser->value("top-level")+".pro");
 			project->setTopLevel(parser->value("top-level"));
 		} else {
 			qErrnoWarning("No top level given!");

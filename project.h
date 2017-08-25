@@ -30,7 +30,7 @@ public:
 class Project : public IProject
 {
 public:
-	Project(QString path);
+	Project(QSettings *settings, QString path);
 	~Project();
 	bool create(QString);
 	bool synthesis();

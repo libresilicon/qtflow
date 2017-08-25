@@ -73,24 +73,17 @@ private slots:
 	void on_menuIOPads_triggered();
 	void on_menuSettings_triggered();
 
-	void on_mainWelcome_clicked();
-	void on_mainEdit_clicked();
-
-	void on_tcshExpand_clicked();
-
-	void on_tcshErrors_clicked();
-
 	void on_toolRefresh_triggered();
 
 	void on_newFile_triggered();
 
 	void on_buildVcd_triggered();
 
-	void on_mainTiming_clicked();
-
 	void openRecentProject();
 
 	void openFile(QString);
+	void closeFile(int);
+	void syncSettings();
 
 	void setTopLevel(QString);
 

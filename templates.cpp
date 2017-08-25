@@ -25,7 +25,7 @@ void Templates::on_buttonBox_accepted()
 	if (path == QString())
 		return;
 
-	project = new Project(path);
+	//project = new Project(settings, path);
 }
 
 void Templates::on_buttonBox_rejected()

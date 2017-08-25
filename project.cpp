@@ -9,8 +9,9 @@
 #include <QSettings>
 #include <QCommandLineParser>
 
-Project::Project(QString path) :
-	IProject()
+Project::Project(QSettings *s, QString path) :
+	IProject(),
+	settings(s)
 {
 	executable
 		= QFileDevice::ReadOwner
@@ -30,7 +31,6 @@ Project::Project(QString path) :
 		create(path);
 	}
 
-	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, ".qtflow", ".qtflow");
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
 	recentProjectsList.append(path);
@@ -42,7 +42,6 @@ Project::Project(QString path) :
 
 Project::~Project()
 {
-	delete settings;
 	delete project_settings;
 }
 

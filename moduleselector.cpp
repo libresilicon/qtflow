@@ -18,7 +18,8 @@ ModuleSelector::ModuleSelector(QWidget *parent):
 
 	ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onContextMenu(const QPoint&)));
-	connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(onSetTopModule(bool)));
+
+	connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(setTopModule_clicked()));
 }
 
 void ModuleSelector::onContextMenu(const QPoint &point)
@@ -57,7 +58,7 @@ void ModuleSelector::onSetTopModule(bool)
 	emit(setTopLevel(index));
 }
 
-void ModuleSelector::on_setTopModule_clicked()
+void ModuleSelector::setTopModule_clicked()
 {
 	QString top = moduleList->data(ui->listView->currentIndex()).toString();
 	QString origin = moduleList->file(ui->listView->currentIndex());
@@ -85,7 +86,7 @@ void ModuleSelector::on_setTopModule_clicked()
 	refresh();
 }
 
-void ModuleSelector::on_closeButton_clicked()
+void ModuleSelector::closeButton_clicked()
 {
 	hide();
 }

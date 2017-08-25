@@ -49,6 +49,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
+	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
 
 	//iopads = new IOPads(this);
 	//iopads->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -75,6 +76,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	editArea = new QTabWidget(ui->frame);
 	editArea->resize(ui->frame->maximumSize());
 	editArea->setTabsClosable(true);
+	connect(editArea, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
 
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
@@ -115,7 +117,7 @@ void MainWindow::openProject(QString path)
 	QFile project_vars(path);
 	if (project_vars.exists()) {
 		if(project) delete project;
-		project = new Project(path);
+		project = new Project(settings, path);
 		modulesWidget->setSourceDir(project->getSourceDir());
 		filesWidget->setSourceDir(project->getSourceDir());
 		projectsWidget->setSourceDir(project->getSourceDir());
@@ -157,10 +159,22 @@ void MainWindow::openFile(QString file)
 	}
 }
 
+void MainWindow::closeFile(int idx)
+{
+	Editor *ed = (Editor*)editArea->widget(idx);
+	ed->saveFile();
+	editArea->removeTab(idx);
+}
+
 void MainWindow::openRecentProject()
 {
 	QAction *action = qobject_cast<QAction *>(sender());
 	if(action) openProject(action->data().toString());
+}
+
+void MainWindow::syncSettings()
+{
+	settings->sync();
 }
 
 MainWindow::~MainWindow()
@@ -321,38 +335,6 @@ void MainWindow::on_menuIOPads_triggered()
 void MainWindow::on_toolRefresh_triggered()
 {
 	enableProject();
-}
-
-void MainWindow::on_mainWelcome_clicked()
-{
-	//ui->tabWidget->show();
-	//ui->tabWidget->setCurrentIndex(0);
-}
-
-void MainWindow::on_mainEdit_clicked()
-{
-	//ui->tabWidget->show();
-	//ui->tabWidget->setCurrentIndex(1);
-}
-
-void MainWindow::on_mainTiming_clicked()
-{
-	//ui->tabWidget->show();
-	//ui->tabWidget->setCurrentIndex(2);
-}
-
-void MainWindow::on_tcshExpand_clicked()
-{
-	//ui->tabWidget->hide();
-	//ui->consoleOut->show();
-	//ui->consoleError->hide();
-}
-
-void MainWindow::on_tcshErrors_clicked()
-{
-	//ui->tabWidget->hide();
-	//ui->consoleOut->hide();
-	//ui->consoleError->show();
 }
 
 void MainWindow::fireTcsh()

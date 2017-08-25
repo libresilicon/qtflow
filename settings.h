@@ -18,14 +18,14 @@ public:
 	Settings(QWidget *parent, QSettings *s);
 
 signals:
-	
+	void syncSettings();
 
 private slots:
-	void on_selectYosys_triggered();
-	void on_selectGraywolf_triggered();
-	void on_selectQRouter_triggered();
-	void on_buttonBox_save();
-	void on_buttonBox_close();
+	void selectYosys_triggered();
+	void selectGraywolf_triggered();
+	void selectQRouter_triggered();
+	void buttonBox_save();
+	void buttonBox_close();
 
 private:
 	Ui::Settings *ui;
