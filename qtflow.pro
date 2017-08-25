@@ -148,4 +148,11 @@ bisonheader.CONFIG += target_predeps no_link
 
 QMAKE_EXTRA_COMPILERS += bisonheader
 
-DATADIR += icons
+#DISTFILES += \
+#    images/document-save-all.svg \
+#    images/document-save-all.svg \
+#    images/document-save-as.svg \
+#    images/document-save.svg
+
+RESOURCES = qtflow.qrc
+

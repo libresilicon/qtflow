@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+	<file alias="document-save-all.svg">images/document-save-all.svg</file>
+	<file alias="document-save-as.svg">images/document-save-as.svg</file>
+	<file alias="document-save.svg">images/document-save.svg</file>
+</qresource>
+</RCC>
