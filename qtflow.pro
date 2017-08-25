@@ -62,7 +62,8 @@ SOURCES += \
 	fileselector.cpp \
 	projectselector.cpp \
 	moduleselector.cpp \
-    editorwidget.cpp
+    editorwidget.cpp \
+    editortabmanager.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -93,7 +94,8 @@ HEADERS  += \
 	fileselector.h \
 	projectselector.h \
 	moduleselector.h \
-    editorwidget.h
+    editorwidget.h \
+    editortabmanager.h
 
 
 FORMS    += \ 

@@ -39,5 +39,5 @@ void FileSelector::onContextMenu(const QPoint &point)
 
 void FileSelector::onOpen(const QModelIndex &i)
 {
-	emit(openFile(i.data().toString()));
+	emit(openFile(sourcedir+'/'+i.data().toString()));
 }

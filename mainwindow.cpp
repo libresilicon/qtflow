@@ -10,8 +10,6 @@
 #include "welcome.h"
 #include "settings.h"
 
-#include "editorwidget.h"
-
 #include "projectselector.h"
 #include "fileselector.h"
 #include "moduleselector.h"
@@ -40,24 +38,18 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 {
 	ui->setupUi(this);
 	project = NULL;
-	//ui->consoleError->hide();
-	//ui->tabWidget->tabBar()->hide();
-	//ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
-	//ui->tabWidget->insertTab(2, timingWidget, "Timing");
-	//ui->tabWidget->insertTab(3, new QWidget, "Design");
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
 
-	//iopads = new IOPads(this);
-	//iopads->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	//addDockWidget(Qt::RightDockWidgetArea, iopads);
+	iopadsWidget = new IOPads(this);
+	iopadsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, iopadsWidget);
 
 	filesWidget = new FileSelector(this);
 	filesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, filesWidget);
-	connect(filesWidget, SIGNAL(openFile(QString)), this, SLOT(openFile(QString)));
 
 	projectsWidget = new ProjectSelector(this);
 	projectsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -72,11 +64,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, timingWidget);
 
-	editArea = new QTabWidget(ui->frame);
-	editArea->resize(ui->frame->maximumSize());
-	editArea->setTabsClosable(true);
-	connect(editArea, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
-	connect(editArea, SIGNAL(currentChanged(int)), this, SLOT(showEditDockerWidgets(int)));
+	editArea = new EditorTabManager(ui->frame);
+	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 
 	mainToolBox = new MainToolBox(this);
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -115,11 +104,7 @@ void MainWindow::hideAllDockerWidgets()
 	modulesWidget->setVisible(false);
 	timingWidget->setVisible(false);
 	mainToolBox->setVisible(false);
-}
-
-void MainWindow::showEditDockerWidgets(int i)
-{
-	mainToolBox->setVisible((editArea->count()>0)?true:false);
+	iopadsWidget->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
@@ -133,54 +118,6 @@ void MainWindow::openProject(QString path)
 		projectsWidget->setSourceDir(project->getSourceDir());
 		enableProject();
 	}
-}
-
-bool MainWindow::isCode(QString suffix)
-{
-	if(suffix=="v") return true;
-	if(suffix=="vs") return true;
-	return false;
-}
-
-bool MainWindow::isSchematic(QString suffix)
-{
-	return false;
-}
-
-void MainWindow::openFile(QString file)
-{
-	QString filepath = project->getSourceDir()+'/'+file;
-	QFileInfo info(filepath);
-
-	for(int idx=0; idx<editArea->count(); idx++) {
-		Editor *ed = (Editor *)editArea->widget(idx);
-		if(ed->getFilePath()==filepath) return; // already open
-	}
-
-	if(isCode(info.suffix())) {
-		EditorWidget *editorWidget = new EditorWidget(editArea);
-		editorWidget->loadFile(filepath);
-		editArea->addTab(editorWidget,file);
-		connect(editorWidget,SIGNAL(textChanged(QString)),this,SLOT(onTextChanged(QString)));
-	}
-}
-
-void MainWindow::onTextChanged(QString f)
-{
-	EditorWidget *ed;
-	for(int idx=0;idx<editArea->count();idx++) {
-		ed = (EditorWidget*)editArea->widget(idx);
-		if(ed->getStatusChanged()) {
-			editArea->setTabText(idx,"Changed");
-		}
-	}
-}
-
-void MainWindow::closeFile(int idx)
-{
-	EditorWidget *ed = (EditorWidget*)editArea->widget(idx);
-	//ed->saveFile();
-	editArea->removeTab(idx);
 }
 
 void MainWindow::openRecentProject()
@@ -203,7 +140,7 @@ MainWindow::~MainWindow()
 	delete createWidget;
 	delete welcomeWidget;
 	delete timingWidget;
-	delete iopads;
+	delete iopadsWidget;
 	delete tcsh;
 }
 
@@ -346,7 +283,7 @@ void MainWindow::on_menuModules_triggered()
 
 void MainWindow::on_menuIOPads_triggered()
 {
-	iopads->show();
+	iopadsWidget->show();
 }
 
 void MainWindow::on_toolRefresh_triggered()

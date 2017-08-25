@@ -18,7 +18,6 @@ EditorWidget::EditorWidget(QWidget *parent) :
 
 	this->setLayout(layout);
 
-	//connect(editArea,SIGNAL(textChanged()),this,SLOT(onTextChanged()));
 	connect(editArea,SIGNAL(blockCountChanged(int)),this,SLOT(onTextChanged()));
 }
 

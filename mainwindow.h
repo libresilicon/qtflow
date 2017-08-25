@@ -11,6 +11,7 @@
 #include "settings.h"
 #include "maintoolbox.h"
 
+#include "editortabmanager.h"
 #include "moduleselector.h"
 #include "fileselector.h"
 #include "projectselector.h"
@@ -52,7 +53,6 @@ public slots:
 	void fireTcsh();
 	void errorTcsh();
 	void exitTcsh(int);
-	void showEditDockerWidgets(int);
 
 private slots:
 	void on_MainWindow_destroyed();
@@ -83,12 +83,10 @@ private slots:
 
 	void openRecentProject();
 
-	void openFile(QString);
 	void setTopLevel(QString);
-	void closeFile(int);
 	void syncSettings();
 	void onTopModuleChanged();
-	void onTextChanged(QString);
+
 
 private:
 	Ui::MainWindow *ui;
@@ -100,7 +98,7 @@ private:
 	New *createWidget;
 	Welcome *welcomeWidget;
 	Wave *timingWidget;
-	IOPads *iopads;
+	IOPads *iopadsWidget;
 
 	QSettings *settings;
 	Settings *settingsDialog;
@@ -111,7 +109,7 @@ private:
 	ModuleSelector *modulesWidget;
 	MainToolBox *mainToolBox;
 
-	QTabWidget *editArea;
+	EditorTabManager *editArea;
 };
 
 #endif // MAINWINDOW_H
