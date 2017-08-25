@@ -150,6 +150,8 @@ bool MainWindow::isSchematic(QString suffix)
 
 void MainWindow::openFile(QString file)
 {
+	QWidget *tabArea;
+	QVBoxLayout *layout;
 	QString filepath = project->getSourceDir()+'/'+file;
 	QFileInfo info(filepath);
 
@@ -158,22 +160,36 @@ void MainWindow::openFile(QString file)
 		if(ed->getFilePath()==filepath) return; // already open
 	}
 
+	if(isCode(info.suffix())||isSchematic(info.suffix())) {
+		tabArea = new QWidget(editArea);
+		layout = new QVBoxLayout(tabArea);
+	}
+
 	if(isCode(info.suffix())) {
-		QTextStream(stdout) << "Opening: " << filepath << "\n";
-		Editor *editorWidget = new Editor(editArea);
+		QToolBar *toolbar = new QToolBar("Main toolbar", tabArea);
+		QPixmap pixmapDocumentSave(":/document-save.svg");
+		QAction *saveButton = new QAction(pixmapDocumentSave,"S&ave", toolbar);
+		toolbar->addAction(saveButton);
+		layout->setMenuBar(toolbar);
+
+		Editor *editorWidget = new Editor(tabArea);
 		editorWidget->loadFile(filepath);
 		if(info.suffix()=="v") {
 			editorWidget->setSyntax(new VerilogHighlight(editorWidget->document()));
 		}
+		layout->addWidget(editorWidget);
 
-		editArea->addTab(editorWidget,file);
+		//connect(editorWidget,SIGNAL(textChanged()),tabArea,SLOT(setWindowModified(bool)));
+
+		tabArea->setLayout(layout);
+		editArea->addTab(tabArea,file);
 	}
 }
 
 void MainWindow::closeFile(int idx)
 {
-	Editor *ed = (Editor*)editArea->widget(idx);
-	ed->saveFile();
+	//Editor *ed = (Editor*)editArea->widget(idx);
+	//ed->saveFile();
 	editArea->removeTab(idx);
 }
 
