@@ -36,6 +36,7 @@ OTHER_FILES +=  \
 
 SOURCES += \
 	main.cpp\
+	maintoolbox.cpp\
 	mainwindow.cpp \
 	magicparser.cpp \
 	grid.cpp \
@@ -61,10 +62,11 @@ SOURCES += \
 	fileselector.cpp \
 	projectselector.cpp \
 	moduleselector.cpp \
-    editortoolbar.cpp
+    editorwidget.cpp
 
 HEADERS  += \
 	mainwindow.h \
+	maintoolbox.h \
 	magicparser.h \
 	common.h \
 	grid.h \
@@ -91,7 +93,7 @@ HEADERS  += \
 	fileselector.h \
 	projectselector.h \
 	moduleselector.h \
-    editortoolbar.h
+    editorwidget.h
 
 
 FORMS    += \ 

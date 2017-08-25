@@ -1,5 +1,5 @@
-#ifndef EDITORTOOLBAR_H
-#define EDITORTOOLBAR_H
+#ifndef MainToolBox_H
+#define MainToolBox_H
 
 #include <QDockWidget>
 #include <QIcon>
@@ -8,11 +8,11 @@
 #include <QToolButton>
 #include <QPainter>
 
-class EditorToolBar : public QDockWidget
+class MainToolBox : public QDockWidget
 {
 	Q_OBJECT
 public:
-	explicit EditorToolBar(QWidget *parent = nullptr);
+	explicit MainToolBox(QWidget *parent = nullptr);
 
 private:
 	QIcon createColorToolButtonIcon(const QString &imageFile, QColor color);
@@ -24,4 +24,4 @@ private:
 	QToolButton *saveButton;
 };
 
-#endif // EDITORTOOLBAR_H
+#endif // MainToolBox_H

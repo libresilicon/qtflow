@@ -9,7 +9,7 @@
 #include "wave.h"
 #include "welcome.h"
 #include "settings.h"
-#include "editortoolbar.h"
+#include "maintoolbox.h"
 
 #include "moduleselector.h"
 #include "fileselector.h"
@@ -108,7 +108,7 @@ private:
 	FileSelector *filesWidget;
 	ProjectSelector *projectsWidget;
 	ModuleSelector *modulesWidget;
-	EditorToolBar *editorToolBar;
+	MainToolBox *mainToolBox;
 
 	QTabWidget *editArea;
 };

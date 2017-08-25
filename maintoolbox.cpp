@@ -1,13 +1,13 @@
-#include "editortoolbar.h"
+#include "maintoolbox.h"
 
-EditorToolBar::EditorToolBar(QWidget *parent) :
+MainToolBox::MainToolBox(QWidget *parent) :
 	QDockWidget(parent)
 {
 	saveButton = new QToolButton(this);
 	saveButton->setIcon(createColorToolButtonIcon("images/document-save.svg", Qt::white));
 }
 
-QIcon EditorToolBar::createColorToolButtonIcon(const QString &imageFile, QColor color)
+QIcon MainToolBox::createColorToolButtonIcon(const QString &imageFile, QColor color)
 {
 	QPixmap pixmap(50, 50);
 	pixmap.fill(Qt::transparent);

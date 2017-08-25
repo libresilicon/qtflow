@@ -10,8 +10,7 @@
 #include "welcome.h"
 #include "settings.h"
 
-#include "editor.h"
-#include "verilog.h"
+#include "editorwidget.h"
 
 #include "projectselector.h"
 #include "fileselector.h"
@@ -79,9 +78,9 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	connect(editArea, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
 	connect(editArea, SIGNAL(currentChanged(int)), this, SLOT(showEditDockerWidgets(int)));
 
-	editorToolBar = new EditorToolBar(this);
-	editorToolBar->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	addDockWidget(Qt::TopDockWidgetArea, editorToolBar);
+	mainToolBox = new MainToolBox(this);
+	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::TopDockWidgetArea, mainToolBox);
 
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
@@ -115,12 +114,12 @@ void MainWindow::hideAllDockerWidgets()
 	projectsWidget->setVisible(false);
 	modulesWidget->setVisible(false);
 	timingWidget->setVisible(false);
-	editorToolBar->setVisible(false);
+	mainToolBox->setVisible(false);
 }
 
 void MainWindow::showEditDockerWidgets(int i)
 {
-		editorToolBar->setVisible((editArea->count()>0)?true:false);
+	mainToolBox->setVisible((editArea->count()>0)?true:false);
 }
 
 void MainWindow::openProject(QString path)
@@ -150,8 +149,6 @@ bool MainWindow::isSchematic(QString suffix)
 
 void MainWindow::openFile(QString file)
 {
-	QWidget *tabArea;
-	QVBoxLayout *layout;
 	QString filepath = project->getSourceDir()+'/'+file;
 	QFileInfo info(filepath);
 
@@ -160,29 +157,10 @@ void MainWindow::openFile(QString file)
 		if(ed->getFilePath()==filepath) return; // already open
 	}
 
-	if(isCode(info.suffix())||isSchematic(info.suffix())) {
-		tabArea = new QWidget(editArea);
-		layout = new QVBoxLayout(tabArea);
-	}
-
 	if(isCode(info.suffix())) {
-		QToolBar *toolbar = new QToolBar("Main toolbar", tabArea);
-		QPixmap pixmapDocumentSave(":/document-save.svg");
-		QAction *saveButton = new QAction(pixmapDocumentSave,"S&ave", toolbar);
-		toolbar->addAction(saveButton);
-		layout->setMenuBar(toolbar);
-
-		Editor *editorWidget = new Editor(tabArea);
+		EditorWidget *editorWidget = new EditorWidget(editArea);
 		editorWidget->loadFile(filepath);
-		if(info.suffix()=="v") {
-			editorWidget->setSyntax(new VerilogHighlight(editorWidget->document()));
-		}
-		layout->addWidget(editorWidget);
-
-		//connect(editorWidget,SIGNAL(textChanged()),tabArea,SLOT(setWindowModified(bool)));
-
-		tabArea->setLayout(layout);
-		editArea->addTab(tabArea,file);
+		editArea->addTab(editorWidget,file);
 	}
 }
 

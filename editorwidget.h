@@ -1,17 +1,30 @@
 #ifndef EDITORWIDGET_H
 #define EDITORWIDGET_H
 
-#include <QObject>
+#include "editor.h"
+#include "verilog.h"
 
-class EditorWidget : public QObject
+#include <QWidget>
+#include <QVBoxLayout>
+#include <QToolBar>
+#include <QFileInfo>
+
+class EditorWidget : public QWidget
 {
-  Q_OBJECT
+	Q_OBJECT
 public:
-  explicit EditorWidget(QObject *parent = nullptr);
-  
+	explicit EditorWidget(QWidget *parent = nullptr);
+	void loadFile(QString);
+	
+	
 signals:
-  
+	
 public slots:
+
+private:
+	Editor *editArea;
+	QVBoxLayout *layout;
+	QToolBar *toolbar;
 };
 
 #endif // EDITORWIDGET_H
