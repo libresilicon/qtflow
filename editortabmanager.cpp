@@ -12,10 +12,11 @@ EditorTabManager::EditorTabManager(QWidget *parent) :
 
 void EditorTabManager::openFile(QString filepath)
 {
+	EditorWidget *ed;
 	QFileInfo info(filepath);
 
-	for(int idx=0; idx<editArea->count(); idx++) {
-		Editor *ed = (Editor *)editArea->widget(idx);
+	for(int idx=0; idx < editArea->count(); idx++) {
+		ed = (EditorWidget *)editArea->widget(idx);
 		if(ed->getFilePath()==filepath) return; // already open
 	}
 
@@ -31,7 +32,7 @@ void EditorTabManager::openFile(QString filepath)
 void EditorTabManager::onTextSaved()
 {
 	EditorWidget *ed;
-	for(int idx=0;idx<editArea->count();idx++) {
+	for(int idx=0; idx<editArea->count(); idx++) {
 		ed = (EditorWidget*)editArea->widget(idx);
 		if(ed->getStatusChanged()) {
 			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
@@ -44,7 +45,7 @@ void EditorTabManager::onTextSaved()
 void EditorTabManager::onTextChanged()
 {
 	EditorWidget *ed;
-	for(int idx=0;idx<editArea->count();idx++) {
+	for(int idx=0; idx<editArea->count(); idx++) {
 		ed = (EditorWidget*)editArea->widget(idx);
 		if(ed->getStatusChanged()) {
 			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
