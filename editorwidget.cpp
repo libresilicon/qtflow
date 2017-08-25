@@ -10,7 +10,9 @@ EditorWidget::EditorWidget(QWidget *parent) :
 	QAction *saveButton;
 
 	toolbar = new QToolBar(this);
+
 	saveButton = new QAction(pixmapDocumentSave,"S&ave", toolbar);
+	connect(saveButton,SIGNAL(triggered(bool)),this,SLOT(saveFile()));
 
 	toolbar->addAction(saveButton);
 	layout->setMenuBar(toolbar);
@@ -25,6 +27,7 @@ void EditorWidget::saveFile()
 {
 	editArea->saveFile();
 	statusChanged = false;
+	emit(textSaved());
 }
 
 void EditorWidget::loadFile(QString path)
@@ -44,11 +47,11 @@ bool EditorWidget::getStatusChanged()
 
 QString EditorWidget::getFilePath()
 {
-	editArea->getFilePath();
+	return editArea->getFilePath();
 }
 
 void EditorWidget::onTextChanged()
 {
 	statusChanged = true;
-	emit(textChanged(editArea->getFilePath()));
+	emit(textChanged());
 }

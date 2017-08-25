@@ -15,16 +15,17 @@ class EditorWidget : public QWidget
 public:
 	explicit EditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
-	void saveFile();
 	QString getFilePath();
 	
 	bool getStatusChanged();
 
 signals:
-	void textChanged(QString);
+	void textChanged();
+	void textSaved();
 	
 public slots:
 	void onTextChanged();
+	void saveFile();
 
 private:
 	Editor *editArea;

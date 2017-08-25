@@ -8,7 +8,6 @@ EditorTabManager::EditorTabManager(QWidget *parent) :
 	editArea->setTabsClosable(true);
 
 	connect(editArea, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
-	//connect(editArea, SIGNAL(currentChanged(int)), this, SLOT(showEditDockerWidgets(int)));
 }
 
 void EditorTabManager::openFile(QString filepath)
@@ -24,17 +23,31 @@ void EditorTabManager::openFile(QString filepath)
 		EditorWidget *editorWidget = new EditorWidget(editArea);
 		editorWidget->loadFile(filepath);
 		editArea->addTab(editorWidget,info.fileName());
-		connect(editorWidget,SIGNAL(textChanged(QString)),this,SLOT(onTextChanged(QString)));
+		connect(editorWidget, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+		connect(editorWidget, SIGNAL(textSaved()), this, SLOT(onTextSaved()));
 	}
 }
 
-void EditorTabManager::onTextChanged(QString f)
+void EditorTabManager::onTextSaved()
 {
 	EditorWidget *ed;
 	for(int idx=0;idx<editArea->count();idx++) {
 		ed = (EditorWidget*)editArea->widget(idx);
 		if(ed->getStatusChanged()) {
-			editArea->setTabText(idx,"Changed");
+			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
+		} else {
+			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName());
+		}
+	}
+}
+
+void EditorTabManager::onTextChanged()
+{
+	EditorWidget *ed;
+	for(int idx=0;idx<editArea->count();idx++) {
+		ed = (EditorWidget*)editArea->widget(idx);
+		if(ed->getStatusChanged()) {
+			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
 		}
 	}
 }
@@ -48,12 +61,12 @@ bool EditorTabManager::isCode(QString suffix)
 
 bool EditorTabManager::isSchematic(QString suffix)
 {
+	if(suffix=="sch") return true;
+	if(suffix=="sym") return true;
 	return false;
 }
 
 void EditorTabManager::closeFile(int idx)
 {
-	EditorWidget *ed = (EditorWidget*)editArea->widget(idx);
-	//ed->saveFile();
 	editArea->removeTab(idx);
 }

@@ -16,7 +16,9 @@ public:
 signals:
 
 public slots:
-	void onTextChanged(QString);
+	void onTextChanged();
+	void onTextSaved();
+
 	void openFile(QString);
 	void closeFile(int);
 
