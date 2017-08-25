@@ -125,15 +125,16 @@ bool Project::create(QString path)
 	project_settings->setValue("technology", "osu035");
 	project_settings->sync();
 	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
+	project_settings->setValue("rootdir", rootdir);
 	project_settings->setValue("sourcedir", rootdir+"/source");
 	project_settings->setValue("synthesis", rootdir+"/synthesis");
 	project_settings->setValue("layout", rootdir+"/layout");
 	project_settings->sync();
 
 	QDir dir(rootdir);
-	dir.mkdir("source");
-	dir.mkdir("synthesis");
-	dir.mkdir("layout");
+	if(!QDir(rootdir+"/source").exists()) dir.mkdir("source");
+	if(!QDir(rootdir+"/synthesis").exists()) dir.mkdir("synthesis");
+	if(!QDir(rootdir+"/layout").exists()) dir.mkdir("layout");
 
 	return true;
 }

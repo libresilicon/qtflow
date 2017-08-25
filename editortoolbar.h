@@ -1,9 +1,12 @@
 #ifndef EDITORTOOLBAR_H
 #define EDITORTOOLBAR_H
 
-#include "ui_editortoolbar.h"
-
 #include <QDockWidget>
+#include <QIcon>
+#include <QRect>
+#include <QPixmap>
+#include <QToolButton>
+#include <QPainter>
 
 class EditorToolBar : public QDockWidget
 {
@@ -11,11 +14,14 @@ class EditorToolBar : public QDockWidget
 public:
 	explicit EditorToolBar(QWidget *parent = nullptr);
 
+private:
+	QIcon createColorToolButtonIcon(const QString &imageFile, QColor color);
+
 signals:
 
 public slots:
 private:
-	Ui::EditorToolBar *ui;
+	QToolButton *saveButton;
 };
 
 #endif // EDITORTOOLBAR_H
