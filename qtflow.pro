@@ -64,7 +64,8 @@ SOURCES += \
 	moduleselector.cpp \
 	editorwidget.cpp \
 	editortabmanager.cpp \
-	codeeditorwidget.cpp
+	codeeditorwidget.cpp \
+	schematicseditorwidget.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -97,8 +98,8 @@ HEADERS  += \
 	moduleselector.h \
 	editorwidget.h \
 	editortabmanager.h \
-	codeeditorwidget.h
-
+	codeeditorwidget.h \
+	schematicseditorwidget.h
 
 FORMS    += \ 
 	mainwindow.ui \

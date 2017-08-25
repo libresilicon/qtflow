@@ -14,6 +14,15 @@ class CodeEditorWidget : public EditorWidget
 	Q_OBJECT
 public:
 	explicit CodeEditorWidget(QWidget *parent = nullptr);
+	void loadFile(QString);
+	QString getFilePath();
+
+public slots:
+	void onContentChanged();
+	void saveFile();
+
+private:
+	Editor *editArea;
 };
 
 #endif // EDITORWIDGET_H

@@ -24,12 +24,19 @@ void EditorTabManager::openFile(QString filepath)
 		CodeEditorWidget *editorWidget = new CodeEditorWidget(editArea);
 		editorWidget->loadFile(filepath);
 		editArea->addTab(editorWidget,info.fileName());
-		connect(editorWidget, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
-		connect(editorWidget, SIGNAL(textSaved()), this, SLOT(onTextSaved()));
+		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+	}
+	if(isSchematic(info.suffix())) {
+		SchematicsEditorWidget *editorWidget = new SchematicsEditorWidget(editArea);
+		editorWidget->loadFile(filepath);
+		editArea->addTab(editorWidget,info.fileName());
+		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
 }
 
-void EditorTabManager::onTextSaved()
+void EditorTabManager::onContentSaved()
 {
 	EditorWidget *ed;
 	for(int idx=0; idx<editArea->count(); idx++) {
@@ -42,7 +49,7 @@ void EditorTabManager::onTextSaved()
 	}
 }
 
-void EditorTabManager::onTextChanged()
+void EditorTabManager::onContentChanged()
 {
 	EditorWidget *ed;
 	for(int idx=0; idx<editArea->count(); idx++) {

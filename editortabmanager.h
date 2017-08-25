@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTabWidget>
 #include "codeeditorwidget.h"
+#include "schematicseditorwidget.h"
 
 class EditorTabManager : public QWidget
 {
@@ -16,8 +17,8 @@ public:
 signals:
 
 public slots:
-	void onTextChanged();
-	void onTextSaved();
+	void onContentChanged();
+	void onContentSaved();
 
 	void openFile(QString);
 	void closeFile(int);

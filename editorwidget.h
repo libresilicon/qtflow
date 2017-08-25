@@ -12,23 +12,25 @@
 class EditorWidget : public QWidget
 {
 	Q_OBJECT
+
 public:
 	explicit EditorWidget(QWidget *parent = nullptr);
-	void loadFile(QString);
-	QString getFilePath();
-	
+	virtual void loadFile(QString);
+	virtual QString getFilePath();
+
 	bool getStatusChanged();
+	void setEditWidget(QWidget *editArea);
+	void setStatusChanged(bool);
 
 signals:
-	void textChanged();
-	void textSaved();
-	
+	void contentChanged();
+	void contentSaved();
+
 public slots:
-	void onTextChanged();
-	void saveFile();
+	virtual void onContentChanged();
+	virtual void saveFile();
 
 private:
-	Editor *editArea;
 	QVBoxLayout *layout;
 	QToolBar *toolbar;
 	
