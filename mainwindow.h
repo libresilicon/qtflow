@@ -9,6 +9,7 @@
 #include "wave.h"
 #include "welcome.h"
 #include "settings.h"
+#include "editortoolbar.h"
 
 #include "moduleselector.h"
 #include "fileselector.h"
@@ -45,12 +46,13 @@ private:
 	void openProject(QString file);
 	bool isCode(QString suffix);
 	bool isSchematic(QString suffix);
+	void hideAllDockerWidgets();
 
 public slots:
 	void fireTcsh();
 	void errorTcsh();
 	void exitTcsh(int);
-	void onTopModuleChanged();
+	void showEditDockerWidgets(int);
 
 private slots:
 	void on_MainWindow_destroyed();
@@ -82,12 +84,10 @@ private slots:
 	void openRecentProject();
 
 	void openFile(QString);
+	void setTopLevel(QString);
 	void closeFile(int);
 	void syncSettings();
-
-	void setTopLevel(QString);
-
-	void hideAllDockerWidgets();
+	void onTopModuleChanged();
 
 private:
 	Ui::MainWindow *ui;
@@ -108,6 +108,7 @@ private:
 	FileSelector *filesWidget;
 	ProjectSelector *projectsWidget;
 	ModuleSelector *modulesWidget;
+	EditorToolBar *editorToolBar;
 
 	QTabWidget *editArea;
 };

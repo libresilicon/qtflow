@@ -60,7 +60,8 @@ SOURCES += \
 	settings.cpp \
 	fileselector.cpp \
 	projectselector.cpp \
-	moduleselector.cpp
+	moduleselector.cpp \
+    editortoolbar.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -89,7 +90,8 @@ HEADERS  += \
 	settings.h \
 	fileselector.h \
 	projectselector.h \
-	moduleselector.h
+	moduleselector.h \
+    editortoolbar.h
 
 
 FORMS    += \ 
@@ -108,7 +110,8 @@ FORMS    += \
     modules.ui \
     projects.ui \
     files.ui \
-    wave.ui
+    wave.ui \
+    editortoolbar.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

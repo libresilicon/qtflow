@@ -1,18 +1,45 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DockWidget</class>
- <widget class="QDockWidget" name="DockWidget">
+ <class>EditorToolBar</class>
+ <widget class="QDockWidget" name="EditorToolBar">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>149</width>
     <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DockWidget</string>
+   <string>Doc&amp;kWidget</string>
   </property>
-  <widget class="QWidget" name="dockWidgetContents"/>
+  <widget class="QWidget" name="dockWidgetContents">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButtonTestBench">
+      <property name="text">
+       <string>Run testbench</string>
+      </property>
+      <property name="icon">
+       <iconset theme="testbench.png">
+        <normaloff>.</normaloff>.</iconset>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="pushButtonSynthesis">
+      <property name="text">
+       <string>Synthesis</string>
+      </property>
+      <property name="icon">
+       <iconset theme="run.png">
+        <normaloff>.</normaloff>.</iconset>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
+ <resources/>
+ <connections/>
 </ui>

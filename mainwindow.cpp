@@ -77,6 +77,11 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	editArea->resize(ui->frame->maximumSize());
 	editArea->setTabsClosable(true);
 	connect(editArea, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
+	connect(editArea, SIGNAL(currentChanged(int)), this, SLOT(showEditDockerWidgets(int)));
+
+	editorToolBar = new EditorToolBar(this);
+	editorToolBar->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::TopDockWidgetArea, editorToolBar);
 
 	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
 	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
@@ -106,10 +111,16 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 
 void MainWindow::hideAllDockerWidgets()
 {
-	filesWidget->setVisible(0);
-	projectsWidget->setVisible(0);
-	modulesWidget->setVisible(0);
-	timingWidget->setVisible(0);
+	filesWidget->setVisible(false);
+	projectsWidget->setVisible(false);
+	modulesWidget->setVisible(false);
+	timingWidget->setVisible(false);
+	editorToolBar->setVisible(false);
+}
+
+void MainWindow::showEditDockerWidgets(int i)
+{
+		editorToolBar->setVisible((editArea->count()>0)?true:false);
 }
 
 void MainWindow::openProject(QString path)
@@ -134,7 +145,7 @@ bool MainWindow::isCode(QString suffix)
 
 bool MainWindow::isSchematic(QString suffix)
 {
-
+	return false;
 }
 
 void MainWindow::openFile(QString file)

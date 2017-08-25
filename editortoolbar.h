@@ -1,9 +1,11 @@
 #ifndef EDITORTOOLBAR_H
 #define EDITORTOOLBAR_H
 
-#include <QWidget>
+#include "ui_editortoolbar.h"
 
-class EditorToolBar : public QWidget
+#include <QDockWidget>
+
+class EditorToolBar : public QDockWidget
 {
 	Q_OBJECT
 public:
@@ -12,6 +14,8 @@ public:
 signals:
 
 public slots:
+private:
+	Ui::EditorToolBar *ui;
 };
 
 #endif // EDITORTOOLBAR_H
