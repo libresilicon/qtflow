@@ -15,16 +15,23 @@ class EditorWidget : public QWidget
 public:
 	explicit EditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
+	void saveFile();
+	QString getFilePath();
 	
-	
+	bool getStatusChanged();
+
 signals:
+	void textChanged(QString);
 	
 public slots:
+	void onTextChanged();
 
 private:
 	Editor *editArea;
 	QVBoxLayout *layout;
 	QToolBar *toolbar;
+	
+	bool statusChanged;
 };
 
 #endif // EDITORWIDGET_H

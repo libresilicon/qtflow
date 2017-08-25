@@ -161,12 +161,24 @@ void MainWindow::openFile(QString file)
 		EditorWidget *editorWidget = new EditorWidget(editArea);
 		editorWidget->loadFile(filepath);
 		editArea->addTab(editorWidget,file);
+		connect(editorWidget,SIGNAL(textChanged(QString)),this,SLOT(onTextChanged(QString)));
+	}
+}
+
+void MainWindow::onTextChanged(QString f)
+{
+	EditorWidget *ed;
+	for(int idx=0;idx<editArea->count();idx++) {
+		ed = (EditorWidget*)editArea->widget(idx);
+		if(ed->getStatusChanged()) {
+			editArea->setTabText(idx,"Changed");
+		}
 	}
 }
 
 void MainWindow::closeFile(int idx)
 {
-	//Editor *ed = (Editor*)editArea->widget(idx);
+	EditorWidget *ed = (EditorWidget*)editArea->widget(idx);
 	//ed->saveFile();
 	editArea->removeTab(idx);
 }

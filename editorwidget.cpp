@@ -3,7 +3,8 @@
 EditorWidget::EditorWidget(QWidget *parent) :
 	QWidget(parent),
 	layout(new QVBoxLayout(this)),
-	editArea(new Editor(this))
+	editArea(new Editor(this)),
+	statusChanged(false)
 {
 	QPixmap pixmapDocumentSave(":/document-save.svg");
 	QAction *saveButton;
@@ -17,7 +18,14 @@ EditorWidget::EditorWidget(QWidget *parent) :
 
 	this->setLayout(layout);
 
-	//connect(editorWidget,SIGNAL(textChanged()),parent,);
+	//connect(editArea,SIGNAL(textChanged()),this,SLOT(onTextChanged()));
+	connect(editArea,SIGNAL(blockCountChanged(int)),this,SLOT(onTextChanged()));
+}
+
+void EditorWidget::saveFile()
+{
+	editArea->saveFile();
+	statusChanged = false;
 }
 
 void EditorWidget::loadFile(QString path)
@@ -27,4 +35,21 @@ void EditorWidget::loadFile(QString path)
 	if(info.suffix()=="v") {
 		editArea->setSyntax(new VerilogHighlight(editArea->document()));
 	}
+	statusChanged = false;
+}
+
+bool EditorWidget::getStatusChanged()
+{
+	return statusChanged;
+}
+
+QString EditorWidget::getFilePath()
+{
+	editArea->getFilePath();
+}
+
+void EditorWidget::onTextChanged()
+{
+	statusChanged = true;
+	emit(textChanged(editArea->getFilePath()));
 }

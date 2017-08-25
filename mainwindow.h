@@ -88,6 +88,7 @@ private slots:
 	void closeFile(int);
 	void syncSettings();
 	void onTopModuleChanged();
+	void onTextChanged(QString);
 
 private:
 	Ui::MainWindow *ui;
