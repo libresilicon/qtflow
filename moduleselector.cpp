@@ -8,18 +8,18 @@ ModuleSelector::ModuleSelector(QWidget *parent):
 	QDockWidget(parent),
 	moduleTree(new ModulesTreeModel)
 {
-	ui->setupUi(this);
-
 	moduleList = NULL;
+
+	ui->setupUi(this);
+	ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	context = new QMenu(ui->listView);
 	QAction *setModulesTopModule = new QAction("Set as Top Module", context);
 	context->addAction(setModulesTopModule);
+	connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(onSetTopModule(bool)));
 
-	ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onContextMenu(const QPoint&)));
 
-	connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(setTopModule_clicked()));
 }
 
 void ModuleSelector::onContextMenu(const QPoint &point)
@@ -52,10 +52,9 @@ void ModuleSelector::refresh()
 void ModuleSelector::onSetTopModule(bool)
 {
 	QString index = moduleList->data(ui->listView->currentIndex()).toString();
-	//projects->setTopModule(index);
-	//modules->setTopModule(index);
 	moduleTree->setTopModule(index);
 	emit(setTopLevel(index));
+	refresh();
 }
 
 void ModuleSelector::setTopModule_clicked()

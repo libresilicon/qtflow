@@ -110,8 +110,7 @@ FORMS    += \
     modules.ui \
     projects.ui \
     files.ui \
-    wave.ui \
-    editortoolbar.ui
+    wave.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
@@ -148,3 +147,5 @@ bisonheader.name = Bison Headers ${QMAKE_FILE_IN}
 bisonheader.CONFIG += target_predeps no_link
 
 QMAKE_EXTRA_COMPILERS += bisonheader
+
+DATADIR += icons
