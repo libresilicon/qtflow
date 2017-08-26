@@ -2,12 +2,15 @@
 #define LAYOUTEDITOR_H
 
 #include "ieditor.h"
+#include "magicdata.h"
 
 #include <QWidget>
+#include <QGraphicsScene>
 
 class LayoutEditor : public QWidget, public IEditor
 {
 	Q_OBJECT
+
 public:
 	explicit LayoutEditor(QWidget *parent = nullptr);
 	~LayoutEditor();
@@ -19,11 +22,12 @@ public:
 	bool changes();
 
 protected:
-	void resizeEvent(QResizeEvent*) override;
+	void resizeEvent(QResizeEvent*);
 	void paintEvent(QPaintEvent *event);
 
 private:
 	QString filePath;
+	magic::MagicData *magicdata;
 
 };
 

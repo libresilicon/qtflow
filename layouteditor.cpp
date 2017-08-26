@@ -2,7 +2,8 @@
 
 LayoutEditor::LayoutEditor(QWidget *parent) :
 	QWidget(parent),
-	filePath(QString())
+	filePath(QString()),
+	magicdata(new magic::MagicData())
 {
 }
 
@@ -25,6 +26,7 @@ void LayoutEditor::resizeEvent(QResizeEvent*)
 void LayoutEditor::loadFile(QString file)
 {
 	filePath = file;
+	magicdata->loadFile(file);
 }
 
 void LayoutEditor::saveFile()

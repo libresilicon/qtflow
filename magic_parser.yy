@@ -21,94 +21,88 @@
 #include "magicdata.h"
 
 #define magiclex (magicdata->getLexer())->magiclex
-//#define yylineno (int)magicdata->lexer->lineno()
-//#define yytext magicdata->lexer->YYText()
+#define magiclineno (int)(magicdata->getLexer())->lineno()
 
 %}
 
 %union {
 	int v_int;
-	char* v_str;
+	std::string* v_str;
+	double v_double;
 }
 
-%initial-action
-{
-	magicdata->clearParsedElements();
-}
-
-%token SPACE
-%token MAGIC TECH MAGSCALE
+%token PORT
+%token BOX
+%token TRANSFORM
+%token MAGIC
+%token TECH
+%token MAGSCALE
 %token TIMESTAMP
-%token BEGINTITLE ENDTITLE
+%token BEGINTITLE
+%token ENDTITLE
+%token USE
 
 %token RECT
 %token RLABEL
-
-%token END
+%token FLABEL
 
 %token INTEGER
 %type <v_int> INTEGER
-%token IDENT
-%type <v_str> IDENT
+%token STRING
+%type <v_str> STRING
+%token DOUBLE
+%type <v_double> DOUBLE
 
+%start magic_file
 %%
-
-program:
-	MAGIC
-	TECH SPACE IDENT
-	MAGSCALE SPACE INTEGER SPACE INTEGER
-	TIMESTAMP SPACE INTEGER
-    sections
-    ;
-
-sections:
-	sections section
-    |
-    section
-    ;
-
+magic_file: MAGIC technology magscale timestamp sections;
+technology: TECH STRING;
+magscale: MAGSCALE INTEGER INTEGER;
+timestamp: TIMESTAMP INTEGER;
+sections: sections section | section;
 section:
-	BEGINTITLE sectiontitle ENDTITLE items
-    |
-    END
-    |
-    %empty
-    ;
+		  BEGINTITLE sectiontitle ENDTITLE items;
+		| BEGINTITLE sectiontitle ENDTITLE;
+sectiontitle: STRING
+	{
+		magicdata->setLayer($1);
+	}
+	;
 
-sectiontitle:
-	IDENT { magicdata->setTitle(QString($1)); }
-    ;
+items: items item | item ;
 
-items:
-	items item
-    |
-    item
-    ;
+item: rect | rlabel | flabel | use;
 
-item:
-    rect
-    |
-    rlabel
-    |
-    sections
-    ;
+use: USE STRING STRING timestamp transform box;
+transform: TRANSFORM INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER;
+box: BOX INTEGER INTEGER INTEGER INTEGER;
 
 rect:
-	RECT SPACE INTEGER SPACE INTEGER SPACE INTEGER SPACE INTEGER { magicdata->addRectangle($3, $5, $7 - $3, $9 - $5, "layer"); }
+	RECT INTEGER INTEGER INTEGER INTEGER
+	{
+		magicdata->addRectangle($2, $3, $4 - $2, $5 - $3);
+	}
     ;
 
 rlabel:
-    RLABEL SPACE material
-    SPACE INTEGER SPACE INTEGER SPACE INTEGER SPACE INTEGER SPACE INTEGER SPACE
-    IDENT
+	RLABEL STRING
+	INTEGER INTEGER INTEGER INTEGER INTEGER
+	STRING
     ;
 
-material:
-    IDENT
-    ;
+flabel:
+	FLABEL STRING
+	INTEGER INTEGER INTEGER INTEGER INTEGER
+	STRING
+	INTEGER INTEGER INTEGER INTEGER
+	STRING
+	port
+	;
+
+port: PORT INTEGER STRING;
+
 %%
 
 void magic::MagicParser::error(const std::string &s) {
-	//yyclearin;
-	//throw ParserException{magicline, QString(s)};
+	std::cout << "Error message: " << s << " on line " << magiclineno << std::endl;
 }

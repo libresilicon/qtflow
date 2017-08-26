@@ -4,7 +4,9 @@
 
 #include "magicscanner.h"
 
-#define YY_DECL int magic::MagicScanner::magiclex(magic::MagicParser::semantic_type* magiclval, magic::MagicData *magicdata)
+#define YY_DECL int magic::MagicScanner::magiclex(\
+	magic::MagicParser::semantic_type* magiclval,\
+	magic::MagicData *magicdata)
 %}
 
 %option header-file="magic.ll.h"
@@ -17,24 +19,54 @@
 %option pointer
 %option yywrap
 %option nounput
+%option yylineno
+
+MAGIC		"magic"
+TECH		"tech"
+MAGSCALE	"magscale"
+TIMESTAMP	"timestamp"
+RECT		"rect"
+USE			"use"
+RLABEL		"rlabel"
+FLABEL		"flabel"
+BEGINTITLE	"<<"
+ENDTITLE	">>"
+BOX			"box"
+PORT		"port"
+TRANSFORM	"transform"
 
 %%
 
-#.*         { /* comment */ }
+{TRANSFORM}+		{ return magic::MagicParser::token::TRANSFORM; }
+{PORT}+				{ return magic::MagicParser::token::PORT; }
+{BOX}+				{ return magic::MagicParser::token::BOX; }
+{USE}+				{ return magic::MagicParser::token::USE; }
+{MAGIC}+			{ return magic::MagicParser::token::MAGIC; }
+{TECH}+				{ return magic::MagicParser::token::TECH; }
+{MAGSCALE}+			{ return magic::MagicParser::token::MAGSCALE; }
+{TIMESTAMP}+		{ return magic::MagicParser::token::TIMESTAMP; }
+{RECT}+				{ return magic::MagicParser::token::RECT; }
+{RLABEL}+			{ return magic::MagicParser::token::RLABEL; }
+{FLABEL}+			{ return magic::MagicParser::token::FLABEL; }
+{BEGINTITLE}+		{ return magic::MagicParser::token::BEGINTITLE; }
+{ENDTITLE}+			{ return magic::MagicParser::token::ENDTITLE; }
 
-magic							{ return magic::MagicParser::token::MAGIC; }
-tech							{ return magic::MagicParser::token::TECH; }
-magscale						{ return magic::MagicParser::token::MAGSCALE; }
-timestamp						{ return magic::MagicParser::token::TIMESTAMP; }
-rect							{ return magic::MagicParser::token::RECT; }
-rlabel							{ return magic::MagicParser::token::RLABEL; }
-\<\<\							{ return magic::MagicParser::token::BEGINTITLE; }
-\ \>\>							{ return magic::MagicParser::token::ENDTITLE; }
-\<\<\ end\ \>\>					{ return magic::MagicParser::token::END; }
-[[:alpha:]][[:alnum:]<>]+		{ magiclval->v_str = yytext; return magic::MagicParser::token::IDENT; }
-[0-9-]+							{ magiclval->v_int = atoi(yytext); return magic::MagicParser::token::INTEGER; }
-[ \t]							{ return magic::MagicParser::token::SPACE; }
-\r\n							{/* skip */}
-\n								{/* skip */}
+[0-9]+ {
+	magiclval->v_int = atoi(yytext);
+	return magic::MagicParser::token::INTEGER;
+}
 
+[0-9]+"."[0-9]* {
+	magiclval->v_double = atof(yytext);
+	return magic::MagicParser::token::DOUBLE;
+}
+
+[A-Za-z][A-Za-z0-9_,.-<>]* {
+	magiclval->v_str = new std::string(yytext, yyleng);
+	return magic::MagicParser::token::STRING;
+}
+
+[ \t\r]+ {
+	/* yylloc->step(); */
+}
 %%
