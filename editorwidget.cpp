@@ -34,7 +34,7 @@ bool EditorWidget::getStatusChanged()
 	return statusChanged;
 }
 
-void EditorWidget::loadFile(QString path) {}
-QString EditorWidget::getFilePath() {}
+void EditorWidget::loadFile(QString path) { filePath = path; }
+QString EditorWidget::getFilePath() { return filePath; }
 void EditorWidget::onContentChanged() {}
 void EditorWidget::saveFile() {}

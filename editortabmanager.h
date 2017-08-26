@@ -5,6 +5,7 @@
 #include <QTabWidget>
 #include "codeeditorwidget.h"
 #include "schematicseditorwidget.h"
+#include "layouteditorwidget.h"
 
 class EditorTabManager : public QWidget
 {

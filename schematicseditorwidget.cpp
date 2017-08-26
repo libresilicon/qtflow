@@ -7,12 +7,14 @@ SchematicsEditorWidget::SchematicsEditorWidget(QWidget *parent) :
 	setEditWidget(editArea);
 }
 
-void SchematicsEditorWidget::loadFile(QString)
+void SchematicsEditorWidget::loadFile(QString path)
 {
+	editArea->loadFile(path);
 }
 
 QString SchematicsEditorWidget::getFilePath()
 {
+	return editArea->getFilePath();
 }
 
 void SchematicsEditorWidget::onContentChanged()

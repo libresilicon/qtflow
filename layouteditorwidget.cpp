@@ -1,6 +1,7 @@
 #include "layouteditorwidget.h"
 
-LayoutEditorWidget::LayoutEditorWidget()
+LayoutEditorWidget::LayoutEditorWidget(QWidget *parent) :
+	EditorWidget(parent)
 {
 
 }

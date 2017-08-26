@@ -75,7 +75,8 @@ SOURCES += \
         magicdata.cpp \
         vcdata.cpp \
         schematicsdata.cpp \
-        schematicsscanner.cpp
+        schematicsscanner.cpp \
+    layouteditorwidget.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -115,7 +116,8 @@ HEADERS  += \
         vcdata.h \
         schematicsdata.h \
         schematicsscanner.h \
-        vcdcommon.h
+        vcdcommon.h \
+    layouteditorwidget.h
 
 FORMS    += \ 
 	mainwindow.ui \

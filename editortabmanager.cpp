@@ -21,7 +21,6 @@ void EditorTabManager::openFile(QString filepath)
 	}
 
 	if(isCode(info.suffix())) {
-		QTextStream(stdout) << filepath << '\n';
 		CodeEditorWidget *editorWidget = new CodeEditorWidget(editArea);
 		editorWidget->loadFile(filepath);
 		editArea->addTab(editorWidget,info.fileName());
@@ -36,6 +35,11 @@ void EditorTabManager::openFile(QString filepath)
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
 	if(isLayout(info.suffix())) {
+		LayoutEditorWidget *editorWidget = new LayoutEditorWidget(editArea);
+		editorWidget->loadFile(filepath);
+		editArea->addTab(editorWidget,info.fileName());
+		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
 }
 

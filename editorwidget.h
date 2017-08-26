@@ -32,6 +32,8 @@ private:
 	QToolBar *toolbar;
 	
 	bool statusChanged;
+
+	QString filePath;
 };
 
 #endif // EDITORWIDGET_H
