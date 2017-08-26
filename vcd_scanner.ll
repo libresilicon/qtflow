@@ -1,39 +1,44 @@
 %{
 #include <cstdlib>
-#include "yyvcd.h"
 #include <iostream>
-
 #include <QString>
 
-int vcdlex();
-void vcderror(const char *s);
+#include "vcdata.h"
+
+#define YY_DECL int vcd::VCDScanner::vcdlex(vcd::VCDParser::semantic_type* vcdlval, vcd::VCData *vcdata)
 %}
 
-%option header-file="lexvcd.h"
-%option outfile="lexvcd.cpp"
-%option noyywrap
-%option nounput
+%option header-file="vcd.ll.h"
 %option prefix="vcd"
 
+%option c++
+%option batch
+%option stack
+%option debug
+%option verbose
+%option pointer
+%option yywrap
+%option nounput
+
+STRING	[a-zA-Z0-9_<>\[\]:.?$/!]*[a-zA-Z_][a-zA-Z0-9_<>\[\]:.?$/!]*
+END		\$end
 %%
 
-\r\n        { return ENDL;   }
-\n          { return ENDL;   }
+\r\n					{}
+\n						{}
 
-\$end            { return END;       }
-\$date           { return DATE;      }
-\$version        { return VERSION;   }
-\$timescale      { return TIMESCALE; }
-\$scope          { return SCOPE;     }
-\$upscope        { return UPSCOPE;   }
-\$var            { return VAR;       }
-\$enddefinitions { return ENDDEFINITIONS; }
-\$dumpvars       { return DUMPVARS; }
+END						{ return vcd::VCDParser::token::END;       }
+\$date					{ return vcd::VCDParser::token::DATE;      }
+\$version				{ return vcd::VCDParser::token::VERSION;   }
+\$timescale				{ return vcd::VCDParser::token::TIMESCALE; }
+\$scope					{ return vcd::VCDParser::token::SCOPE;     }
+\$upscope				{ return vcd::VCDParser::token::UPSCOPE;   }
+\$var					{ return vcd::VCDParser::token::VAR;       }
+\$enddefinitions		{ return vcd::VCDParser::token::ENDDEFINITIONS; }
+\$dumpvars				{ return vcd::VCDParser::token::DUMPVARS; }
 
-[ \t]                    { vcdlval.v_char = yytext[0]; return SPACE;    }
-[[:alnum:]]              { vcdlval.v_char = yytext[0]; return ALPHANUM; }
-[[:cntrl:][:punct:]]     { vcdlval.v_char = yytext[0]; return SPECIAL;  }
-
-.           { vcderror(yytext); }
+[ \t]					{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::SPACE;    }
+[[:alnum:]]				{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::ALPHANUM; }
+[[:cntrl:][:punct:]]	{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::SPECIAL;  }
 
 %%

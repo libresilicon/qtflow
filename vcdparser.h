@@ -4,7 +4,7 @@
 #include <QMap>
 
 #include "common.h"
-#include "lexvcd.h"
+#include "vcd.ll.h"
 
 class VCDBufferGuard
 {

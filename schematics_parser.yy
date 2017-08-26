@@ -21,7 +21,6 @@
 
 #include "schematicsdata.h"
 
-void schematics_error(const char *s);
 #define schematicslex (schematicsdata->getLexer())->schematicslex
 %}
 
@@ -45,7 +44,7 @@ component_content:
 
 %%
 
-void schematics_error(const char *s) {
+void schematics::SchematicsParser::error(const std::string &s) {
         //yyclearin;
 	//throw ParserException{settingsline, QString(s)};
 }

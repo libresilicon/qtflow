@@ -25,20 +25,24 @@ DEFINES += QT_DEPRECATED_WARNINGS
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
 
-FLEXSOURCES = lexmagic.l \
-    lexvcd.l
-BISONSOURCES = yymagic.y \
-    yyvcd.y
+FLEXSOURCES = \
+        vcd_scanner.ll \
+        schematics_scanner.ll \
+	magic_scanner.ll
+
+BISONSOURCES = \
+	magic_parser.yy \
+	vcd_parser.yy \
+        schematics_parser.yy
 
 OTHER_FILES +=  \
-    $$FLEXSOURCES \
-    $$BISONSOURCES
+        $$FLEXSOURCES \
+        $$BISONSOURCES
 
 SOURCES += \
 	main.cpp\
 	maintoolbox.cpp\
 	mainwindow.cpp \
-	magicparser.cpp \
 	grid.cpp \
 	templates.cpp \
 	project.cpp \
@@ -53,7 +57,6 @@ SOURCES += \
 	modulestreemodel.cpp \
 	moduleslistmodel.cpp \
 	new.cpp \
-	vcdparser.cpp \
 	wave.cpp \
 	vcdtreemodel.cpp \
 	vcdlistmodel.cpp \
@@ -66,12 +69,17 @@ SOURCES += \
 	editortabmanager.cpp \
 	codeeditorwidget.cpp \
 	schematicseditorwidget.cpp \
-	schematicseditor.cpp
+	schematicseditor.cpp \
+    vcdscanner.cpp \
+    magicscanner.cpp \
+    magicdata.cpp \
+    vcdata.cpp \
+    schematicsdata.cpp \
+    schematicsscanner.cpp
 
 HEADERS  += \
 	mainwindow.h \
 	maintoolbox.h \
-	magicparser.h \
 	common.h \
 	grid.h \
 	templates.h \
@@ -88,7 +96,6 @@ HEADERS  += \
 	modulestreemodel.h \
 	moduleslistmodel.h \
 	new.h \
-	vcdparser.h \
 	wave.h \
 	vcdtreemodel.h \
 	vcdlistmodel.h \
@@ -102,7 +109,13 @@ HEADERS  += \
 	codeeditorwidget.h \
 	schematicseditorwidget.h \
 	schematicseditor.h \
-	ieditor.h
+	ieditor.h \
+    vcdscanner.h \
+    magicscanner.h \
+    magicdata.h \
+    vcdata.h \
+    schematicsdata.h \
+    schematicsscanner.h
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -124,7 +137,7 @@ FORMS    += \
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
-flexsource.commands = flex --header-file=${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
+flexsource.commands = flex++ --header-file=${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
 flexsource.variable_out = SOURCES
 flexsource.name = Flex Sources ${QMAKE_FILE_IN}
 flexsource.CONFIG += target_predeps
@@ -142,7 +155,7 @@ QMAKE_EXTRA_COMPILERS += flexheader
 
 bisonsource.input = BISONSOURCES
 bisonsource.output = ${QMAKE_FILE_BASE}.cpp
-bisonsource.commands = bison -d --defines=${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
+bisonsource.commands = bison -Lc++ -d --defines=${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
 bisonsource.variable_out = SOURCES
 bisonsource.name = Bison Sources ${QMAKE_FILE_IN}
 bisonsource.CONFIG += target_predeps

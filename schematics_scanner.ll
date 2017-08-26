@@ -2,16 +2,18 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "schematics.yy.h"
-
 #include <QString>
 
-int schematics_lex();
+#include "schematicsdata.h"
+
 void schematics_error(const char *s);
+#define YY_DECL int schematics::SchematicsScanner::schematicslex( \
+	schematics::SchematicsParser::semantic_type* schematicslval, \
+	schematics::SchematicsData *schematicsdata)
 %}
 
 %option header-file="schematics.ll.h"
-%option noyywrap
+%option yywrap
 %option nounput
 %option stack
 %option prefix="schematics"

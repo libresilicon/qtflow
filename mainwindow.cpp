@@ -3,8 +3,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "lexmagic.h"
-#include "magicparser.h"
+//#include "magicparser.h"
 #include "templates.h"
 #include "grid.h"
 #include "welcome.h"
@@ -185,14 +184,14 @@ void MainWindow::on_openMagicFile_triggered()
 		return;
 
 	qDebug() << "Open magic file:" << name;
-	QFile file(name);
+	/*QFile file(name);
 	file.open(QFile::ReadOnly);
 	QByteArray content(file.readAll());
 	MagicParser parser(content);
 	rects_t grid = parser.getRectangles();
 	Grid *g = new Grid();
 	g->show();
-	g->RenderRectangles(grid);
+	g->RenderRectangles(grid);*/
 }
 
 void MainWindow::on_exit_triggered()

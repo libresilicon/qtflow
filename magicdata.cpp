@@ -1,7 +1,8 @@
 #include "magicdata.h"
 
 namespace magic {
-	MagicData::MagicData()
+	MagicData::MagicData():
+		lexer(new MagicScanner())
 	{
 
 	}

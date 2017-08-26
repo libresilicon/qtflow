@@ -41,22 +41,22 @@ Wave::~Wave()
 
 void Wave::loadVcd(QString path)
 {
-    QFile file(path);
+	QFile file(path);
 
-    if (!file.exists())
-        return;
+	if (!file.exists())
+		return;
 
-    if (!file.open(QIODevice::ReadOnly))
-        return;
+	if (!file.open(QIODevice::ReadOnly))
+		return;
 
-    QByteArray content(file.readAll());
-    VcdParser parser(content);
+	QByteArray content(file.readAll());
+	//VcdParser parser(content);
 
-    file.close();
+	file.close();
 
-    list->reset();
-    tree->setVcd(parser.getVcd());
-    scene->clear();
+	list->reset();
+	//tree->setVcd(parser.getVcd());
+	scene->clear();
 }
 
 void Wave::onSignalsChanged()

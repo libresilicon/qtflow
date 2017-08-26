@@ -1,35 +1,39 @@
-%{
-#include "common.h"
+%define api.prefix {magic}
+%defines "magic.yy.h"
+%error-verbose
+%language "c++"
+%glr-parser
+%token-table
+%define "parser_class_name" {MagicParser}
 
+%code requires {
+	namespace magic {
+		class MagicData;
+	}
+}
+
+%param {class magic::MagicData *magicdata}
+
+%{
 #include <iostream>
 #include <string>
-
 #include <QString>
+#include "magicdata.h"
 
-int yylex();
-void yyerror(const char *s);
-
-rects_t parsedElements;
-int magicline;
-QString title;
+#define magiclex (magicdata->getLexer())->magiclex
+//#define yylineno (int)magicdata->lexer->lineno()
+//#define yytext magicdata->lexer->YYText()
 
 %}
 
-%defines "yymagic.h"
-%output "yymagic.cpp"
-%error-verbose
-
-%define api.prefix {magic}
-
 %union {
-    int v_int;
-    char* v_str;
+	int v_int;
+	char* v_str;
 }
 
 %initial-action
 {
-    magicline = 1;
-    parsedElements.clear();
+	magicdata->clearParsedElements();
 }
 
 %token SPACE
@@ -40,7 +44,6 @@ QString title;
 %token RECT
 %token RLABEL
 
-%token ENDL
 %token END
 
 %token INTEGER
@@ -51,21 +54,21 @@ QString title;
 %%
 
 program:
-    MAGIC endls
-    TECH SPACE IDENT endls
-    MAGSCALE SPACE INTEGER SPACE INTEGER endls
-    TIMESTAMP SPACE INTEGER endls
+	MAGIC
+	TECH SPACE IDENT
+	MAGSCALE SPACE INTEGER SPACE INTEGER
+	TIMESTAMP SPACE INTEGER
     sections
     ;
 
 sections:
-    sections endls section
+	sections section
     |
     section
     ;
 
 section:
-    BEGINTITLE sectiontitle ENDTITLE endls items
+	BEGINTITLE sectiontitle ENDTITLE items
     |
     END
     |
@@ -73,11 +76,11 @@ section:
     ;
 
 sectiontitle:
-    IDENT { title = QString($1); }
+	IDENT { magicdata->setTitle(QString($1)); }
     ;
 
 items:
-    items endls item
+	items item
     |
     item
     ;
@@ -91,7 +94,7 @@ item:
     ;
 
 rect:
-    RECT SPACE INTEGER SPACE INTEGER SPACE INTEGER SPACE INTEGER { parsedElements << Rectangle { $3, $5, $7 - $3, $9 - $5, title }; }
+	RECT SPACE INTEGER SPACE INTEGER SPACE INTEGER SPACE INTEGER { magicdata->addRectangle($3, $5, $7 - $3, $9 - $5, "layer"); }
     ;
 
 rlabel:
@@ -103,20 +106,9 @@ rlabel:
 material:
     IDENT
     ;
-
-endls:
-    endls endl
-    |
-    endl
-    ;
-
-endl:
-    ENDL    { ++magicline; }
-    ;
-
 %%
 
-void yyerror(const char *s) {
-    yyclearin;
-    throw ParserException{magicline, QString(s)};
+void magic::MagicParser::error(const std::string &s) {
+	//yyclearin;
+	//throw ParserException{magicline, QString(s)};
 }

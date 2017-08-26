@@ -1,4 +1,5 @@
 #include "schematicseditor.h"
+//#include "schematics.yy.h"
 #include <QLabel>
 
 SchematicsEditor::SchematicsEditor(QWidget *parent):
