@@ -8,12 +8,10 @@ int magiclex();
 void magicerror(const char *s);
 %}
 
-%option header-file="lexmagic.h"
-%option outfile="lexmagic.cpp"
+%option header-file="magic.ll.h"
 %option noyywrap
 %option nounput
-%option prefix="magic"
-
+%option yyclass="MagicScanner"
 
 %%
 
