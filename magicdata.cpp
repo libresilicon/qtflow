@@ -17,7 +17,6 @@ namespace magic {
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
-		int stat;
 
 		streamname = filename;
 		std::cout << "opening file " << stdfilename << std::endl;
@@ -28,8 +27,8 @@ namespace magic {
 		lexer->set_debug(trace_scanning);
 
 		parser = new MagicParser(this);
-		//parser->set_debug_level(trace_parsing);
-		stat=parser->parse();
+		parser->set_debug_level(trace_parsing);
+		parser->parse();
 		input.close();
 	}
 
@@ -73,9 +72,14 @@ namespace magic {
 		recentTitle = QString::fromStdString(*s);
 	}
 
-	class MagicScanner *MagicData::getLexer()
+	MagicScanner *MagicData::getLexer()
 	{
 		return lexer;
+	}
+
+	layers_t MagicData::getLayers()
+	{
+		return parsedElements;
 	}
 
 	void MagicData::addRectangle(int x, int y, int w, int h)

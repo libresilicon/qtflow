@@ -24,6 +24,7 @@ namespace magic {
 		MagicData(QString file);
 
 		bool loadFile(QString);
+		layers_t getLayers();
 
 		// building the info
 		void clearParsedElements();

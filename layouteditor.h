@@ -24,6 +24,7 @@ public:
 protected:
 	void resizeEvent(QResizeEvent*);
 	void paintEvent(QPaintEvent *event);
+	QColor colorMat(QString material);
 
 private:
 	QString filePath;
