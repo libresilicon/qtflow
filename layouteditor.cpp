@@ -28,7 +28,25 @@ void LayoutEditor::drawBoxes()
 {
 	QColor color;
 	rects_t layer;
-	layers_t layers = magicdata->getLayers();
+	layer_rects_t layers = magicdata->getBoxes();
+	foreach(QString layerN, layers.keys()) {
+		color = colorMat(layerN);
+		layer = layers[layerN];
+		foreach (const QRect& e, layer)
+		{
+			QPen pen = QPen(color);
+			QTextStream(stdout) << "Coming to here " << "\t x:" << e.x() << "\t y:" << e.y()  << '\n';
+			QTextStream(stdout) << "Scene rect " << "\t x:" << editScene->sceneRect().x() << "\t y:" << editScene->sceneRect().y()  << '\n';
+			editScene->addRect(e, pen);
+		}
+	}
+}
+
+void LayoutEditor::drawRectangles()
+{
+	QColor color;
+	rects_t layer;
+	layer_rects_t layers = magicdata->getRectangles();
 	foreach(QString layerN, layers.keys()) {
 		color = colorMat(layerN);
 		layer = layers[layerN];
@@ -58,6 +76,7 @@ void LayoutEditor::loadFile(QString file)
 	filePath = file;
 	magicdata->loadFile(file);
 	drawBoxes();
+	drawRectangles();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 }
 

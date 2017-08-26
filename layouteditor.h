@@ -32,6 +32,7 @@ protected:
 	//void paintEvent(QPaintEvent *event);
 	QColor colorMat(QString material);
 	void drawBoxes();
+	void drawRectangles();
 
 private:
 	QString filePath;

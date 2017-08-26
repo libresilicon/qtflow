@@ -14,7 +14,7 @@
 #include "magicscanner.h"
 
 typedef QVector<QRect> rects_t;
-typedef QMap<QString,rects_t> layers_t;
+typedef QMap<QString,rects_t> layer_rects_t;
 
 namespace magic {
 	class MagicData
@@ -24,16 +24,20 @@ namespace magic {
 		MagicData(QString file);
 
 		bool loadFile(QString);
-		layers_t getLayers();
+
+		layer_rects_t getRectangles();
+		layer_rects_t getBoxes();
 
 		// building the info
-		void clearParsedElements();
 		void addRectangle(int x, int y, int w, int h);
+		void addBox(int x, int y, int w, int h);
 		void setLayer(std::string *s);
 		class MagicScanner *getLexer();
 
 	private:
-		layers_t parsedElements;
+		layer_rects_t parsedRectangles;
+		layer_rects_t parsedBoxes;
+
 		class MagicScanner* lexer;
 		class MagicParser* parser;
 		QString recentTitle;

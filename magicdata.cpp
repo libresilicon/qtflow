@@ -61,11 +61,6 @@ namespace magic {
 		return stat;
 	}
 
-	void MagicData::clearParsedElements()
-	{
-		parsedElements.clear();
-	}
-
 	void MagicData::setLayer(std::string *s)
 	{
 		recentTitle = QString::fromStdString(*s);
@@ -76,18 +71,33 @@ namespace magic {
 		return lexer;
 	}
 
-	layers_t MagicData::getLayers()
+	layer_rects_t MagicData::getBoxes()
 	{
-		return parsedElements;
+		return parsedBoxes;
+	}
+
+	layer_rects_t MagicData::getRectangles()
+	{
+		return parsedRectangles;
 	}
 
 	void MagicData::addRectangle(int x, int y, int w, int h)
 	{
 		rects_t list;
 		QRect objR(x,y,w,h);
-		if(!parsedElements.contains(recentTitle)){
-			parsedElements[recentTitle]=list;
+		if(!parsedRectangles.contains(recentTitle)){
+			parsedRectangles[recentTitle]=list;
 		}
-		parsedElements[recentTitle].append(objR);
+		parsedRectangles[recentTitle].append(objR);
+	}
+
+	void MagicData::addBox(int x, int y, int w, int h)
+	{
+		rects_t list;
+		QRect objR(x,y,w,h);
+		if(!parsedBoxes.contains(recentTitle)){
+			parsedBoxes[recentTitle]=list;
+		}
+		parsedBoxes[recentTitle].append(objR);
 	}
 }

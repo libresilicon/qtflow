@@ -76,7 +76,12 @@ item: rect | rlabel | flabel | use;
 
 use: USE STRING STRING timestamp transform box;
 transform: TRANSFORM INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER;
-box: BOX INTEGER INTEGER INTEGER INTEGER;
+box:
+	BOX INTEGER INTEGER INTEGER INTEGER
+	{
+		magicdata->addBox($2, $3, $4 - $2, $5 - $3);
+	}
+	;
 
 rect:
 	RECT INTEGER INTEGER INTEGER INTEGER
