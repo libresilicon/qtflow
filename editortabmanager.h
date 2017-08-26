@@ -15,6 +15,7 @@ public:
 	bool isSchematic(QString);
 
 signals:
+	void fileSaved();
 
 public slots:
 	void onContentChanged();

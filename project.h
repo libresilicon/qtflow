@@ -42,9 +42,11 @@ public:
 	bool prepareStep(QString path);
 	void setTechnology(QString tech);
 	void setTopLevel(QString mod);
+	void setTestBench(QString mod);
 
 	QString getSourceDir();
 	QString getTopLevel();
+	QString getRootDir();
 
 private:
 	QSettings *settings;

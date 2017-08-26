@@ -69,6 +69,8 @@ public slots:
 private:
 	ProjectsItem *rootItem;
 	ProjectsItem *sourceItem;
+	ProjectsItem *layoutItem;
+	ProjectsItem *schematicsItem;
 
 	QString top;
 

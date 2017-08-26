@@ -50,14 +50,25 @@ QString Project::getSourceDir()
 	return project_settings->value("sourcedir").toString();
 }
 
+QString Project::getRootDir()
+{
+	return project_settings->value("rootdir").toString();
+}
+
 QString Project::getTopLevel()
 {
 	return project_settings->value("toplevel").toString();
 }
 
+void Project::setTestBench(QString top)
+{
+	QTextStream(stdout) << "Setting test bench to: " << top << "\n";
+	project_settings->setValue("testbench",top);
+	project_settings->sync();
+}
+
 void Project::setTopLevel(QString top)
 {
-	QTextStream(stdout) << "Setting top level to: " << top << "\n";
 	project_settings->setValue("toplevel",top);
 	project_settings->sync();
 }

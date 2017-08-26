@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include "project.h"
-#include "common.h"
 #include "dependencies.h"
 #include "new.h"
 #include "iopads.h"
@@ -84,6 +83,7 @@ private slots:
 	void openRecentProject();
 
 	void setTopLevel(QString);
+	void setTestBench(QString);
 	void syncSettings();
 	void onTopModuleChanged();
 

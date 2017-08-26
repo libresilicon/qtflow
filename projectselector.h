@@ -15,21 +15,24 @@ class ProjectSelector : public QDockWidget
 public:
 	ProjectSelector(QWidget *parent);
 
-	void setSourceDir(QString path);
+	void setRootDir(QString path);
 
 	void refresh();
 
 signals:
+	void openFile(QString);
 
 public slots:
+	void onContextMenu(const QPoint&);
+	void onOpen(const QModelIndex&);
 
 private:
 	Ui::Projects *ui;
 
-	QString sourcedir;
+	QString rootdir;
 
 	ProjectsTreeModel *projects;
-	QMenu *projectsContext;
+	QMenu *context;
 };
 
 #endif // PROJECTSELECTOR_H

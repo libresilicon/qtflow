@@ -4,22 +4,28 @@
 #include <QMessageBox>
 
 ModuleSelector::ModuleSelector(QWidget *parent):
-	ui(new Ui::Modules),
 	QDockWidget(parent),
+	ui(new Ui::Modules),
 	moduleTree(new ModulesTreeModel)
 {
 	moduleList = NULL;
+	QAction *setModulesTestbench;
+	QAction *setModulesTopModule;
 
 	ui->setupUi(this);
 	ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
 
 	context = new QMenu(ui->listView);
-	QAction *setModulesTopModule = new QAction("Set as Top Module", context);
+
+	setModulesTopModule = new QAction("Set as Top Module", context);
 	context->addAction(setModulesTopModule);
 	connect(setModulesTopModule, SIGNAL(triggered(bool)), this, SLOT(onSetTopModule(bool)));
 
-	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onContextMenu(const QPoint&)));
+	setModulesTestbench = new QAction("Set as Top Testbench", context);
+	context->addAction(setModulesTestbench);
+	connect(setModulesTestbench, SIGNAL(triggered(bool)), this, SLOT(onSetTestBench(bool)));
 
+	connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(onContextMenu(const QPoint&)));
 }
 
 void ModuleSelector::onContextMenu(const QPoint &point)
@@ -29,7 +35,6 @@ void ModuleSelector::onContextMenu(const QPoint &point)
 	if (!index.isValid())
 		return;
 
-	//setModulesTopModule->setDisabled(modules->topModule(index));
 	context->exec(ui->listView->mapToGlobal(point));
 }
 
@@ -46,6 +51,8 @@ void ModuleSelector::refresh()
 
 	if(moduleList) delete moduleList;
 	moduleList = new ModulesListModel(this,sourcedir);
+	moduleList->setTopLevel(toplevel);
+	moduleList->setTestBench(testbench);
 	ui->listView->setModel(moduleList);
 }
 
@@ -53,7 +60,17 @@ void ModuleSelector::onSetTopModule(bool)
 {
 	QString index = moduleList->data(ui->listView->currentIndex()).toString();
 	moduleTree->setTopModule(index);
+	toplevel = index;
 	emit(setTopLevel(index));
+	refresh();
+}
+
+void ModuleSelector::onSetTestBench(bool)
+{
+	QString index = moduleList->data(ui->listView->currentIndex()).toString();
+	moduleTree->setTestBench(index);
+	testbench = index;
+	emit(setTestBench(index));
 	refresh();
 }
 

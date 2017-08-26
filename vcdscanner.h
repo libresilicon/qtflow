@@ -7,6 +7,7 @@
 #undef yyFlexLexer
 #endif
 
+#include "vcdcommon.h"
 #include "vcd.yy.h"
 
 namespace vcd {

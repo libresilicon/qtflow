@@ -21,6 +21,7 @@ void EditorTabManager::openFile(QString filepath)
 	}
 
 	if(isCode(info.suffix())) {
+		QTextStream(stdout) << filepath << '\n';
 		CodeEditorWidget *editorWidget = new CodeEditorWidget(editArea);
 		editorWidget->loadFile(filepath);
 		editArea->addTab(editorWidget,info.fileName());
@@ -47,6 +48,7 @@ void EditorTabManager::onContentSaved()
 			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName());
 		}
 	}
+	emit(fileSaved());
 }
 
 void EditorTabManager::onContentChanged()

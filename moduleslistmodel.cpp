@@ -10,7 +10,8 @@ ModulesListModel::ModulesListModel(QObject *parent, QString s) :
 	modules(QList<QString>()),
 	files(QList<QString>()),
 	sourcedir(s),
-	topmodule(-1)
+	toplevel(QString()),
+	testbench(QString())
 {
 	if (sourcedir == QString())
 		return;
@@ -36,13 +37,6 @@ ModulesListModel::ModulesListModel(QObject *parent, QString s) :
 			file.close();
 		}
 	}
-
-	QString index;
-	QList<QString>::iterator is;
-	int at;
-	for (is = modules.begin(), at = 0; is != modules.end(); ++is, ++at)
-		if (*is == index)
-			topmodule = at;
 }
 
 ModulesListModel::~ModulesListModel()
@@ -63,9 +57,11 @@ QVariant ModulesListModel::data(const QModelIndex &index, int role) const
 	if (role == Qt::FontRole)
 	{
 		QFont font;
-		if (index.row() != topmodule)
-			return font;
-		font.setBold(true);
+		if(files.at(index.row()) == toplevel)
+			font.setBold(true);
+		if(files.at(index.row()) == testbench)
+			font.setUnderline(true);
+
 		return font;
 	}
 
@@ -81,4 +77,14 @@ QString ModulesListModel::file(const QModelIndex& index)
 		return QString();
 
 	return files.at(index.row());
+}
+
+void ModulesListModel::setTestBench(QString m)
+{
+	testbench = m;
+}
+
+void ModulesListModel::setTopLevel(QString m)
+{
+	toplevel = m;
 }

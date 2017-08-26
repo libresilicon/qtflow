@@ -270,6 +270,11 @@ void ModulesTreeModel::setTopModule(QString t)
 	top = t;
 }
 
+void ModulesTreeModel::setTestBench(QString t)
+{
+	testbench = t;
+}
+
 QVariant ModulesTreeModel::data(const QModelIndex &index, int role) const
 {
 	if (!index.isValid())

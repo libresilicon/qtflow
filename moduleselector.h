@@ -16,20 +16,20 @@ class ModuleSelector : public QDockWidget
 
 public:
 	ModuleSelector(QWidget *parent);
-
-	void refresh();
-
 	void setSourceDir(QString path);
 
 signals:
 	void topModuleChanged();
 	void setTopLevel(QString);
+	void setTestBench(QString);
 
 public slots:
 	void setTopModule_clicked();
 	void closeButton_clicked();
 	void onSetTopModule(bool);
+	void onSetTestBench(bool);
 	void onContextMenu(const QPoint&);
+	void refresh();
 
 private:
 	Ui::Modules *ui;
@@ -39,6 +39,9 @@ private:
 
 	QMenu *context;
 	QString sourcedir;
+
+	QString testbench;
+	QString toplevel;
 };
 
 #endif // MODULESELECTOR_H

@@ -1,8 +1,6 @@
 #include "grid.h"
 #include "ui_grid.h"
 
-#include "common.h"
-
 #include <iostream>
 #include <string>
 
@@ -10,40 +8,37 @@
 #include <QGraphicsView>
 
 Grid::Grid(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Grid),
-    scene(new QGraphicsScene)
+	QWidget(parent),
+	ui(new Ui::Grid),
+	scene(new QGraphicsScene)
 {
-    ui->setupUi(this);
-    ui->graphicsView->setScene(scene);
+	ui->setupUi(this);
+	ui->graphicsView->setScene(scene);
 }
 
 Grid::~Grid()
 {
-    delete scene;
-    delete ui;
+	delete scene;
+	delete ui;
 }
 
-void Grid::RenderRectangles(rects_t rectangles)
+void Grid::RenderRectangles(QString layer, rects_t rectangles)
 {
-    foreach (const Rectangle& e, rectangles)
-    {
-        QColor color = colorMat(e.m);
-        QPen pen = QPen(color);
-        QBrush brush = QBrush(color);
-
-        QRectF rect;
-        rect.setX(e.x);
-        rect.setY(e.y);
-        rect.setWidth(e.w);
-        rect.setHeight(e.h);
-
-        scene->addRect(rect, pen, brush);
-    }
+	foreach (const QRect& e, rectangles)
+	{
+		QColor color = colorMat(layer);
+		QPen pen = QPen(color);
+		QBrush brush = QBrush(color);
+		scene->addRect(e, pen, brush);
+	}
 }
 
 QColor Grid::colorMat(QString m)
 {
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+
     std::string material = m.toStdString();
     if (material == "metal1")
         return QColor("lightblue");

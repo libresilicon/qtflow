@@ -17,11 +17,15 @@ public:
 
 	QString file(const QModelIndex& = QModelIndex());
 
+	void setTestBench(QString);
+	void setTopLevel(QString);
+
 private:
 	QList<QString> modules;
 	QList<QString> files;
 	QString sourcedir;
-	int topmodule;
+	QString toplevel;
+	QString testbench;
 };
 
 #endif // MODULESLISTMODEL_H

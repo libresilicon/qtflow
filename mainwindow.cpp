@@ -5,7 +5,7 @@
 
 //#include "magicparser.h"
 #include "templates.h"
-#include "grid.h"
+//#include "grid.h"
 #include "welcome.h"
 #include "settings.h"
 
@@ -58,6 +58,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
 	connect(modulesWidget, SIGNAL(setTopLevel(QString)), this, SLOT(setTopLevel(QString)));
+	connect(modulesWidget, SIGNAL(setTestBench(QString)), this, SLOT(setTestBench(QString)));
 
 	timingWidget = new Wave(this);
 	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -65,6 +66,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 
 	editArea = new EditorTabManager(ui->frame);
 	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
+	connect(projectsWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
+	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));
 
 	mainToolBox = new MainToolBox(this);
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -114,7 +117,7 @@ void MainWindow::openProject(QString path)
 		project = new Project(settings, path);
 		modulesWidget->setSourceDir(project->getSourceDir());
 		filesWidget->setSourceDir(project->getSourceDir());
-		projectsWidget->setSourceDir(project->getSourceDir());
+		projectsWidget->setRootDir(project->getRootDir());
 		enableProject();
 	}
 }
@@ -371,6 +374,11 @@ void MainWindow::enableTopModule()
 void MainWindow::setTopLevel(QString name)
 {
 	project->setTopLevel(name);
+}
+
+void MainWindow::setTestBench(QString name)
+{
+	project->setTestBench(name);
 }
 
 void MainWindow::enableFile()

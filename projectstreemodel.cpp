@@ -112,9 +112,13 @@ ProjectsTreeModel::ProjectsTreeModel(QObject *parent)
 	QVector<QVariant> rootData;
 	rootData << "Item";
 	rootItem = new ProjectsItem(rootData);
-	rootItem->insertChildren(rootItem->childCount(), 1, rootItem->columnCount());
+	rootItem->insertChildren(rootItem->childCount(), 3, rootItem->columnCount());
 	sourceItem = rootItem->child(rootItem->childCount() - 1);
-	sourceItem->setData(0, "Sources");
+	sourceItem->setData(0, "Sources Bar");
+	layoutItem = rootItem->child(rootItem->childCount() - 1);
+	layoutItem->setData(0, "Layouts");
+	schematicsItem = rootItem->child(rootItem->childCount() - 1);
+	schematicsItem->setData(0, "Schematics");
 }
 
 ProjectsTreeModel::~ProjectsTreeModel()
@@ -127,9 +131,13 @@ void ProjectsTreeModel::reset()
 {
 	beginResetModel();
 	removeRows(0, rootItem->childCount(), createIndex(0, 0, rootItem));
-	rootItem->insertChildren(0, 1, rootItem->columnCount());
+	rootItem->insertChildren(0, 3, rootItem->columnCount());
 	sourceItem = rootItem->child(0);
 	sourceItem->setData(0, "Sources");
+	layoutItem = rootItem->child(1);
+	layoutItem->setData(0, "Layouts");
+	schematicsItem = rootItem->child(2);
+	schematicsItem->setData(0, "Schematics");
 	endResetModel();
 }
 
@@ -148,7 +156,7 @@ void ProjectsTreeModel::setRootPath(const QString &path)
 
 	QStack<QFileInfo> roots;
 	QMap<QString, QVector<QFileInfo>> children;
-	QDirIterator it(path, QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
+	QDirIterator it(path, QStringList() << "*.v" << "*.mag" << "*.sch" << "*.sym", QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
 		QFileInfo file(it.next());
@@ -176,18 +184,31 @@ void ProjectsTreeModel::setRootPath(const QString &path)
 	while (!roots.isEmpty())
 	{
 		QFileInfo file = roots.pop();
-		sourceItem->insertChildren(sourceItem->childCount(), 1, sourceItem->columnCount());
-		ProjectsItem *current = sourceItem->child(sourceItem->childCount() - 1);
-		current->setData(0, file.fileName());
-		current->setFileData(file);
-		if (children.contains(file.baseName()))
-		{
-			foreach (const QFileInfo &child, children[file.baseName()])
+		if(file.suffix()=="mag") {
+			layoutItem->insertChildren(layoutItem->childCount(), 1, layoutItem->columnCount());
+			ProjectsItem *current = layoutItem->child(layoutItem->childCount() - 1);
+			current->setData(0, file.fileName());
+			current->setFileData(file);
+		} else if(file.suffix()=="sch"||file.suffix()=="sym") {
+			schematicsItem->insertChildren(schematicsItem->childCount(), 1, schematicsItem->columnCount());
+			ProjectsItem *current = schematicsItem->child(schematicsItem->childCount() - 1);
+			current->setData(0, file.fileName());
+			current->setFileData(file);
+		} else if(file.suffix()=="v"||file.suffix()=="hs") {
+			sourceItem->insertChildren(sourceItem->childCount(), 1, sourceItem->columnCount());
+			ProjectsItem *current = sourceItem->child(sourceItem->childCount() - 1);
+			current->setData(0, file.fileName());
+			current->setFileData(file);
+
+			if (children.contains(file.baseName()))
 			{
-				current->insertChildren(current->childCount(), 1, current->columnCount());
-				ProjectsItem *sub_current = current->child(current->childCount() - 1);
-				sub_current->setData(0, child.fileName());
-				sub_current->setFileData(child);
+				foreach (const QFileInfo &child, children[file.baseName()])
+				{
+					current->insertChildren(current->childCount(), 1, current->columnCount());
+					ProjectsItem *sub_current = current->child(current->childCount() - 1);
+					sub_current->setData(0, child.fileName());
+					sub_current->setFileData(child);
+				}
 			}
 		}
 	}

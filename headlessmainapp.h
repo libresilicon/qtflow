@@ -2,7 +2,6 @@
 #define HEADLESSMAINAPP_H
 
 #include "project.h"
-#include "common.h"
 #include "edit.h"
 #include "dependencies.h"
 #include "new.h"

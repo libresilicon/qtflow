@@ -1,9 +1,8 @@
 #ifndef VCDTREEMODEL_H
 #define VCDTREEMODEL_H
 
-#include "common.h"
-
 #include <QAbstractItemModel>
+#include "vcdcommon.h"
 
 class VcdItem
 {

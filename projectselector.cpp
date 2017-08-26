@@ -1,4 +1,5 @@
 #include "projectselector.h"
+#include <QDirIterator>
 
 ProjectSelector::ProjectSelector(QWidget *parent) :
 	ui(new Ui::Projects),
@@ -7,17 +8,38 @@ ProjectSelector::ProjectSelector(QWidget *parent) :
 {
 	ui->setupUi(this);
 	ui->treeView->setModel(projects);
-	projectsContext = new QMenu(ui->treeView);
+	context = new QMenu(ui->treeView);
+
+	connect(ui->treeView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onOpen(const QModelIndex&)));
 }
 
-void ProjectSelector::setSourceDir(QString path)
+void ProjectSelector::setRootDir(QString path)
 {
-	sourcedir = path;
+	rootdir = path;
 	refresh();
 }
 
 void ProjectSelector::refresh()
 {
-	projects->setRootPath(sourcedir);
+	projects->setRootPath(rootdir);
 	ui->treeView->setModel(projects);
+}
+
+void ProjectSelector::onOpen(const QModelIndex &i)
+{
+	QString filename = i.data().toString();
+	QDirIterator it(rootdir, QDirIterator::Subdirectories);
+	while (it.hasNext()) {
+		it.next();
+		if (it.fileName() == filename) {
+			emit(openFile(it.filePath()));
+		}
+	}
+}
+
+void ProjectSelector::onContextMenu(const QPoint &point)
+{
+	QModelIndex index = ui->treeView->indexAt(point);
+	if (index.isValid())
+		context->exec(ui->treeView->mapToGlobal(point));
 }

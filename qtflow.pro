@@ -70,17 +70,16 @@ SOURCES += \
 	codeeditorwidget.cpp \
 	schematicseditorwidget.cpp \
 	schematicseditor.cpp \
-    vcdscanner.cpp \
-    magicscanner.cpp \
-    magicdata.cpp \
-    vcdata.cpp \
-    schematicsdata.cpp \
-    schematicsscanner.cpp
+        vcdscanner.cpp \
+        magicscanner.cpp \
+        magicdata.cpp \
+        vcdata.cpp \
+        schematicsdata.cpp \
+        schematicsscanner.cpp
 
 HEADERS  += \
 	mainwindow.h \
 	maintoolbox.h \
-	common.h \
 	grid.h \
 	templates.h \
 	project.h \
@@ -110,12 +109,13 @@ HEADERS  += \
 	schematicseditorwidget.h \
 	schematicseditor.h \
 	ieditor.h \
-    vcdscanner.h \
-    magicscanner.h \
-    magicdata.h \
-    vcdata.h \
-    schematicsdata.h \
-    schematicsscanner.h
+        vcdscanner.h \
+        magicscanner.h \
+        magicdata.h \
+        vcdata.h \
+        schematicsdata.h \
+        schematicsscanner.h \
+        vcdcommon.h
 
 FORMS    += \ 
 	mainwindow.ui \

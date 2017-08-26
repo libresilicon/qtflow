@@ -3,7 +3,7 @@
 
 #include <QMap>
 
-#include "common.h"
+#include "vcdcommon.h"
 #include "vcd.ll.h"
 
 class VCDBufferGuard
