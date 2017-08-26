@@ -11,18 +11,22 @@ void LayoutEditor::paintEvent(QPaintEvent *event)
 {
 	QPainter painter(this);
 	painter.setBackground(Qt::white);
-	painter.boundingRect(QRect(0,0,400,400),"Test");
-	painter.fillRect(QRect(0,0,100,100),Qt::black);
+	//painter.boundingRect(QRect(0,0,400,400),"Test");
 
-	foreach(QString key, magicdata->getLayers().keys())
-		QTextStream(stdout) << key << '\n';
-	/*foreach (const QRect& e, rectangles)
-	{
-		QColor color = colorMat(layer);
-		QPen pen = QPen(color);
-		QBrush brush = QBrush(color);
-		scene->addRect(e, pen, brush);
-	}*/
+	QColor color;
+	rects_t layer;
+	layers_t layers = magicdata->getLayers();
+	foreach(QString layerN, layers.keys()) {
+		color = colorMat(layerN);
+		layer = layers[layerN];
+		foreach (const QRect& e, layer)
+		{
+			//QPen pen = QPen(color);
+			//QBrush brush = QBrush(color);
+			//scene->addRect(e, pen, brush);
+			painter.fillRect(e,color);
+		}
+	}
 }
 
 LayoutEditor::~LayoutEditor()
