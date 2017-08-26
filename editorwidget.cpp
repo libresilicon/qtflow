@@ -1,8 +1,10 @@
 #include "editorwidget.h"
 
+#include <QShortcut>
+
 EditorWidget::EditorWidget(QWidget *parent) :
 	QWidget(parent),
-	layout(new QVBoxLayout(this)),
+	layout(new QGridLayout(this)),
 	statusChanged(false)
 {
 	QPixmap pixmapDocumentSave(":/document-save.svg");
@@ -12,6 +14,9 @@ EditorWidget::EditorWidget(QWidget *parent) :
 
 	saveButton = new QAction(pixmapDocumentSave,"S&ave", toolbar);
 	connect(saveButton,SIGNAL(triggered(bool)),this,SLOT(saveFile()));
+
+	QShortcut *saveShortcut = new QShortcut(QKeySequence("Ctrl+S"), this);
+	connect(saveShortcut, SIGNAL(activated()),this,SLOT(saveFile()));
 
 	toolbar->addAction(saveButton);
 	layout->setMenuBar(toolbar);

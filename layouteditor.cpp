@@ -1,18 +1,31 @@
 #include "layouteditor.h"
+#include <QAbstractScrollArea>
 
 LayoutEditor::LayoutEditor(QWidget *parent) :
-	QWidget(parent),
+	QGraphicsView(parent),
+	magicdata(new magic::MagicData()),
 	filePath(QString()),
-	magicdata(new magic::MagicData())
+	editScene(new QGraphicsScene(this))
 {
+	setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
+	//setBaseSize(parent->maximumWidth(),parent->maximumHeight());
+	//editScene->setBackgroundBrush(Qt::blue);
+	editScene->setBackgroundBrush(Qt::white);
+	//setBaseSize(300,300);
+	//editScene->setSceneRect(0,0,300,300);
+	setScene(editScene);
 }
 
-void LayoutEditor::paintEvent(QPaintEvent *event)
+void LayoutEditor::mousePressEvent(QMouseEvent * e)
 {
-	QPainter painter(this);
-	painter.setBackground(Qt::white);
-	//painter.boundingRect(QRect(0,0,400,400),"Test");
+	double rad = 10;
+	QPointF pt = mapToScene(e->pos());
+	editScene->addEllipse(pt.x()-rad, pt.y()-rad, rad*2.0, rad*2.0, QPen(), QBrush(Qt::SolidPattern));
+	QTextStream(stdout) << "Drawing here " << "\t x:" << pt.x() << "\t y:" << pt.y()  << '\n';
+}
 
+void LayoutEditor::drawBoxes()
+{
 	QColor color;
 	rects_t layer;
 	layers_t layers = magicdata->getLayers();
@@ -21,10 +34,11 @@ void LayoutEditor::paintEvent(QPaintEvent *event)
 		layer = layers[layerN];
 		foreach (const QRect& e, layer)
 		{
-			//QPen pen = QPen(color);
-			//QBrush brush = QBrush(color);
-			//scene->addRect(e, pen, brush);
-			painter.fillRect(e,color);
+			QPen pen = QPen(color);
+			QBrush brush = QBrush(color);
+			QTextStream(stdout) << "Coming to here " << "\t x:" << e.x() << "\t y:" << e.y()  << '\n';
+			QTextStream(stdout) << "Scene rect " << "\t x:" << editScene->sceneRect().x() << "\t y:" << editScene->sceneRect().y()  << '\n';
+			editScene->addRect(e, pen, brush);
 		}
 	}
 }
@@ -33,14 +47,18 @@ LayoutEditor::~LayoutEditor()
 {
 }
 
-void LayoutEditor::resizeEvent(QResizeEvent*)
+/*void LayoutEditor::resizeEvent(QResizeEvent*)
 {
-}
+	setBaseSize(this->maximumWidth(),this->maximumHeight());
+	drawBoxes();
+}*/
 
 void LayoutEditor::loadFile(QString file)
 {
 	filePath = file;
 	magicdata->loadFile(file);
+	drawBoxes();
+	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void LayoutEditor::saveFile()

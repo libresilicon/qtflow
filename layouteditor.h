@@ -6,8 +6,11 @@
 
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QGraphicsWidget>
+#include <QGridLayout>
 
-class LayoutEditor : public QWidget, public IEditor
+class LayoutEditor : public QGraphicsView, public IEditor
 {
 	Q_OBJECT
 
@@ -21,13 +24,18 @@ public:
 
 	bool changes();
 
+public slots:
+	void mousePressEvent(QMouseEvent * e);
+
 protected:
-	void resizeEvent(QResizeEvent*);
-	void paintEvent(QPaintEvent *event);
+	//void resizeEvent(QResizeEvent*);
+	//void paintEvent(QPaintEvent *event);
 	QColor colorMat(QString material);
+	void drawBoxes();
 
 private:
 	QString filePath;
+	QGraphicsScene *editScene;
 	magic::MagicData *magicdata;
 
 };

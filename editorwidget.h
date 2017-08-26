@@ -28,7 +28,7 @@ public slots:
 	virtual void saveFile();
 
 private:
-	QVBoxLayout *layout;
+	QGridLayout *layout;
 	QToolBar *toolbar;
 	
 	bool statusChanged;
