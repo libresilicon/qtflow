@@ -35,6 +35,8 @@ void EditorTabManager::openFile(QString filepath)
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
+	if(isLayout(info.suffix())) {
+	}
 }
 
 void EditorTabManager::onContentSaved()
@@ -66,6 +68,12 @@ bool EditorTabManager::isCode(QString suffix)
 {
 	if(suffix=="v") return true;
 	if(suffix=="vs") return true;
+	return false;
+}
+
+bool EditorTabManager::isLayout(QString suffix)
+{
+	if(suffix=="mag") return true;
 	return false;
 }
 

@@ -11,8 +11,6 @@ class EditorTabManager : public QWidget
 	Q_OBJECT
 public:
 	explicit EditorTabManager(QWidget *parent = nullptr);
-	bool isCode(QString);
-	bool isSchematic(QString);
 
 signals:
 	void fileSaved();
@@ -26,6 +24,11 @@ public slots:
 
 private:
 	QTabWidget *editArea;
+
+	bool isCode(QString);
+	bool isSchematic(QString);
+	bool isLayout(QString suffix);
+
 };
 
 #endif // EDITORTABMANAGER_H
