@@ -32,10 +32,10 @@ namespace magic {
 		class MagicScanner *getLexer();
 
 	private:
-		rects_t parsedElements;
+		layers_t parsedElements;
 		class MagicScanner* lexer;
 		class MagicParser* parser;
-		QString title;
+		QString recentTitle;
 		bool trace_parsing;
 		bool trace_scanning;
 		QString streamname;

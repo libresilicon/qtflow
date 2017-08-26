@@ -51,7 +51,7 @@ TRANSFORM	"transform"
 {BEGINTITLE}+		{ return magic::MagicParser::token::BEGINTITLE; }
 {ENDTITLE}+			{ return magic::MagicParser::token::ENDTITLE; }
 
-[0-9]+ {
+-[0-9]+|[0-9]+ {
 	magiclval->v_int = atoi(yytext);
 	return magic::MagicParser::token::INTEGER;
 }
@@ -66,7 +66,8 @@ TRANSFORM	"transform"
 	return magic::MagicParser::token::STRING;
 }
 
-[ \t\r]+ {
+[ \n\t\r]+ {
 	/* yylloc->step(); */
 }
+
 %%

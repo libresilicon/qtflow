@@ -3,6 +3,7 @@
 %error-verbose
 %language "c++"
 %glr-parser
+%debug
 %token-table
 %define "parser_class_name" {MagicParser}
 

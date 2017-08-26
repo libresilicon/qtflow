@@ -41,10 +41,9 @@ namespace magic {
 
 		if(filename==QString())
 			return false;
-		QTextStream(stdout) << filename << '\n';
-		trace_scanning = true;
 
 		streamname = filename;
+		//trace_scanning = true;
 
 		std::cout << "opening file " << stdfilename << std::endl;
 		input.open(stdfilename, std::ios::in);
@@ -56,7 +55,8 @@ namespace magic {
 
 		if(parser) delete parser;
 		parser = new MagicParser(this);
-		//parser->set_debug_level(trace_parsing);
+		parser->set_debug_level(trace_parsing);
+
 		stat=parser->parse();
 		input.close();
 
@@ -70,8 +70,7 @@ namespace magic {
 
 	void MagicData::setLayer(std::string *s)
 	{
-		//title = s;
-		QTextStream(stdout) << "setLayer: " << s << '\n';
+		recentTitle = QString::fromStdString(*s);
 	}
 
 	class MagicScanner *MagicData::getLexer()
@@ -81,7 +80,13 @@ namespace magic {
 
 	void MagicData::addRectangle(int x, int y, int w, int h)
 	{
-		//QRect objR(x,y,w,h);
-		//parsedElements.append(objR);
+		rects_t list;
+		QRect objR(x,y,w,h);
+		if(parsedElements.contains(recentTitle)) {
+			list=parsedElements.value(recentTitle);
+		} else {
+			parsedElements[recentTitle]=list;
+		}
+		list.append(objR);
 	}
 }
