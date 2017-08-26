@@ -100,4 +100,39 @@ namespace magic {
 		}
 		parsedBoxes[recentTitle].append(objR);
 	}
+
+	void MagicData::addUsedModuleTransform(int a, int b, int c, int d, int e, int f)
+	{
+		recent_module.x = c;
+		recent_module.y = f;
+	}
+
+	void MagicData::addUsedModuleBox(int x, int y, int w, int h)
+	{
+		//recent_module.x = x;
+		//recent_module.y = y;
+		recent_module.w = w;
+		recent_module.h = h;
+	}
+
+	void MagicData::addUsedModuleNames(std::string *module, std::string *name)
+	{
+		recent_module.module_name = QString::fromStdString(*module);
+		recent_module.instance_name = QString::fromStdString(*name);
+	}
+
+	void MagicData::addUsedModule()
+	{
+		module_info info;
+		info.box = QRect(recent_module.x,recent_module.y,recent_module.w,recent_module.h);
+		info.module_name = recent_module.module_name;
+		info.instance_name = recent_module.instance_name;
+		parsedModules.append(info);
+	}
+
+	mods_t MagicData::getModules()
+	{
+		return parsedModules;
+	}
+
 }

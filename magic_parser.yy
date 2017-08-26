@@ -60,10 +60,15 @@ magic_file: MAGIC technology magscale timestamp sections;
 technology: TECH STRING;
 magscale: MAGSCALE INTEGER INTEGER;
 timestamp: TIMESTAMP INTEGER;
-sections: sections section | section;
+sections:
+	  sections section
+	| section
+	;
+
 section:
-		  BEGINTITLE sectiontitle ENDTITLE items;
-		| BEGINTITLE sectiontitle ENDTITLE;
+	  BEGINTITLE sectiontitle ENDTITLE items;
+	| BEGINTITLE sectiontitle ENDTITLE;
+
 sectiontitle: STRING
 	{
 		magicdata->setLayer($1);
@@ -72,14 +77,36 @@ sectiontitle: STRING
 
 items: items item | item ;
 
-item: rect | rlabel | flabel | use;
+item:
+	  rect
+	| rlabel
+	| flabel
+	| use
+	;
 
-use: USE STRING STRING timestamp transform box;
-transform: TRANSFORM INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER;
-box:
+use: use_start timestamp transform use_box
+	{
+		magicdata->addUsedModule();
+	}
+	;
+
+use_start: USE STRING STRING
+	{
+		magicdata->addUsedModuleNames($2,$3);
+	}
+	;
+
+transform:
+	TRANSFORM INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER
+	{
+		magicdata->addUsedModuleTransform($2,$3,$4,$5,$6,$7);
+	}
+	;
+
+use_box:
 	BOX INTEGER INTEGER INTEGER INTEGER
 	{
-		magicdata->addBox($2, $3, $4 - $2, $5 - $3);
+		magicdata->addUsedModuleBox($2, $3, $4 - $2, $5 - $3);
 	}
 	;
 

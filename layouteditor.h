@@ -33,6 +33,7 @@ protected:
 	QColor colorMat(QString material);
 	void drawBoxes();
 	void drawRectangles();
+	void drawModuleInfo();
 
 private:
 	QString filePath;

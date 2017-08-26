@@ -32,11 +32,9 @@ void LayoutEditor::drawBoxes()
 	foreach(QString layerN, layers.keys()) {
 		color = colorMat(layerN);
 		layer = layers[layerN];
+		QPen pen = QPen(color);
 		foreach (const QRect& e, layer)
 		{
-			QPen pen = QPen(color);
-			QTextStream(stdout) << "Coming to here " << "\t x:" << e.x() << "\t y:" << e.y()  << '\n';
-			QTextStream(stdout) << "Scene rect " << "\t x:" << editScene->sceneRect().x() << "\t y:" << editScene->sceneRect().y()  << '\n';
 			editScene->addRect(e, pen);
 		}
 	}
@@ -50,14 +48,23 @@ void LayoutEditor::drawRectangles()
 	foreach(QString layerN, layers.keys()) {
 		color = colorMat(layerN);
 		layer = layers[layerN];
+		QPen pen = QPen(color);
+		QBrush brush = QBrush(color);
 		foreach (const QRect& e, layer)
 		{
-			QPen pen = QPen(color);
-			QBrush brush = QBrush(color);
-			QTextStream(stdout) << "Coming to here " << "\t x:" << e.x() << "\t y:" << e.y()  << '\n';
-			QTextStream(stdout) << "Scene rect " << "\t x:" << editScene->sceneRect().x() << "\t y:" << editScene->sceneRect().y()  << '\n';
 			editScene->addRect(e, pen, brush);
 		}
+	}
+}
+
+void LayoutEditor::drawModuleInfo()
+{
+	QPen pen = QPen(Qt::black);
+	mods_t mods = magicdata->getModules();
+	foreach (module_info e, mods)
+	{
+		editScene->addRect(e.box, pen);
+		editScene->addText(e.module_name);
 	}
 }
 
@@ -77,6 +84,7 @@ void LayoutEditor::loadFile(QString file)
 	magicdata->loadFile(file);
 	drawBoxes();
 	drawRectangles();
+	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
