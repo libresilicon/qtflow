@@ -19,6 +19,7 @@ public slots:
 
 private:
 	LayoutEditor *editArea;
+	QWidget *grid;
 };
 
 #endif // LAYOUTEDITORWIDGET_H
