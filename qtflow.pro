@@ -76,7 +76,8 @@ SOURCES += \
         vcdata.cpp \
         schematicsdata.cpp \
         schematicsscanner.cpp \
-    layouteditorwidget.cpp
+	layouteditorwidget.cpp \
+	layouteditor.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -117,7 +118,8 @@ HEADERS  += \
         schematicsdata.h \
         schematicsscanner.h \
         vcdcommon.h \
-    layouteditorwidget.h
+	layouteditorwidget.h \
+	layouteditor.h
 
 FORMS    += \ 
 	mainwindow.ui \

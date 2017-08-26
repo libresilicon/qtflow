@@ -1,6 +1,7 @@
 #ifndef LAYOUTEDITORWIDGET_H
 #define LAYOUTEDITORWIDGET_H
 
+#include "layouteditor.h"
 #include "editorwidget.h"
 
 class LayoutEditorWidget : public EditorWidget
@@ -9,6 +10,15 @@ class LayoutEditorWidget : public EditorWidget
 
 public:
 	LayoutEditorWidget(QWidget *parent = nullptr);
+	void loadFile(QString);
+	QString getFilePath();
+
+public slots:
+	void onContentChanged();
+	void saveFile();
+
+private:
+	LayoutEditor *editArea;
 };
 
 #endif // LAYOUTEDITORWIDGET_H
