@@ -1,10 +1,19 @@
 #ifndef TESTBENCHTOOLBOX_H
 #define TESTBENCHTOOLBOX_H
 
-#include <QObject>
+#include <QToolBar>
+#include <QPixmap>
+#include <QDockWidget>
 #include <QWidget>
+#include <QAction>
+#include <QToolButton>
+#include <QGridLayout>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
-class TestBenchToolBox : public QWidget
+#include "toolboxbasis.h"
+
+class TestBenchToolBox : public ToolBoxBasis
 {
 	Q_OBJECT
 public:
