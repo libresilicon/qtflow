@@ -7,6 +7,8 @@
 #include <QSettings>
 #include <QMenu>
 
+#include "qtflowfilelist.h"
+
 #include "ui_files.h"
 
 class FileSelector : public QDockWidget
@@ -32,7 +34,8 @@ signals:
 private:
 	Ui::Files *ui;
 
-	QFileSystemModel *filesystem;
+	QtFlowFileList *filesystem;
+	//QFileSystemModel *filesystem;
 	QMenu *context;
 	QString sourcedir;
 };

@@ -2,9 +2,12 @@
 #define QTFLOWFILELIST_H
 
 #include <QWidget>
+#include <QFileSystemModel>
 
-class QtFlowFileList
+class QtFlowFileList : public QFileSystemModel
 {
+	Q_OBJECT
+
 public:
 	QtFlowFileList();
 };

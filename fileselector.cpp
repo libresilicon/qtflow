@@ -5,7 +5,7 @@
 FileSelector::FileSelector(QWidget *parent):
 	QDockWidget(parent),
 	ui(new Ui::Files),
-	filesystem(new QFileSystemModel)
+	filesystem(new QtFlowFileList)
 {
 	ui->setupUi(this);
 	context = new QMenu(ui->listView);

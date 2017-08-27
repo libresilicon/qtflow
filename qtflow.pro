@@ -77,7 +77,8 @@ SOURCES += \
         schematicsdata.cpp \
         schematicsscanner.cpp \
 	layouteditorwidget.cpp \
-	layouteditor.cpp
+	layouteditor.cpp \
+    qtflowfilelist.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -119,7 +120,8 @@ HEADERS  += \
         schematicsscanner.h \
         vcdcommon.h \
 	layouteditorwidget.h \
-	layouteditor.h
+	layouteditor.h \
+    qtflowfilelist.h
 
 FORMS    += \ 
 	mainwindow.ui \
