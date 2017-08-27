@@ -118,9 +118,8 @@ void MainWindow::openProject(QString path)
 		if(project) delete project;
 		project = new Project(settings, path);
 		modulesWidget->setProject(project);
-
-		filesWidget->setSourceDir(project->getSourceDir());
-		projectsWidget->setRootDir(project->getRootDir());
+		filesWidget->setProject(project);
+		projectsWidget->setProject(project);
 		enableProject();
 	}
 }

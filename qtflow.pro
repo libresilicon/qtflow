@@ -78,7 +78,8 @@ SOURCES += \
         schematicsscanner.cpp \
 	layouteditorwidget.cpp \
 	layouteditor.cpp \
-    qtflowfilelist.cpp
+    qtflowfilelist.cpp \
+    testbenchtoolbox.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -121,7 +122,8 @@ HEADERS  += \
         vcdcommon.h \
 	layouteditorwidget.h \
 	layouteditor.h \
-    qtflowfilelist.h
+    qtflowfilelist.h \
+    testbenchtoolbox.h
 
 FORMS    += \ 
 	mainwindow.ui \

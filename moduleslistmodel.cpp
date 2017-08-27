@@ -51,9 +51,6 @@ int ModulesListModel::rowCount(const QModelIndex &) const
 
 QVariant ModulesListModel::data(const QModelIndex &index, int role) const
 {
-	if (!index.isValid() || index.row() >= modules.count())
-		return QVariant();
-
 	if (role == Qt::FontRole)
 	{
 		QFont font;

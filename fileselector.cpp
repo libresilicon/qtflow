@@ -5,7 +5,8 @@
 FileSelector::FileSelector(QWidget *parent):
 	QDockWidget(parent),
 	ui(new Ui::Files),
-	filesystem(new QtFlowFileList)
+	filesystem(new QtFlowFileList),
+	project(NULL)
 {
 	ui->setupUi(this);
 	context = new QMenu(ui->listView);
@@ -15,19 +16,20 @@ FileSelector::FileSelector(QWidget *parent):
 	connect(ui->listView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onOpen(const QModelIndex&)));
 }
 
-void FileSelector::setSourceDir(QString path)
+void FileSelector::setProject(Project *p)
 {
-	sourcedir = path;
+	project = p;
 	refresh();
 }
 
 void FileSelector::refresh()
 {
-	if (sourcedir == QString())
+	if (project->getSourceDir() == QString())
 		return;
-	filesystem->setRootPath(sourcedir);
+
+	filesystem->setProject(project);
 	ui->listView->setModel(filesystem);
-	ui->listView->setRootIndex(filesystem->index(sourcedir));
+	ui->listView->setRootIndex(filesystem->index(project->getSourceDir()));
 }
 
 void FileSelector::onSetTestBenchFile(QString m)
@@ -49,5 +51,5 @@ void FileSelector::onContextMenu(const QPoint &point)
 
 void FileSelector::onOpen(const QModelIndex &i)
 {
-	emit(openFile(sourcedir+'/'+i.data().toString()));
+	emit(openFile(project->getSourceDir()+'/'+i.data().toString()));
 }

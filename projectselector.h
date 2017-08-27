@@ -8,6 +8,8 @@
 
 #include "ui_projects.h"
 
+#include "project.h"
+
 class ProjectSelector : public QDockWidget
 {
 	Q_OBJECT
@@ -15,7 +17,7 @@ class ProjectSelector : public QDockWidget
 public:
 	ProjectSelector(QWidget *parent);
 
-	void setRootDir(QString path);
+	void setProject(Project*);
 
 	void refresh();
 
@@ -29,7 +31,7 @@ public slots:
 private:
 	Ui::Projects *ui;
 
-	QString rootdir;
+	Project *project;
 
 	ProjectsTreeModel *projects;
 	QMenu *context;

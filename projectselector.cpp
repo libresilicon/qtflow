@@ -4,7 +4,8 @@
 ProjectSelector::ProjectSelector(QWidget *parent) :
 	ui(new Ui::Projects),
 	projects(new ProjectsTreeModel),
-	QDockWidget(parent)
+	QDockWidget(parent),
+	project(NULL)
 {
 	ui->setupUi(this);
 	ui->treeView->setModel(projects);
@@ -13,26 +14,24 @@ ProjectSelector::ProjectSelector(QWidget *parent) :
 	connect(ui->treeView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onOpen(const QModelIndex&)));
 }
 
-void ProjectSelector::setRootDir(QString path)
-{
-	rootdir = path;
-	refresh();
-}
-
 void ProjectSelector::refresh()
 {
-	projects->setRootPath(rootdir);
-	ui->treeView->setModel(projects);
+	if(project) {
+		projects->setRootPath(project->getRootDir());
+		ui->treeView->setModel(projects);
+	}
 }
 
 void ProjectSelector::onOpen(const QModelIndex &i)
 {
-	QString filename = i.data().toString();
-	QDirIterator it(rootdir, QDirIterator::Subdirectories);
-	while (it.hasNext()) {
-		it.next();
-		if (it.fileName() == filename) {
-			emit(openFile(it.filePath()));
+	if(project) {
+		QString filename = i.data().toString();
+		QDirIterator it(project->getRootDir(), QDirIterator::Subdirectories);
+		while (it.hasNext()) {
+			it.next();
+			if (it.fileName() == filename) {
+				emit(openFile(it.filePath()));
+			}
 		}
 	}
 }
@@ -42,4 +41,10 @@ void ProjectSelector::onContextMenu(const QPoint &point)
 	QModelIndex index = ui->treeView->indexAt(point);
 	if (index.isValid())
 		context->exec(ui->treeView->mapToGlobal(point));
+}
+
+void ProjectSelector::setProject(Project* p)
+{
+	project = p;
+	refresh();
 }

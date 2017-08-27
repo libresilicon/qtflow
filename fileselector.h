@@ -11,6 +11,8 @@
 
 #include "ui_files.h"
 
+#include "project.h"
+
 class FileSelector : public QDockWidget
 {
 	Q_OBJECT
@@ -20,7 +22,7 @@ public:
 
 	void refresh();
 
-	void setSourceDir(QString path);
+	void setProject(Project *p);
 
 public slots:
 	void onContextMenu(const QPoint&);
@@ -35,9 +37,9 @@ private:
 	Ui::Files *ui;
 
 	QtFlowFileList *filesystem;
-	//QFileSystemModel *filesystem;
 	QMenu *context;
-	QString sourcedir;
+
+	Project *project;
 };
 
 #endif // FILESELECTOR_H
