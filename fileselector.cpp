@@ -30,6 +30,16 @@ void FileSelector::refresh()
 	ui->listView->setRootIndex(filesystem->index(sourcedir));
 }
 
+void FileSelector::onSetTestBenchFile(QString m)
+{
+	QTextStream(stdout) << "New test bench " << m << '\n';
+}
+
+void FileSelector::onSetTopLevelFile(QString m)
+{
+	QTextStream(stdout) << "New top level " << m << '\n';
+}
+
 void FileSelector::onContextMenu(const QPoint &point)
 {
 	QModelIndex index = ui->listView->indexAt(point);

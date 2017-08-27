@@ -23,6 +23,8 @@ public:
 public slots:
 	void onContextMenu(const QPoint&);
 	void onOpen(const QModelIndex&);
+	void onSetTestBenchFile(QString);
+	void onSetTopLevelFile(QString);
 
 signals:
 	void openFile(QString);

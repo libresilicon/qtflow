@@ -59,6 +59,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
 	connect(modulesWidget, SIGNAL(setTopLevel(QString)), this, SLOT(setTopLevel(QString)));
 	connect(modulesWidget, SIGNAL(setTestBench(QString)), this, SLOT(setTestBench(QString)));
+	connect(modulesWidget, SIGNAL(setTestBench(QString)), filesWidget, SLOT(onSetTestBenchFile(QString)));
+	connect(modulesWidget, SIGNAL(setTopLevel(QString)), filesWidget, SLOT(onSetTopLevelFile(QString)));
 
 	timingWidget = new Wave(this);
 	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
