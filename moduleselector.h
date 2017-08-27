@@ -5,6 +5,8 @@
 #include "moduleslistmodel.h"
 #include "modulestreemodel.h"
 
+#include "project.h"
+
 #include <QDockWidget>
 #include <QSettings>
 #include <QFile>
@@ -16,7 +18,7 @@ class ModuleSelector : public QDockWidget
 
 public:
 	ModuleSelector(QWidget *parent);
-	void setSourceDir(QString path);
+	void setProject(Project *project);
 
 signals:
 	void topModuleChanged();
@@ -33,6 +35,8 @@ public slots:
 
 private:
 	Ui::Modules *ui;
+
+	Project *project;
 
 	ModulesListModel *moduleList;
 	ModulesTreeModel *moduleTree;

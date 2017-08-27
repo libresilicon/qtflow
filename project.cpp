@@ -60,6 +60,11 @@ QString Project::getTopLevel()
 	return project_settings->value("toplevel").toString();
 }
 
+QString Project::getTestBench()
+{
+	return project_settings->value("testbench").toString();
+}
+
 void Project::setTestBench(QString top)
 {
 	QTextStream(stdout) << "Setting test bench to: " << top << "\n";

@@ -115,7 +115,8 @@ void MainWindow::openProject(QString path)
 	if (project_vars.exists()) {
 		if(project) delete project;
 		project = new Project(settings, path);
-		modulesWidget->setSourceDir(project->getSourceDir());
+		modulesWidget->setProject(project);
+
 		filesWidget->setSourceDir(project->getSourceDir());
 		projectsWidget->setRootDir(project->getRootDir());
 		enableProject();

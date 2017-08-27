@@ -47,6 +47,7 @@ public:
 	QString getSourceDir();
 	QString getTopLevel();
 	QString getRootDir();
+	QString getTestBench();
 
 private:
 	QSettings *settings;

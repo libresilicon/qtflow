@@ -6,9 +6,10 @@
 ModuleSelector::ModuleSelector(QWidget *parent):
 	QDockWidget(parent),
 	ui(new Ui::Modules),
-	moduleTree(new ModulesTreeModel)
+	moduleTree(new ModulesTreeModel),
+	project(NULL),
+	moduleList(NULL)
 {
-	moduleList = NULL;
 	QAction *setModulesTestbench;
 	QAction *setModulesTopModule;
 
@@ -38,9 +39,14 @@ void ModuleSelector::onContextMenu(const QPoint &point)
 	context->exec(ui->listView->mapToGlobal(point));
 }
 
-void ModuleSelector::setSourceDir(QString path)
+void ModuleSelector::setProject(Project *p)
 {
-	sourcedir = path;
+	project = p;
+	if(project) {
+		sourcedir = project->getSourceDir();
+		toplevel = project->getTopLevel();
+		testbench = project->getTestBench();
+	}
 	refresh();
 }
 
