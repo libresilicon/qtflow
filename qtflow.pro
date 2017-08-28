@@ -79,8 +79,7 @@ SOURCES += \
 	layouteditorwidget.cpp \
 	layouteditor.cpp \
 	qtflowfilelist.cpp \
-	testbenchtoolbox.cpp \
-	toolboxbasis.cpp
+	testbenchtoolbox.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -124,8 +123,7 @@ HEADERS  += \
 	layouteditorwidget.h \
 	layouteditor.h \
 	qtflowfilelist.h \
-	testbenchtoolbox.h \
-	toolboxbasis.h
+	testbenchtoolbox.h
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -144,7 +142,8 @@ FORMS    += \
 	projects.ui \
 	files.ui \
 	wave.ui \
-	toolbox.ui
+	testbenchtoolbox.ui \
+	synhesistoolbox.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
