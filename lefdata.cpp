@@ -1,4 +1,5 @@
 #include "lefdata.h"
+#include "lefscanner.h"
 
 namespace lef {
 	LEFData::LEFData() :
@@ -19,9 +20,7 @@ namespace lef {
 		std::string stdfilename = filename.toStdString();
 
 		streamname = filename;
-		std::cout << "opening file " << stdfilename << std::endl;
 		input.open(stdfilename, std::ios::in);
-		std::cout << "opened file" << stdfilename << std::endl;
 
 		lexer = new LEFScanner(&input, &std::cout);
 		lexer->set_debug(trace_scanning);

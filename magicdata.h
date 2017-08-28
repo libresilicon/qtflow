@@ -12,8 +12,6 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-#include "magicscanner.h"
-
 typedef QVector<QRect> rects_t;
 typedef QMap<QString,rects_t> layer_rects_t;
 
@@ -34,6 +32,7 @@ typedef struct {
 typedef QVector<module_info> mods_t;
 
 namespace magic {
+	class MagicScanner;
 	class MagicData
 	{
 	public:

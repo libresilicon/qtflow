@@ -1,6 +1,9 @@
 #include "layouteditor.h"
 #include <QAbstractScrollArea>
 
+#include "magicdata.h"
+#include "lefdata.h"
+
 LayoutEditor::LayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(new magic::MagicData()),
@@ -54,6 +57,8 @@ void LayoutEditor::loadFile(QString file)
 	magicdata->loadFile(file);
 	drawRectangles();
 	drawModuleInfo();
+	magicdata->getTechnology(); // TODO: do something with this here
+	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 }
 

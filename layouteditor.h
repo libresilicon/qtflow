@@ -2,13 +2,20 @@
 #define LAYOUTEDITOR_H
 
 #include "ieditor.h"
-#include "magicdata.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsWidget>
 #include <QGridLayout>
+
+namespace magic {
+	class MagicData;
+}
+
+namespace lef {
+	class LEFData;
+}
 
 class LayoutEditor : public QGraphicsView, public IEditor
 {
@@ -27,8 +34,6 @@ public slots:
 	void mousePressEvent(QMouseEvent * e);
 
 protected:
-	//void resizeEvent(QResizeEvent*);
-	//void paintEvent(QPaintEvent *event);
 	QColor colorMat(QString material);
 	void drawRectangles();
 	void drawModuleInfo();
@@ -37,7 +42,7 @@ private:
 	QString filePath;
 	QGraphicsScene *editScene;
 	magic::MagicData *magicdata;
-
+	lef::LEFData *lefdata;
 };
 
 #endif // LAYOUTEDITOR_H

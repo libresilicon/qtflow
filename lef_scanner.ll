@@ -21,11 +21,17 @@
 %option nounput
 %option yylineno
 
-VERSION		"VERSION"
+COMMENT				"#"
+VERSION				"VERSION"
+NAMESCASESENSITIVE	"NAMESCASESENSITIVE"
+BUSBITCHARS			"BUSBITCHARS"
 
 %%
 
-{VERSION}+		{ return lef::LEFParser::token::VERSION; }
+{COMMENT}.*				{}
+{VERSION}+				{ return lef::LEFParser::token::VERSION; }
+{NAMESCASESENSITIVE}+	{ return lef::LEFParser::token::NAMESCASESENSITIVE; }
+{BUSBITCHARS}+			{ return lef::LEFParser::token::BUSBITCHARS; }
 
 -[0-9]+|[0-9]+ {
 	leflval->v_int = atoi(yytext);
@@ -45,4 +51,3 @@ VERSION		"VERSION"
 [ \n\t\r]+ {
 	/* yylloc->step(); */
 }
-

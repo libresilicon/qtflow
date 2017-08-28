@@ -10,7 +10,7 @@
 #include "lef.yy.h"
 
 namespace lef {
-	class LEFata;
+	class LEFData;
 	class LEFScanner : public lefFlexLexer
 	{
 	public:

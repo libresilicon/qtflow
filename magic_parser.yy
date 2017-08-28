@@ -20,6 +20,7 @@
 #include <string>
 #include <QString>
 #include "magicdata.h"
+#include "magicscanner.h"
 
 #define magiclex (magicdata->getLexer())->magiclex
 #define magiclineno (int)(magicdata->getLexer())->lineno()

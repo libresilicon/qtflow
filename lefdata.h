@@ -12,9 +12,9 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-#include "lefscanner.h"
-
 namespace lef {
+	class LEFScanner;
+	class LEFParser;
 	class LEFData
 	{
 	public:

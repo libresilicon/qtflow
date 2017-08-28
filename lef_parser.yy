@@ -20,6 +20,7 @@
 #include <string>
 #include <QString>
 #include "lefdata.h"
+#include "lefscanner.h"
 
 #define leflex (lefdata->getLexer())->leflex
 #define leflineno (int)(lefdata->getLexer())->lineno()
@@ -37,10 +38,12 @@
 %token <v_double> DOUBLE
 
 %token VERSION
+%token NAMESCASESENSITIVE
+%token BUSBITCHARS
 
 %%
 
-version: VERSION DOUBLE;
+version: VERSION DOUBLE
 
 %%
 
