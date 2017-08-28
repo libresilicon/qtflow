@@ -3,16 +3,21 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QDialog>
 
-class ProjectSettings : public QWidget
+#include "ui_projectsettings.h"
+
+class ProjectSettings : public QDialog
 {
-  Q_OBJECT
+	Q_OBJECT
 public:
-  explicit ProjectSettings(QWidget *parent = nullptr);
+	explicit ProjectSettings(QWidget *parent = nullptr);
   
 signals:
-  
+	
 public slots:
+private:
+	Ui::ProjectSettings *ui;
 };
 
 #endif // PROJECTSETTINGS_H
