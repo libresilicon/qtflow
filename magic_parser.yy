@@ -81,6 +81,7 @@ item:
 	  rect
 	| rlabel
 	| flabel
+	| port
 	| use
 	;
 
@@ -121,7 +122,7 @@ rlabel:
 	RLABEL STRING
 	INTEGER INTEGER INTEGER INTEGER INTEGER
 	STRING
-    ;
+	;
 
 flabel:
 	FLABEL STRING
@@ -129,7 +130,6 @@ flabel:
 	STRING
 	INTEGER INTEGER INTEGER INTEGER
 	STRING
-	port
 	;
 
 port: PORT INTEGER STRING;
