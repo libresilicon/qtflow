@@ -57,7 +57,11 @@
 %start magic_file
 %%
 magic_file: MAGIC technology magscale timestamp sections;
-technology: TECH STRING;
+technology: TECH STRING
+	{
+		magicdata->setTechnology($2);
+	}
+	;
 magscale: MAGSCALE INTEGER INTEGER;
 timestamp: TIMESTAMP INTEGER;
 sections:

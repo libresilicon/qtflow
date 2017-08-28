@@ -66,6 +66,16 @@ namespace magic {
 		recentTitle = QString::fromStdString(*s);
 	}
 
+	void MagicData::setTechnology(std::string *s)
+	{
+		technology = QString::fromStdString(*s);
+	}
+
+	QString MagicData::getTechnology()
+	{
+		return technology;
+	}
+
 	MagicScanner *MagicData::getLexer()
 	{
 		return lexer;

@@ -45,6 +45,7 @@ namespace magic {
 		layer_rects_t getRectangles();
 		layer_rects_t getBoxes();
 		mods_t getModules();
+		QString getTechnology();
 
 		// building the info
 		void addRectangle(int,int,int,int);
@@ -54,6 +55,7 @@ namespace magic {
 		void addUsedModuleTransform(int, int, int, int, int, int);
 		void addUsedModule();
 		void setLayer(std::string *s);
+		void setTechnology(std::string *s);
 		class MagicScanner *getLexer();
 
 	private:
@@ -64,6 +66,7 @@ namespace magic {
 		class MagicScanner* lexer;
 		class MagicParser* parser;
 		QString recentTitle;
+		QString technology;
 		bool trace_parsing;
 		bool trace_scanning;
 		QString streamname;
