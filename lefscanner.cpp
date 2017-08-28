@@ -1,6 +1,6 @@
 #include "lefscanner.h"
-
-LEFScanner::LEFScanner()
-{
-  
+namespace lef {
+	LEFScanner::LEFScanner()
+	{
+	}
 }

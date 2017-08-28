@@ -83,7 +83,9 @@ SOURCES += \
 	qtflowfilelist.cpp \
 	testbenchtoolbox.cpp \
 	synthesistoolbox.cpp \
-	projectsettings.cpp
+	projectsettings.cpp \
+    lefscanner.cpp \
+    lefdata.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -129,7 +131,9 @@ HEADERS  += \
 	qtflowfilelist.h \
 	testbenchtoolbox.h \
 	synthesistoolbox.h \
-	projectsettings.h
+	projectsettings.h \
+    lefscanner.h \
+    lefdata.h
 
 FORMS    += \ 
 	mainwindow.ui \

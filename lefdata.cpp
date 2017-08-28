@@ -1,6 +1,13 @@
 #include "lefdata.h"
 
-LEFData::LEFData()
-{
-  
+namespace lef {
+	LEFData::LEFData()
+	{
+	}
+	
+	LEFScanner *LEFData::getLexer()
+	{
+		return lexer;
+	}
 }
+
