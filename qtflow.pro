@@ -79,7 +79,8 @@ SOURCES += \
 	layouteditorwidget.cpp \
 	layouteditor.cpp \
 	qtflowfilelist.cpp \
-	testbenchtoolbox.cpp
+	testbenchtoolbox.cpp \
+    synthesistoolbox.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -123,7 +124,8 @@ HEADERS  += \
 	layouteditorwidget.h \
 	layouteditor.h \
 	qtflowfilelist.h \
-	testbenchtoolbox.h
+	testbenchtoolbox.h \
+    synthesistoolbox.h
 
 FORMS    += \ 
 	mainwindow.ui \
