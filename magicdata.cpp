@@ -1,7 +1,7 @@
 #include "magicdata.h"
 
 namespace magic {
-	MagicData::MagicData():
+	MagicData::MagicData() :
 		lexer(NULL),
 		parser(NULL),
 		trace_scanning(false),
