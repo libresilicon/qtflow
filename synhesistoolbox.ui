@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>TestBenchToolBox</class>
- <widget class="QDockWidget" name="TestBenchToolBox">
+ <class>SynthesisToolBox</class>
+ <widget class="QDockWidget" name="SynthesisToolBox">
   <property name="enabled">
    <bool>true</bool>
   </property>
@@ -29,7 +29,7 @@
    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
   </property>
   <property name="windowTitle">
-   <string>Testbe&amp;nch</string>
+   <string notr="true">S&amp;ynthesis</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <property name="sizePolicy">
