@@ -107,14 +107,14 @@ transform:
 use_box:
 	BOX INTEGER INTEGER INTEGER INTEGER
 	{
-		magicdata->addUsedModuleBox($2, $3, $4 - $2, $5 - $3);
+		magicdata->addUsedModuleBox($2, $3, $4, $5);
 	}
 	;
 
 rect:
 	RECT INTEGER INTEGER INTEGER INTEGER
 	{
-		magicdata->addRectangle($2, $3, $4 - $2, $5 - $3);
+		magicdata->addRectangle($2, $3, $4, $5);
 	}
     ;
 

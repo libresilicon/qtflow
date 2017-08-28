@@ -19,7 +19,8 @@ typedef QMap<QString,rects_t> layer_rects_t;
 typedef struct {
 	QString module_name;
 	QString instance_name;
-	int x,y,w,h;
+	int x1,y1,x2,y2;
+	int a,b,c,d,e,f;
 } module_info_buffer;
 
 typedef struct {
@@ -43,9 +44,9 @@ namespace magic {
 		mods_t getModules();
 
 		// building the info
-		void addRectangle(int x, int y, int w, int h);
-		void addBox(int x, int y, int w, int h);
-		void addUsedModuleBox(int x, int y, int w, int h);
+		void addRectangle(int,int,int,int);
+		void addBox(int,int,int,int);
+		void addUsedModuleBox(int,int,int,int);
 		void addUsedModuleNames(std::string *module, std::string *name);
 		void addUsedModuleTransform(int, int, int, int, int, int);
 		void addUsedModule();

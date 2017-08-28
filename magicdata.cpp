@@ -81,20 +81,20 @@ namespace magic {
 		return parsedRectangles;
 	}
 
-	void MagicData::addRectangle(int x, int y, int w, int h)
+	void MagicData::addRectangle(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
-		QRect objR(x,y,w,h);
+		QRect objR(x1,y1,x2-x1,y2-y1);
 		if(!parsedRectangles.contains(recentTitle)){
 			parsedRectangles[recentTitle]=list;
 		}
 		parsedRectangles[recentTitle].append(objR);
 	}
 
-	void MagicData::addBox(int x, int y, int w, int h)
+	void MagicData::addBox(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
-		QRect objR(x,y,w,h);
+		QRect objR(x1,y1,x2-x1,y2-y1);
 		if(!parsedBoxes.contains(recentTitle)){
 			parsedBoxes[recentTitle]=list;
 		}
@@ -103,16 +103,20 @@ namespace magic {
 
 	void MagicData::addUsedModuleTransform(int a, int b, int c, int d, int e, int f)
 	{
-		recent_module.x = c;
-		recent_module.y = f;
+		recent_module.a = a;
+		recent_module.b = b;
+		recent_module.c = c;
+		recent_module.d = d;
+		recent_module.e = e;
+		recent_module.f = f;
 	}
 
-	void MagicData::addUsedModuleBox(int x, int y, int w, int h)
+	void MagicData::addUsedModuleBox(int x1, int y1, int x2, int y2)
 	{
-		//recent_module.x = x;
-		//recent_module.y = y;
-		recent_module.w = w;
-		recent_module.h = h;
+		recent_module.x1 = x1;
+		recent_module.y1 = y1;
+		recent_module.x2 = x2;
+		recent_module.y2 = y2;
 	}
 
 	void MagicData::addUsedModuleNames(std::string *module, std::string *name)
@@ -124,9 +128,16 @@ namespace magic {
 	void MagicData::addUsedModule()
 	{
 		module_info info;
-		info.box = QRect(recent_module.x,recent_module.y,recent_module.w,recent_module.h);
+		info.box = QRect(
+				recent_module.c,
+				recent_module.f,
+				recent_module.a*(recent_module.x2-recent_module.x1),
+				recent_module.e*(recent_module.y2-recent_module.y1)
+				);
+
 		info.module_name = recent_module.module_name;
 		info.instance_name = recent_module.instance_name;
+
 		parsedModules.append(info);
 	}
 
@@ -134,5 +145,4 @@ namespace magic {
 	{
 		return parsedModules;
 	}
-
 }
