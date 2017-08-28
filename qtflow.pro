@@ -26,14 +26,16 @@ QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
 
 FLEXSOURCES = \
-        vcd_scanner.ll \
-        schematics_scanner.ll \
-	magic_scanner.ll
+	magic_scanner.ll \
+	vcd_scanner.ll \
+	schematics_scanner.ll \
+	lef_scanner.ll
 
 BISONSOURCES = \
 	magic_parser.yy \
 	vcd_parser.yy \
-        schematics_parser.yy
+	schematics_parser.yy \
+	lef_parser.yy
 
 OTHER_FILES +=  \
         $$FLEXSOURCES \
