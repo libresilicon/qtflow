@@ -24,22 +24,6 @@ void LayoutEditor::mousePressEvent(QMouseEvent * e)
 	QTextStream(stdout) << "Drawing here " << "\t x:" << pt.x() << "\t y:" << pt.y()  << '\n';
 }
 
-void LayoutEditor::drawBoxes()
-{
-	QColor color;
-	rects_t layer;
-	layer_rects_t layers = magicdata->getBoxes();
-	foreach(QString layerN, layers.keys()) {
-		color = colorMat(layerN);
-		layer = layers[layerN];
-		QPen pen = QPen(color);
-		foreach (const QRect& e, layer)
-		{
-			editScene->addRect(e, pen);
-		}
-	}
-}
-
 void LayoutEditor::drawRectangles()
 {
 	QColor color;
@@ -64,7 +48,8 @@ void LayoutEditor::drawModuleInfo()
 	foreach (module_info e, mods)
 	{
 		editScene->addRect(e.box, pen);
-		editScene->addText(e.module_name);
+		editScene->addItem(e.instance_name);
+		//editScene->addItem(e.module_name);
 	}
 }
 
@@ -82,7 +67,6 @@ void LayoutEditor::loadFile(QString file)
 {
 	filePath = file;
 	magicdata->loadFile(file);
-	drawBoxes();
 	drawRectangles();
 	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);

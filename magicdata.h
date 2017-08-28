@@ -10,6 +10,7 @@
 #include <QTextStream>
 #include <QString>
 #include <QTextStream>
+#include <QGraphicsTextItem>
 
 #include "magicscanner.h"
 
@@ -24,10 +25,11 @@ typedef struct {
 } module_info_buffer;
 
 typedef struct {
-	QString module_name;
-	QString instance_name;
+	QGraphicsTextItem *module_name;
+	QGraphicsTextItem *instance_name;
 	QRect box;
 } module_info;
+
 typedef QVector<module_info> mods_t;
 
 namespace magic {

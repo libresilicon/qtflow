@@ -31,7 +31,6 @@ protected:
 	//void resizeEvent(QResizeEvent*);
 	//void paintEvent(QPaintEvent *event);
 	QColor colorMat(QString material);
-	void drawBoxes();
 	void drawRectangles();
 	void drawModuleInfo();
 

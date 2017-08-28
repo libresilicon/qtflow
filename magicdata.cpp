@@ -135,8 +135,13 @@ namespace magic {
 				recent_module.e*(recent_module.y2-recent_module.y1)
 				);
 
-		info.module_name = recent_module.module_name;
-		info.instance_name = recent_module.instance_name;
+
+		info.module_name = new QGraphicsTextItem;
+		info.module_name->setPlainText(recent_module.module_name);
+		info.module_name->setPos(recent_module.c,recent_module.f);
+		info.instance_name = new QGraphicsTextItem;
+		info.instance_name->setPlainText(recent_module.instance_name);
+		info.instance_name->setPos(recent_module.c,recent_module.f+recent_module.e*(recent_module.y2-recent_module.y1));
 
 		parsedModules.append(info);
 	}
