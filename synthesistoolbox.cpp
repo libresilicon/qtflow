@@ -5,5 +5,5 @@ SynthesisToolBox::SynthesisToolBox(QWidget *parent) :
 	ui(new Ui::SynthesisToolBox)
 {
 	ui->setupUi(this);
-	setMaximumHeight(ui->dockWidgetContents->height());
+	setMaximumHeight(ui->dockWidgetContents->height()+20);
 }
