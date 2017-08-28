@@ -7,7 +7,7 @@
 #include "schematicseditorwidget.h"
 #include "layouteditorwidget.h"
 
-class EditorTabManager : public QWidget
+class EditorTabManager : public QTabWidget
 {
 	Q_OBJECT
 public:
@@ -24,8 +24,6 @@ public slots:
 	void closeFile(int);
 
 private:
-	QTabWidget *editArea;
-
 	bool isCode(QString);
 	bool isSchematic(QString);
 	bool isLayout(QString suffix);

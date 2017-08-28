@@ -1,13 +1,13 @@
 #include "editortabmanager.h"
 
-EditorTabManager::EditorTabManager(QWidget *parent) :
-	QWidget(parent),
-	editArea(new QTabWidget(this))
-{
-	editArea->resize(this->maximumSize());
-	editArea->setTabsClosable(true);
+#include <QLabel>
 
-	connect(editArea, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
+EditorTabManager::EditorTabManager(QWidget *parent) :
+	QTabWidget(parent)
+{
+	setTabsClosable(true);
+	parent->layout()->addWidget(this);
+	connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeFile(int)));
 }
 
 void EditorTabManager::openFile(QString filepath)
@@ -15,29 +15,29 @@ void EditorTabManager::openFile(QString filepath)
 	EditorWidget *ed;
 	QFileInfo info(filepath);
 
-	for(int idx=0; idx < editArea->count(); idx++) {
-		ed = (EditorWidget *)editArea->widget(idx);
+	for(int idx=0; idx < count(); idx++) {
+		ed = (EditorWidget *)widget(idx);
 		if(ed->getFilePath()==filepath) return; // already open
 	}
 
 	if(isCode(info.suffix())) {
-		CodeEditorWidget *editorWidget = new CodeEditorWidget(editArea);
+		CodeEditorWidget *editorWidget = new CodeEditorWidget(this);
 		editorWidget->loadFile(filepath);
-		editArea->addTab(editorWidget,info.fileName());
+		addTab(editorWidget,info.fileName());
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
 	if(isSchematic(info.suffix())) {
-		SchematicsEditorWidget *editorWidget = new SchematicsEditorWidget(editArea);
+		SchematicsEditorWidget *editorWidget = new SchematicsEditorWidget(this);
 		editorWidget->loadFile(filepath);
-		editArea->addTab(editorWidget,info.fileName());
+		addTab(editorWidget,info.fileName());
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
 	if(isLayout(info.suffix())) {
-		LayoutEditorWidget *editorWidget = new LayoutEditorWidget(editArea);
+		LayoutEditorWidget *editorWidget = new LayoutEditorWidget(this);
 		editorWidget->loadFile(filepath);
-		editArea->addTab(editorWidget,info.fileName());
+		addTab(editorWidget,info.fileName());
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
@@ -46,12 +46,12 @@ void EditorTabManager::openFile(QString filepath)
 void EditorTabManager::onContentSaved()
 {
 	EditorWidget *ed;
-	for(int idx=0; idx<editArea->count(); idx++) {
-		ed = (EditorWidget*)editArea->widget(idx);
+	for(int idx=0; idx < count(); idx++) {
+		ed = (EditorWidget*)widget(idx);
 		if(ed->getStatusChanged()) {
-			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
+			setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
 		} else {
-			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName());
+			setTabText(idx, QFileInfo(ed->getFilePath()).fileName());
 		}
 	}
 	emit(fileSaved());
@@ -60,10 +60,10 @@ void EditorTabManager::onContentSaved()
 void EditorTabManager::onContentChanged()
 {
 	EditorWidget *ed;
-	for(int idx=0; idx<editArea->count(); idx++) {
-		ed = (EditorWidget*)editArea->widget(idx);
+	for(int idx=0; idx < count(); idx++) {
+		ed = (EditorWidget*)widget(idx);
 		if(ed->getStatusChanged()) {
-			editArea->setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
+			setTabText(idx, QFileInfo(ed->getFilePath()).fileName()+"*");
 		}
 	}
 }
@@ -90,5 +90,7 @@ bool EditorTabManager::isSchematic(QString suffix)
 
 void EditorTabManager::closeFile(int idx)
 {
-	editArea->removeTab(idx);
+	EditorWidget *ed = (EditorWidget*)widget(idx);
+	ed->closeFile();
+	removeTab(idx);
 }

@@ -42,3 +42,4 @@ void EditorWidget::loadFile(QString path) { filePath = path; }
 QString EditorWidget::getFilePath() { return filePath; }
 void EditorWidget::onContentChanged() {}
 void EditorWidget::saveFile() {}
+void EditorWidget::closeFile() {}

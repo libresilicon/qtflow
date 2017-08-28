@@ -18,6 +18,8 @@ public:
 	bool getStatusChanged();
 	void setEditWidget(QWidget *editArea);
 	void setStatusChanged(bool);
+	
+	virtual void closeFile();
 
 signals:
 	void contentChanged();
