@@ -1,11 +1,10 @@
 #include "layouteditorwidget.h"
 
 LayoutEditorWidget::LayoutEditorWidget(QWidget *parent) :
-	EditorWidget(parent),
-	grid(new QWidget(this))
+	EditorWidget(parent)
 {
-	editArea = new LayoutEditor(grid);
-	setEditWidget(grid);
+	editArea = new LayoutEditor(this);
+	setEditWidget(editArea);
 }
 
 void LayoutEditorWidget::loadFile(QString path)

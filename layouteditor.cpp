@@ -7,7 +7,7 @@ LayoutEditor::LayoutEditor(QWidget *parent) :
 	filePath(QString()),
 	editScene(new QGraphicsScene(this))
 {
-	setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
+	//setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
 	//setBaseSize(parent->maximumWidth(),parent->maximumHeight());
 	//editScene->setBackgroundBrush(Qt::blue);
 	editScene->setBackgroundBrush(Qt::white);
