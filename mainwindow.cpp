@@ -29,8 +29,12 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	addDockWidget(Qt::LeftDockWidgetArea, projectsWidget);
 
 	toolBoxWidgetTestBench = new TestBenchToolBox(this);
-	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetTestBench);
+
+	toolBoxWidgetSynthesis = new SynthesisToolBox(this);
+	toolBoxWidgetSynthesis->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetSynthesis);
 
 	modulesWidget = new ModuleSelector(this);
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );

@@ -21,6 +21,8 @@
 #include "fileselector.h"
 #include "moduleselector.h"
 #include "testbenchtoolbox.h"
+#include "synthesistoolbox.h"
+
 #include "editortabmanager.h"
 
 #include "templates.h"
@@ -122,6 +124,7 @@ private:
 	ModuleSelector *modulesWidget;
 
 	TestBenchToolBox *toolBoxWidgetTestBench;
+	SynthesisToolBox *toolBoxWidgetSynthesis;
 	MainToolBox *mainToolBox;
 
 	EditorTabManager *editArea;

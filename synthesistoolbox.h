@@ -1,5 +1,5 @@
-#ifndef TESTBENCHTOOLBOX_H
-#define TESTBENCHTOOLBOX_H
+#ifndef SYNTHESISTOOLBOX_H
+#define SYNTHESISTOOLBOX_H
 
 #include <QToolBar>
 #include <QPixmap>
@@ -11,7 +11,8 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "ui_synhesistoolbox.h"
+#include "ui_synthesistoolbox.h"
+
 class SynthesisToolBox : public QDockWidget
 {
 	Q_OBJECT

@@ -145,7 +145,7 @@ FORMS    += \
 	files.ui \
 	wave.ui \
 	testbenchtoolbox.ui \
-	synhesistoolbox.ui
+    synthesistoolbox.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
