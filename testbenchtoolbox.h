@@ -11,9 +11,9 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "toolboxbasis.h"
+#include "ui_testbenchtoolbox.h"
 
-class TestBenchToolBox : public ToolBoxBasis
+class TestBenchToolBox : public QDockWidget
 {
 	Q_OBJECT
 public:
@@ -22,6 +22,8 @@ public:
 signals:
 
 public slots:
+private:
+	Ui::TestBenchToolBox *ui;
 };
 
 #endif // TESTBENCHTOOLBOX_H

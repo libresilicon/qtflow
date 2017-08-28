@@ -1,8 +1,9 @@
 #include "testbenchtoolbox.h"
 
 TestBenchToolBox::TestBenchToolBox(QWidget *parent) :
-	ToolBoxBasis(parent)
+	QDockWidget(parent),
+	ui(new Ui::TestBenchToolBox)
 {
-	QToolButton *startButton = addButton(":/media-playback-start.svg");
-	QToolButton *stopButton = addButton(":/media-playback-stop.svg");
+	ui->setupUi(this);
+	setMaximumHeight(ui->dockWidgetContents->height());
 }
