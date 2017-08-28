@@ -4,6 +4,10 @@
 #include <QObject>
 #include <QWidget>
 #include <QDialog>
+#include <QFile>
+
+#include <QXmlSimpleReader>
+#include <QDomDocument>
 
 #include "ui_projectsettings.h"
 
@@ -16,8 +20,13 @@ public:
 signals:
 	
 public slots:
+	void technologyActivated(int);
+	void processActivated(int);
+
 private:
 	Ui::ProjectSettings *ui;
+
+	QDomDocument *settingsFileProcess;
 };
 
 #endif // PROJECTSETTINGS_H

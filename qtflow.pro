@@ -4,7 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui script
+QT += core
+QT += gui
+QT += script
+QT += xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
