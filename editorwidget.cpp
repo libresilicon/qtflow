@@ -4,13 +4,12 @@
 
 EditorWidget::EditorWidget(QWidget *parent) :
 	QWidget(parent),
+	toolbar(new QToolBar(this)),
 	layout(new QGridLayout(this)),
 	statusChanged(false)
 {
 	QPixmap pixmapDocumentSave(":/document-save.svg");
 	QAction *saveButton;
-
-	toolbar = new QToolBar(this);
 
 	saveButton = new QAction(pixmapDocumentSave,"S&ave", toolbar);
 	connect(saveButton,SIGNAL(triggered(bool)),this,SLOT(saveFile()));
