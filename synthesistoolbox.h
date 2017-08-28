@@ -11,8 +11,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 
-#include "ui_testbenchtoolbox.h"
-
+#include "ui_synhesistoolbox.h"
 class SynthesisToolBox : public QDockWidget
 {
 	Q_OBJECT
@@ -23,7 +22,7 @@ signals:
 
 public slots:
 private:
-	Ui::TestBenchToolBox *ui;
+	Ui::SynthesisToolBox *ui;
 };
 
 #endif // TESTBENCHTOOLBOX_H
