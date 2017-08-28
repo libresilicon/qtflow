@@ -33,16 +33,6 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    <item>
-     <widget class="QFrame" name="frame">
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -52,7 +42,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>22</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -104,10 +94,20 @@
     <addaction name="separator"/>
     <addaction name="menuSettings"/>
    </widget>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>&amp;Project</string>
+    </property>
+    <addaction name="projectSettings"/>
+    <addaction name="setSimulationMode"/>
+    <addaction name="setSynthesisMode"/>
+    <addaction name="setLayoutMode"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuBuild"/>
    <addaction name="menuTools"/>
+   <addaction name="menuProject"/>
   </widget>
   <action name="openMagicFile">
    <property name="text">
@@ -271,6 +271,26 @@
   <action name="actionCode">
    <property name="text">
     <string>Code</string>
+   </property>
+  </action>
+  <action name="projectSettings">
+   <property name="text">
+    <string>&amp;Settings</string>
+   </property>
+  </action>
+  <action name="setSimulationMode">
+   <property name="text">
+    <string>S&amp;imulation mode</string>
+   </property>
+  </action>
+  <action name="setSynthesisMode">
+   <property name="text">
+    <string>Synthesis &amp;mode</string>
+   </property>
+  </action>
+  <action name="setLayoutMode">
+   <property name="text">
+    <string>&amp;Layout mode</string>
    </property>
   </action>
  </widget>

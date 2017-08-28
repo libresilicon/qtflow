@@ -15,6 +15,9 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
+	
+	projectSettingsDialog = new ProjectSettings(this);
+	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
 
 	iopadsWidget = new IOPads(this);
 	iopadsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -48,7 +51,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, timingWidget);
 
-	editArea = new EditorTabManager(ui->frame);
+	editArea = new EditorTabManager(ui->centralWidget);
 	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 	connect(projectsWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));

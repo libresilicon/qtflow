@@ -25,6 +25,8 @@
 
 #include "editortabmanager.h"
 
+#include "projectsettings.h"
+
 #include "templates.h"
 #include "welcome.h"
 #include "settings.h"
@@ -117,6 +119,7 @@ private:
 
 	QSettings *settings;
 	Settings *settingsDialog;
+	ProjectSettings *projectSettingsDialog;
 	QCommandLineParser *parser;
 
 	FileSelector *filesWidget;
