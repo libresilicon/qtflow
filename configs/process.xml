@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<technologies>
+	<technology xml:id="xfab">
+		<title>X-Fab</title>
+		<description>A foundry somewhere in Germany</description>
+		<process name="xh035" description="350nm process"/>
+	</technology>
+	<technology xml:id="scmos">
+		<title>Generic free technology</title>
+		<description>Can be manufactured by LanceVille minifab</description>
+		<process name="osu018" description="180nm process"/>
+		<process name="osu035" description="350nm process"/>
+		<process name="osu050" description="500nm process"/>
+	</technology>
+</technologies>
