@@ -1,24 +1,37 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QMainWindow>
+#include <QDebug>
+#include <QFileDialog>
+#include <QPlainTextEdit>
+#include <QScrollBar>
+#include <QString>
+#include <QProcess>
+#include <QDockWidget>
+#include <QVBoxLayout>
+#include <QErrorMessage>
+
+#include <iostream>
+#include <string>
+
+#include "ui_mainwindow.h"
+
+#include "projectselector.h"
+#include "fileselector.h"
+#include "moduleselector.h"
+#include "testbenchtoolbox.h"
+#include "editortabmanager.h"
+
+#include "templates.h"
+#include "welcome.h"
+#include "settings.h"
 #include "project.h"
 #include "dependencies.h"
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
-#include "welcome.h"
-#include "settings.h"
 #include "maintoolbox.h"
-
-#include "editortabmanager.h"
-#include "moduleselector.h"
-#include "fileselector.h"
-#include "projectselector.h"
-
-#include <QMainWindow>
-#include <QVBoxLayout>
-#include <QErrorMessage>
-#include <QMdiArea>
 
 namespace Ui {
 	class MainWindow;
@@ -107,6 +120,8 @@ private:
 	FileSelector *filesWidget;
 	ProjectSelector *projectsWidget;
 	ModuleSelector *modulesWidget;
+
+	TestBenchToolBox *toolBoxWidgetTestBench;
 	MainToolBox *mainToolBox;
 
 	EditorTabManager *editArea;

@@ -1,30 +1,4 @@
-#include <QMainWindow>
-
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
-
-//#include "magicparser.h"
-#include "templates.h"
-//#include "grid.h"
-#include "welcome.h"
-#include "settings.h"
-
-#include "projectselector.h"
-#include "fileselector.h"
-#include "moduleselector.h"
-
-#include <iostream>
-#include <string>
-
-#include <QDebug>
-#include <QFileDialog>
-#include <QPlainTextEdit>
-#include <QScrollBar>
-#include <QString>
-#include <QProcess>
-#include <QMdiArea>
-#include <QMdiSubWindow>
-#include <QDockWidget>
 
 MainWindow::MainWindow(QCommandLineParser *p) :
 	QMainWindow(NULL),
@@ -53,6 +27,10 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	projectsWidget = new ProjectSelector(this);
 	projectsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, projectsWidget);
+
+	toolBoxWidgetTestBench = new TestBenchToolBox(this);
+	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetTestBench);
 
 	modulesWidget = new ModuleSelector(this);
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
