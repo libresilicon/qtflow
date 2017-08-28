@@ -142,6 +142,7 @@ namespace magic {
 		info.instance_name = new QGraphicsTextItem;
 		info.instance_name->setPlainText(recent_module.instance_name);
 		info.instance_name->setPos(recent_module.c,recent_module.f+recent_module.e*(recent_module.y2-recent_module.y1));
+		info.module_name_plain = recent_module.module_name; // for looking up in LEF file
 
 		parsedModules.append(info);
 	}

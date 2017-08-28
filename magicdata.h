@@ -25,6 +25,7 @@ typedef struct {
 } module_info_buffer;
 
 typedef struct {
+	QString module_name_plain;
 	QGraphicsTextItem *module_name;
 	QGraphicsTextItem *instance_name;
 	QRect box;

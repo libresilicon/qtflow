@@ -19,10 +19,4 @@ namespace lef {
 	};
 }
 
-int lefFlexLexer::yylex()
-{
-	std::cerr << "in vcdFlexLexer::yylex() !" << std::endl;
-	return 0;
-}
-
 #endif // LEFSCANNER_H
