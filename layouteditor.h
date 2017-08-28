@@ -16,7 +16,6 @@ class LayoutEditor : public QGraphicsView, public IEditor
 
 public:
 	explicit LayoutEditor(QWidget *parent = nullptr);
-	~LayoutEditor();
 
 	void loadFile(QString);
 	void saveFile();
