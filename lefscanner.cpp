@@ -1,7 +1,9 @@
 #include "lefscanner.h"
 namespace lef {
-	LEFScanner::LEFScanner()
+	LEFScanner::LEFScanner(std::istream* in, std::ostream* out) :
+		lefFlexLexer(in, out)
 	{
+
 	}
 }
 

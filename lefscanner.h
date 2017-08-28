@@ -14,7 +14,7 @@ namespace lef {
 	class LEFScanner : public lefFlexLexer
 	{
 	public:
-		LEFScanner();
+		LEFScanner(std::istream* in = 0, std::ostream* out = &std::cout);
 		int leflex(lef::LEFParser::semantic_type*, lef::LEFData*);
 	};
 }
