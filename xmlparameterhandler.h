@@ -1,14 +1,12 @@
 #ifndef XMLPARAMETERHANDLER_H
 #define XMLPARAMETERHANDLER_H
 
-#include <QObject>
-#include <QWidget>
+#include <QXmlDefaultHandler>
 
-class XMLParameterHandler : public QWidget
+class XMLParameterHandler : public QXmlDefaultHandler
 {
-	Q_OBJECT
 public:
-	explicit XMLParameterHandler(QWidget *parent = nullptr);
+	explicit XMLParameterHandler();
 
 signals:
 
