@@ -76,11 +76,13 @@
 %token USE
 %token SHAPE
 %token PORT
+%token LIBRARY
 
 %start lef_file
 
 %%
-lef_file: options layers vias viarules sites macros;
+lef_file: options layers vias viarules sites macros end_library;
+end_library: END LIBRARY;
 
 options: option | option options;
 option:
@@ -195,12 +197,12 @@ macro_option:
 	| macro_obs
 	;
 
-macro_class: CLASS STRING;
+macro_class: CLASS STRING | CLASS STRING STRING;
 macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
 macro_site: SITE STRING;
 macro_origin: ORIGIN DOUBLE DOUBLE;
 macro_size: SIZE DOUBLE BY DOUBLE;
-macro_symmetrie: SYMMETRY STRING | SYMMETRY STRING STRING;
+macro_symmetrie: SYMMETRY STRING | SYMMETRY STRING STRING | SYMMETRY STRING STRING STRING;
 
 macro_pin: macro_pin_options END STRING;
 
@@ -230,10 +232,12 @@ macro_pin_port_infos:
 macro_pin_port_info:
 	  macro_pin_port_layer
 	| macro_pin_port_rect
+	| macro_pin_port_class
 	;
 
 macro_pin_port_layer: LAYER STRING;
 macro_pin_port_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
+macro_pin_port_class: CLASS STRING;
 
 macro_obs: OBS macro_obs_infos END;
 macro_obs_infos:

@@ -75,6 +75,7 @@ FOREIGN				"FOREIGN"
 ORIGIN				"ORIGIN"
 SHAPE				"SHAPE"
 PORT				"PORT"
+LIBRARY				"LIBRARY"
 
 %%
 
@@ -119,6 +120,7 @@ PORT				"PORT"
 {USE}+					{ return lef::LEFParser::token::USE; }
 {SHAPE}+					{ return lef::LEFParser::token::SHAPE; }
 {PORT}+					{ return lef::LEFParser::token::PORT; }
+{LIBRARY}+					{ return lef::LEFParser::token::LIBRARY; }
 
 {INTEGER}* {
 	leflval->v_int = atoi(yytext);
