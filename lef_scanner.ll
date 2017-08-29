@@ -60,6 +60,7 @@ RECT				"RECT"
 VIARULE				"VIARULE"
 TO					"TO"
 BY					"BY"
+USE					"USE"
 
 OVERHANG			"OVERHANG"
 METALOVERHANG		"METALOVERHANG"
@@ -68,6 +69,12 @@ SITE				"SITE"
 SYMMETRY			"SYMMETRY"
 CLASS				"CLASS"
 SIZE				"SIZE"
+
+MACRO				"MACRO"
+FOREIGN				"FOREIGN"
+ORIGIN				"ORIGIN"
+SHAPE				"SHAPE"
+PORT				"PORT"
 
 %%
 
@@ -106,6 +113,12 @@ SIZE				"SIZE"
 {SYMMETRY}+					{ return lef::LEFParser::token::SYMMETRY; }
 {CLASS}+					{ return lef::LEFParser::token::CLASS; }
 {SIZE}+						{ return lef::LEFParser::token::SIZE; }
+{MACRO}+					{ return lef::LEFParser::token::MACRO; }
+{FOREIGN}+					{ return lef::LEFParser::token::FOREIGN; }
+{ORIGIN}+					{ return lef::LEFParser::token::ORIGIN; }
+{USE}+					{ return lef::LEFParser::token::USE; }
+{SHAPE}+					{ return lef::LEFParser::token::SHAPE; }
+{PORT}+					{ return lef::LEFParser::token::PORT; }
 
 {INTEGER}* {
 	leflval->v_int = atoi(yytext);

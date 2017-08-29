@@ -70,19 +70,17 @@
 %token SYMMETRY
 %token CLASS
 %token SIZE
+%token MACRO
+%token FOREIGN
+%token ORIGIN
+%token USE
+%token SHAPE
+%token PORT
 
 %start lef_file
 
 %%
-lef_file: lef_file_part | lef_file lef_file_part;
-
-lef_file_part:
-	  options
-	| layers
-	| vias
-	| viarules
-	| sites
-	;
+lef_file: options layers vias viarules sites macros;
 
 options: option | option options;
 option:
@@ -170,8 +168,84 @@ site_option:
 	;
 
 site_class: CLASS STRING;
-site_symmetry: SYMMETRY STRING STRING;
+site_symmetry: SYMMETRY STRING STRING | SYMMETRY STRING;
 site_size: SIZE DOUBLE BY DOUBLE;
+
+macros:
+	  macro
+	| macro macros
+	;
+
+macro: macro_name macro_options END STRING;
+macro_name: MACRO STRING;
+
+macro_options:
+	  macro_option
+	| macro_options macro_option
+	;
+
+macro_option:
+	  macro_class
+	| macro_foreign
+	| macro_origin
+	| macro_size
+	| macro_symmetrie
+	| macro_site
+	| macro_pin
+	| macro_obs
+	;
+
+macro_class: CLASS STRING;
+macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
+macro_site: SITE STRING;
+macro_origin: ORIGIN DOUBLE DOUBLE;
+macro_size: SIZE DOUBLE BY DOUBLE;
+macro_symmetrie: SYMMETRY STRING | SYMMETRY STRING STRING;
+
+macro_pin: macro_pin_options END STRING;
+
+macro_pin_options:
+	  macro_pin_option
+	| macro_pin_option macro_pin_options
+	;
+
+macro_pin_option:
+	  macro_pin_name
+	| macro_pin_use
+	| macro_pin_direction
+	| macro_pin_shape
+	| macro_pin_port
+	;
+
+macro_pin_name: PIN STRING;
+macro_pin_use: USE STRING;
+macro_pin_direction: DIRECTION STRING;
+macro_pin_shape: SHAPE STRING;
+macro_pin_port: PORT macro_pin_port_infos END;
+macro_pin_port_infos:
+	  macro_pin_port_info
+	| macro_pin_port_info macro_pin_port_infos
+	;
+
+macro_pin_port_info:
+	  macro_pin_port_layer
+	| macro_pin_port_rect
+	;
+
+macro_pin_port_layer: LAYER STRING;
+macro_pin_port_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
+
+macro_obs: OBS macro_obs_infos END;
+macro_obs_infos:
+	  macro_obs_info
+	| macro_obs_info macro_obs_infos
+	;
+macro_obs_info:
+	  macro_obs_layer
+	| macro_obs_rect
+	;
+macro_obs_layer: LAYER STRING;
+macro_obs_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
 
 %%
 
