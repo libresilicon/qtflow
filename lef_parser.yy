@@ -40,10 +40,31 @@
 %token VERSION
 %token NAMESCASESENSITIVE
 %token BUSBITCHARS
+%token DIVIDERCHAR
+%token UNITS
+%token END
+%token DATABASE
+%token MICRONS
+
+%start options
 
 %%
 
-version: VERSION DOUBLE
+options: option | option options;
+option:
+	  version
+	| cases
+	| bitchars
+	| dividechar
+	| units
+	;
+
+version: VERSION DOUBLE;
+cases: NAMESCASESENSITIVE STRING;
+bitchars: BUSBITCHARS STRING;
+dividechar: DIVIDERCHAR STRING;
+units: UNITS database_list END UNITS;
+database_list: DATABASE MICRONS INTEGER;
 
 %%
 
