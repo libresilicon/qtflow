@@ -11,21 +11,26 @@
 
 #include "ui_projectsettings.h"
 
+#include "project.h"
+
 class ProjectSettings : public QDialog
 {
 	Q_OBJECT
 public:
 	explicit ProjectSettings(QWidget *parent = nullptr);
+	void setProject(Project*);
   
 signals:
 	
 public slots:
 	void technologyActivated(int);
 	void processActivated(int);
+	void storeData();
 
 private:
 	Ui::ProjectSettings *ui;
 
+	Project *project;
 	QDomDocument *settingsFileProcess;
 };
 

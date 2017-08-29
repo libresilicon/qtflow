@@ -65,9 +65,19 @@ QString Project::getTestBench()
 	return project_settings->value("testbench").toString();
 }
 
+
+QString Project::getTechnology()
+{
+	return project_settings->value("technology").toString();
+}
+
+QString Project::getProcess()
+{
+	return project_settings->value("process").toString();
+}
+
 void Project::setTestBench(QString top)
 {
-	QTextStream(stdout) << "Setting test bench to: " << top << "\n";
 	project_settings->setValue("testbench",top);
 	project_settings->sync();
 }
@@ -80,8 +90,13 @@ void Project::setTopLevel(QString top)
 
 void Project::setTechnology(QString tech)
 {
-	QTextStream(stdout) << "Setting technology to: " << tech << "\n";
 	project_settings->setValue("technology",tech);
+	project_settings->sync();
+}
+
+void Project::setProcess(QString proc)
+{
+	project_settings->setValue("process",proc);
 	project_settings->sync();
 }
 

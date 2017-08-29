@@ -41,6 +41,7 @@ public:
 	bool buildAll(QString ident, QProcess* = new QProcess);
 	bool prepareStep(QString path);
 	void setTechnology(QString tech);
+	void setProcess(QString proc);
 	void setTopLevel(QString mod);
 	void setTestBench(QString mod);
 
@@ -48,6 +49,8 @@ public:
 	QString getTopLevel();
 	QString getRootDir();
 	QString getTestBench();
+	QString getTechnology();
+	QString getProcess();
 
 private:
 	QSettings *settings;

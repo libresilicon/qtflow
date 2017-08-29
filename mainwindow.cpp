@@ -105,6 +105,7 @@ void MainWindow::openProject(QString path)
 		modulesWidget->setProject(project);
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);
+		projectSettingsDialog->setProject(project);
 		enableProject();
 	}
 }
