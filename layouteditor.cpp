@@ -41,6 +41,8 @@ void LayoutEditor::drawRectangles()
 
 void LayoutEditor::drawModuleInfo()
 {
+	QColor color;
+	QBrush brush;
 	QPen pen = QPen(Qt::black);
 	mods_t mods = magicdata->getModules();
 	foreach (module_info e, mods)
@@ -48,9 +50,16 @@ void LayoutEditor::drawModuleInfo()
 		editScene->addRect(e.box, pen);
 		editScene->addItem(e.instance_name);
 		if(lefdata->isDefinedMacro(e.module_name_plain)) {
-			//foreach (QString pin, lefdata->getListOfPins(e.module_name_plain)) {
-			//	QTextStream(stdout) << pin << '\n';
-			//}
+			foreach(QString name, lefdata->getMacro(e.module_name_plain).getPinNames()) {
+				foreach(QString l, lefdata->getMacro(e.module_name_plain).getPin(name).getPortLayers()) {
+					color = colorMat(l);
+					pen = QPen(color);
+					brush = QBrush(color);
+					foreach(QRect r, lefdata->getMacro(e.module_name_plain).getPin(name).getPortRectangles(l)) {
+						editScene->addRect(r, pen, brush);
+					}
+				}
+			}
 		}
 		//editScene->addItem(e.module_name);
 	}

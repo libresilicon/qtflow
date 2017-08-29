@@ -178,8 +178,15 @@ macros:
 	| macro macros
 	;
 
-macro: macro_name macro_options END STRING;
-macro_name: MACRO STRING;
+macro: macro_name macro_options END STRING
+	{
+		lefdata->storeMacro();
+	};
+
+macro_name: MACRO STRING
+	{
+		lefdata->addMacroName($2);
+	};
 
 macro_options:
 	  macro_option
@@ -219,7 +226,11 @@ macro_pin_option:
 	| macro_pin_port
 	;
 
-macro_pin_name: PIN STRING;
+macro_pin_name: PIN STRING
+	{
+		lefdata->addMacroPinName($2);
+	}
+	;
 macro_pin_use: USE STRING;
 macro_pin_direction: DIRECTION STRING;
 macro_pin_shape: SHAPE STRING;
@@ -235,8 +246,14 @@ macro_pin_port_info:
 	| macro_pin_port_class
 	;
 
-macro_pin_port_layer: LAYER STRING;
-macro_pin_port_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
+macro_pin_port_layer: LAYER STRING
+	{
+		lefdata->addMacroPinPortLayer($2);
+	};
+macro_pin_port_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE
+	{
+		lefdata->addMacroPinPortRectangle($2,$3,$4,$5);
+	};
 macro_pin_port_class: CLASS STRING;
 
 macro_obs: OBS macro_obs_infos END;
