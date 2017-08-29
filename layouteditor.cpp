@@ -47,6 +47,11 @@ void LayoutEditor::drawModuleInfo()
 	{
 		editScene->addRect(e.box, pen);
 		editScene->addItem(e.instance_name);
+		if(lefdata->isDefinedMacro(e.module_name_plain)) {
+			//foreach (QString pin, lefdata->getListOfPins(e.module_name_plain)) {
+			//	QTextStream(stdout) << pin << '\n';
+			//}
+		}
 		//editScene->addItem(e.module_name);
 	}
 }
@@ -55,10 +60,10 @@ void LayoutEditor::loadFile(QString file)
 {
 	filePath = file;
 	magicdata->loadFile(file);
-	drawRectangles();
-	drawModuleInfo();
 	magicdata->getTechnology(); // TODO: do something with this here
 	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
+	drawRectangles();
+	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
