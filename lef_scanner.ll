@@ -21,7 +21,12 @@
 %option nounput
 %option yylineno
 
-STRING [A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
+NUMBER			[0-9]
+INTEGER			-{NUMBER}+|{NUMBER}+
+EXPONENT		[eE][+-]?{INTEGER}
+DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
+
+STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
 
 SEMICOLON			";"
 COMMENT				"#"
@@ -33,26 +38,72 @@ UNITS				"UNITS"
 END					"END"
 DATABASE			"DATABASE"
 MICRONS				"MICRONS"
+USEMINSPACING		"USEMINSPACING"
+OBS					"OBS"
+PIN					"PIN"
+CLEARANCEMEASURE	"CLEARANCEMEASURE"
+MANUFACTURINGGRID	"MANUFACTURINGGRID"
+
+LAYER				"LAYER"
+TYPE				"TYPE"
+SPACING				"SPACING"
+DIRECTION			"DIRECTION"
+PITCH				"PITCH"
+OFFSET				"OFFSET"
+WIDTH				"WIDTH"
+RESISTANCE			"RESISTANCE"
+CAPACITANCE			"CAPACITANCE"
+
+VIA					"VIA"
+RECT				"RECT"
+
+VIARULE				"VIARULE"
+TO					"TO"
+BY					"BY"
+
+OVERHANG			"OVERHANG"
+METALOVERHANG		"METALOVERHANG"
 
 %%
 
-{SEMICOLON}.*			{}
-{COMMENT}.*				{}
-{VERSION}+				{ return lef::LEFParser::token::VERSION; }
-{NAMESCASESENSITIVE}+	{ return lef::LEFParser::token::NAMESCASESENSITIVE; }
-{BUSBITCHARS}+			{ return lef::LEFParser::token::BUSBITCHARS; }
-{DIVIDERCHAR}+			{ return lef::LEFParser::token::DIVIDERCHAR; }
-{UNITS}+				{ return lef::LEFParser::token::UNITS; }
-{END}+					{ return lef::LEFParser::token::END; }
-{DATABASE}+				{ return lef::LEFParser::token::DATABASE; }
-{MICRONS}+				{ return lef::LEFParser::token::MICRONS; }
+{SEMICOLON}.*				{}
+{COMMENT}.*					{}
+{VERSION}+					{ return lef::LEFParser::token::VERSION; }
+{NAMESCASESENSITIVE}+		{ return lef::LEFParser::token::NAMESCASESENSITIVE; }
+{BUSBITCHARS}+				{ return lef::LEFParser::token::BUSBITCHARS; }
+{DIVIDERCHAR}+				{ return lef::LEFParser::token::DIVIDERCHAR; }
+{UNITS}+					{ return lef::LEFParser::token::UNITS; }
+{END}+						{ return lef::LEFParser::token::END; }
+{DATABASE}+					{ return lef::LEFParser::token::DATABASE; }
+{MICRONS}+					{ return lef::LEFParser::token::MICRONS; }
+{USEMINSPACING}+			{ return lef::LEFParser::token::USEMINSPACING; }
+{OBS}+						{ return lef::LEFParser::token::OBS; }
+{PIN}+						{ return lef::LEFParser::token::PIN; }
+{CLEARANCEMEASURE}+			{ return lef::LEFParser::token::CLEARANCEMEASURE; }
+{MANUFACTURINGGRID}+		{ return lef::LEFParser::token::MANUFACTURINGGRID; }
+{LAYER}+					{ return lef::LEFParser::token::LAYER; }
+{TYPE}+						{ return lef::LEFParser::token::TYPE; }
+{SPACING}+					{ return lef::LEFParser::token::SPACING; }
+{DIRECTION}+				{ return lef::LEFParser::token::DIRECTION; }
+{PITCH}+					{ return lef::LEFParser::token::PITCH; }
+{OFFSET}+					{ return lef::LEFParser::token::OFFSET; }
+{WIDTH}+					{ return lef::LEFParser::token::WIDTH; }
+{RESISTANCE}+				{ return lef::LEFParser::token::RESISTANCE; }
+{CAPACITANCE}+				{ return lef::LEFParser::token::CAPACITANCE; }
+{VIA}+						{ return lef::LEFParser::token::VIA; }
+{RECT}+						{ return lef::LEFParser::token::RECT; }
+{VIARULE}+					{ return lef::LEFParser::token::VIARULE; }
+{TO}+						{ return lef::LEFParser::token::TO; }
+{BY}+						{ return lef::LEFParser::token::BY; }
+{OVERHANG}+					{ return lef::LEFParser::token::OVERHANG; }
+{METALOVERHANG}+			{ return lef::LEFParser::token::METALOVERHANG; }
 
--[0-9]+|[0-9]+ {
+{INTEGER}* {
 	leflval->v_int = atoi(yytext);
 	return lef::LEFParser::token::INTEGER;
 }
 
-[0-9]+"."[0-9]* {
+{DOUBLE}* {
 	leflval->v_double = atof(yytext);
 	return lef::LEFParser::token::DOUBLE;
 }
