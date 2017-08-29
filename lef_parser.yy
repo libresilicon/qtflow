@@ -66,12 +66,23 @@
 %token BY
 %token OVERHANG
 %token METALOVERHANG
+%token SITE
+%token SYMMETRY
+%token CLASS
+%token SIZE
 
 %start lef_file
 
 %%
+lef_file: lef_file_part | lef_file lef_file_part;
 
-lef_file: options layers vias viarules;
+lef_file_part:
+	  options
+	| layers
+	| vias
+	| viarules
+	| sites
+	;
 
 options: option | option options;
 option:
@@ -98,13 +109,11 @@ manufacturinggrid: MANUFACTURINGGRID DOUBLE;
 layers: layer | layers layer;
 layer: layer_name layer_options END STRING;
 layer_name: LAYER STRING;
-layer_type: TYPE STRING;
-layer_spacing: SPACING DOUBLE;
 
 layer_options: layer_option | layer_options layer_option;
 layer_option:
-	  layer_type
-	| layer_spacing
+	  TYPE STRING
+	| SPACING DOUBLE;
 	| DIRECTION STRING
 	| PITCH DOUBLE
 	| PITCH INTEGER
@@ -148,7 +157,21 @@ viarule_layer_option_width: WIDTH DOUBLE TO INTEGER | WIDTH DOUBLE TO DOUBLE;
 viarule_layer_option_overhang: OVERHANG INTEGER | OVERHANG DOUBLE;
 viarule_layer_option_metaloverhang: METALOVERHANG INTEGER | METALOVERHANG DOUBLE;
 viarule_layer_option_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
-viarule_layer_option_spacing: SPACING INTEGER BY INTEGER | SPACING DOUBLE BY DOUBLE;
+viarule_layer_option_spacing: SPACING INTEGER BY INTEGER | SPACING INTEGER BY DOUBLE | SPACING DOUBLE BY INTEGER | SPACING DOUBLE BY DOUBLE;
+
+sites: site | sites site;
+site: site_name site_options END STRING;
+site_name: SITE STRING;
+site_options: site_option | site_options site_option;
+site_option:
+	  site_class
+	| site_symmetry
+	| site_size
+	;
+
+site_class: CLASS STRING;
+site_symmetry: SYMMETRY STRING STRING;
+site_size: SIZE DOUBLE BY DOUBLE;
 
 %%
 

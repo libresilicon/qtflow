@@ -64,6 +64,11 @@ BY					"BY"
 OVERHANG			"OVERHANG"
 METALOVERHANG		"METALOVERHANG"
 
+SITE				"SITE"
+SYMMETRY			"SYMMETRY"
+CLASS				"CLASS"
+SIZE				"SIZE"
+
 %%
 
 {SEMICOLON}.*				{}
@@ -97,6 +102,10 @@ METALOVERHANG		"METALOVERHANG"
 {BY}+						{ return lef::LEFParser::token::BY; }
 {OVERHANG}+					{ return lef::LEFParser::token::OVERHANG; }
 {METALOVERHANG}+			{ return lef::LEFParser::token::METALOVERHANG; }
+{SITE}+						{ return lef::LEFParser::token::SITE; }
+{SYMMETRY}+					{ return lef::LEFParser::token::SYMMETRY; }
+{CLASS}+					{ return lef::LEFParser::token::CLASS; }
+{SIZE}+						{ return lef::LEFParser::token::SIZE; }
 
 {INTEGER}* {
 	leflval->v_int = atoi(yytext);
