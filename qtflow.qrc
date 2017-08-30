@@ -10,5 +10,8 @@
 	<file alias="qflow_logo.png">images/qflow_logo.png</file>
 	<!-- config files -->
 	<file>configs/process.xml</file>
+	<!-- script files -->
+	<file>scripts/synthesis.js</file>
+	<file>scripts/simulation.js</file>
 </qresource>
 </RCC>
