@@ -21,47 +21,35 @@
 %option nounput
 %option yylineno
 
-MAGIC		"def"
-TECH		"tech"
-MAGSCALE	"magscale"
-TIMESTAMP	"timestamp"
-RECT		"rect"
-USE			"use"
-RLABEL		"rlabel"
-FLABEL		"flabel"
-BEGINTITLE	"<<"
-ENDTITLE	">>"
-BOX			"box"
-PORT		"port"
-TRANSFORM	"transform"
+NUMBER			[0-9]
+INTEGER			-{NUMBER}+|{NUMBER}+
+EXPONENT		[eE][+-]?{INTEGER}
+DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
+
+STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
+
+SEMICOLON			";"
+COMMENT				"#"
+VERSION				"VERSION"
+NAMESCASESENSITIVE	"NAMESCASESENSITIVE"
 
 %%
+{SEMICOLON}.*				{}
+{COMMENT}.*					{}
+{VERSION}+					{ return def::DEFParser::token::VERSION; }
+{NAMESCASESENSITIVE}+		{ return def::DEFParser::token::NAMESCASESENSITIVE; }
 
-{TRANSFORM}+		{ return def::DEFParser::token::TRANSFORM; }
-{PORT}+				{ return def::DEFParser::token::PORT; }
-{BOX}+				{ return def::DEFParser::token::BOX; }
-{USE}+				{ return def::DEFParser::token::USE; }
-{MAGIC}+			{ return def::DEFParser::token::MAGIC; }
-{TECH}+				{ return def::DEFParser::token::TECH; }
-{MAGSCALE}+			{ return def::DEFParser::token::MAGSCALE; }
-{TIMESTAMP}+		{ return def::DEFParser::token::TIMESTAMP; }
-{RECT}+				{ return def::DEFParser::token::RECT; }
-{RLABEL}+			{ return def::DEFParser::token::RLABEL; }
-{FLABEL}+			{ return def::DEFParser::token::FLABEL; }
-{BEGINTITLE}+		{ return def::DEFParser::token::BEGINTITLE; }
-{ENDTITLE}+			{ return def::DEFParser::token::ENDTITLE; }
-
--[0-9]+|[0-9]+ {
+{INTEGER}* {
 	deflval->v_int = atoi(yytext);
 	return def::DEFParser::token::INTEGER;
 }
 
-[0-9]+"."[0-9]* {
+{DOUBLE}* {
 	deflval->v_double = atof(yytext);
 	return def::DEFParser::token::DOUBLE;
 }
 
-[A-Za-z][A-Za-z0-9_,.-<>]* {
+{STRING}* {
 	deflval->v_str = new std::string(yytext, yyleng);
 	return def::DEFParser::token::STRING;
 }

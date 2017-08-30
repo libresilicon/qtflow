@@ -137,7 +137,9 @@ HEADERS  += \
 	synthesistoolbox.h \
 	projectsettings.h \
         lefscanner.h \
-        lefdata.h
+        lefdata.h \
+	defdata.h \
+	defscanner.h
 
 FORMS    += \ 
 	mainwindow.ui \
