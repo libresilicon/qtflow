@@ -7,6 +7,7 @@
 	<file alias="media-playback-pause.svg">images/media-playback-pause.svg</file>
 	<file alias="media-playback-start.svg">images/media-playback-start.svg</file>
 	<file alias="media-playback-stop.svg">images/media-playback-stop.svg</file>
+	<file alias="qflow_logo.png">images/qflow_logo.png</file>
 	<!-- config files -->
 	<file>configs/process.xml</file>
 </qresource>

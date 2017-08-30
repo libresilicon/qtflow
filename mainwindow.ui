@@ -10,11 +10,21 @@
     <height>555</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="focusPolicy">
    <enum>Qt::TabFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Layout</string>
+   <string>QtFlow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qtflow.qrc">
+    <normaloff>:/qflow_logo.png</normaloff>:/qflow_logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -42,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>29</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -295,6 +305,8 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="qtflow.qrc"/>
+ </resources>
  <connections/>
 </ui>
