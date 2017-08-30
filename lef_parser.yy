@@ -212,7 +212,11 @@ macro_class: CLASS STRING | CLASS STRING STRING;
 macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
 macro_site: SITE STRING;
 macro_origin: ORIGIN DOUBLE DOUBLE;
-macro_size: SIZE DOUBLE BY DOUBLE;
+macro_size: SIZE DOUBLE BY DOUBLE
+	{
+		lefdata->setMacroSize($2,$4);
+	}
+	;
 macro_symmetrie: SYMMETRY STRING | SYMMETRY STRING STRING | SYMMETRY STRING STRING STRING;
 
 macro_pin: macro_pin_options END STRING;

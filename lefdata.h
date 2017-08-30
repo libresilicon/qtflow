@@ -14,31 +14,60 @@
 
 namespace lef {
 	typedef struct {
+		double x;
+		double y;
+		double w;
+		double h;
+	} rect_t;
+
+	class LEFPortLayer {
+	public:
+		LEFPortLayer(QString);
+		void addRectangle(double, double, double, double);
+		void setOffsetX(double);
+		void setOffsetY(double);
+		void scaleLayer(double w, double h);
+		QVector<QRect> getRects();
+		
+		QString getName();
+	private:
 		QString name;
-		QRect rect;
-	} port_layer_t;
+		QVector<rect_t> rects;
+		QVector<QRect> rectsExport;
+		double offsetX;
+		double offsetY;
+		double scaleX;
+		double scaleY;
+		
+		void generateExportLayers();
+	};
 
 	class LEFPort {
 	public:
 		LEFPort();
 		QVector<QString> getLayerNames();
-		QVector<port_layer_t> getLayers();
-		void addRectangleToLayer(QString, int x, int y, int w, int h);
+		QVector<LEFPortLayer*> getLayers();
+		void scalePort(double,double);
+		LEFPortLayer *getLayer(QString);
+		bool layerExists(QString n);
+
+		void addLayer(QString);
 	private:
-		QVector<port_layer_t> *layers;
+		QVector<LEFPortLayer*> layers;
 	};
 
 	class LEFPin {
 	public:
 		LEFPin();
 		LEFPin(QString);
-		void addPortRectangleToLayer(QString, int, int, int, int);
+		void scalePin(double,double);
+
 		QString getName();
-		LEFPort getPort();
-		QVector<port_layer_t> getPortLayers();
+		LEFPort *getPort();
+		QVector<LEFPortLayer*> getPortLayers();
 	private:
 		QString name;
-		LEFPort port;
+		LEFPort *port;
 	};
 
 	class LEFMacro {
@@ -46,14 +75,20 @@ namespace lef {
 		LEFMacro();
 		LEFMacro(QString);
 		void addPin(QString);
+		void setSize(double w, double h);
+		void scaleMacro(int w, int h);
 
 		QVector<QString> getPinNames();
-		QVector<LEFPin> getPins();
-		LEFPin getPin(QString name);
+		QVector<LEFPin*> getPins();
+		LEFPin *getPin(QString name);
 		QString getName();
+		bool pinExists(QString n);
 	private:
 		QString name;
-		QVector<LEFPin> pins;
+		QVector<LEFPin*> pins;
+		
+		double sizeW;
+		double sizeH;
 	};
 
 	class LEFScanner;
@@ -65,11 +100,12 @@ namespace lef {
 		LEFScanner *getLexer();
 
 		bool isDefinedMacro(QString name);
-		LEFMacro getMacro(QString);
+		LEFMacro *getMacro(QString);
 
 		void setBaseUnitMicrons(int);
 
 		void storeMacro();
+		void setMacroSize(double w, double h);
 		void addMacroName(std::string *s);
 		void addMacroPinName(std::string *s);
 		void addMacroPinPortLayer(std::string *s);
@@ -83,8 +119,8 @@ namespace lef {
 		QString streamname;
 
 		// work variables:
-		QVector<LEFMacro> macros;
-		LEFMacro recentMacro;
+		QVector<LEFMacro*> macros;
+		LEFMacro *recentMacro;
 
 		QString recentMacroName;
 		QString recentMacroPinName;

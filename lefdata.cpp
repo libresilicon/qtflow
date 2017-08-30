@@ -2,41 +2,124 @@
 #include "lefscanner.h"
 
 namespace lef {
-	LEFPort::LEFPort() :
-		layers(new QVector<port_layer_t>)
+	QString LEFPortLayer::getName()
 	{
+		return name;
 	}
 
-	void LEFPort::addRectangleToLayer(QString l, int x, int y, int w, int h)
+	void LEFPortLayer::setOffsetX(double o)
 	{
-		port_layer_t n;
-		n.name=l;
-		n.rect=QRect(x,y,w,h);
-		layers->append(n);
+		offsetX = o;
+		generateExportLayers();
+	}
+
+	void LEFPortLayer::setOffsetY(double o)
+	{
+		offsetY = o;
+		generateExportLayers();
+	}
+
+	QVector<QRect> LEFPortLayer::getRects()
+	{
+		return rectsExport;
+	}
+	
+	LEFPortLayer::LEFPortLayer(QString n) :
+		offsetX(0),
+		offsetY(0),
+		scaleX(1),
+		scaleY(1),
+		name(n)
+	{
+	}
+	
+	void LEFPortLayer::addRectangle(double x, double y, double w, double h)
+	{
+		rect_t obj;
+		obj.x = x;
+		obj.y = y;
+		obj.w = w;
+		obj.h = h;
+		rects.append(obj);
+	}
+
+	void LEFPortLayer::generateExportLayers()
+	{
+		rectsExport.clear();
+		foreach(rect_t obj, rects) {
+			rectsExport.append(QRect(obj.x*scaleX+offsetX, obj.y*scaleY+offsetY, obj.w*scaleX, obj.h*scaleY));
+		}
+	}
+
+	void LEFPortLayer::scaleLayer(double w, double h)
+	{
+		scaleX=w;
+		scaleY=h;
+		generateExportLayers();
+	}
+
+	LEFPort::LEFPort() :
+		layers(QVector<LEFPortLayer*>())
+	{
+	}
+	
+	LEFPortLayer* LEFPort::getLayer(QString n)
+	{
+		foreach(LEFPortLayer *l, layers)
+			if(l->getName()==n)
+				return l;
+	}
+	
+	void LEFPort::addLayer(QString n)
+	{
+		layers.append(new LEFPortLayer(n));
+	}
+
+	bool LEFPort::layerExists(QString n)
+	{
+		foreach(lef::LEFPortLayer *layer, layers)
+			if(layer->getName()==n)
+				return true;
+		return false;
+	}
+
+	void LEFPort::scalePort(double w, double h)
+	{
+		foreach(LEFPortLayer* layer, layers) {
+		    layer->scaleLayer(w,h);
+		}
 	}
 
 	QVector<QString> LEFPort::getLayerNames()
 	{
 		QVector<QString> ret;
-		foreach(port_layer_t l, *layers) ret.append(l.name);
+		foreach(LEFPortLayer *l, layers) ret.append(l->getName());
 		return ret;
 	}
 
-	QVector<port_layer_t> LEFPort::getLayers()
+	QVector<LEFPortLayer*> LEFPort::getLayers()
 	{
-		return *layers;
+		return layers;
 	}
 
-	LEFPin::LEFPin() {}
+	LEFPin::LEFPin():
+		port(NULL)
+	{}
 
-	LEFPort LEFPin::getPort()
+	LEFPort* LEFPin::getPort()
 	{
 		return port;
 	}
 
-	LEFPin::LEFPin(QString n)
+	LEFPin::LEFPin(QString n) :
+		port(new LEFPort())
 	{
 		name = n;
+	}
+
+	void LEFPin::scalePin(double w, double h)
+	{
+		port->scalePort(w,h);
 	}
 
 	QString LEFPin::getName()
@@ -44,21 +127,18 @@ namespace lef {
 		return name;
 	}
 
-	QVector<port_layer_t> LEFPin::getPortLayers()
+	QVector<LEFPortLayer*> LEFPin::getPortLayers()
 	{
-		return port.getLayers();
-	}
-
-	void LEFPin::addPortRectangleToLayer(QString l, int x, int y, int w, int h)
-	{
-		port.addRectangleToLayer(l,x,y,w,h);
+		return port->getLayers();
 	}
 
 	LEFMacro::LEFMacro() {}
 
-	LEFMacro::LEFMacro(QString n)
+	LEFMacro::LEFMacro(QString n) :
+		sizeW(0),
+		sizeH(0),
+		name(n)
 	{
-		name = n;
 	}
 
 	QString LEFMacro::getName()
@@ -68,19 +148,27 @@ namespace lef {
 
 	void LEFMacro::addPin(QString n)
 	{
-		pins.append(LEFPin(n));
+		pins.append(new LEFPin(n));
 	}
 
-	QVector<LEFPin> LEFMacro::getPins()
+	bool LEFMacro::pinExists(QString n)
+	{
+		foreach(lef::LEFPin *pin, pins)
+			if(pin->getName()==n)
+				return true;
+		return false;
+	}
+
+	QVector<LEFPin*> LEFMacro::getPins()
 	{
 		return pins;
 	}
 
-	LEFPin LEFMacro::getPin(QString name)
+	LEFPin* LEFMacro::getPin(QString name)
 	{
-		LEFPin p;
+		LEFPin *p = NULL;
 		foreach(p, pins)
-			if(p.getName()==name)
+			if(p->getName()==name)
 				return p;
 		return p;
 	}
@@ -88,7 +176,7 @@ namespace lef {
 	QVector<QString> LEFMacro::getPinNames()
 	{
 		QVector<QString> ret;
-		foreach(LEFPin m, pins) ret.append(m.getName());
+		foreach(LEFPin *m, pins) ret.append(m->getName());
 		return ret;
 	}
 
@@ -97,7 +185,8 @@ namespace lef {
 		parser(NULL),
 		trace_scanning(false),
 		trace_parsing(false),
-		baseUnitMicrons(false)
+		baseUnitMicrons(false),
+		baseUnitMicronsValue(1)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -116,17 +205,19 @@ namespace lef {
 
 	bool LEFData::isDefinedMacro(QString name)
 	{
-		foreach(LEFMacro m, macros)
-			if(m.getName()==name)
+		foreach(LEFMacro *m, macros)
+			if(m->getName()==name)
 				return true;
 		return false;
 	}
 
-	LEFMacro LEFData::getMacro(QString n)
+	LEFMacro* LEFData::getMacro(QString n)
 	{
-		foreach(LEFMacro m, macros)
-			if(m.getName()==n)
-				return m;
+		LEFMacro *ret = NULL;
+		foreach(LEFMacro *m, macros)
+			if(m->getName()==n)
+				ret = m;
+		return ret;
 	}
 
 	LEFScanner *LEFData::getLexer()
@@ -139,37 +230,73 @@ namespace lef {
 		macros.append(recentMacro);
 	}
 
+	void LEFMacro::setSize(double w, double h)
+	{
+		sizeW = w;
+		sizeH = h;
+	}
+
+	void LEFMacro::scaleMacro(int w, int h)
+	{
+		double scaleW = (1000*w/sizeW)/1000;
+		double scaleH = (1000*h/sizeH)/1000;
+		foreach(LEFPin *pin, pins)
+			pin->scalePin(scaleW,scaleH);
+	}
+
+	void LEFData::setMacroSize(double w, double h)
+	{
+		recentMacro->setSize(w,h);
+	}
+
 	void LEFData::addMacroName(std::string *s)
 	{
-		recentMacro = LEFMacro(QString::fromStdString(*s));
+		recentMacro = new LEFMacro(QString::fromStdString(*s));
 	}
 
 	void LEFData::addMacroPinName(std::string *s)
 	{
-		recentMacro.addPin(QString::fromStdString(*s));
 		recentMacroPinName = QString::fromStdString(*s);
+		recentMacro->addPin(recentMacroPinName);
 	}
 
 	void LEFData::addMacroPinPortRectangle(double x1, double y1, double x2, double y2)
 	{
-		int x = (int)x1;
-		int y = (int)y1;
-		int w = (int)x2 - (int)x1;
-		int h = (int)y2 - (int)y1;
+		double x = x1;
+		double y = y1;
+		double w = x2-x1;
+		double h = y2-y1;
 
-		/*if(baseUnitMicrons) {
-			x/=baseUnitMicronsValue;
-			y/=baseUnitMicronsValue;
-			w/=baseUnitMicronsValue;
-			h/=baseUnitMicronsValue;
-		}*/
+		lef::LEFPin *pin;
+		lef::LEFPort *port;
+		lef::LEFPortLayer *layer;
 
-		recentMacro.getPin(recentMacroPinName).addPortRectangleToLayer(recentMacroPinPortLayer, x, y, w, h);
+		if(!recentMacro->pinExists(recentMacroPinName))
+			recentMacro->addPin(recentMacroPinName);
+
+		pin = recentMacro->getPin(recentMacroPinName);
+		port = pin->getPort();
+
+		if(!port->layerExists(recentMacroPinPortLayer))
+			port->addLayer(recentMacroPinPortLayer);
+
+		layer = port->getLayer(recentMacroPinPortLayer);
+		layer->addRectangle(x, y, w, h);
 	}
 
 	void LEFData::addMacroPinPortLayer(std::string *s)
 	{
+		lef::LEFPin *pin;
+		lef::LEFPort *port;
+
 		recentMacroPinPortLayer = QString::fromStdString(*s);
+		if(!recentMacro->pinExists(recentMacroPinName))
+			recentMacro->addPin(recentMacroPinName);
+
+		pin = recentMacro->getPin(recentMacroPinName);
+		port = pin->getPort();
+		if(!port->layerExists(recentMacroPinPortLayer))
+			port->addLayer(recentMacroPinPortLayer);
 	}
 
 	void LEFData::setBaseUnitMicrons(int i)
@@ -179,4 +306,3 @@ namespace lef {
 	}
 
 }
-

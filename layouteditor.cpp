@@ -41,36 +41,40 @@ void LayoutEditor::drawRectangles()
 
 void LayoutEditor::drawModuleInfo()
 {
-	lef::LEFMacro macro;
-	lef::LEFPin pin;
-	lef::LEFPort port;
+	lef::LEFMacro *macro;
+	lef::LEFPin *pin;
+	lef::LEFPort *port;
 
 	QColor color;
 	QBrush brush;
-	QPen pen = QPen(Qt::black);
+	QPen pen;
 	mods_t mods = magicdata->getModules();
 	foreach (module_info e, mods)
 	{
+		// fill in library content:
+		if(lefdata->isDefinedMacro(e.module_name_plain)) {
+			macro = lefdata->getMacro(e.module_name_plain);
+			macro->scaleMacro(e.box.width(),e.box.height());
+			foreach(pin, macro->getPins()) {
+				port = pin->getPort();
+				foreach(lef::LEFPortLayer *l, port->getLayers()) {
+					color = colorMat(l->getName());
+					pen = QPen(color);
+					brush = QBrush(color);
+					l->setOffsetX(e.xoffset);
+					l->setOffsetY(e.yoffset);
+					foreach(QRect rect, l->getRects()) {
+						editScene->addRect(rect, pen, brush);
+					}
+				}
+			}
+		}
+		// write layout details:
+		pen = QPen(Qt::black);
 		editScene->addRect(e.box, pen);
 		editScene->addItem(e.instance_name);
 		//editScene->addItem(e.module_name);
 
-		// fill in library content:
-		if(lefdata->isDefinedMacro(e.module_name_plain)) {
-			macro = lefdata->getMacro(e.module_name_plain);
-			foreach(pin, macro.getPins()) {
-				port = pin.getPort();
-				foreach(lef::port_layer_t l, port.getLayers()) {
-					color = colorMat(l.name);
-					pen = QPen(color);
-					brush = QBrush(color);
-					QRect offsrect(l.rect);
-					offsrect.setX(offsrect.x()+e.xoffset);
-					offsrect.setY(offsrect.y()+e.yoffset);
-					editScene->addRect(offsrect, pen, brush);
-				}
-			}
-		}
 	}
 }
 
@@ -104,24 +108,27 @@ QColor LayoutEditor::colorMat(QString material)
 	// TODO:
 	// make this configuration based!
 	// don't hardcode this!
+	QColor mat = QColor("black");
 
 	if (material == "metal1")
-		return QColor("lightblue");
+		mat = QColor("lightblue");
 	if (material == "metal2")
-		return QColor("blue");
+		mat = QColor("blue");
 	if (material == "metal3")
-		return QColor("teal");
+		mat = QColor("teal");
 	if (material == "metal4")
-		return QColor("purple");
+		mat = QColor("purple");
 
 	if (material == "m1contact")
-		return QColor("yellow");
+		mat = QColor("yellow");
 	if (material == "m2contact")
-		return QColor("green");
+		mat = QColor("green");
 	if (material == "m3contact")
-		return QColor("teal");
+		mat = QColor("teal");
 	if (material == "m4contact")
-		return QColor("teal");
+		mat = QColor("teal");
+	
+	mat.setAlphaF( 0.5 );
 
-	return QColor("black");
+	return mat;
 }
