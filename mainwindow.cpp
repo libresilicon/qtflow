@@ -10,6 +10,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	project(NULL)
 {
 	ui->setupUi(this);
+	connect(ui->setSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_simulationMode_triggered()));
+	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
@@ -91,8 +93,9 @@ void MainWindow::hideAllDockerWidgets()
 	timingWidget->setVisible(false);
 	mainToolBox->setVisible(false);
 	iopadsWidget->setVisible(false);
-	//toolBoxWidgetTestBench->setVisible(false);
+	toolBoxWidgetTestBench->setVisible(false);
 	toolBoxWidgetSynthesis->setVisible(false);
+	timingWidget->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
@@ -134,7 +137,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_MainWindow_destroyed()
 {
+}
 
+void MainWindow::on_simulationMode_triggered()
+{
+	hideAllDockerWidgets();
+	timingWidget->setVisible(true);
+}
+
+void MainWindow::on_synthesisMode_triggered()
+{
+	hideAllDockerWidgets();
 }
 
 void MainWindow::on_newProject_triggered()
@@ -194,10 +207,6 @@ void MainWindow::on_buildAll_triggered()
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
 	ui->buildAll->setDisabled(true);
-	//QString path = session.project();
-	//QSettings env(path);
-	//tcsh->setWorkingDirectory(path);
-	//project->buildAll(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuSimulation_triggered()
@@ -211,10 +220,6 @@ void MainWindow::on_menuSynthesis_triggered()
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
 	ui->buildAll->setDisabled(true);
-	//QString path = session.project();
-	//ProjectSettings env(path);
-	//tcsh->setWorkingDirectory(path);
-	//project->synthesis(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuPlacement_triggered()
@@ -223,10 +228,6 @@ void MainWindow::on_menuPlacement_triggered()
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
 	ui->buildAll->setDisabled(true);
-	//QString path = session.project();
-	//ProjectSettings env(path);
-	//tcsh->setWorkingDirectory(path);
-	//project->placement(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuRouting_triggered()
@@ -235,10 +236,6 @@ void MainWindow::on_menuRouting_triggered()
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
 	ui->buildAll->setDisabled(true);
-	//QString path = session.project();
-	//ProjectSettings env(path);
-	//tcsh->setWorkingDirectory(path);
-	//project->routing(env.value(DEFAULT_VERILOG), tcsh);
 }
 
 void MainWindow::on_menuModules_triggered()

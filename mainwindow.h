@@ -93,11 +93,13 @@ private slots:
 
 	void openRecentProject();
 
+	void on_simulationMode_triggered();
+	void on_synthesisMode_triggered();
+
 	void setTopLevel(QString);
 	void setTestBench(QString);
 	void syncSettings();
 	void onTopModuleChanged();
-
 
 private:
 	Ui::MainWindow *ui;
