@@ -44,8 +44,6 @@ QVariant QtFlowFileList::data(const QModelIndex &index, int role) const
 			QFont font;
 			font.setBold(mapFileModule[path]==project->getTopLevel());
 			font.setUnderline(mapFileModule[path]==project->getTestBench());
-		//	font.setUnderline(this->fileContainsTestBench(filePath(index)));
-
 
 			return font;
 		}

@@ -154,7 +154,7 @@ void ProjectsTreeModel::setRootPath(const QString &path)
 
 	QStack<QFileInfo> roots;
 	QMap<QString, QVector<QFileInfo>> children;
-	QDirIterator it(path, QStringList() << "*.v" << "*.mag" << "*.sch" << "*.sym", QDir::Files, QDirIterator::Subdirectories);
+	QDirIterator it(path, QStringList() << "*.v" << "*.mag" << "*.def" << "*.sch" << "*.sym", QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
 		QFileInfo file(it.next());
@@ -182,7 +182,7 @@ void ProjectsTreeModel::setRootPath(const QString &path)
 	while (!roots.isEmpty())
 	{
 		QFileInfo file = roots.pop();
-		if(file.suffix()=="mag") {
+		if(file.suffix()=="mag"||file.suffix()=="def") {
 			layoutItem->insertChildren(layoutItem->childCount(), 1, layoutItem->columnCount());
 			ProjectsItem *current = layoutItem->child(layoutItem->childCount() - 1);
 			current->setData(0, file.fileName());
