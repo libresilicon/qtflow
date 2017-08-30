@@ -20,15 +20,12 @@ class FileSelector : public QDockWidget
 public:
 	FileSelector(QWidget *parent);
 
-	void refresh();
-
 	void setProject(Project *p);
 
 public slots:
 	void onContextMenu(const QPoint&);
 	void onOpen(const QModelIndex&);
-	void onSetTestBenchFile(QString);
-	void onSetTopLevelFile(QString);
+	void refresh();
 
 signals:
 	void openFile(QString);
