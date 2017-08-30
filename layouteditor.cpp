@@ -44,6 +44,7 @@ void LayoutEditor::drawModuleInfo()
 	lef::LEFMacro *macro;
 	lef::LEFPin *pin;
 	lef::LEFPort *port;
+	lef::LEFLayer *layer;
 
 	QColor color;
 	QBrush brush;
@@ -57,15 +58,25 @@ void LayoutEditor::drawModuleInfo()
 			macro->scaleMacro(e.box.width(),e.box.height());
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
-				foreach(lef::LEFLayer *l, port->getLayers()) {
-					color = colorMat(l->getName());
+				foreach(layer, port->getLayers()) {
+					color = colorMat(layer->getName());
 					pen = QPen(color);
 					brush = QBrush(color);
-					l->setOffsetX(e.xoffset);
-					l->setOffsetY(e.yoffset);
-					foreach(QRect rect, l->getRects()) {
+					layer->setOffsetX(e.xoffset);
+					layer->setOffsetY(e.yoffset);
+					foreach(QRect rect, layer->getRects()) {
 						editScene->addRect(rect, pen, brush);
 					}
+				}
+			}
+			foreach (layer, macro->getObstruction()->getLayers()) {
+				color = colorMat(layer->getName());
+				pen = QPen(color);
+				brush = QBrush(color);
+				layer->setOffsetX(e.xoffset);
+				layer->setOffsetY(e.yoffset);
+				foreach(QRect rect, layer->getRects()) {
+					editScene->addRect(rect, pen, brush);
 				}
 			}
 		}

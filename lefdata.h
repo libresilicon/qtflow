@@ -46,6 +46,10 @@ namespace lef {
 	public:
 		LEFObstruction();
 		void addLayer(QString);
+		QVector<LEFLayer*> getLayers();
+		bool layerExists(QString n);
+		LEFLayer *getLayer(QString);
+		void scaleObstruction(double,double);
 
 	private:
 		QVector<LEFLayer*> layers;
@@ -67,7 +71,6 @@ namespace lef {
 
 	class LEFPin {
 	public:
-		LEFPin();
 		LEFPin(QString);
 		void scalePin(double,double);
 
@@ -81,9 +84,9 @@ namespace lef {
 
 	class LEFMacro {
 	public:
-		LEFMacro();
 		LEFMacro(QString);
 		void addPin(QString);
+
 		void setSize(double w, double h);
 		void scaleMacro(int w, int h);
 
@@ -91,10 +94,12 @@ namespace lef {
 		QVector<LEFPin*> getPins();
 		LEFPin *getPin(QString name);
 		QString getName();
+		LEFObstruction *getObstruction();
 		bool pinExists(QString n);
 	private:
 		QString name;
 		QVector<LEFPin*> pins;
+		LEFObstruction* obstructions;
 		
 		double sizeW;
 		double sizeH;
@@ -119,6 +124,8 @@ namespace lef {
 		void addMacroPinName(std::string *s);
 		void addMacroPinPortLayer(std::string *s);
 		void addMacroPinPortRectangle(double x1, double y1, double x2, double y2);
+		void addMacroPinObstructionLayer(std::string *s);
+		void addMacroPinObstructionRectangle(double, double, double, double);
 
 	private:
 		LEFScanner *lexer;
@@ -134,6 +141,8 @@ namespace lef {
 		QString recentMacroName;
 		QString recentMacroPinName;
 		QString recentMacroPinPortLayer;
+
+		QString recentMacroPinObstructionLayer;
 
 		bool baseUnitMicrons;
 		int baseUnitMicronsValue;

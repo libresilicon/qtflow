@@ -273,8 +273,14 @@ macro_obs_info:
 	  macro_obs_layer
 	| macro_obs_rect
 	;
-macro_obs_layer: LAYER STRING;
-macro_obs_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
+macro_obs_layer: LAYER STRING
+	{
+		  lefdata->addMacroPinObstructionLayer($2);
+	};
+macro_obs_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE
+	{
+		lefdata->addMacroPinObstructionRectangle($2,$3,$4,$5);
+	};
 
 %%
 

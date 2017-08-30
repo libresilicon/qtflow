@@ -2,6 +2,37 @@
 #include "lefscanner.h"
 
 namespace lef {
+	LEFObstruction::LEFObstruction()
+	{
+	}
+
+	bool LEFObstruction::layerExists(QString n)
+	{
+		foreach(lef::LEFLayer *layer, layers)
+			if(layer->getName()==n)
+				return true;
+		return false;
+	}
+
+	QVector<LEFLayer*> LEFObstruction::getLayers()
+	{
+		return layers;
+	}
+
+	void LEFObstruction::addLayer(QString n)
+	{
+		layers.append(new LEFLayer(n));
+	}
+
+	LEFLayer *LEFObstruction::getLayer(QString n)
+	{
+		LEFLayer *ret = NULL;
+		foreach(LEFLayer *l, layers)
+			if(l->getName()==n)
+				ret=l;
+		return ret;
+	}
+
 	QString LEFLayer::getName()
 	{
 		return name;
@@ -58,16 +89,17 @@ namespace lef {
 		generateExportLayers();
 	}
 
-	LEFPort::LEFPort() :
-		layers(QVector<LEFLayer*>())
+	LEFPort::LEFPort()
 	{
 	}
 	
 	LEFLayer* LEFPort::getLayer(QString n)
 	{
+		LEFLayer *ret = NULL;
 		foreach(LEFLayer *l, layers)
 			if(l->getName()==n)
-				return l;
+				ret=l;
+		return ret;
 	}
 	
 	void LEFPort::addLayer(QString n)
@@ -102,10 +134,6 @@ namespace lef {
 		return layers;
 	}
 
-	LEFPin::LEFPin():
-		port(NULL)
-	{}
-
 	LEFPort* LEFPin::getPort()
 	{
 		return port;
@@ -132,12 +160,11 @@ namespace lef {
 		return port->getLayers();
 	}
 
-	LEFMacro::LEFMacro() {}
-
 	LEFMacro::LEFMacro(QString n) :
 		sizeW(0),
 		sizeH(0),
-		name(n)
+		name(n),
+		obstructions(new LEFObstruction)
 	{
 	}
 
@@ -240,8 +267,17 @@ namespace lef {
 	{
 		double scaleW = (1000*w/sizeW)/1000;
 		double scaleH = (1000*h/sizeH)/1000;
-		foreach(LEFPin *pin, pins)
+		foreach(LEFPin *pin, pins) {
 			pin->scalePin(scaleW,scaleH);
+		}
+		foreach(LEFLayer *layer, obstructions->getLayers()) {
+			layer->scaleLayer(scaleW,scaleH);
+		}
+	}
+
+	LEFObstruction *LEFMacro::getObstruction()
+	{
+		return obstructions;
 	}
 
 	void LEFData::setMacroSize(double w, double h)
@@ -299,10 +335,34 @@ namespace lef {
 			port->addLayer(recentMacroPinPortLayer);
 	}
 
+	void LEFData::addMacroPinObstructionLayer(std::string *s)
+	{
+		lef::LEFPin *pin;
+		lef::LEFPort *port;
+
+		recentMacroPinObstructionLayer = QString::fromStdString(*s);
+	}
+
+	void LEFData::addMacroPinObstructionRectangle(double x1, double y1, double x2, double y2)
+	{
+		double x = x1;
+		double y = y1;
+		double w = x2-x1;
+		double h = y2-y1;
+
+		lef::LEFObstruction *obstruction;
+		lef::LEFLayer *layer;
+		obstruction = recentMacro->getObstruction();
+		if(!obstruction->layerExists(recentMacroPinPortLayer))
+			obstruction->addLayer(recentMacroPinPortLayer);
+
+		layer = obstruction->getLayer(recentMacroPinPortLayer);
+		layer->addRectangle(x, y, w, h);
+	}
+
 	void LEFData::setBaseUnitMicrons(int i)
 	{
 		baseUnitMicrons = true;
 		baseUnitMicronsValue = i;
 	}
-
 }
