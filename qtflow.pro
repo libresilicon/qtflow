@@ -96,7 +96,6 @@ HEADERS  += \
 	grid.h \
 	templates.h \
 	project.h \
-	constants.h \
 	edit.h \
 	editor.h \
 	verilog.h \

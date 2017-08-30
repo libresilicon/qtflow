@@ -1,8 +1,6 @@
 #ifndef VCDLISTMODEL_H
 #define VCDLISTMODEL_H
 
-#include "constants.h"
-
 #include <QAbstractListModel>
 #include <QItemDelegate>
 #include <QList>
@@ -54,7 +52,7 @@ public:
     QSize sizeHint (const QStyleOptionViewItem &option, const QModelIndex &index) const
     {
          QSize result = QItemDelegate::sizeHint(option, index);
-         result.setHeight(WAVE_ITEM_HEIGHT);
+		 //result.setHeight(WAVE_ITEM_HEIGHT);
          return result;
     }
 };

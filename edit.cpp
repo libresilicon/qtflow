@@ -1,7 +1,6 @@
 #include "edit.h"
 #include "ui_edit.h"
 
-#include "constants.h"
 #include "editor.h"
 #include "savechanges.h"
 #include "verilog.h"

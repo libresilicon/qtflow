@@ -85,10 +85,10 @@ void Wave::drawSignals()
 
         int time = 0;
         int state = 0;
-        int h = i * WAVE_ITEM_HEIGHT;
-        double hs = WAVE_ITEM_HEIGHT / high_;
-        double ws = tree->vcd().timescale * WAVE_STRETCH / 1000000;
-        int margin = WAVE_STRETCH / 10;
+		int h = i * ui->dockWidgetContents->height();
+		double hs = ui->dockWidgetContents->height() / high_;
+		double ws = tree->vcd().timescale * ui->dockWidgetContents->height() / 1000000;
+		int margin = ui->dockWidgetContents->width() / 10;
         QPen green(Qt::green);
         for (it = changes.begin(); it != changes.end(); ++it)
         {
@@ -102,9 +102,9 @@ void Wave::drawSignals()
             else
             {
                 scene->addLine(time * ws + margin, h + margin, it->first * ws - margin, h + margin, green);
-                scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + WAVE_ITEM_HEIGHT - margin, green);
-                scene->addLine(time * ws + margin, h + WAVE_ITEM_HEIGHT - margin, it->first * ws - margin, h + WAVE_ITEM_HEIGHT - margin, green);
-                scene->addLine(time * ws - margin, h + WAVE_ITEM_HEIGHT - margin, time * ws + margin, h + margin, green);
+				scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + ui->dockWidgetContents->height() - margin, green);
+				scene->addLine(time * ws + margin, h + ui->dockWidgetContents->height() - margin, it->first * ws - margin, h + ui->dockWidgetContents->height() - margin, green);
+				scene->addLine(time * ws - margin, h + ui->dockWidgetContents->height() - margin, time * ws + margin, h + margin, green);
 
                 QGraphicsTextItem* ann = new QGraphicsTextItem;
                 ann->setPos(time * ws, h);

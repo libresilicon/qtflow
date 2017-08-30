@@ -7,10 +7,10 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	tcsh(new QProcess),
 	welcomeWidget(new Welcome),
 	createWidget(new New),
-	errorMessage(new QErrorMessage)
+	errorMessage(new QErrorMessage),
+	project(NULL)
 {
 	ui->setupUi(this);
-	project = NULL;
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);

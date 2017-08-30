@@ -1,5 +1,4 @@
 #include "moduleslistmodel.h"
-#include "constants.h"
 
 #include <QDirIterator>
 #include <QTextStream>

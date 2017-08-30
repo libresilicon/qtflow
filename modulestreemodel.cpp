@@ -1,7 +1,5 @@
 #include "modulestreemodel.h"
 
-#include "constants.h"
-
 #include <QFont>
 #include <QFile>
 #include <QStack>

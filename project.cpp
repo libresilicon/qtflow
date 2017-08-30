@@ -1,5 +1,4 @@
 
-#include "constants.h"
 #include "project.h"
 
 #include <QString>
