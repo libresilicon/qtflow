@@ -13,17 +13,32 @@
 #include <QGraphicsTextItem>
 
 namespace lef {
+	typedef struct {
+		QString name;
+		QRect rect;
+	} port_layer_t;
+
+	class LEFPort {
+	public:
+		LEFPort();
+		QVector<QString> getLayerNames();
+		QVector<port_layer_t> getLayers();
+		void addRectangleToLayer(QString, int x, int y, int w, int h);
+	private:
+		QVector<port_layer_t> *layers;
+	};
+
 	class LEFPin {
 	public:
 		LEFPin();
 		LEFPin(QString);
-		void addPortRectangleToLayer(QString, int x1, int y1, int x2, int y2);
+		void addPortRectangleToLayer(QString, int, int, int, int);
 		QString getName();
-		QList<QString> getPortLayers();
-		QVector<QRect> getPortRectangles(QString l);
+		LEFPort getPort();
+		QVector<port_layer_t> getPortLayers();
 	private:
 		QString name;
-		QMap<QString,QVector<QRect>> port;
+		LEFPort port;
 	};
 
 	class LEFMacro {
@@ -33,7 +48,8 @@ namespace lef {
 		void addPin(QString);
 
 		QVector<QString> getPinNames();
-		LEFPin getPin(QString);
+		QVector<LEFPin> getPins();
+		LEFPin getPin(QString name);
 		QString getName();
 	private:
 		QString name;
@@ -50,6 +66,8 @@ namespace lef {
 
 		bool isDefinedMacro(QString name);
 		LEFMacro getMacro(QString);
+
+		void setBaseUnitMicrons(int);
 
 		void storeMacro();
 		void addMacroName(std::string *s);
@@ -71,6 +89,9 @@ namespace lef {
 		QString recentMacroName;
 		QString recentMacroPinName;
 		QString recentMacroPinPortLayer;
+
+		bool baseUnitMicrons;
+		int baseUnitMicronsValue;
 	};
 }
 

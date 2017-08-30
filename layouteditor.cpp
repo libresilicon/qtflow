@@ -41,6 +41,10 @@ void LayoutEditor::drawRectangles()
 
 void LayoutEditor::drawModuleInfo()
 {
+	lef::LEFMacro macro;
+	lef::LEFPin pin;
+	lef::LEFPort port;
+
 	QColor color;
 	QBrush brush;
 	QPen pen = QPen(Qt::black);
@@ -49,19 +53,24 @@ void LayoutEditor::drawModuleInfo()
 	{
 		editScene->addRect(e.box, pen);
 		editScene->addItem(e.instance_name);
+		//editScene->addItem(e.module_name);
+
+		// fill in library content:
 		if(lefdata->isDefinedMacro(e.module_name_plain)) {
-			foreach(QString name, lefdata->getMacro(e.module_name_plain).getPinNames()) {
-				foreach(QString l, lefdata->getMacro(e.module_name_plain).getPin(name).getPortLayers()) {
-					color = colorMat(l);
+			macro = lefdata->getMacro(e.module_name_plain);
+			foreach(pin, macro.getPins()) {
+				port = pin.getPort();
+				foreach(lef::port_layer_t l, port.getLayers()) {
+					color = colorMat(l.name);
 					pen = QPen(color);
 					brush = QBrush(color);
-					foreach(QRect r, lefdata->getMacro(e.module_name_plain).getPin(name).getPortRectangles(l)) {
-						editScene->addRect(r, pen, brush);
-					}
+					QRect offsrect(l.rect);
+					offsrect.setX(offsrect.x()+e.xoffset);
+					offsrect.setY(offsrect.y()+e.yoffset);
+					editScene->addRect(offsrect, pen, brush);
 				}
 			}
 		}
-		//editScene->addItem(e.module_name);
 	}
 }
 

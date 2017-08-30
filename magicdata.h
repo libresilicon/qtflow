@@ -27,6 +27,8 @@ typedef struct {
 	QGraphicsTextItem *module_name;
 	QGraphicsTextItem *instance_name;
 	QRect box;
+	double xoffset, yoffset;
+	int xsign, ysign;
 } module_info;
 
 typedef QVector<module_info> mods_t;

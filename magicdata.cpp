@@ -144,6 +144,11 @@ namespace magic {
 				recent_module.e*(recent_module.y2-recent_module.y1)
 				);
 
+		info.xoffset = recent_module.c;
+		info.yoffset = recent_module.f;
+
+		info.xsign = recent_module.a;
+		info.ysign = recent_module.e;
 
 		info.module_name = new QGraphicsTextItem;
 		info.module_name->setPlainText(recent_module.module_name);

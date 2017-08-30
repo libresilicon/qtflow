@@ -101,7 +101,11 @@ cases: NAMESCASESENSITIVE STRING;
 bitchars: BUSBITCHARS STRING;
 dividechar: DIVIDERCHAR STRING;
 units: UNITS database_list END UNITS;
-database_list: DATABASE MICRONS INTEGER;
+database_list: DATABASE MICRONS INTEGER
+	{
+	lefdata->setBaseUnitMicrons($3);
+	}
+	;
 useminamespacing: USEMINSPACING OBS STRING | USEMINSPACING PIN STRING;
 clearensmeasure: CLEARANCEMEASURE STRING;
 manufacturinggrid: MANUFACTURINGGRID DOUBLE;
