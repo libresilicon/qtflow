@@ -32,13 +32,15 @@ FLEXSOURCES = \
 	magic_scanner.ll \
 	vcd_scanner.ll \
 	schematics_scanner.ll \
-	lef_scanner.ll
+	lef_scanner.ll \
+	def_scanner.ll
 
 BISONSOURCES = \
 	magic_parser.yy \
 	vcd_parser.yy \
 	schematics_parser.yy \
-	lef_parser.yy
+	lef_parser.yy \
+	def_parser.yy
 
 OTHER_FILES +=  \
         $$FLEXSOURCES \
