@@ -20,8 +20,11 @@ public:
 	explicit TestBenchToolBox(QWidget *parent = nullptr);
 
 signals:
+	void runSimulation();
 
 public slots:
+	void onRunSimulation();
+
 private:
 	Ui::TestBenchToolBox *ui;
 };

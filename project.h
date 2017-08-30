@@ -6,6 +6,7 @@
 #include <QProcess>
 #include <QFileDevice>
 #include <QCommandLineParser>
+#include <QtScript>
 
 class IProject
 {
@@ -13,18 +14,11 @@ public:
 	IProject() {}
 	virtual ~IProject() {}
 	virtual bool create(QString) { return false; }
-	virtual bool valuedump(QString, QProcess* = new QProcess) { return false; }
-
-	virtual bool synthesis(QString, QProcess* = new QProcess) { return false; }
+	virtual bool simulation() { return false; }
 	virtual bool synthesis() { return false; }
-
-	virtual bool timing(QString, QProcess* = new QProcess) { return false; }
-
-	virtual bool placement(QString, QProcess* = new QProcess) { return false; }
-
-	virtual bool routing(QString, QProcess* = new QProcess) { return false; }
-
-	virtual bool buildAll(QString, QProcess* = new QProcess) { return false; }
+	virtual bool placement() { return false; }
+	virtual bool routing() { return false; }
+	virtual bool buildAll() { return false; }
 };
 
 class Project : public IProject
@@ -34,12 +28,10 @@ public:
 	~Project();
 	bool create(QString);
 	bool synthesis();
-	bool synthesis(QString ident, QProcess* = new QProcess);
-	bool timing(QString ident, QProcess* = new QProcess);
-	bool placement(QString ident, QProcess* = new QProcess);
-	bool routing(QString ident, QProcess* = new QProcess);
-	bool buildAll(QString ident, QProcess* = new QProcess);
-	bool prepareStep(QString path);
+	bool simulation();
+	bool placement();
+	bool routing();
+	bool buildAll();
 	void setTechnology(QString tech);
 	void setProcess(QString proc);
 	void setTopLevel(QString mod);

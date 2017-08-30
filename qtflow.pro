@@ -87,8 +87,8 @@ SOURCES += \
 	testbenchtoolbox.cpp \
 	synthesistoolbox.cpp \
 	projectsettings.cpp \
-    lefscanner.cpp \
-    lefdata.cpp
+        lefscanner.cpp \
+        lefdata.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -134,8 +134,8 @@ HEADERS  += \
 	testbenchtoolbox.h \
 	synthesistoolbox.h \
 	projectsettings.h \
-    lefscanner.h \
-    lefdata.h
+        lefscanner.h \
+        lefdata.h
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -193,12 +193,6 @@ bisonheader.name = Bison Headers ${QMAKE_FILE_IN}
 bisonheader.CONFIG += target_predeps no_link
 
 QMAKE_EXTRA_COMPILERS += bisonheader
-
-#DISTFILES += \
-#    images/document-save-all.svg \
-#    images/document-save-all.svg \
-#    images/document-save-as.svg \
-#    images/document-save.svg
 
 RESOURCES = qtflow.qrc
 

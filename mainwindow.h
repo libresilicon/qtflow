@@ -65,11 +65,6 @@ private:
 	bool isSchematic(QString suffix);
 	void hideAllDockerWidgets();
 
-public slots:
-	void fireTcsh();
-	void errorTcsh();
-	void exitTcsh(int);
-
 private slots:
 	void on_MainWindow_destroyed();
 
@@ -84,6 +79,7 @@ private slots:
 
 	void on_buildAll_triggered();
 	void on_menuModules_triggered();
+	void on_menuSimulation_triggered();
 	void on_menuSynthesis_triggered();
 	void on_menuPlacement_triggered();
 	void on_menuRouting_triggered();
@@ -94,8 +90,6 @@ private slots:
 	void on_toolRefresh_triggered();
 
 	void on_newFile_triggered();
-
-	void on_buildVcd_triggered();
 
 	void openRecentProject();
 
@@ -111,7 +105,6 @@ private:
 	Project *project;
 	Dependencies *dependencies;
 	QErrorMessage *errorMessage;
-	QProcess *tcsh;
 	New *createWidget;
 	Welcome *welcomeWidget;
 	Wave *timingWidget;

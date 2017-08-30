@@ -4,7 +4,6 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	QMainWindow(NULL),
 	parser(p),
 	ui(new Ui::MainWindow),
-	tcsh(new QProcess),
 	welcomeWidget(new Welcome),
 	createWidget(new New),
 	errorMessage(new QErrorMessage),
@@ -35,6 +34,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetTestBench);
 
+	connect(toolBoxWidgetTestBench,SIGNAL(runSimulation()),this,SLOT(on_menuSimulation_triggered()));
+
 	toolBoxWidgetSynthesis = new SynthesisToolBox(this);
 	toolBoxWidgetSynthesis->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetSynthesis);
@@ -59,10 +60,6 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	mainToolBox = new MainToolBox(this);
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::TopDockWidgetArea, mainToolBox);
-
-	connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
-	connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
-	connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
 
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
@@ -94,6 +91,8 @@ void MainWindow::hideAllDockerWidgets()
 	timingWidget->setVisible(false);
 	mainToolBox->setVisible(false);
 	iopadsWidget->setVisible(false);
+	//toolBoxWidgetTestBench->setVisible(false);
+	toolBoxWidgetSynthesis->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
@@ -131,7 +130,6 @@ MainWindow::~MainWindow()
 	delete welcomeWidget;
 	delete timingWidget;
 	delete iopadsWidget;
-	delete tcsh;
 }
 
 void MainWindow::on_MainWindow_destroyed()
@@ -192,9 +190,6 @@ void MainWindow::on_exit_triggered()
 
 void MainWindow::on_buildAll_triggered()
 {
-	if (tcsh->state() == QProcess::Running)
-		return;
-
 	ui->menuSynthesis->setDisabled(true);
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
@@ -205,26 +200,13 @@ void MainWindow::on_buildAll_triggered()
 	//project->buildAll(env.value(DEFAULT_VERILOG), tcsh);
 }
 
-void MainWindow::on_buildVcd_triggered()
+void MainWindow::on_menuSimulation_triggered()
 {
-	if (tcsh->state() == QProcess::Running)
-		return;
-
-	ui->menuSynthesis->setDisabled(true);
-	ui->menuPlacement->setDisabled(true);
-	ui->menuRouting->setDisabled(true);
-	ui->buildAll->setDisabled(true);
-	//QString path = session.project();
-	//ProjectSettings env(path);
-	//tcsh->setWorkingDirectory(path);
-	//project->valuedump(env.value(DEFAULT_VERILOG), tcsh);
+	if(project) project->simulation();
 }
 
 void MainWindow::on_menuSynthesis_triggered()
 {
-	if (tcsh->state() == QProcess::Running)
-		return;
-
 	ui->menuSynthesis->setDisabled(true);
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
@@ -237,9 +219,6 @@ void MainWindow::on_menuSynthesis_triggered()
 
 void MainWindow::on_menuPlacement_triggered()
 {
-	if (tcsh->state() == QProcess::Running)
-		return;
-
 	ui->menuSynthesis->setDisabled(true);
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
@@ -252,9 +231,6 @@ void MainWindow::on_menuPlacement_triggered()
 
 void MainWindow::on_menuRouting_triggered()
 {
-	if (tcsh->state() == QProcess::Running)
-		return;
-
 	ui->menuSynthesis->setDisabled(true);
 	ui->menuPlacement->setDisabled(true);
 	ui->menuRouting->setDisabled(true);
@@ -279,30 +255,6 @@ void MainWindow::on_menuIOPads_triggered()
 void MainWindow::on_toolRefresh_triggered()
 {
 	enableProject();
-}
-
-void MainWindow::fireTcsh()
-{
-	QByteArray bytes = tcsh->read(4096);
-	//ui->consoleOut->insertPlainText(bytes);
-	//ui->consoleOut->verticalScrollBar()->setValue(ui->consoleOut->verticalScrollBar()->maximum());
-}
-
-void MainWindow::errorTcsh()
-{
-	QByteArray bytes = tcsh->readAllStandardError();
-	//ui->consoleError->insertPlainText(bytes);
-	//ui->consoleError->verticalScrollBar()->setValue(ui->consoleError->verticalScrollBar()->maximum());
-}
-
-void MainWindow::exitTcsh(int code)
-{
-	qDebug() << "Tcsh exited with code" << code;
-	ui->menuSynthesis->setDisabled(false);
-	ui->menuPlacement->setDisabled(false);
-	ui->menuRouting->setDisabled(false);
-	ui->buildAll->setDisabled(false);
-	enableTopModule();
 }
 
 void MainWindow::onTopModuleChanged()
