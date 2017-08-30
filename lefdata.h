@@ -20,9 +20,9 @@ namespace lef {
 		double h;
 	} rect_t;
 
-	class LEFPortLayer {
+	class LEFLayer {
 	public:
-		LEFPortLayer(QString);
+		LEFLayer(QString);
 		void addRectangle(double, double, double, double);
 		void setOffsetX(double);
 		void setOffsetY(double);
@@ -42,18 +42,27 @@ namespace lef {
 		void generateExportLayers();
 	};
 
+	class LEFObstruction {
+	public:
+		LEFObstruction();
+		void addLayer(QString);
+
+	private:
+		QVector<LEFLayer*> layers;
+	};
+
 	class LEFPort {
 	public:
 		LEFPort();
 		QVector<QString> getLayerNames();
-		QVector<LEFPortLayer*> getLayers();
+		QVector<LEFLayer*> getLayers();
 		void scalePort(double,double);
-		LEFPortLayer *getLayer(QString);
+		LEFLayer *getLayer(QString);
 		bool layerExists(QString n);
 
 		void addLayer(QString);
 	private:
-		QVector<LEFPortLayer*> layers;
+		QVector<LEFLayer*> layers;
 	};
 
 	class LEFPin {
@@ -64,7 +73,7 @@ namespace lef {
 
 		QString getName();
 		LEFPort *getPort();
-		QVector<LEFPortLayer*> getPortLayers();
+		QVector<LEFLayer*> getPortLayers();
 	private:
 		QString name;
 		LEFPort *port;

@@ -2,29 +2,29 @@
 #include "lefscanner.h"
 
 namespace lef {
-	QString LEFPortLayer::getName()
+	QString LEFLayer::getName()
 	{
 		return name;
 	}
 
-	void LEFPortLayer::setOffsetX(double o)
+	void LEFLayer::setOffsetX(double o)
 	{
 		offsetX = o;
 		generateExportLayers();
 	}
 
-	void LEFPortLayer::setOffsetY(double o)
+	void LEFLayer::setOffsetY(double o)
 	{
 		offsetY = o;
 		generateExportLayers();
 	}
 
-	QVector<QRect> LEFPortLayer::getRects()
+	QVector<QRect> LEFLayer::getRects()
 	{
 		return rectsExport;
 	}
 	
-	LEFPortLayer::LEFPortLayer(QString n) :
+	LEFLayer::LEFLayer(QString n) :
 		offsetX(0),
 		offsetY(0),
 		scaleX(1),
@@ -33,7 +33,7 @@ namespace lef {
 	{
 	}
 	
-	void LEFPortLayer::addRectangle(double x, double y, double w, double h)
+	void LEFLayer::addRectangle(double x, double y, double w, double h)
 	{
 		rect_t obj;
 		obj.x = x;
@@ -43,7 +43,7 @@ namespace lef {
 		rects.append(obj);
 	}
 
-	void LEFPortLayer::generateExportLayers()
+	void LEFLayer::generateExportLayers()
 	{
 		rectsExport.clear();
 		foreach(rect_t obj, rects) {
@@ -51,7 +51,7 @@ namespace lef {
 		}
 	}
 
-	void LEFPortLayer::scaleLayer(double w, double h)
+	void LEFLayer::scaleLayer(double w, double h)
 	{
 		scaleX=w;
 		scaleY=h;
@@ -59,25 +59,25 @@ namespace lef {
 	}
 
 	LEFPort::LEFPort() :
-		layers(QVector<LEFPortLayer*>())
+		layers(QVector<LEFLayer*>())
 	{
 	}
 	
-	LEFPortLayer* LEFPort::getLayer(QString n)
+	LEFLayer* LEFPort::getLayer(QString n)
 	{
-		foreach(LEFPortLayer *l, layers)
+		foreach(LEFLayer *l, layers)
 			if(l->getName()==n)
 				return l;
 	}
 	
 	void LEFPort::addLayer(QString n)
 	{
-		layers.append(new LEFPortLayer(n));
+		layers.append(new LEFLayer(n));
 	}
 
 	bool LEFPort::layerExists(QString n)
 	{
-		foreach(lef::LEFPortLayer *layer, layers)
+		foreach(lef::LEFLayer *layer, layers)
 			if(layer->getName()==n)
 				return true;
 		return false;
@@ -85,7 +85,7 @@ namespace lef {
 
 	void LEFPort::scalePort(double w, double h)
 	{
-		foreach(LEFPortLayer* layer, layers) {
+		foreach(LEFLayer* layer, layers) {
 		    layer->scaleLayer(w,h);
 		}
 	}
@@ -93,11 +93,11 @@ namespace lef {
 	QVector<QString> LEFPort::getLayerNames()
 	{
 		QVector<QString> ret;
-		foreach(LEFPortLayer *l, layers) ret.append(l->getName());
+		foreach(LEFLayer *l, layers) ret.append(l->getName());
 		return ret;
 	}
 
-	QVector<LEFPortLayer*> LEFPort::getLayers()
+	QVector<LEFLayer*> LEFPort::getLayers()
 	{
 		return layers;
 	}
@@ -127,7 +127,7 @@ namespace lef {
 		return name;
 	}
 
-	QVector<LEFPortLayer*> LEFPin::getPortLayers()
+	QVector<LEFLayer*> LEFPin::getPortLayers()
 	{
 		return port->getLayers();
 	}
@@ -269,7 +269,7 @@ namespace lef {
 
 		lef::LEFPin *pin;
 		lef::LEFPort *port;
-		lef::LEFPortLayer *layer;
+		lef::LEFLayer *layer;
 
 		if(!recentMacro->pinExists(recentMacroPinName))
 			recentMacro->addPin(recentMacroPinName);

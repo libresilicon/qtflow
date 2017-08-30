@@ -57,7 +57,7 @@ void LayoutEditor::drawModuleInfo()
 			macro->scaleMacro(e.box.width(),e.box.height());
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
-				foreach(lef::LEFPortLayer *l, port->getLayers()) {
+				foreach(lef::LEFLayer *l, port->getLayers()) {
 					color = colorMat(l->getName());
 					pen = QPen(color);
 					brush = QBrush(color);
