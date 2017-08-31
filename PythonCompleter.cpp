@@ -5,12 +5,12 @@
 #include "SimpleConsole.h"
 
 
-PythonCompleter::PythonCompleter(SimpleConsole *parent, PythonQtObjectPtr context) :
+PythonCompleter::PythonCompleter(SimpleConsole *parent, PythonQtObjectPtr *context) :
     QCompleter(parent)
 {
     // use given pythonqt-context
     _context = PythonQt::self()->createUniqueModule();
-    _parentContext = context;
+	_parentContext = *context;
 
     // initialize python
     _context.evalFile(":/lib/PythonCompleter.py");

@@ -32,7 +32,7 @@ public:
 class Project : public IProject
 {
 public:
-	Project(QSettings *settings, QString path, PythonQtObjectPtr main);
+	Project(QSettings *settings, QString path, PythonQtObjectPtr *main);
 	~Project();
 	bool create(QString);
 	bool synthesis();
@@ -56,7 +56,7 @@ private:
 	QSettings *settings;
 	QSettings *project_settings;
 	QString rootdir;
-	PythonQtObjectPtr mainModule;
+	PythonQtObjectPtr *mainModule;
 	QFileDevice::Permissions executable;
 };
 

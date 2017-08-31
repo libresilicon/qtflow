@@ -1,7 +1,8 @@
 #include "headlessmainapp.h"
 #include "project.h"
 
-HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
+HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p, PythonQtObjectPtr *context) :
+	mainContext(context)
 {
 	QString path = QDir(".").absolutePath();
 	parser = p;
@@ -10,7 +11,7 @@ HeadlessMainApp::HeadlessMainApp(QCommandLineParser * p )
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	if(parser) {
 		if(parser->isSet("top-level")) {
-			project = new Project(settings, path+'/'+parser->value("top-level")+".pro");
+			project = new Project(settings, path+'/'+parser->value("top-level")+".pro", mainContext);
 			project->setTopLevel(parser->value("top-level"));
 		} else {
 			qErrnoWarning("No top level given!");

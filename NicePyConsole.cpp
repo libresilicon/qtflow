@@ -20,10 +20,10 @@ namespace
 	}
 }
 
-NicePyConsole::NicePyConsole(QWidget *parent, const PythonQtObjectPtr &context) :
-	SimpleConsole(parent)
+NicePyConsole::NicePyConsole(QWidget *parent, PythonQtObjectPtr *context) :
+	SimpleConsole(parent),
+	_context(context)
 {
-	_context = context;
 	
 	// connect output
 	connect(PythonQt::self(), SIGNAL(pythonStdOut(QString)), this, SLOT(output(QString)));
@@ -67,9 +67,9 @@ int NicePyConsole::executePythonCommand(QString cmd)
 	PythonQtObjectPtr p;
 	PyObject* dict = NULL;
 	if (PyModule_Check(_context)) {
-		dict = PyModule_GetDict(_context);
+		dict = PyModule_GetDict(*_context);
 	} else if (PyDict_Check(_context)) {
-		dict = _context;
+		dict = *_context;
 	}
 
 	if (dict) {

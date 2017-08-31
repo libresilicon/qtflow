@@ -23,8 +23,7 @@ class PythonCompleter : public QCompleter
 {
     Q_OBJECT
 public:
-    explicit PythonCompleter(SimpleConsole *parent,
-                               PythonQtObjectPtr context);
+	explicit PythonCompleter(SimpleConsole *parent, PythonQtObjectPtr *context);
 
 protected slots:
     void updateCompletions();                                   //!< dynamically updates possible completion strings
@@ -32,8 +31,8 @@ protected slots:
     void popupAboutToHide();                                    //!< stops dynamic updates of possible completions
 
 protected:
-    PythonQtObjectPtr _context;                                 //!< python context to run the completer
-    PythonQtObjectPtr _parentContext;                           //!< python context to complete
+	PythonQtObjectPtr _context;                                 //!< python context to run the completer
+	PythonQtObjectPtr _parentContext;                           //!< python context to complete
 
 };
 

@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	HeadlessMainApp *ha;
 	MainWindow *w;
 	PythonQt::init();
+	PythonQtObjectPtr mainContext = PythonQt::self()->getMainModule();
 
 	QCommandLineParser *parser = new QCommandLineParser();
 	parser->setApplicationDescription("QtFlow: Qt5 based synthesis tool");
@@ -30,10 +31,10 @@ int main(int argc, char *argv[])
 	parser->process(app);
 
 	if(parser->isSet("no-graphics")) {
-		ha = new HeadlessMainApp(parser);
+		ha = new HeadlessMainApp(parser, &mainContext);
 		ha->run();
 	} else {
-		w = new MainWindow(parser);
+		w = new MainWindow(parser, &mainContext);
 		w->show();
 		return app.exec();
 	}

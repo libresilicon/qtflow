@@ -1,8 +1,9 @@
 #include "project.h"
 
-Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
+Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	IProject(),
-	settings(s)
+	settings(s),
+	mainModule(main)
 {
 	executable
 		= QFileDevice::ReadOwner
@@ -29,8 +30,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 	settings->setValue("recentProjects",recentProjectsList);
 	settings->endGroup();
 	settings->sync();
-	
-	mainModule = PythonQt::self()->getMainModule();
 }
 
 Project::~Project()
@@ -133,8 +132,8 @@ bool Project::synthesis()
 bool Project::simulation()
 {
 	QString fileName = ":/scripts/simulation.py";
-	mainModule.evalFile(fileName);
-	PythonQtObjectPtr tag = mainModule.evalScript("main()",Py_eval_input);
+	mainModule->evalFile(fileName);
+	PythonQtObjectPtr tag = mainModule->evalScript("main()",Py_eval_input);
 }
 
 bool Project::placement()

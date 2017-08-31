@@ -48,7 +48,7 @@ class MainWindow : public QMainWindow
 	Q_OBJECT
 
 public:
-	explicit MainWindow(QCommandLineParser *parser = 0);
+	explicit MainWindow(QCommandLineParser *parser = nullptr, PythonQtObjectPtr *context = nullptr);
 	~MainWindow();
 
 	void enableProject();
@@ -130,7 +130,7 @@ private:
 
 	EditorTabManager *editArea;
 	
-	PythonQtObjectPtr mainContext;
+	PythonQtObjectPtr *mainContext;
 };
 
 #endif // MAINWINDOW_H

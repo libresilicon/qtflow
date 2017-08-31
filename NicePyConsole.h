@@ -25,17 +25,16 @@ class NicePyConsole : public SimpleConsole
 {
 		Q_OBJECT
 public:
-		explicit NicePyConsole(QWidget *parent,
-													 const PythonQtObjectPtr& context);			 //!< constructor
+		explicit NicePyConsole(QWidget *parent, PythonQtObjectPtr* context);			 //!< constructor
 		~NicePyConsole();																							 //!< destructor
 		
-		PythonQtObjectPtr context() const {return _context;}						//!< get the python context of this console
+		PythonQtObjectPtr *context() const {return _context;}						//!< get the python context of this console
 
 protected slots:
 		int executePythonCommand(QString cmd);													//!< slot to run python code
 
 protected:
-		PythonQtObjectPtr _context;																		 //!< the python context of this console
+		PythonQtObjectPtr *_context;																		 //!< the python context of this console
 		PygmentsHighlighter *_highlighter;															//!< for syntax highlightning
 		PythonCompleter *_completer;																	//!< for autocompletion
 		

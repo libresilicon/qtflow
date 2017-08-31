@@ -9,14 +9,14 @@ class PythonConsoleDockWidget : public QDockWidget
 {
 	Q_OBJECT
 public:
-	explicit PythonConsoleDockWidget(QWidget *parent = nullptr, PythonQtObjectPtr context = nullptr);
+	explicit PythonConsoleDockWidget(QWidget *parent = nullptr, PythonQtObjectPtr *context = nullptr);
 	
 signals:
 	
 public slots:
 private:
 	NicePyConsole *console;
-	PythonQtObjectPtr mainContext;
+	PythonQtObjectPtr *mainContext;
 	Ui::PythonConsole *ui;
 };
 

@@ -1,16 +1,16 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QCommandLineParser *p) :
+MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	QMainWindow(NULL),
 	parser(p),
 	ui(new Ui::MainWindow),
 	welcomeWidget(new Welcome),
 	createWidget(new New),
 	errorMessage(new QErrorMessage),
-	project(NULL)
+	project(NULL),
+	mainContext(context)
 {
 	ui->setupUi(this);
-	mainContext = PythonQt::self()->getMainModule();
 
 	connect(ui->setSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_simulationMode_triggered()));
 	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
@@ -108,7 +108,7 @@ void MainWindow::openProject(QString path)
 	QFile project_vars(path);
 	if (project_vars.exists()) {
 		if(project) delete project;
-		project = new Project(settings, path);
+		project = new Project(settings, path, mainContext);
 		modulesWidget->setProject(project);
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);

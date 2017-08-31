@@ -26,7 +26,7 @@ class HeadlessMainApp : public QObject
 	Q_OBJECT
 
 public:
-	HeadlessMainApp(QCommandLineParser * parser = nullptr);
+	HeadlessMainApp(QCommandLineParser * parser = nullptr, PythonQtObjectPtr *mainContext = nullptr);
 	void run();
 	void runSynthesis();
 	void runPlacing();
@@ -36,7 +36,8 @@ private:
 	Project *project;
 	Dependencies *dependencies;
 	QSettings *settings;
-	QCommandLineParser * parser;
+	QCommandLineParser *parser;
+	PythonQtObjectPtr *mainContext;
 
 signals:
 	void finished();
