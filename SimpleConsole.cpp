@@ -42,7 +42,7 @@ SimpleConsole::SimpleConsole(QWidget *parent) :
 	
 	connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(updateLastValidCursor()));
 	
-	resize(800,300);
+	resize(parent->width(),parent->height());
 }
 
 

@@ -32,7 +32,7 @@ public:
 class Project : public IProject
 {
 public:
-	Project(QSettings *settings, QString path);
+	Project(QSettings *settings, QString path, PythonQtObjectPtr main);
 	~Project();
 	bool create(QString);
 	bool synthesis();

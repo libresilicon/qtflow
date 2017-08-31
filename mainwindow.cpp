@@ -10,6 +10,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	project(NULL)
 {
 	ui->setupUi(this);
+	mainContext = PythonQt::self()->getMainModule();
+
 	connect(ui->setSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_simulationMode_triggered()));
 	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
 
@@ -53,7 +55,7 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	timingWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::BottomDockWidgetArea, timingWidget);
 
-	pythonConsoleWidget = new PythonConsoleDockWidget(this);
+	pythonConsoleWidget = new PythonConsoleDockWidget(this, mainContext);
 	pythonConsoleWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::BottomDockWidgetArea, pythonConsoleWidget);
 

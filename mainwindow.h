@@ -129,6 +129,8 @@ private:
 	MainToolBox *mainToolBox;
 
 	EditorTabManager *editArea;
+	
+	PythonQtObjectPtr mainContext;
 };
 
 #endif // MAINWINDOW_H

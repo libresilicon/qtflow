@@ -1,6 +1,6 @@
 #include "project.h"
 
-Project::Project(QSettings *s, QString path) :
+Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 	IProject(),
 	settings(s)
 {
