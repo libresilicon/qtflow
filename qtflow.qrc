@@ -11,7 +11,7 @@
 	<!-- config files -->
 	<file>configs/process.xml</file>
 	<!-- script files -->
+	<file>scripts/simulation.py</file>
 	<file>scripts/synthesis.js</file>
-	<file>scripts/simulation.js</file>
 </qresource>
 </RCC>
