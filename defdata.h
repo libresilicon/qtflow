@@ -33,7 +33,7 @@ typedef struct {
 
 typedef QVector<module_info> mods_t;
 
-namespace magic {
+namespace def {
 	class DEFScanner;
 	class DEFData
 	{
