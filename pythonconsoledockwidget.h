@@ -1,18 +1,21 @@
 #ifndef PYTHONCONSOLEDOCKWIDGET_H
 #define PYTHONCONSOLEDOCKWIDGET_H
 
-#include <QObject>
-#include <QWidget>
+#include <QDockWidget>
+#include "pythonconsolewidget.h"
 
-class PythonConsoleDockWidget : public QWidget
+class PythonConsoleDockWidget : public QDockWidget
 {
-  Q_OBJECT
+	Q_OBJECT
 public:
-  explicit PythonConsoleDockWidget(QWidget *parent = nullptr);
-  
+	explicit PythonConsoleDockWidget(QWidget *parent = nullptr);
+	
 signals:
-  
+	
 public slots:
+private:
+	PythonConsoleWidget *consoleWidget;
+	QVBoxLayout *layout;
 };
 
 #endif // PYTHONCONSOLEDOCKWIDGET_H

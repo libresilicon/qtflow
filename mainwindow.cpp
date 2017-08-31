@@ -35,7 +35,6 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	toolBoxWidgetTestBench = new TestBenchToolBox(this);
 	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetTestBench);
-
 	connect(toolBoxWidgetTestBench,SIGNAL(runSimulation()),this,SLOT(on_menuSimulation_triggered()));
 
 	toolBoxWidgetSynthesis = new SynthesisToolBox(this);
@@ -53,6 +52,10 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	timingWidget = new Wave(this);
 	timingWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::BottomDockWidgetArea, timingWidget);
+
+	pythonConsoleWidget = new PythonConsoleDockWidget(this);
+	pythonConsoleWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::BottomDockWidgetArea, pythonConsoleWidget);
 
 	editArea = new EditorTabManager(ui->centralWidget);
 	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
@@ -75,10 +78,6 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 		recent_action->setData(recentProject);
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
 	}
-
-	mainPythonContext = PythonQt::self()->getMainModule();
-	pythonConsole = new NicePyConsole(NULL, mainPythonContext);
-	pythonConsole->show();
 
 	hideAllDockerWidgets();
 

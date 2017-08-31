@@ -107,7 +107,9 @@ SOURCES += \
 	SimpleConsole.cpp \
 	PythonCompleter.cpp \
 	PythonCompleterPopup.cpp \
-	PygmentsHighlighter.cpp
+	PygmentsHighlighter.cpp \
+    pythonconsolewidget.cpp \
+    pythonconsoledockwidget.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -163,7 +165,9 @@ HEADERS  += \
 	SimpleConsole.h \
 	PythonCompleter.h \
 	PythonCompleterPopup.h \
-	PygmentsHighlighter.h
+	PygmentsHighlighter.h \
+    pythonconsolewidget.h \
+    pythonconsoledockwidget.h
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -184,7 +188,8 @@ FORMS    += \
 	wave.ui \
 	testbenchtoolbox.ui \
 	synthesistoolbox.ui \
-	projectsettings.ui
+	projectsettings.ui \
+    console.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp
