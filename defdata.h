@@ -41,8 +41,6 @@ namespace def {
 		DEFData();
 		DEFData(QString file);
 
-		bool loadFile(QString);
-
 		layer_rects_t getRectangles();
 		layer_rects_t getBoxes();
 		mods_t getModules();

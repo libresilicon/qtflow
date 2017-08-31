@@ -95,7 +95,9 @@ SOURCES += \
 	synthesistoolbox.cpp \
 	projectsettings.cpp \
         lefscanner.cpp \
-        lefdata.cpp
+        lefdata.cpp \
+        defscanner.cpp \
+        defdata.cpp
 
 HEADERS  += \
 	mainwindow.h \
