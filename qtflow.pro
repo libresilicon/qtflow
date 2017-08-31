@@ -29,9 +29,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += /usr/include/python2.7
 #INCLUDEPATH += PYTHON_WIN32 (add here windows path when building)
 
+include(PythonQt.prf)
+
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -lpython2.7
+QMAKE_CXXFLAGS += -lPythonQt
 
 FLEXSOURCES = \
 	magic_scanner.ll \
