@@ -1,15 +1,15 @@
-#ifndef LAYOUTEDITORWIDGET_H
-#define LAYOUTEDITORWIDGET_H
+#ifndef MAGICLAYOUTEDITORWIDGET_H
+#define MAGICLAYOUTEDITORWIDGET_H
 
 #include "magiclayouteditor.h"
 #include "editorwidget.h"
 
-class LayoutEditorWidget : public EditorWidget
+class MagicLayoutEditorWidget : public EditorWidget
 {
 	Q_OBJECT
 
 public:
-	LayoutEditorWidget(QWidget *parent = nullptr);
+	MagicLayoutEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
 	QString getFilePath();
 
@@ -21,4 +21,4 @@ private:
 	MagicLayoutEditor *editArea;
 };
 
-#endif // LAYOUTEDITORWIDGET_H
+#endif // MAGICLAYOUTEDITORWIDGET_H

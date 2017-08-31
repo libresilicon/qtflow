@@ -38,7 +38,6 @@ namespace def {
 	class DEFData
 	{
 	public:
-		DEFData();
 		DEFData(QString file);
 
 		layer_rects_t getRectangles();
@@ -53,6 +52,7 @@ namespace def {
 		void addUsedModuleNames(std::string *module, std::string *name);
 		void addUsedModuleTransform(int, int, int, int, int, int);
 		void addUsedModule();
+		void setDistanceUnitMicrons(int t);
 		void setLayer(std::string *s);
 		void setTechnology(std::string *s);
 		class DEFScanner *getLexer();
@@ -70,6 +70,9 @@ namespace def {
 		bool trace_scanning;
 		QString streamname;
 		module_info_buffer recent_module;
+		
+		bool distanceMicrons;
+		int distanceMicronsValue;
 	};
 }
 

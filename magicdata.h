@@ -38,10 +38,7 @@ namespace magic {
 	class MagicData
 	{
 	public:
-		MagicData();
 		MagicData(QString file);
-
-		bool loadFile(QString);
 
 		layer_rects_t getRectangles();
 		layer_rects_t getBoxes();

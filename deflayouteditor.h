@@ -1,5 +1,5 @@
-#ifndef MAGICLAYOUTEDITOR_H
-#define MAGICLAYOUTEDITOR_H
+#ifndef DEFLAYOUTEDITOR_H
+#define DEFLAYOUTEDITOR_H
 
 #include "ieditor.h"
 
@@ -9,20 +9,20 @@
 #include <QGraphicsWidget>
 #include <QGridLayout>
 
-namespace magic {
-	class MagicData;
+namespace def {
+	class DEFData;
 }
 
 namespace lef {
 	class LEFData;
 }
 
-class MagicLayoutEditor : public QGraphicsView, public IEditor
+class DEFLayoutEditor : public QGraphicsView, public IEditor
 {
 	Q_OBJECT
 
 public:
-	explicit MagicLayoutEditor(QWidget *parent = nullptr);
+	explicit DEFLayoutEditor(QWidget *parent = nullptr);
 
 	void loadFile(QString);
 	void saveFile();
@@ -41,8 +41,8 @@ protected:
 private:
 	QString filePath;
 	QGraphicsScene *editScene;
-	magic::MagicData *magicdata;
+	def::DEFData *defdata;
 	lef::LEFData *lefdata;
 };
 
-#endif // MAGICLAYOUTEDITOR_H
+#endif // DEFLAYOUTEDITOR_H

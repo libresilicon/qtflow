@@ -1,12 +1,12 @@
-#include "magiclayouteditor.h"
+#include "deflayouteditor.h"
 #include <QAbstractScrollArea>
 
-#include "magicdata.h"
+#include "defdata.h"
 #include "lefdata.h"
 
-MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
+DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
-	magicdata(NULL),
+	defdata(NULL),
 	lefdata(NULL),
 	filePath(QString()),
 	editScene(new QGraphicsScene(this))
@@ -15,7 +15,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	setScene(editScene);
 }
 
-void MagicLayoutEditor::mousePressEvent(QMouseEvent * e)
+void DEFLayoutEditor::mousePressEvent(QMouseEvent * e)
 {
 	double rad = 10;
 	QPointF pt = mapToScene(e->pos());
@@ -23,11 +23,11 @@ void MagicLayoutEditor::mousePressEvent(QMouseEvent * e)
 	QTextStream(stdout) << "Drawing here " << "\t x:" << pt.x() << "\t y:" << pt.y()  << '\n';
 }
 
-void MagicLayoutEditor::drawRectangles()
+void DEFLayoutEditor::drawRectangles()
 {
 	QColor color;
 	rects_t layer;
-	layer_rects_t layers = magicdata->getRectangles();
+	layer_rects_t layers = defdata->getRectangles();
 	foreach(QString layerN, layers.keys()) {
 		color = colorMat(layerN);
 		layer = layers[layerN];
@@ -40,7 +40,7 @@ void MagicLayoutEditor::drawRectangles()
 	}
 }
 
-void MagicLayoutEditor::drawModuleInfo()
+void DEFLayoutEditor::drawModuleInfo()
 {
 	lef::LEFMacro *macro;
 	lef::LEFPin *pin;
@@ -50,7 +50,7 @@ void MagicLayoutEditor::drawModuleInfo()
 	QColor color;
 	QBrush brush;
 	QPen pen;
-	mods_t mods = magicdata->getModules();
+	mods_t mods = defdata->getModules();
 	foreach (module_info e, mods)
 	{
 		// fill in library content:
@@ -90,34 +90,33 @@ void MagicLayoutEditor::drawModuleInfo()
 	}
 }
 
-void MagicLayoutEditor::loadFile(QString file)
+void DEFLayoutEditor::loadFile(QString file)
 {
 	filePath = file;
-	if(magicdata) delete magicdata;
-	magicdata = new magic::MagicData(file);
-	magicdata->getTechnology(); // TODO: do something with this here
-	if(lefdata) delete lefdata;
+	if(defdata) delete defdata;
+	defdata = new def::DEFData(file);
+	defdata->getTechnology(); // TODO: do something with this here
+	if(defdata) delete defdata;
 	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
-	drawRectangles();
-	drawModuleInfo();
-	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
+	//drawRectangles();
+	//drawModuleInfo();
 }
 
-void MagicLayoutEditor::saveFile()
+void DEFLayoutEditor::saveFile()
 {
 }
 
-QString MagicLayoutEditor::getFilePath()
+QString DEFLayoutEditor::getFilePath()
 {
 	return filePath;
 }
 
-bool MagicLayoutEditor::changes()
+bool DEFLayoutEditor::changes()
 {
 	return false;
 }
 
-QColor MagicLayoutEditor::colorMat(QString material)
+QColor DEFLayoutEditor::colorMat(QString material)
 {
 	// TODO:
 	// make this configuration based!

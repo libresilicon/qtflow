@@ -91,8 +91,10 @@ SOURCES += \
         vcdata.cpp \
         schematicsdata.cpp \
         schematicsscanner.cpp \
-	layouteditorwidget.cpp \
-	layouteditor.cpp \
+	magiclayouteditorwidget.cpp \
+	magiclayouteditor.cpp \
+	deflayouteditorwidget.cpp \
+	deflayouteditor.cpp \
 	qtflowfilelist.cpp \
 	testbenchtoolbox.cpp \
 	synthesistoolbox.cpp \
@@ -145,8 +147,10 @@ HEADERS  += \
         schematicsdata.h \
         schematicsscanner.h \
         vcdcommon.h \
-	layouteditorwidget.h \
-	layouteditor.h \
+	magiclayouteditorwidget.h \
+	magiclayouteditor.h \
+	deflayouteditorwidget.h \
+	deflayouteditor.h \
 	qtflowfilelist.h \
 	testbenchtoolbox.h \
 	synthesistoolbox.h \

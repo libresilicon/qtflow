@@ -2,19 +2,12 @@
 #include "defscanner.h"
 
 namespace def {
-	DEFData::DEFData() :
-		lexer(NULL),
-		parser(NULL),
-		trace_scanning(false),
-		trace_parsing(false)
-	{
-	}
-
 	DEFData::DEFData(QString filename) :
 		lexer(NULL),
 		parser(NULL),
 		trace_scanning(false),
-		trace_parsing(false)
+		trace_parsing(false),
+		distanceMicrons(false)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -135,5 +128,11 @@ namespace def {
 	mods_t DEFData::getModules()
 	{
 		return parsedModules;
+	}
+	
+	void DEFData::setDistanceUnitMicrons(int t)
+	{
+		distanceMicrons = true;
+		distanceMicronsValue = t;
 	}
 }

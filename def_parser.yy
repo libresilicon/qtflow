@@ -35,14 +35,43 @@
 
 %token VERSION
 %token NAMESCASESENSITIVE
+%token END
+%token DESIGN
+%token BUSBITCHARS
+%token DISTANCE
+%token DIVIDERCHAR
+%token UNITS
+%token MICRONS
 
 %token <v_int> INTEGER
 %token <v_str> STRING
 %token <v_double> DOUBLE
 
+%start def_file
+
 %%
 
+def_file: def_file_options END DESIGN;
+def_file_options: def_file_option | def_file_options def_file_option;
+def_file_option:
+	  version
+	| cases
+	| bitchars
+	| dividechar
+	| units
+	| design
+	;
+
+design: DESIGN STRING;
 version: VERSION DOUBLE;
+cases: NAMESCASESENSITIVE STRING;
+bitchars: BUSBITCHARS STRING;
+dividechar: DIVIDERCHAR STRING;
+units: UNITS DISTANCE MICRONS INTEGER
+	{
+	defdata->setDistanceUnitMicrons($4);
+	}
+	;
 
 %%
 

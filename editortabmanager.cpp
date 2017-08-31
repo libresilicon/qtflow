@@ -35,11 +35,20 @@ void EditorTabManager::openFile(QString filepath)
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	}
 	if(isLayout(info.suffix())) {
-		LayoutEditorWidget *editorWidget = new LayoutEditorWidget(this);
-		editorWidget->loadFile(filepath);
-		addTab(editorWidget,info.fileName());
-		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
-		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+		if(info.suffix()=="mag") {
+			MagicLayoutEditorWidget *editorWidget = new MagicLayoutEditorWidget(this);
+			editorWidget->loadFile(filepath);
+			addTab(editorWidget,info.fileName());
+			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+		}
+		if(info.suffix()=="def") {
+			DEFLayoutEditorWidget *editorWidget = new DEFLayoutEditorWidget(this);
+			editorWidget->loadFile(filepath);
+			addTab(editorWidget,info.fileName());
+			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+		}
 	}
 }
 

@@ -1,26 +1,26 @@
-#include "layouteditorwidget.h"
+#include "magiclayouteditorwidget.h"
 
-LayoutEditorWidget::LayoutEditorWidget(QWidget *parent) :
+MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
 	editArea(new MagicLayoutEditor(this))
 {
 	setEditWidget(editArea);
 }
 
-void LayoutEditorWidget::loadFile(QString path)
+void MagicLayoutEditorWidget::loadFile(QString path)
 {
 	editArea->loadFile(path);
 }
 
-QString LayoutEditorWidget::getFilePath()
+QString MagicLayoutEditorWidget::getFilePath()
 {
 	return editArea->getFilePath();
 }
 
-void LayoutEditorWidget::onContentChanged()
+void MagicLayoutEditorWidget::onContentChanged()
 {
 }
 
-void LayoutEditorWidget::saveFile()
+void MagicLayoutEditorWidget::saveFile()
 {
 }
