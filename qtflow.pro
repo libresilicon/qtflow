@@ -8,6 +8,7 @@ QT += core
 QT += gui
 QT += script
 QT += xml
+QT += widgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,8 +26,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += /usr/include/python2.7
+#INCLUDEPATH += PYTHON_WIN32 (add here windows path when building)
+
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -lpython2.7
 
 FLEXSOURCES = \
 	magic_scanner.ll \
@@ -200,3 +205,8 @@ QMAKE_EXTRA_COMPILERS += bisonheader
 
 RESOURCES = qtflow.qrc
 
+include(PythonQt/src/src.pri)
+
+include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
+include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
+#include($${PYTHONQT_GENERATED_PATH}/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
