@@ -78,6 +78,7 @@ bool EditorTabManager::isCode(QString suffix)
 bool EditorTabManager::isLayout(QString suffix)
 {
 	if(suffix=="mag") return true;
+	if(suffix=="def") return true;
 	return false;
 }
 
