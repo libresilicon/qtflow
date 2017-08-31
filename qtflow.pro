@@ -108,7 +108,6 @@ SOURCES += \
 	PythonCompleter.cpp \
 	PythonCompleterPopup.cpp \
 	PygmentsHighlighter.cpp \
-    pythonconsolewidget.cpp \
     pythonconsoledockwidget.cpp
 
 HEADERS  += \
@@ -166,7 +165,6 @@ HEADERS  += \
 	PythonCompleter.h \
 	PythonCompleterPopup.h \
 	PygmentsHighlighter.h \
-    pythonconsolewidget.h \
     pythonconsoledockwidget.h
 
 FORMS    += \ 

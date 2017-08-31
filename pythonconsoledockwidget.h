@@ -2,7 +2,7 @@
 #define PYTHONCONSOLEDOCKWIDGET_H
 
 #include <QDockWidget>
-#include "pythonconsolewidget.h"
+#include "ui_console.h"
 
 class PythonConsoleDockWidget : public QDockWidget
 {
@@ -14,8 +14,7 @@ signals:
 	
 public slots:
 private:
-	PythonConsoleWidget *consoleWidget;
-	QVBoxLayout *layout;
+	Ui::PythonConsole *ui;
 };
 
 #endif // PYTHONCONSOLEDOCKWIDGET_H

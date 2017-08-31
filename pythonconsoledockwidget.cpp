@@ -2,9 +2,7 @@
 
 PythonConsoleDockWidget::PythonConsoleDockWidget(QWidget *parent) :
 	QDockWidget(parent),
-	consoleWidget(new PythonConsoleWidget(this)),
-	layout(new QVBoxLayout(this))
+	ui(new Ui::PythonConsole)
 {
-	setLayout(layout);
-	layout->addWidget(consoleWidget);
+	ui->setupUi(this);
 }
