@@ -51,8 +51,8 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 	connect(modulesWidget, SIGNAL(setTopLevel(QString)), filesWidget, SLOT(refresh()));
 
 	timingWidget = new Wave(this);
-	timingWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	addDockWidget(Qt::RightDockWidgetArea, timingWidget);
+	timingWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::BottomDockWidgetArea, timingWidget);
 
 	editArea = new EditorTabManager(ui->centralWidget);
 	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
@@ -75,6 +75,10 @@ MainWindow::MainWindow(QCommandLineParser *p) :
 		recent_action->setData(recentProject);
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
 	}
+
+	mainPythonContext = PythonQt::self()->getMainModule();
+	pythonConsole = new NicePyConsole(NULL, mainPythonContext);
+	pythonConsole->show();
 
 	hideAllDockerWidgets();
 
@@ -143,6 +147,8 @@ void MainWindow::on_simulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	timingWidget->setVisible(true);
+	toolBoxWidgetTestBench->setVisible(true);
+	filesWidget->setVisible(true);
 }
 
 void MainWindow::on_synthesisMode_triggered()

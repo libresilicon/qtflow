@@ -37,6 +37,8 @@
 #include "wave.h"
 #include "maintoolbox.h"
 
+#include "NicePyConsole.h"
+
 namespace Ui {
 	class MainWindow;
 }
@@ -126,6 +128,9 @@ private:
 	MainToolBox *mainToolBox;
 
 	EditorTabManager *editArea;
+
+	PythonQtObjectPtr mainPythonContext;
+	NicePyConsole *pythonConsole;
 };
 
 #endif // MAINWINDOW_H

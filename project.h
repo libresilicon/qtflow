@@ -7,6 +7,14 @@
 #include <QFileDevice>
 #include <QCommandLineParser>
 #include <QtScript>
+#include <QString>
+#include <QTextStream>
+#include <QDir>
+#include <QProcess>
+#include <QSettings>
+#include <QCommandLineParser>
+
+#include <PythonQt.h>
 
 class IProject
 {
@@ -48,7 +56,7 @@ private:
 	QSettings *settings;
 	QSettings *project_settings;
 	QString rootdir;
-
+	PythonQtObjectPtr mainModule;
 	QFileDevice::Permissions executable;
 };
 

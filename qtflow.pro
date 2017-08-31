@@ -100,7 +100,12 @@ SOURCES += \
         lefscanner.cpp \
         lefdata.cpp \
         defscanner.cpp \
-        defdata.cpp
+        defdata.cpp \
+	NicePyConsole.cpp \
+	SimpleConsole.cpp \
+	PythonCompleter.cpp \
+	PythonCompleterPopup.cpp \
+	PygmentsHighlighter.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -149,7 +154,12 @@ HEADERS  += \
         lefscanner.h \
         lefdata.h \
 	defdata.h \
-	defscanner.h
+	defscanner.h \
+	NicePyConsole.h \
+	SimpleConsole.h \
+	PythonCompleter.h \
+	PythonCompleterPopup.h \
+	PygmentsHighlighter.h
 
 FORMS    += \ 
 	mainwindow.ui \
@@ -211,7 +221,5 @@ QMAKE_EXTRA_COMPILERS += bisonheader
 RESOURCES = qtflow.qrc
 
 include(PythonQt/src/src.pri)
-
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
-#include($${PYTHONQT_GENERATED_PATH}/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)

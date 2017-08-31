@@ -1,14 +1,5 @@
 #include "project.h"
 
-#include <QString>
-#include <QTextStream>
-#include <QDir>
-#include <QProcess>
-#include <QSettings>
-#include <QCommandLineParser>
-
-#include <python/Python.h>
-
 Project::Project(QSettings *s, QString path) :
 	IProject(),
 	settings(s)
@@ -38,6 +29,8 @@ Project::Project(QSettings *s, QString path) :
 	settings->setValue("recentProjects",recentProjectsList);
 	settings->endGroup();
 	settings->sync();
+	
+	mainModule = PythonQt::self()->getMainModule();
 }
 
 Project::~Project()
@@ -139,17 +132,9 @@ bool Project::synthesis()
 
 bool Project::simulation()
 {
-	QTextStream(stdout) << QString("Running simulation in ") << rootdir << "\n";
-	QString fileName = ":/scripts/simulation.js";
-	QScriptEngine engine;
-	QFile scriptFile(fileName);
-	if (scriptFile.open(QIODevice::ReadOnly)) {
-		QTextStream stream(&scriptFile);
-		QString contents = stream.readAll();
-		scriptFile.close();
-		QScriptValue result = engine.evaluate(contents, fileName);
-		QTextStream(stdout) << result.toString() << '\n';
-	}
+	QString fileName = ":/scripts/simulation.py";
+	mainModule.evalFile(fileName);
+	PythonQtObjectPtr tag = mainModule.evalScript("main()",Py_eval_input);
 }
 
 bool Project::placement()

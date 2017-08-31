@@ -8,11 +8,14 @@
 
 #include <iostream>
 
+#include <PythonQt.h>
+
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 	HeadlessMainApp *ha;
 	MainWindow *w;
+	PythonQt::init();
 
 	QCommandLineParser *parser = new QCommandLineParser();
 	parser->setApplicationDescription("QtFlow: Qt5 based synthesis tool");
