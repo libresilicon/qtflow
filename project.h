@@ -15,6 +15,7 @@
 #include <QCommandLineParser>
 
 #include <PythonQt.h>
+#include "pyprojectsettings.h"
 
 class IProject: public QObject
 {
@@ -57,9 +58,6 @@ public:
 	QString getTechnology();
 	QString getProcess();
 	QString getProjectType();
-
-signals:
-	void runPythonFunction(QString);
 
 private:
 	QSettings *settings;

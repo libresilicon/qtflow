@@ -106,7 +106,8 @@ lefdata.cpp \
 defscanner.cpp \
 defdata.cpp \
 pythonconsoledockwidget.cpp \
-    pysettings.cpp
+    pysettings.cpp \
+    pyprojectsettings.cpp
 
 HEADERS  += \
 mainwindow.h \
@@ -159,7 +160,8 @@ lefdata.h \
 defdata.h \
 defscanner.h \
 pythonconsoledockwidget.h \
-    pysettings.h
+    pysettings.h \
+    pyprojectsettings.h
 
 FORMS    += \
 mainwindow.ui \

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>571</width>
-    <height>194</height>
+    <width>736</width>
+    <height>211</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
         <x>10</x>
         <y>30</y>
         <width>531</width>
-        <height>101</height>
+        <height>128</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout">
@@ -85,6 +85,27 @@
          </item>
          <item>
           <widget class="QPushButton" name="qrouterButton">
+           <property name="text">
+            <string>Select</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="pathOfYosysLabel_4">
+         <property name="text">
+          <string>Path of Icarus iVerilog</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QLineEdit" name="pathIcarus"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="icarusButton">
            <property name="text">
             <string>Select</string>
            </property>

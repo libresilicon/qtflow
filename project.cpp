@@ -135,13 +135,12 @@ void Project::create(QString path)
 void Project::synthesis()
 {
 	mainContext->evalFile(":/scripts/synthesis.py");
-	emit(runPythonFunction("synthesis()"));
 }
 
 void Project::simulation()
 {
+	mainContext->addObject("project_settings", new PyProjectSettings(this, project_settings));
 	mainContext->evalFile(":/scripts/simulation.py");
-	emit(runPythonFunction("simulation()"));
 }
 
 void Project::placement()

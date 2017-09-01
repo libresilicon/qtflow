@@ -24,6 +24,8 @@ private slots:
 	void selectYosys_triggered();
 	void selectGraywolf_triggered();
 	void selectQRouter_triggered();
+	void selectIcarus_triggered();
+
 	void buttonBox_save();
 	void buttonBox_close();
 
