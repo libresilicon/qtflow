@@ -1,9 +1,13 @@
 #include "project.h"
 
+IProject::IProject() : QObject()
+{
+}
+
 Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	IProject(),
 	settings(s),
-	mainModule(main)
+	mainContext(main)
 {
 	executable
 		= QFileDevice::ReadOwner
@@ -103,7 +107,7 @@ void Project::setProjectType(QString proc)
 	project_settings->sync();
 }
 
-bool Project::create(QString path)
+void Project::create(QString path)
 {
 	QString rootdir;
 
@@ -121,43 +125,28 @@ bool Project::create(QString path)
 	if(!QDir(rootdir+"/source").exists()) dir.mkdir("source");
 	if(!QDir(rootdir+"/synthesis").exists()) dir.mkdir("synthesis");
 	if(!QDir(rootdir+"/layout").exists()) dir.mkdir("layout");
-
-	return true;
 }
 
-bool Project::synthesis()
+void Project::synthesis()
 {
-	QTextStream(stdout) << QString("Running synthesis in ") << rootdir << "\n";
-	QString fileName = ":/scripts/synthesis.js";
-	QScriptEngine engine;
-	QFile scriptFile(fileName);
-	if (scriptFile.open(QIODevice::ReadOnly)) {
-		QTextStream stream(&scriptFile);
-		QString contents = stream.readAll();
-		scriptFile.close();
-		QScriptValue result = engine.evaluate(contents, fileName);
-		QTextStream(stdout) << result.toString() << '\n';
-	}
+	mainContext->evalFile(":/scripts/synthesis.py");
+	emit(runPythonFunction("synthesis()"));
 }
 
-bool Project::simulation()
+void Project::simulation()
 {
-	QString fileName = ":/scripts/simulation.py";
-	mainModule->evalFile(fileName);
-	PythonQtObjectPtr tag = mainModule->evalScript("main()",Py_eval_input);
+	mainContext->evalFile(":/scripts/simulation.py");
+	emit(runPythonFunction("simulation()"));
 }
 
-bool Project::placement()
+void Project::placement()
 {
-	return true;
 }
 
-bool Project::routing()
+void Project::routing()
 {
-	return true;
 }
 
-bool Project::buildAll()
+void Project::buildAll()
 {
-	return true;
 }

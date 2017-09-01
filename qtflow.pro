@@ -30,164 +30,166 @@ INCLUDEPATH += /usr/include/python2.7
 #INCLUDEPATH += PYTHON_WIN32 (add here windows path when building)
 
 include(PythonQt.prf)
+include(PythonQt_QtAll.prf)
 
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_CXXFLAGS += -lpython2.7
 QMAKE_CXXFLAGS += -lPythonQt
+QMAKE_CXXFLAGS += -lPythonQt_QtAll
 
 FLEXSOURCES = \
-	magic_scanner.ll \
-	vcd_scanner.ll \
-	schematics_scanner.ll \
-	lef_scanner.ll \
-	def_scanner.ll
+magic_scanner.ll \
+vcd_scanner.ll \
+schematics_scanner.ll \
+lef_scanner.ll \
+def_scanner.ll
 
 BISONSOURCES = \
-	magic_parser.yy \
-	vcd_parser.yy \
-	schematics_parser.yy \
-	lef_parser.yy \
-	def_parser.yy
+magic_parser.yy \
+vcd_parser.yy \
+schematics_parser.yy \
+lef_parser.yy \
+def_parser.yy
 
 OTHER_FILES +=  \
-        $$FLEXSOURCES \
-        $$BISONSOURCES
+$$FLEXSOURCES \
+$$BISONSOURCES
 
 SOURCES += \
-	main.cpp\
-	maintoolbox.cpp\
-	mainwindow.cpp \
-	grid.cpp \
-	templates.cpp \
-	project.cpp \
-	edit.cpp \
-	editor.cpp \
-	verilog.cpp \
-	savechanges.cpp \
-	welcome.cpp \
-	iopads.cpp \
-	dependencies.cpp \
-	projectstreemodel.cpp \
-	modulestreemodel.cpp \
-	moduleslistmodel.cpp \
-	new.cpp \
-	wave.cpp \
-	vcdtreemodel.cpp \
-	vcdlistmodel.cpp \
-	headlessmainapp.cpp \
-	settings.cpp \
-	fileselector.cpp \
-	projectselector.cpp \
-	moduleselector.cpp \
-	editorwidget.cpp \
-	editortabmanager.cpp \
-	codeeditorwidget.cpp \
-	schematicseditorwidget.cpp \
-	schematicseditor.cpp \
-        vcdscanner.cpp \
-        magicscanner.cpp \
-        magicdata.cpp \
-        vcdata.cpp \
-        schematicsdata.cpp \
-        schematicsscanner.cpp \
-	magiclayouteditorwidget.cpp \
-	magiclayouteditor.cpp \
-	deflayouteditorwidget.cpp \
-	deflayouteditor.cpp \
-	qtflowfilelist.cpp \
-	testbenchtoolbox.cpp \
-	synthesistoolbox.cpp \
-	projectsettings.cpp \
-        lefscanner.cpp \
-        lefdata.cpp \
-        defscanner.cpp \
-        defdata.cpp \
-	NicePyConsole.cpp \
-	SimpleConsole.cpp \
-	PythonCompleter.cpp \
-	PythonCompleterPopup.cpp \
-	PygmentsHighlighter.cpp \
-    pythonconsoledockwidget.cpp
+main.cpp\
+maintoolbox.cpp\
+mainwindow.cpp \
+grid.cpp \
+templates.cpp \
+project.cpp \
+edit.cpp \
+editor.cpp \
+verilog.cpp \
+savechanges.cpp \
+welcome.cpp \
+iopads.cpp \
+dependencies.cpp \
+projectstreemodel.cpp \
+modulestreemodel.cpp \
+moduleslistmodel.cpp \
+new.cpp \
+wave.cpp \
+vcdtreemodel.cpp \
+vcdlistmodel.cpp \
+headlessmainapp.cpp \
+settings.cpp \
+fileselector.cpp \
+projectselector.cpp \
+moduleselector.cpp \
+editorwidget.cpp \
+editortabmanager.cpp \
+codeeditorwidget.cpp \
+schematicseditorwidget.cpp \
+schematicseditor.cpp \
+vcdscanner.cpp \
+magicscanner.cpp \
+magicdata.cpp \
+vcdata.cpp \
+schematicsdata.cpp \
+schematicsscanner.cpp \
+magiclayouteditorwidget.cpp \
+magiclayouteditor.cpp \
+deflayouteditorwidget.cpp \
+deflayouteditor.cpp \
+qtflowfilelist.cpp \
+testbenchtoolbox.cpp \
+synthesistoolbox.cpp \
+projectsettings.cpp \
+lefscanner.cpp \
+lefdata.cpp \
+defscanner.cpp \
+defdata.cpp \
+NicePyConsole.cpp \
+SimpleConsole.cpp \
+PythonCompleter.cpp \
+PythonCompleterPopup.cpp \
+PygmentsHighlighter.cpp \
+pythonconsoledockwidget.cpp
 
 HEADERS  += \
-	mainwindow.h \
-	maintoolbox.h \
-	grid.h \
-	templates.h \
-	project.h \
-	edit.h \
-	editor.h \
-	verilog.h \
-	savechanges.h \
-	welcome.h \
-	iopads.h \
-	dependencies.h \
-	projectstreemodel.h \
-	modulestreemodel.h \
-	moduleslistmodel.h \
-	new.h \
-	wave.h \
-	vcdtreemodel.h \
-	vcdlistmodel.h \
-	headlessmainapp.h \
-	settings.h \
-	fileselector.h \
-	projectselector.h \
-	moduleselector.h \
-	editorwidget.h \
-	editortabmanager.h \
-	codeeditorwidget.h \
-	schematicseditorwidget.h \
-	schematicseditor.h \
-	ieditor.h \
-        vcdscanner.h \
-        magicscanner.h \
-        magicdata.h \
-        vcdata.h \
-        schematicsdata.h \
-        schematicsscanner.h \
-        vcdcommon.h \
-	magiclayouteditorwidget.h \
-	magiclayouteditor.h \
-	deflayouteditorwidget.h \
-	deflayouteditor.h \
-	qtflowfilelist.h \
-	testbenchtoolbox.h \
-	synthesistoolbox.h \
-	projectsettings.h \
-        lefscanner.h \
-        lefdata.h \
-	defdata.h \
-	defscanner.h \
-	NicePyConsole.h \
-	SimpleConsole.h \
-	PythonCompleter.h \
-	PythonCompleterPopup.h \
-	PygmentsHighlighter.h \
-    pythonconsoledockwidget.h
+mainwindow.h \
+maintoolbox.h \
+grid.h \
+templates.h \
+project.h \
+edit.h \
+editor.h \
+verilog.h \
+savechanges.h \
+welcome.h \
+iopads.h \
+dependencies.h \
+projectstreemodel.h \
+modulestreemodel.h \
+moduleslistmodel.h \
+new.h \
+wave.h \
+vcdtreemodel.h \
+vcdlistmodel.h \
+headlessmainapp.h \
+settings.h \
+fileselector.h \
+projectselector.h \
+moduleselector.h \
+editorwidget.h \
+editortabmanager.h \
+codeeditorwidget.h \
+schematicseditorwidget.h \
+schematicseditor.h \
+ieditor.h \
+vcdscanner.h \
+magicscanner.h \
+magicdata.h \
+vcdata.h \
+schematicsdata.h \
+schematicsscanner.h \
+vcdcommon.h \
+magiclayouteditorwidget.h \
+magiclayouteditor.h \
+deflayouteditorwidget.h \
+deflayouteditor.h \
+qtflowfilelist.h \
+testbenchtoolbox.h \
+synthesistoolbox.h \
+projectsettings.h \
+lefscanner.h \
+lefdata.h \
+defdata.h \
+defscanner.h \
+NicePyConsole.h \
+SimpleConsole.h \
+PythonCompleter.h \
+PythonCompleterPopup.h \
+PygmentsHighlighter.h \
+pythonconsoledockwidget.h
 
-FORMS    += \ 
-	mainwindow.ui \
-	grid.ui \
-	templates.ui \
-	environment.ui \
-	edit.ui \
-	savechanges.ui \
-	welcome.ui \
-	iopads.ui \
-	modules.ui \
-	new.ui \
-	mainwindow.ui \
-	settings.ui \
-	modules.ui \
-	projects.ui \
-	files.ui \
-	wave.ui \
-	testbenchtoolbox.ui \
-	synthesistoolbox.ui \
-	projectsettings.ui \
-    console.ui
+FORMS    += \
+mainwindow.ui \
+grid.ui \
+templates.ui \
+environment.ui \
+edit.ui \
+savechanges.ui \
+welcome.ui \
+iopads.ui \
+modules.ui \
+new.ui \
+mainwindow.ui \
+settings.ui \
+modules.ui \
+projects.ui \
+files.ui \
+wave.ui \
+testbenchtoolbox.ui \
+synthesistoolbox.ui \
+projectsettings.ui \
+console.ui
 
 flexsource.input = FLEXSOURCES
 flexsource.output = ${QMAKE_FILE_BASE}.cpp

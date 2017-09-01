@@ -6,6 +6,7 @@ PythonConsoleDockWidget::PythonConsoleDockWidget(QWidget *parent, PythonQtObject
 	mainContext(context)
 {
 	ui->setupUi(this);
-	console = new NicePyConsole(ui->pythonConsole, mainContext);
+	console = new PythonQtScriptingConsole(ui->dockWidgetContents, *mainContext);
+	ui->dockWidgetContents->layout()->addWidget(console);
 	console->showMaximized();
 }

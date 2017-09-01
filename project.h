@@ -16,30 +16,34 @@
 
 #include <PythonQt.h>
 
-class IProject
+class IProject: public QObject
 {
+	Q_OBJECT
+
 public:
-	IProject() {}
+	IProject();
 	virtual ~IProject() {}
-	virtual bool create(QString) { return false; }
-	virtual bool simulation() { return false; }
-	virtual bool synthesis() { return false; }
-	virtual bool placement() { return false; }
-	virtual bool routing() { return false; }
-	virtual bool buildAll() { return false; }
+	virtual void create(QString) {}
+	virtual void simulation() {}
+	virtual void synthesis() {}
+	virtual void placement() {}
+	virtual void routing() {}
+	virtual void buildAll() {}
 };
 
 class Project : public IProject
 {
+	Q_OBJECT
+
 public:
 	Project(QSettings *settings, QString path, PythonQtObjectPtr *main);
 	~Project();
-	bool create(QString);
-	bool synthesis();
-	bool simulation();
-	bool placement();
-	bool routing();
-	bool buildAll();
+	void create(QString);
+	void synthesis();
+	void simulation();
+	void placement();
+	void routing();
+	void buildAll();
 	void setTechnology(QString tech);
 	void setProcess(QString proc);
 	void setTopLevel(QString mod);
@@ -54,11 +58,14 @@ public:
 	QString getProcess();
 	QString getProjectType();
 
+signals:
+	void runPythonFunction(QString);
+
 private:
 	QSettings *settings;
 	QSettings *project_settings;
 	QString rootdir;
-	PythonQtObjectPtr *mainModule;
+	PythonQtObjectPtr *mainContext;
 	QFileDevice::Permissions executable;
 };
 
