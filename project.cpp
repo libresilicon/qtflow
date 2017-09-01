@@ -23,6 +23,11 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 		if(project_settings->value("sourcedir","").toString()=="") {
 			QTextStream(stdout) << "No variable called sourcedir set!!\n";
 		}
+		if(project_settings->value("projectType","").toString()=="") {
+			QTextStream(stdout) << "No variable called projectType set!!\n\tSetting to default";
+			project_settings->setValue("projectType","asic_mixed");
+			project_settings->sync();
+		}
 	} else {
 		create(path);
 	}
