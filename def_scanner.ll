@@ -29,6 +29,8 @@ DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
 
 SEMICOLON			";"
+BRACKETOPEN			"("
+BRACKETCLOSE		")"
 COMMENT				"#"
 VERSION				"VERSION"
 NAMESCASESENSITIVE	"NAMESCASESENSITIVE"
@@ -72,6 +74,7 @@ SHAPE				"SHAPE"
 PORT				"PORT"
 LIBRARY				"LIBRARY"
 DISTANCE				"DISTANCE"
+DIEAREA				"DIEAREA"
 
 %%
 {SEMICOLON}.*				{}
@@ -85,6 +88,9 @@ DISTANCE				"DISTANCE"
 {DISTANCE}+						{ return def::DEFParser::token::DISTANCE; }
 {MICRONS}+						{ return def::DEFParser::token::MICRONS; }
 {DESIGN}+						{ return def::DEFParser::token::DESIGN; }
+{BRACKETOPEN}+						{ return def::DEFParser::token::BRACKETOPEN; }
+{BRACKETCLOSE}+						{ return def::DEFParser::token::BRACKETCLOSE; }
+{DIEAREA}+						{ return def::DEFParser::token::DIEAREA; }
 
 {INTEGER}* {
 	deflval->v_int = atoi(yytext);

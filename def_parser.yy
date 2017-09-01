@@ -42,6 +42,9 @@
 %token DIVIDERCHAR
 %token UNITS
 %token MICRONS
+%token BRACKETOPEN
+%token BRACKETCLOSE
+%token DIEAREA
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -60,6 +63,7 @@ def_file_option:
 	| dividechar
 	| units
 	| design
+	| diearea
 	;
 
 design: DESIGN STRING;
@@ -70,6 +74,10 @@ dividechar: DIVIDERCHAR STRING;
 units: UNITS DISTANCE MICRONS INTEGER
 	{
 	defdata->setDistanceUnitMicrons($4);
+	}
+	;
+diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE
+	{
 	}
 	;
 
