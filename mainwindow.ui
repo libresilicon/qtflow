@@ -72,9 +72,6 @@
     <addaction name="newFile"/>
     <addaction name="saveFile"/>
     <addaction name="separator"/>
-    <addaction name="openMagicFile"/>
-    <addaction name="separator"/>
-    <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
@@ -291,7 +288,7 @@
   </action>
   <action name="setDigialSimulationMode">
    <property name="text">
-    <string>Digital simulation mode</string>
+    <string>&amp;Digital simulation mode</string>
    </property>
   </action>
   <action name="setSynthesisMode">
@@ -306,7 +303,7 @@
   </action>
   <action name="setAnalogSimulationMode">
    <property name="text">
-    <string>Analog simulation mode</string>
+    <string>&amp;Analog simulation mode</string>
    </property>
   </action>
  </widget>

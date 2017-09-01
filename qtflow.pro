@@ -105,12 +105,8 @@ lefscanner.cpp \
 lefdata.cpp \
 defscanner.cpp \
 defdata.cpp \
-NicePyConsole.cpp \
-SimpleConsole.cpp \
-PythonCompleter.cpp \
-PythonCompleterPopup.cpp \
-PygmentsHighlighter.cpp \
-pythonconsoledockwidget.cpp
+pythonconsoledockwidget.cpp \
+    pysettings.cpp
 
 HEADERS  += \
 mainwindow.h \
@@ -162,12 +158,8 @@ lefscanner.h \
 lefdata.h \
 defdata.h \
 defscanner.h \
-NicePyConsole.h \
-SimpleConsole.h \
-PythonCompleter.h \
-PythonCompleterPopup.h \
-PygmentsHighlighter.h \
-pythonconsoledockwidget.h
+pythonconsoledockwidget.h \
+    pysettings.h
 
 FORMS    += \
 mainwindow.ui \

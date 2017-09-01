@@ -36,6 +36,7 @@
 #include "iopads.h"
 #include "wave.h"
 #include "maintoolbox.h"
+#include "pysettings.h"
 
 #include "pythonconsoledockwidget.h"
 
@@ -73,8 +74,6 @@ private slots:
 
 	void on_newProject_triggered();
 	void on_openProject_triggered();
-
-	void on_openMagicFile_triggered();
 
 	void on_saveFile_triggered();
 
@@ -131,7 +130,7 @@ private:
 	MainToolBox *mainToolBox;
 
 	EditorTabManager *editArea;
-	
+
 	PythonQtObjectPtr *mainContext;
 };
 

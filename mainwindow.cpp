@@ -12,13 +12,15 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 {
 	ui->setupUi(this);
 
-	connect(ui->setDigialSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_simulationMode_triggered()));
+	connect(ui->setAnalogSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_analogSimulationMode_triggered()));
+	connect(ui->setDigialSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_digitalSimulationMode_triggered()));
 	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
-	
+	mainContext->addObject("settings", new PySettings(settings));
+
 	projectSettingsDialog = new ProjectSettings(this);
 	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
 
@@ -110,13 +112,13 @@ void MainWindow::hideAllDockerWidgets()
 	iopadsWidget->setVisible(false);
 	toolBoxWidgetTestBench->setVisible(false);
 	toolBoxWidgetSynthesis->setVisible(false);
-	timingWidget->setVisible(false);
+	pythonConsoleWidget->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
 {
-	QFile project_vars(path);
-	if (project_vars.exists()) {
+	QFile project_path(path);
+	if (project_path.exists()) {
 		if(project) delete project;
 		project = new Project(settings, path, mainContext);
 		modulesWidget->setProject(project);
@@ -157,16 +159,18 @@ void MainWindow::on_MainWindow_destroyed()
 void MainWindow::on_digitalSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
-	timingWidget->setVisible(true);
 	toolBoxWidgetTestBench->setVisible(true);
 	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
+	pythonConsoleWidget->setVisible(true);
 }
 
 void MainWindow::on_analogSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
-	timingWidget->setVisible(true);
-	toolBoxWidgetTestBench->setVisible(true);
+	//toolBoxWidgetTestBench->setVisible(true);
+	// TODO: enable analog simulation toolbox here!
 	filesWidget->setVisible(true);
 }
 
@@ -201,24 +205,6 @@ void MainWindow::on_newFile_triggered()
 
 void MainWindow::on_saveFile_triggered()
 {
-}
-
-void MainWindow::on_openMagicFile_triggered()
-{
-	QString name = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Magic Files (*.mag)"));
-
-	if (name == QString())
-		return;
-
-	qDebug() << "Open magic file:" << name;
-	/*QFile file(name);
-	file.open(QFile::ReadOnly);
-	QByteArray content(file.readAll());
-	MagicParser parser(content);
-	rects_t grid = parser.getRectangles();
-	Grid *g = new Grid();
-	g->show();
-	g->RenderRectangles(grid);*/
 }
 
 void MainWindow::on_exit_triggered()
@@ -286,8 +272,22 @@ void MainWindow::onTopModuleChanged()
 
 void MainWindow::enableProject()
 {
+	if(!project) return;
 	enableTopModule();
-	//ui->tabWidget->show();
+
+	disableAllFunctions();
+	if(project->getProjectType()=="asic_mixed" || project->getProjectType()=="asic_digital") {
+		ui->setLayoutMode->setEnabled(true);
+		ui->setDigialSimulationMode->setEnabled(true);
+		ui->setAnalogSimulationMode->setEnabled(true);
+		ui->setSynthesisMode->setEnabled(true);
+		ui->projectSettings->setEnabled(true);
+	}
+	if(project->getProjectType()=="asic_analog" || project->getProjectType()=="macro") {
+		ui->setLayoutMode->setEnabled(true);
+		ui->setAnalogSimulationMode->setEnabled(true);
+		ui->projectSettings->setEnabled(true);
+	}
 
 	ui->newFile->setDisabled(false);
 	ui->buildAll->setDisabled(false);
@@ -300,9 +300,9 @@ void MainWindow::enableProject()
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
 
-	filesWidget->setVisible(1);
-	projectsWidget->setVisible(1);
-	modulesWidget->setVisible(1);
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()
@@ -321,14 +321,15 @@ void MainWindow::disableProject()
 
 void MainWindow::enableTopModule()
 {
-	QString path = project->getSourceDir()+"/"+project->getTopLevel()+".vcd";
+	QString path = project->getSourceDir()+"/"+project->getTestBench()+".vcd";
 	QFile file(path);
 
 	if (!file.exists())
 	{
-		timingWidget->setDisabled(true);
+		timingWidget->hide();
 		return;
 	}
+
 	timingWidget->loadVcd(path);
 	timingWidget->setDisabled(false);
 }

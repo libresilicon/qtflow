@@ -97,7 +97,12 @@ diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBL
 	;
 
 tracks: TRACKS STRING DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | TRACKS STRING DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
-components: COMPONENTS INTEGER component_list END COMPONENTS;
+components: components_amount component_list END COMPONENTS;
+components_amount: COMPONENTS INTEGER
+	{
+		defdata->setAmountComponents($2);
+	}
+	;
 component_list:
 	  component_list_element
 	| component_list_element component_list

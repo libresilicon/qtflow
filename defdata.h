@@ -46,15 +46,10 @@ namespace def {
 		QString getTechnology();
 
 		// building the info
-		void addRectangle(int,int,int,int);
-		void addBox(int,int,int,int);
-		void addUsedModuleBox(int,int,int,int);
-		void addUsedModuleNames(std::string *module, std::string *name);
-		void addUsedModuleTransform(int, int, int, int, int, int);
-		void addUsedModule();
 		void setDistanceUnitMicrons(int t);
 		void setLayer(std::string *s);
 		void setTechnology(std::string *s);
+		void setAmountComponents(int i);
 		class DEFScanner *getLexer();
 
 	private:
