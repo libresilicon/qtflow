@@ -56,6 +56,9 @@
 %token PINS
 %token NET
 %token NETS
+%token ROUTED
+%token ASTERISK
+%token NEW
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -133,7 +136,8 @@ net_list:
 	  net_list_element
 	| net_list_element net_list
 	;
-net_list_element: MINUS STRING net_connections;
+
+net_list_element: MINUS STRING net_connections routed_info;
 
 net_connections:
 	  net_connection
@@ -141,6 +145,43 @@ net_connections:
 	;
 
 net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE;
+
+routed_info:
+	  routed_info_layer routed_info_tupels new_metal_list
+	| routed_info_layer routed_info_tupels STRING new_metal_list;
+
+routed_info_layer: PLUS ROUTED STRING;
+
+routed_info_tupels:
+	  routed_info_tupel
+	| routed_info_tupel routed_info_tupels
+	;
+
+routed_info_tupel:
+	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+	| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+
+new_metal_tupels:
+	  new_metal_tupel
+	| new_metal_tupel new_metal_tupels
+	;
+
+new_metal_tupel:
+	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+	| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+
+new_metal_list:
+	  new_metal
+	| new_metal new_metal_list
+	;
+
+new_metal:
+	  NEW STRING new_metal_tupels STRING
+	| NEW STRING new_metal_tupels;
 
 %%
 

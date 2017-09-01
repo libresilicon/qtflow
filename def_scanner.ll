@@ -28,6 +28,7 @@ DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 
 STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/$]
 
+ASTERISK			"*"
 PLUS			"+"
 MINUS			"-"
 SEMICOLON			";"
@@ -54,6 +55,8 @@ PLACED				"PLACED"
 NET				"NET"
 PINS				"PINS"
 NETS				"NETS"
+ROUTED				"ROUTED"
+NEW					"NEW"
 
 %%
 {SEMICOLON}.*				{}
@@ -81,7 +84,9 @@ NETS				"NETS"
 {NETS}+						{ return def::DEFParser::token::NETS; }
 {NET}+						{ return def::DEFParser::token::NET; }
 {PINS}+						{ return def::DEFParser::token::PINS; }
-
+{ROUTED}+						{ return def::DEFParser::token::ROUTED; }
+{ASTERISK}+						{ return def::DEFParser::token::ASTERISK; }
+{NEW}+						{ return def::DEFParser::token::NEW; }
 
 {INTEGER}* {
 	deflval->v_int = atoi(yytext);
