@@ -9,16 +9,24 @@
 #include <QPushButton>
 #include <QVariant>
 #include <QLayout>
+#include <QSettings>
 
 class PySettings : public QObject
 {
 	Q_OBJECT
 public:
-	explicit PySettings(QObject *parent = nullptr);
+	explicit PySettings(QObject *parent = nullptr, QSettings *s = nullptr);
 
 public Q_SLOTS:
 	PyObject* getMainModule();
-	void test();
+
+	QString getIcarus();
+	QString getYosys();
+	QString getGrayWolf();
+	QString getQRouter();
+
+private:
+	QSettings *settings;
 };
 
 #endif // PYSETTINGS_H

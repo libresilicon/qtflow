@@ -19,7 +19,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
-	mainContext->addObject("settings", new PySettings(settings));
+	mainContext->addObject("settings", new PySettings(this, settings));
 
 	projectSettingsDialog = new ProjectSettings(this);
 	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
@@ -170,13 +170,20 @@ void MainWindow::on_analogSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	//toolBoxWidgetTestBench->setVisible(true);
-	// TODO: enable analog simulation toolbox here!
 	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
+	pythonConsoleWidget->setVisible(true);
 }
 
 void MainWindow::on_synthesisMode_triggered()
 {
 	hideAllDockerWidgets();
+	//toolBoxWidgetTestBench->setVisible(true);
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
+	pythonConsoleWidget->setVisible(true);
 }
 
 void MainWindow::on_newProject_triggered()

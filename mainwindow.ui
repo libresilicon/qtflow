@@ -52,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>29</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -107,7 +107,6 @@
     </property>
     <addaction name="projectSettings"/>
     <addaction name="setSynthesisMode"/>
-    <addaction name="setLayoutMode"/>
     <addaction name="setDigialSimulationMode"/>
     <addaction name="setAnalogSimulationMode"/>
    </widget>
