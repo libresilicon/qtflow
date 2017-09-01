@@ -44,6 +44,7 @@ public:
 	void setProcess(QString proc);
 	void setTopLevel(QString mod);
 	void setTestBench(QString mod);
+	void setProjectType(QString proc);
 
 	QString getSourceDir();
 	QString getTopLevel();
@@ -51,6 +52,7 @@ public:
 	QString getTestBench();
 	QString getTechnology();
 	QString getProcess();
+	QString getProjectType();
 
 private:
 	QSettings *settings;

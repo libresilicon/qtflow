@@ -68,6 +68,11 @@ QString Project::getProcess()
 	return project_settings->value("process").toString();
 }
 
+QString Project::getProjectType()
+{
+	return project_settings->value("projectType").toString();
+}
+
 void Project::setTestBench(QString top)
 {
 	project_settings->setValue("testbench",top);
@@ -89,6 +94,12 @@ void Project::setTechnology(QString tech)
 void Project::setProcess(QString proc)
 {
 	project_settings->setValue("process",proc);
+	project_settings->sync();
+}
+
+void Project::setProjectType(QString proc)
+{
+	project_settings->setValue("projectType",proc);
 	project_settings->sync();
 }
 

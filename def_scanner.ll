@@ -28,6 +28,8 @@ DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 
 STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
 
+PLUS			"+"
+MINUS			"-"
 SEMICOLON			";"
 BRACKETOPEN			"("
 BRACKETCLOSE		")"
@@ -38,43 +40,21 @@ BUSBITCHARS			"BUSBITCHARS"
 DIVIDERCHAR			"DIVIDERCHAR"
 UNITS				"UNITS"
 END					"END"
-DATABASE			"DATABASE"
+DESIGN					"DESIGN"
 MICRONS				"MICRONS"
 USEMINSPACING		"USEMINSPACING"
-OBS					"OBS"
-PIN					"PIN"
-CLEARANCEMEASURE	"CLEARANCEMEASURE"
-MANUFACTURINGGRID	"MANUFACTURINGGRID"
-LAYER				"LAYER"
-TYPE				"TYPE"
-SPACING				"SPACING"
-DIRECTION			"DIRECTION"
-PITCH				"PITCH"
-OFFSET				"OFFSET"
-WIDTH				"WIDTH"
-RESISTANCE			"RESISTANCE"
-CAPACITANCE			"CAPACITANCE"
-VIA					"VIA"
-RECT				"RECT"
-VIARULE				"VIARULE"
-TO					"TO"
-BY					"BY"
-USE					"USE"
-OVERHANG			"OVERHANG"
-METALOVERHANG		"METALOVERHANG"
-SITE				"SITE"
-DESIGN				"DESIGN"
-SYMMETRY			"SYMMETRY"
-CLASS				"CLASS"
-SIZE				"SIZE"
-MACRO				"MACRO"
-FOREIGN				"FOREIGN"
-ORIGIN				"ORIGIN"
-SHAPE				"SHAPE"
-PORT				"PORT"
-LIBRARY				"LIBRARY"
 DISTANCE				"DISTANCE"
 DIEAREA				"DIEAREA"
+COMPONENTS				"COMPONENTS"
+TRACKS				"TRACKS"
+DO				"DO"
+LAYER				"LAYER"
+STEP				"STEP"
+PLACED				"PLACED"
+X				"X"
+Y				"Y"
+NET				"NET"
+PINS				"PINS"
 
 %%
 {SEMICOLON}.*				{}
@@ -91,6 +71,19 @@ DIEAREA				"DIEAREA"
 {BRACKETOPEN}+						{ return def::DEFParser::token::BRACKETOPEN; }
 {BRACKETCLOSE}+						{ return def::DEFParser::token::BRACKETCLOSE; }
 {DIEAREA}+						{ return def::DEFParser::token::DIEAREA; }
+{COMPONENTS}+						{ return def::DEFParser::token::COMPONENTS; }
+{TRACKS}+						{ return def::DEFParser::token::TRACKS; }
+{DO}+						{ return def::DEFParser::token::DO; }
+{LAYER}+						{ return def::DEFParser::token::LAYER; }
+{STEP}+						{ return def::DEFParser::token::STEP; }
+{X}+						{ return def::DEFParser::token::X; }
+{Y}+						{ return def::DEFParser::token::Y; }
+{MINUS}+						{ return def::DEFParser::token::MINUS; }
+{PLUS}+						{ return def::DEFParser::token::PLUS; }
+{PLACED}+						{ return def::DEFParser::token::PLACED; }
+{NET}+						{ return def::DEFParser::token::NET; }
+{PINS}+						{ return def::DEFParser::token::PINS; }
+
 
 {INTEGER}* {
 	deflval->v_int = atoi(yytext);

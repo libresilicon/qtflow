@@ -45,6 +45,18 @@
 %token BRACKETOPEN
 %token BRACKETCLOSE
 %token DIEAREA
+%token COMPONENTS
+%token TRACKS
+%token DO
+%token LAYER
+%token STEP
+%token X
+%token Y
+%token MINUS
+%token PLUS
+%token PLACED
+%token PINS
+%token NET
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -64,6 +76,9 @@ def_file_option:
 	| units
 	| design
 	| diearea
+	| tracks
+	| components
+	| pins
 	;
 
 design: DESIGN STRING;
@@ -80,6 +95,25 @@ diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBL
 	{
 	}
 	;
+
+tracks: TRACKS tracks_x | TRACKS tracks_y;
+tracks_x: X DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | X DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
+tracks_y: Y DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | Y DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
+
+components: COMPONENTS INTEGER component_list END COMPONENTS;
+component_list:
+	  component_list_element
+	| component_list_element component_list
+	;
+
+component_list_element: MINUS STRING STRING PLUS PLACED BRACKETOPEN DOUBLE INTEGER BRACKETCLOSE STRING;
+
+pins: PINS INTEGER pin_list END PINS;
+pin_list:
+	  pin_list_element
+	| pin_list_element pin_list
+	;
+pin_list_element: MINUS STRING PLUS NET STRING;
 
 %%
 

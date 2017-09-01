@@ -66,6 +66,7 @@ private:
 	bool isCode(QString suffix);
 	bool isSchematic(QString suffix);
 	void hideAllDockerWidgets();
+	void disableAllFunctions();
 
 private slots:
 	void on_MainWindow_destroyed();
@@ -95,7 +96,8 @@ private slots:
 
 	void openRecentProject();
 
-	void on_simulationMode_triggered();
+	void on_digitalSimulationMode_triggered();
+	void on_analogSimulationMode_triggered();
 	void on_synthesisMode_triggered();
 
 	void setTopLevel(QString);

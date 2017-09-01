@@ -12,7 +12,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 {
 	ui->setupUi(this);
 
-	connect(ui->setSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_simulationMode_triggered()));
+	connect(ui->setDigialSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_simulationMode_triggered()));
 	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
@@ -82,12 +82,22 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	}
 
 	hideAllDockerWidgets();
+	disableAllFunctions();
 
 	if(parser) {
 		if(parser->isSet("top-level")) {
 			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
 		}
 	}
+}
+
+void MainWindow::disableAllFunctions()
+{
+	ui->setLayoutMode->setEnabled(false);
+	ui->setDigialSimulationMode->setEnabled(false);
+	ui->setAnalogSimulationMode->setEnabled(false);
+	ui->setSynthesisMode->setEnabled(false);
+	ui->projectSettings->setEnabled(false);
 }
 
 void MainWindow::hideAllDockerWidgets()
@@ -144,7 +154,15 @@ void MainWindow::on_MainWindow_destroyed()
 {
 }
 
-void MainWindow::on_simulationMode_triggered()
+void MainWindow::on_digitalSimulationMode_triggered()
+{
+	hideAllDockerWidgets();
+	timingWidget->setVisible(true);
+	toolBoxWidgetTestBench->setVisible(true);
+	filesWidget->setVisible(true);
+}
+
+void MainWindow::on_analogSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	timingWidget->setVisible(true);
