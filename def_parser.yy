@@ -50,13 +50,12 @@
 %token DO
 %token LAYER
 %token STEP
-%token X
-%token Y
 %token MINUS
 %token PLUS
 %token PLACED
 %token PINS
 %token NET
+%token NETS
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -79,6 +78,7 @@ def_file_option:
 	| tracks
 	| components
 	| pins
+	| nets
 	;
 
 design: DESIGN STRING;
@@ -96,10 +96,7 @@ diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBL
 	}
 	;
 
-tracks: TRACKS tracks_x | TRACKS tracks_y;
-tracks_x: X DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | X DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
-tracks_y: Y DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | Y DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
-
+tracks: TRACKS STRING DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | TRACKS STRING DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
 components: COMPONENTS INTEGER component_list END COMPONENTS;
 component_list:
 	  component_list_element
@@ -113,7 +110,32 @@ pin_list:
 	  pin_list_element
 	| pin_list_element pin_list
 	;
-pin_list_element: MINUS STRING PLUS NET STRING;
+pin_list_element: MINUS STRING PLUS NET STRING pin_settings;
+pin_settings:
+	  PLUS pin_setting
+	| PLUS pin_setting pin_settings
+	;
+pin_setting:
+	  pin_setting_layer
+	| pin_setting_position
+	;
+
+pin_setting_layer: LAYER STRING BRACKETOPEN INTEGER INTEGER BRACKETCLOSE BRACKETOPEN INTEGER INTEGER BRACKETCLOSE;
+pin_setting_position: PLACED BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE STRING;
+
+nets: NETS INTEGER net_list END NETS;
+net_list:
+	  net_list_element
+	| net_list_element net_list
+	;
+net_list_element: MINUS STRING net_connections;
+
+net_connections:
+	  net_connection
+	| net_connection net_connections
+	;
+
+net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE;
 
 %%
 

@@ -26,7 +26,7 @@ INTEGER			-{NUMBER}+|{NUMBER}+
 EXPONENT		[eE][+-]?{INTEGER}
 DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 
-STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
+STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/$]
 
 PLUS			"+"
 MINUS			"-"
@@ -51,10 +51,9 @@ DO				"DO"
 LAYER				"LAYER"
 STEP				"STEP"
 PLACED				"PLACED"
-X				"X"
-Y				"Y"
 NET				"NET"
 PINS				"PINS"
+NETS				"NETS"
 
 %%
 {SEMICOLON}.*				{}
@@ -76,11 +75,10 @@ PINS				"PINS"
 {DO}+						{ return def::DEFParser::token::DO; }
 {LAYER}+						{ return def::DEFParser::token::LAYER; }
 {STEP}+						{ return def::DEFParser::token::STEP; }
-{X}+						{ return def::DEFParser::token::X; }
-{Y}+						{ return def::DEFParser::token::Y; }
 {MINUS}+						{ return def::DEFParser::token::MINUS; }
 {PLUS}+						{ return def::DEFParser::token::PLUS; }
 {PLACED}+						{ return def::DEFParser::token::PLACED; }
+{NETS}+						{ return def::DEFParser::token::NETS; }
 {NET}+						{ return def::DEFParser::token::NET; }
 {PINS}+						{ return def::DEFParser::token::PINS; }
 
