@@ -28,6 +28,8 @@ public Q_SLOTS:
 	QString getSourceDir();
 	QString getSynthesisDir();
 	QString getTestBench();
+	QString getVCDFile();
+	QString getVCDPath();
 
 private:
 	QSettings *settings;

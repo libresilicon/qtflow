@@ -58,6 +58,8 @@ public:
 	QString getTechnology();
 	QString getProcess();
 	QString getProjectType();
+	QString getSynthesisDir();
+	QString getVCDFile();
 
 private:
 	QSettings *settings;

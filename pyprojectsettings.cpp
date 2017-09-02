@@ -40,3 +40,13 @@ QString PyProjectSettings::getTestBench()
 {
 	return settings->value("testbench").toString();
 }
+
+QString PyProjectSettings::getVCDFile()
+{
+	return this->getTestBench()+".vcd";
+}
+
+QString PyProjectSettings::getVCDPath()
+{
+	return this->getSynthesisDir()+'/'+this->getVCDFile();
+}

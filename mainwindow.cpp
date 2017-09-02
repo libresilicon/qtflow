@@ -229,7 +229,12 @@ void MainWindow::on_buildAll_triggered()
 
 void MainWindow::on_menuSimulation_triggered()
 {
-	if(project) project->simulation();
+	if(project) {
+		project->simulation();
+		timingWidget->loadVcd(project->getVCDFile());
+		timingWidget->setEnabled(true);
+		timingWidget->setVisible(true);
+	}
 }
 
 void MainWindow::on_menuSynthesis_triggered()
@@ -328,16 +333,13 @@ void MainWindow::disableProject()
 
 void MainWindow::enableTopModule()
 {
-	QString path = project->getSourceDir()+"/"+project->getTestBench()+".vcd";
-	QFile file(path);
-
-	if (!file.exists())
+	if (!QFile(project->getVCDFile()).exists())
 	{
 		timingWidget->hide();
 		return;
 	}
 
-	timingWidget->loadVcd(path);
+	timingWidget->loadVcd(project->getVCDFile());
 	timingWidget->setDisabled(false);
 }
 

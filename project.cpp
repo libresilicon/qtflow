@@ -31,6 +31,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	} else {
 		create(path);
 	}
+	mainContext->addObject("project_settings", new PyProjectSettings(this, project_settings));
 
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
@@ -51,6 +52,11 @@ QString Project::getSourceDir()
 	return project_settings->value("sourcedir").toString();
 }
 
+QString Project::getSynthesisDir()
+{
+	return project_settings->value("synthesis").toString();
+}
+
 QString Project::getRootDir()
 {
 	return project_settings->value("rootdir").toString();
@@ -66,6 +72,10 @@ QString Project::getTestBench()
 	return project_settings->value("testbench").toString();
 }
 
+QString Project::getVCDFile()
+{
+	return this->getSynthesisDir()+'/'+this->getTestBench()+".vcd";
+}
 
 QString Project::getTechnology()
 {
@@ -139,7 +149,6 @@ void Project::synthesis()
 
 void Project::simulation()
 {
-	mainContext->addObject("project_settings", new PyProjectSettings(this, project_settings));
 	mainContext->evalFile(":/scripts/simulation.py");
 }
 
