@@ -18,26 +18,34 @@
 %option verbose
 %option pointer
 %option yywrap
+%option yylineno
 %option nounput
 
-STRING	[a-zA-Z0-9_<>\[\]:.?$/!]*[a-zA-Z_][a-zA-Z0-9_<>\[\]:.?$/!]*
-END		\$end
+STRING				[a-zA-Z0-9_<>\[\]:.?$/!]*[a-zA-Z_][a-zA-Z0-9_<>\[\]:.?$/!]*
+END					"$end"
+DATE				"$date"
+VERSION				"$version"
+TIMESCALE			"$timescale"
+SCOPE				"$scope"
+USCOPE				"$upscope"
+VAR					"$var"
+ENDDEFINITIONS		"$enddefinitions"
+DUMPVARS			"$dumpvars"
+
 %%
 
-\r\n					{}
-\n						{}
+[ \n\t\r]+	{}
 
 END						{ return vcd::VCDParser::token::END;       }
-\$date					{ return vcd::VCDParser::token::DATE;      }
-\$version				{ return vcd::VCDParser::token::VERSION;   }
-\$timescale				{ return vcd::VCDParser::token::TIMESCALE; }
-\$scope					{ return vcd::VCDParser::token::SCOPE;     }
-\$upscope				{ return vcd::VCDParser::token::UPSCOPE;   }
-\$var					{ return vcd::VCDParser::token::VAR;       }
-\$enddefinitions		{ return vcd::VCDParser::token::ENDDEFINITIONS; }
-\$dumpvars				{ return vcd::VCDParser::token::DUMPVARS; }
+DATE					{ return vcd::VCDParser::token::DATE;      }
+VERSION					{ return vcd::VCDParser::token::VERSION;   }
+TIMESCALE				{ return vcd::VCDParser::token::TIMESCALE; }
+SCOPE					{ return vcd::VCDParser::token::SCOPE;     }
+USCOPE					{ return vcd::VCDParser::token::UPSCOPE;   }
+VAR						{ return vcd::VCDParser::token::VAR;       }
+ENDDEFINITIONS			{ return vcd::VCDParser::token::ENDDEFINITIONS; }
+DUMPVARS				{ return vcd::VCDParser::token::DUMPVARS; }
 
-[ \t]					{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::SPACE;    }
 [[:alnum:]]				{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::ALPHANUM; }
 [[:cntrl:][:punct:]]	{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::SPECIAL;  }
 

@@ -1,4 +1,5 @@
 #include "project.h"
+#include "pyprojectsettings.h"
 
 IProject::IProject() : QObject()
 {
@@ -31,7 +32,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	} else {
 		create(path);
 	}
-	mainContext->addObject("project_settings", new PyProjectSettings(this, project_settings));
+	mainContext->addObject("project_settings", new PyProjectSettings(this));
 
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
@@ -72,9 +73,19 @@ QString Project::getTestBench()
 	return project_settings->value("testbench").toString();
 }
 
+QString Project::getLayoutDir()
+{
+	return project_settings->value("layout").toString();
+}
+
 QString Project::getVCDFile()
 {
-	return this->getSynthesisDir()+'/'+this->getTestBench()+".vcd";
+	return this->getTestBench()+".vcd";
+}
+
+QString Project::getVCDPath()
+{
+	return this->getSynthesisDir()+'/'+this->getVCDFile();
 }
 
 QString Project::getTechnology()

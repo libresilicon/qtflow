@@ -1,8 +1,9 @@
+#include "project.h"
 #include "pyprojectsettings.h"
 
-PyProjectSettings::PyProjectSettings(QObject *parent, QSettings *s) :
+PyProjectSettings::PyProjectSettings(Project *parent) :
 	QObject(parent),
-	settings(s)
+	project(parent)
 {
 }
 
@@ -13,40 +14,40 @@ PyObject* PyProjectSettings::getMainModule()
 
 QString PyProjectSettings::getTopLevel()
 {
-	return settings->value("toplevel").toString();
+	return project->getTopLevel();
 }
 
 QString PyProjectSettings::getRootDir()
 {
-	return settings->value("rootdir").toString();
+	return project->getRootDir();
 }
 
 QString PyProjectSettings::getLayoutDir()
 {
-	return settings->value("layout").toString();
+	return project->getLayoutDir();
 }
 
 QString PyProjectSettings::getSourceDir()
 {
-	return settings->value("sourcedir").toString();
+	return project->getSourceDir();
 }
 
 QString PyProjectSettings::getSynthesisDir()
 {
-	return settings->value("synthesis").toString();
+	return project->getSynthesisDir();
 }
 
 QString PyProjectSettings::getTestBench()
 {
-	return settings->value("testbench").toString();
+	return project->getTestBench();
 }
 
 QString PyProjectSettings::getVCDFile()
 {
-	return this->getTestBench()+".vcd";
+	return project->getVCDFile();
 }
 
 QString PyProjectSettings::getVCDPath()
 {
-	return this->getSynthesisDir()+'/'+this->getVCDFile();
+	return project->getVCDPath();
 }

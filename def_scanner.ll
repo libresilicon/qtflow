@@ -103,8 +103,6 @@ NEW					"NEW"
 	return def::DEFParser::token::STRING;
 }
 
-[ \n\t\r]+ {
-	/* yylloc->step(); */
-}
+[ \n\t\r]+	{}
 
 %%

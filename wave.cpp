@@ -1,7 +1,7 @@
 #include "wave.h"
 #include "ui_wave.h"
 
-#include "vcdparser.h"
+#include "vcdata.h"
 
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),
@@ -43,20 +43,14 @@ void Wave::loadVcd(QString path)
 {
 	QFile file(path);
 
-	if (!file.exists())
-		return;
+	if (file.exists()) if(file.open(QIODevice::ReadOnly)) {
+		QByteArray content(file.readAll());
+		vcd::VCData data(content);
 
-	if (!file.open(QIODevice::ReadOnly))
-		return;
-
-	QByteArray content(file.readAll());
-	//VcdParser parser(content);
-
-	file.close();
-
-	list->reset();
-	//tree->setVcd(parser.getVcd());
-	scene->clear();
+		list->reset();
+		tree->setVcd(data.getVCD());
+		scene->clear();
+	}
 }
 
 void Wave::onSignalsChanged()

@@ -4,24 +4,32 @@
 #include <QStack>
 #include <QHash>
 
+#include <fstream>
+#include <istream>
+
 #include "vcdscanner.h"
 
 namespace vcd {
 	class VCData
 	{
 	public:
-		VCData();
+		VCData(QString s);
 		VCDScanner *getLexer();
 		void setDate(std::string*);
 		void setVersion(std::string*);
 		void addTimescale(std::string*);
 		void addScope(std::string*);
+		vcd_t getVCD();
 
 	private:
-		QStack<vcd_scopes_t*> parsedScopes;
+		QString streamname;
 		QStack<QChar> vcdstring;
 		vcd_t parsedVcd;
 		VCDScanner *lexer;
+		VCDParser *parser;
+		bool trace_scanning;
+		bool trace_parsing;
+		bool rootSet;
 	};
 }
 

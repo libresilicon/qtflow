@@ -55,8 +55,6 @@ public:
 	void enableProject();
 	void disableProject();
 
-	void enableTopModule();
-
 	void enableFile();
 	void disableFile();
 
@@ -102,7 +100,6 @@ private slots:
 	void setTopLevel(QString);
 	void setTestBench(QString);
 	void syncSettings();
-	void onTopModuleChanged();
 
 private:
 	Ui::MainWindow *ui;

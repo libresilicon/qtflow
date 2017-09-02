@@ -15,7 +15,6 @@
 #include <QCommandLineParser>
 
 #include <PythonQt.h>
-#include "pyprojectsettings.h"
 
 class IProject: public QObject
 {
@@ -59,7 +58,9 @@ public:
 	QString getProcess();
 	QString getProjectType();
 	QString getSynthesisDir();
+	QString getLayoutDir();
 	QString getVCDFile();
+	QString getVCDPath();
 
 private:
 	QSettings *settings;

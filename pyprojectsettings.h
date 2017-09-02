@@ -3,6 +3,8 @@
 
 #include "PythonQt.h"
 
+#include "project.h"
+
 #include <QObject>
 #include <QStringList>
 #include <QMainWindow>
@@ -16,23 +18,24 @@ class PyProjectSettings : public QObject
 	Q_OBJECT
 
 public:
-	explicit PyProjectSettings(QObject *parent = nullptr, QSettings *s = nullptr);
+	explicit PyProjectSettings(Project *parent = nullptr);
 
 public Q_SLOTS:
 	PyObject* getMainModule();
 
 	QString getTopLevel();
+	QString getTestBench();
 
 	QString getRootDir();
 	QString getLayoutDir();
 	QString getSourceDir();
 	QString getSynthesisDir();
-	QString getTestBench();
+
 	QString getVCDFile();
 	QString getVCDPath();
 
 private:
-	QSettings *settings;
+	Project *project;
 };
 
 #endif // PYPROJECTSETTINGS_H

@@ -231,7 +231,7 @@ void MainWindow::on_menuSimulation_triggered()
 {
 	if(project) {
 		project->simulation();
-		timingWidget->loadVcd(project->getVCDFile());
+		timingWidget->loadVcd(project->getSynthesisDir()+'/'+project->getVCDFile());
 		timingWidget->setEnabled(true);
 		timingWidget->setVisible(true);
 	}
@@ -277,15 +277,9 @@ void MainWindow::on_toolRefresh_triggered()
 	enableProject();
 }
 
-void MainWindow::onTopModuleChanged()
-{
-	enableTopModule();
-}
-
 void MainWindow::enableProject()
 {
 	if(!project) return;
-	enableTopModule();
 
 	disableAllFunctions();
 	if(project->getProjectType()=="asic_mixed" || project->getProjectType()=="asic_digital") {
@@ -329,18 +323,6 @@ void MainWindow::disableProject()
 	ui->menuRouting->setDisabled(true);
 	ui->menuModules->setDisabled(true);
 	ui->toolRefresh->setDisabled(true);
-}
-
-void MainWindow::enableTopModule()
-{
-	if (!QFile(project->getVCDFile()).exists())
-	{
-		timingWidget->hide();
-		return;
-	}
-
-	timingWidget->loadVcd(project->getVCDFile());
-	timingWidget->setDisabled(false);
 }
 
 void MainWindow::setTopLevel(QString name)

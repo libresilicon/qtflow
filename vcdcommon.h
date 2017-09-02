@@ -21,7 +21,7 @@ struct vcd_t
 	QString date;
 	QString version;
 	int timescale;
-	vcd_scopes_t scopes;
+	vcd_scopes_t scope;
 	QHash<int, vcd_changes_t> changes;
 };
 

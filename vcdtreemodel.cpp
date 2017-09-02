@@ -132,7 +132,7 @@ void VcdTreeModel::setVcd(vcd_t v)
 {
     values = v;
     reset();
-    setScopes(values.scopes, rootItem);
+	setScopes(values.scope, rootItem);
 }
 
 vcd_changes_t VcdTreeModel::getValues(int index)
