@@ -39,13 +39,11 @@ QMAKE_CXXFLAGS += -lPythonQt
 QMAKE_CXXFLAGS += -lPythonQt_QtAll
 
 FLEXSOURCES = \
-magic_scanner.ll \
 vcd_scanner.ll \
 lef_scanner.ll \
 def_scanner.ll
 
 BISONSOURCES = \
-magic_parser.yy \
 vcd_parser.yy \
 lef_parser.yy \
 def_parser.yy
@@ -84,11 +82,7 @@ editorwidget.cpp \
 editortabmanager.cpp \
 codeeditorwidget.cpp \
 vcdscanner.cpp \
-magicscanner.cpp \
-magicdata.cpp \
 vcdata.cpp \
-magiclayouteditorwidget.cpp \
-magiclayouteditor.cpp \
 deflayouteditorwidget.cpp \
 deflayouteditor.cpp \
 qtflowfilelist.cpp \
@@ -133,12 +127,8 @@ editortabmanager.h \
 codeeditorwidget.h \
 ieditor.h \
 vcdscanner.h \
-magicscanner.h \
-magicdata.h \
 vcdata.h \
 vcdcommon.h \
-magiclayouteditorwidget.h \
-magiclayouteditor.h \
 deflayouteditorwidget.h \
 deflayouteditor.h \
 qtflowfilelist.h \
@@ -217,3 +207,4 @@ include(PythonQt/src/src.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
 include(schematics/schematics.pri)
+include(magic/magic.pri)
