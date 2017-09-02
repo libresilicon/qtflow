@@ -1,3 +1,4 @@
+#include "vcd_parser/vcd_parser.h"
 #include "vcdscanner.h"
 
 namespace vcd {

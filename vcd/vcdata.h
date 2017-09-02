@@ -1,4 +1,6 @@
-#pragma once
+#ifndef VCD_DATA_H
+#define VCD_DATA_H
+
 #include <QStack>
 #include <QHash>
 
@@ -99,3 +101,5 @@ namespace vcd {
 		bool rootSet;
 	};
 }
+
+#endif

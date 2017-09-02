@@ -1,3 +1,4 @@
+#include "magic_parser/magic_parser.h"
 #include "magicscanner.h"
 
 namespace magic {

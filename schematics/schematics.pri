@@ -6,7 +6,7 @@ INCLUDEPATH += $${PARSE_OUT_PWD}
 # This was needed to work around "number of sections exceeded object file format limit" linker error
 win32:QMAKE_CXXFLAGS += /bigobj
 
-LEXSOURCES += $$PWD/schematics_scanner.ll
+FLEXSOURCES += $$PWD/schematics_scanner.ll
 BISONSOURCES += $$PWD/schematics_parser.yy
 
 SOURCES += \

@@ -7,8 +7,6 @@
 #undef yyFlexLexer
 #endif
 
-#include "magic_parser/magic_parser.h"
-
 namespace magic {
 	class MagicScanner : public magicFlexLexer
 	{

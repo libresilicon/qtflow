@@ -142,7 +142,7 @@ include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_
 
 #flex definition
 flex.name = Flex
-flex.input = LEXSOURCES
+flex.input = FLEXSOURCES
 flex.output = $${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.cpp
 flex.commands = flex++ --header-file=$${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_OUT} ${QMAKE_FILE_IN}
 flex.variable_out = SOURCES
@@ -158,8 +158,8 @@ bison.variable_out = SOURCES
 bison.CONFIG += target_predeps
 QMAKE_EXTRA_COMPILERS += bison
 
-#include(schematics/schematics.pri)
+include(schematics/schematics.pri)
 include(magic/magic.pri)
-#include(vcd/vcd.pri)
+include(vcd/vcd.pri)
 include(lef/lef.pri)
 include(def/def.pri)

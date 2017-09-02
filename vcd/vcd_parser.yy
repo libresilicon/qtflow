@@ -72,10 +72,6 @@
 }
 
 %code top {
-
-	#include "vcd_scanner.h"
-	#include "vcdata.h"
-
     //Bison calls yylex() to get the next token.
     //Since we have re-defined the equivalent function in the lexer
     //we need to tell Bison how to get the next token.

@@ -1,10 +1,7 @@
-
-PARSE_OUT_PWD = $$OUT_PWD/vcd
-
 # This was needed to work around "number of sections exceeded object file format limit" linker error
 win32:QMAKE_CXXFLAGS += /bigobj
 
-LEXSOURCES += $$PWD/vcd_scanner.ll
+FLEXSOURCES += $$PWD/vcd_scanner.ll
 BISONSOURCES += $$PWD/vcd_parser.yy
 
 SOURCES += \

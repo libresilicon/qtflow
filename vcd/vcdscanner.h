@@ -8,12 +8,13 @@
 #endif
 
 namespace vcd {
+	class VCDParser;
 	class VCData;
 	class VCDScanner : public vcdFlexLexer
 	{
 	public:
 		VCDScanner(std::istream* in = 0, std::ostream* out = &std::cout);
-		//int vcdlex(YYSTYPE* yylval, vcd::VCData *vcdata);
+		int vcdlex(vcd::VCDParser::semantic_type* yylval, vcd::VCData *vcdata);
 		int yylex();
 	};
 }

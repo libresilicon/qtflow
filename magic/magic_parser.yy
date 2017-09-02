@@ -12,12 +12,14 @@
 	}
 }
 
-%param {class magic::MagicData *magicdata}
+%param {magic::MagicData *magicdata}
 
 %{
 #include <iostream>
 #include <string>
 #include <QString>
+
+#include "magic_parser/magic_parser.h"
 #include "magic/magicdata.h"
 #include "magic/magicscanner.h"
 

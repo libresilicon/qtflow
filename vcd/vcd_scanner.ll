@@ -2,9 +2,6 @@
     #include <iostream>
     #include <sstream>
     #include <cassert>
-	#include "vcd/vcdscanner.h"
-	#include "vcd_parser/vcd_parser.h"
-	#include "vcd_parser/location.hh"
 
     using std::cout;
     using std::stringstream;
@@ -12,9 +9,18 @@
     //Called everytime a token matches
     //This advances the end of the location to the end
     //of the token.
-	#define YY_USER_ACTION loc_.columns(YYLeng());
+	//#define YY_USER_ACTION loc_.columns(YYLeng());
+	#include "vcd/vcdata.h"
+	//#define YY_DECL int vcd::VCDScanner::vcdlex(\
+	//	vcd::VCDParser::semantic_type* vcdlval,\
+	//	vcd::VCDData *vcddata)
 
 %}
+
+%top{
+#include "vcd_parser/vcd_parser.h"
+#include "vcd_parser/location.hh"
+}
 
 /* Generate a C++ lexer */
 %option c++
@@ -41,7 +47,7 @@
  * This allows us to acces member vairables of the lexer class
  * in side the flex rules below.
  */
-%option yyclass="vcd::VCDScanner"
+/*%option yyclass="vcd::VCDScanner"*/
 
 /*
  * Use a prefix to avoid name clashes with other
