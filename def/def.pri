@@ -5,7 +5,7 @@ PARSE_OUT_PWD = $$OUT_PWD/def
 win32:QMAKE_CXXFLAGS += /bigobj
 
 LEXSOURCES += $$PWD/def_scanner.ll
-YACCSOURCES += $$PWD/def_parser.yy
+BISONSOURCES += $$PWD/def_parser.yy
 
 SOURCES += \
 	$$PWD/defdata.cpp \

@@ -7,7 +7,7 @@
 #undef yyFlexLexer
 #endif
 
-#include "lef.yy.h"
+#include "lef_parser/lef_parser.h"
 
 namespace lef {
 	class LEFData;

@@ -1,5 +1,6 @@
-#include "magicdata.h"
+#include "magic_parser/magic_parser.h"
 #include "magicscanner.h"
+#include "magicdata.h"
 
 namespace magic {
 	MagicData::MagicData(QString filename) :

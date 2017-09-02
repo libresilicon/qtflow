@@ -2,7 +2,7 @@
 #include <QAbstractScrollArea>
 
 #include "magicdata.h"
-#include "lefdata.h"
+#include "../lef/lefdata.h"
 
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),

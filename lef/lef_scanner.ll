@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <QString>
 
-#include "lefscanner.h"
+#include "lef/lefscanner.h"
 
 #define YY_DECL int lef::LEFScanner::leflex(\
 	lef::LEFParser::semantic_type* leflval,\

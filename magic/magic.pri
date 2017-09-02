@@ -5,7 +5,7 @@ PARSE_OUT_PWD = $$OUT_PWD/magic
 win32:QMAKE_CXXFLAGS += /bigobj
 
 LEXSOURCES += $$PWD/magic_scanner.ll
-YACCSOURCES += $$PWD/magic_parser.yy
+BISONSOURCES += $$PWD/magic_parser.yy
 
 SOURCES += \
 	$$PWD/magicdata.cpp \

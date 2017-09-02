@@ -7,14 +7,14 @@
 #undef yyFlexLexer
 #endif
 
-#include "magic.yy.h"
+#include "magic_parser/magic_parser.h"
 
 namespace magic {
 	class MagicScanner : public magicFlexLexer
 	{
 	public:
 		MagicScanner(std::istream* in = 0, std::ostream* out = &std::cout);
-		int magiclex(MagicParser::semantic_type*, MagicData*);
+		int magiclex(magic::MagicParser::semantic_type*, MagicData*);
 	};
 }
 

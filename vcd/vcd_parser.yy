@@ -64,8 +64,8 @@
 		class VCData;
     }
 
-	#include "vcderror.h"
-	#include "vcdata.h"
+	#include "vcd/vcderror.h"
+	#include "vcd/vcdata.h"
 
     //This is not defined by default for some reason...
     #define YY_NULLPTR nullptr

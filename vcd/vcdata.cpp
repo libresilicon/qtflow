@@ -1,6 +1,6 @@
 #include "vcdata.h"
 #include "vcdscanner.h"
-#include "vcd_parser.h"
+#include "vcd_parser/vcd_parser.h"
 
 namespace vcd {
 	VCData::VCData(QString filename) :

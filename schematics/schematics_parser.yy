@@ -18,7 +18,8 @@
 #include <QMap>
 #include <QStack>
 
-#include "schematicsdata.h"
+#include "schematics/schematicsscanner.h"
+#include "schematics/schematicsdata.h"
 
 #define schematicslex (schematicsdata->getLexer())->schematicslex
 %}

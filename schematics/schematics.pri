@@ -7,7 +7,7 @@ INCLUDEPATH += $${PARSE_OUT_PWD}
 win32:QMAKE_CXXFLAGS += /bigobj
 
 LEXSOURCES += $$PWD/schematics_scanner.ll
-YACCSOURCES += $$PWD/schematics_parser.yy
+BISONSOURCES += $$PWD/schematics_parser.yy
 
 SOURCES += \
 	$$PWD/schematicsdata.cpp \

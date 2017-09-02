@@ -4,13 +4,18 @@
 
 #include <QString>
 
-#include "schematicsdata.h"
+#include "schematics/schematicsscanner.h"
 
 void schematics_error(const char *s);
 #define YY_DECL int schematics::SchematicsScanner::schematicslex( \
 	schematics::SchematicsParser::semantic_type* schematicslval, \
 	schematics::SchematicsData *schematicsdata)
 %}
+
+%top {
+#include "schematics_parser/schematics_parser.h"
+#include "schematics/schematicsdata.h"
+}
 
 %option yywrap
 %option nounput

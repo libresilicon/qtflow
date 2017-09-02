@@ -18,8 +18,8 @@
 #include <iostream>
 #include <string>
 #include <QString>
-#include "lefdata.h"
-#include "lefscanner.h"
+#include "lef/lefdata.h"
+#include "lef/lefscanner.h"
 
 #define leflex (lefdata->getLexer())->leflex
 #define leflineno (int)(lefdata->getLexer())->lineno()

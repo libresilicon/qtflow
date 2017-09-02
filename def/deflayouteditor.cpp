@@ -2,7 +2,7 @@
 #include <QAbstractScrollArea>
 
 #include "defdata.h"
-#include "lefdata.h"
+#include "../lef/lefdata.h"
 
 DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),

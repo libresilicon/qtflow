@@ -2,9 +2,9 @@
     #include <iostream>
     #include <sstream>
     #include <cassert>
-	#include "vcdscanner.h"
-	#include "vcd_parser.h"
-    #include "location.hh"
+	#include "vcd/vcdscanner.h"
+	#include "vcd_parser/vcd_parser.h"
+	#include "vcd_parser/location.hh"
 
     using std::cout;
     using std::stringstream;
@@ -12,7 +12,7 @@
     //Called everytime a token matches
     //This advances the end of the location to the end
     //of the token.
-    #define YY_USER_ACTION loc_.columns(YYLeng());
+	#define YY_USER_ACTION loc_.columns(YYLeng());
 
 %}
 
@@ -72,7 +72,7 @@ ENDL (\n|\n\r)
 
 %{
     //Run everytime yylex is called
-    loc_.step(); //Move begining of location to end
+	loc_.step(); //Move begining of location to end
 %}
 
 <INITIAL,changevalues,var,varid>
@@ -154,7 +154,7 @@ $var                                            {
                                                     if(ss.fail() || !ss.eof()) {
                                                         stringstream msg_ss;
                                                         msg_ss << "Failed to parse var width '" << YYText() << "'";
-                                                        throw vcdparse::ParseError(msg_ss.str(), loc_);
+														throw vcd::ParseError(msg_ss.str(), loc_);
                                                     }
                                                     BEGIN(varid);
                                                     /*cout << "Time: " << val << " '" << YYText() << "'\n";*/
@@ -234,7 +234,7 @@ $dumpvars                                       {
                                                     if(ss.fail() || !ss.eof()) {
                                                         stringstream msg_ss;
                                                         msg_ss << "Failed to parse Time value '" << YYText() << "'";
-                                                        throw vcdparse::ParseError(msg_ss.str(), loc_);
+														throw vcd::ParseError(msg_ss.str(), loc_);
                                                     }
                                                     /*cout << "Time: " << YYText() << "\n";*/
 													return vcd::VCDParser::make_Time(val, loc_);
@@ -250,7 +250,7 @@ $dumpvars                                       {
                                                     /*cout << "Unrecognized: " << YYText() << "\n";*/
                                                     stringstream ss;
                                                     ss << "Unexpected character '" << YYText() << "'";
-                                                    throw vcdparse::ParseError(ss.str(), loc_);
+													throw vcd::ParseError(ss.str(), loc_);
                                                 }
 
 <<EOF>>                                         { 

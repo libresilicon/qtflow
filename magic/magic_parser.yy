@@ -18,8 +18,8 @@
 #include <iostream>
 #include <string>
 #include <QString>
-#include "magicdata.h"
-#include "magicscanner.h"
+#include "magic/magicdata.h"
+#include "magic/magicscanner.h"
 
 #define magiclex (magicdata->getLexer())->magiclex
 #define magiclineno (int)(magicdata->getLexer())->lineno()

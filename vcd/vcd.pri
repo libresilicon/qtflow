@@ -5,7 +5,7 @@ PARSE_OUT_PWD = $$OUT_PWD/vcd
 win32:QMAKE_CXXFLAGS += /bigobj
 
 LEXSOURCES += $$PWD/vcd_scanner.ll
-YACCSOURCES += $$PWD/vcd_parser.yy
+BISONSOURCES += $$PWD/vcd_parser.yy
 
 SOURCES += \
 	$$PWD/vcdata.cpp \
