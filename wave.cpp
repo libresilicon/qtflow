@@ -47,7 +47,7 @@ void Wave::loadVcd(QString path)
 		vcd::VCData data(path);
 
 		list->reset();
-		tree->setVcd(data.getVCD());
+		//tree->setVcd(data.getVCD());
 		scene->clear();
 	}
 }

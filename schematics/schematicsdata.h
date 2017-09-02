@@ -1,9 +1,8 @@
 #ifndef SCHEMATICSDATA_H
 #define SCHEMATICSDATA_H
 
-#include "schematicsscanner.h"
-
 namespace schematics {
+	class SchematicsScanner;
 	class SchematicsData
 	{
 	public:

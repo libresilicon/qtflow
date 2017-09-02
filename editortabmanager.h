@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QTabWidget>
 #include "codeeditorwidget.h"
-#include "schematicseditorwidget.h"
+#include "schematics/schematicseditorwidget.h"
 #include "magiclayouteditorwidget.h"
 #include "deflayouteditorwidget.h"
 

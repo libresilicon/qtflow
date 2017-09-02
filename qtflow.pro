@@ -41,14 +41,12 @@ QMAKE_CXXFLAGS += -lPythonQt_QtAll
 FLEXSOURCES = \
 magic_scanner.ll \
 vcd_scanner.ll \
-schematics_scanner.ll \
 lef_scanner.ll \
 def_scanner.ll
 
 BISONSOURCES = \
 magic_parser.yy \
 vcd_parser.yy \
-schematics_parser.yy \
 lef_parser.yy \
 def_parser.yy
 
@@ -85,14 +83,10 @@ moduleselector.cpp \
 editorwidget.cpp \
 editortabmanager.cpp \
 codeeditorwidget.cpp \
-schematicseditorwidget.cpp \
-schematicseditor.cpp \
 vcdscanner.cpp \
 magicscanner.cpp \
 magicdata.cpp \
 vcdata.cpp \
-schematicsdata.cpp \
-schematicsscanner.cpp \
 magiclayouteditorwidget.cpp \
 magiclayouteditor.cpp \
 deflayouteditorwidget.cpp \
@@ -137,15 +131,11 @@ moduleselector.h \
 editorwidget.h \
 editortabmanager.h \
 codeeditorwidget.h \
-schematicseditorwidget.h \
-schematicseditor.h \
 ieditor.h \
 vcdscanner.h \
 magicscanner.h \
 magicdata.h \
 vcdata.h \
-schematicsdata.h \
-schematicsscanner.h \
 vcdcommon.h \
 magiclayouteditorwidget.h \
 magiclayouteditor.h \
@@ -226,3 +216,4 @@ RESOURCES = qtflow.qrc
 include(PythonQt/src/src.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
+include(schematics/schematics.pri)

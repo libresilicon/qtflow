@@ -1,4 +1,5 @@
 #include "schematicsdata.h"
+#include "schematicsscanner.h"
 
 namespace schematics {
 	SchematicsData::SchematicsData() :

@@ -7,16 +7,14 @@
 #undef yyFlexLexer
 #endif
 
-#include "vcdcommon.h"
-#include "vcd.yy.h"
-
 namespace vcd {
 	class VCData;
 	class VCDScanner : public vcdFlexLexer
 	{
 	public:
 		VCDScanner(std::istream* in = 0, std::ostream* out = &std::cout);
-		int vcdlex(YYSTYPE* yylval, vcd::VCData *vcdata);
+		//int vcdlex(YYSTYPE* yylval, vcd::VCData *vcdata);
+		int yylex();
 	};
 }
 
