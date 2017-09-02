@@ -4,7 +4,7 @@ PARSE_OUT_PWD = $$OUT_PWD/def
 # This was needed to work around "number of sections exceeded object file format limit" linker error
 win32:QMAKE_CXXFLAGS += /bigobj
 
-LEXSOURCES += $$PWD/def_scanner.ll
+FLEXSOURCES += $$PWD/def_scanner.ll
 BISONSOURCES += $$PWD/def_parser.yy
 
 SOURCES += \

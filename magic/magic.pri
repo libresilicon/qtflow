@@ -1,10 +1,7 @@
-
-PARSE_OUT_PWD = $$OUT_PWD/magic
-
 # This was needed to work around "number of sections exceeded object file format limit" linker error
 win32:QMAKE_CXXFLAGS += /bigobj
 
-LEXSOURCES += $$PWD/magic_scanner.ll
+FLEXSOURCES += $$PWD/magic_scanner.ll
 BISONSOURCES += $$PWD/magic_parser.yy
 
 SOURCES += \
