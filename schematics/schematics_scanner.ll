@@ -15,7 +15,6 @@ void schematics_error(const char *s);
 %option header-file="schematics.ll.h"
 %option yywrap
 %option nounput
-%option stack
 %option prefix="schematics"
 
 LIBS			"LIBS"
