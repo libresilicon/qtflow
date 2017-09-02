@@ -1,7 +1,7 @@
 #include "wave.h"
 #include "ui_wave.h"
 
-#include "vcdata.h"
+#include "vcd/vcdata.h"
 
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),

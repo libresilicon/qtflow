@@ -5,8 +5,8 @@
 #include <QTabWidget>
 #include "codeeditorwidget.h"
 #include "schematics/schematicseditorwidget.h"
-#include "magiclayouteditorwidget.h"
-#include "deflayouteditorwidget.h"
+#include "magic/magiclayouteditorwidget.h"
+#include "def/deflayouteditorwidget.h"
 
 class EditorTabManager : public QTabWidget
 {

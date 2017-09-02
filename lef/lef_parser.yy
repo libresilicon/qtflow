@@ -1,5 +1,4 @@
 %define api.prefix {lef}
-%defines "lef.yy.h"
 %error-verbose
 %language "c++"
 %glr-parser

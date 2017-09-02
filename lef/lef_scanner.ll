@@ -9,7 +9,6 @@
 	lef::LEFData *lefdata)
 %}
 
-%option header-file="lef.ll.h"
 %option prefix="lef"
 %option c++
 %option batch

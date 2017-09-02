@@ -7,7 +7,7 @@
 #undef yyFlexLexer
 #endif
 
-#include "schematics.yy.h"
+#include "schematics/schematics.yy.h"
 
 namespace schematics {
 	class SchematicsScanner : public schematicsFlexLexer

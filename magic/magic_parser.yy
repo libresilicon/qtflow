@@ -1,5 +1,4 @@
 %define api.prefix {magic}
-%defines "magic.yy.h"
 %error-verbose
 %language "c++"
 %glr-parser

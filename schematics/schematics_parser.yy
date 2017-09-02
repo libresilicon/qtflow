@@ -1,4 +1,3 @@
-%defines "schematics.yy.h"
 %error-verbose
 %define "parser_class_name" {SchematicsParser}
 %define api.prefix {schematics}

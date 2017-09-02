@@ -1,8 +1,8 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#include "vcdtreemodel.h"
-#include "vcdlistmodel.h"
+#include "vcd/vcdtreemodel.h"
+#include "vcd/vcdlistmodel.h"
 
 #include <QGraphicsScene>
 #include <QDockWidget>

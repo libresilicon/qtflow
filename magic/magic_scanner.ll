@@ -9,7 +9,6 @@
 	magic::MagicData *magicdata)
 %}
 
-%option header-file="magic.ll.h"
 %option prefix="magic"
 %option c++
 %option batch

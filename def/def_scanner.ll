@@ -9,7 +9,6 @@
 	def::DEFData *defdata)
 %}
 
-%option header-file="def.ll.h"
 %option prefix="def"
 %option c++
 %option batch

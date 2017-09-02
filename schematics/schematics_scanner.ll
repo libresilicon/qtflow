@@ -12,7 +12,6 @@ void schematics_error(const char *s);
 	schematics::SchematicsData *schematicsdata)
 %}
 
-%option header-file="schematics.ll.h"
 %option yywrap
 %option nounput
 %option prefix="schematics"

@@ -1,5 +1,4 @@
 %define api.prefix {def}
-%defines "def.yy.h"
 %error-verbose
 %language "c++"
 %glr-parser

@@ -139,6 +139,25 @@ RESOURCES = qtflow.qrc
 include(PythonQt/src/src.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
+
+#flex definition
+flex.name = Flex
+flex.input = LEXSOURCES
+flex.output = $${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.cpp
+flex.commands = flex++ --header-file=$${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.h -o $${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_OUT} ${QMAKE_FILE_IN}
+flex.variable_out = SOURCES
+flexsource.CONFIG += target_predeps
+QMAKE_EXTRA_COMPILERS += flex
+
+#bison definition
+bison.name = Bison
+bison.input = YACCSOURCES
+bison.output = $${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.cpp
+bison.commands = bison -Lc++ -d --defines=$${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.h -o $${OUT_PWD}/${QMAKE_FILE_BASE}/${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
+bison.variable_out = SOURCES
+bison.CONFIG += target_predeps
+QMAKE_EXTRA_COMPILERS += bison
+
 include(schematics/schematics.pri)
 include(magic/magic.pri)
 include(vcd/vcd.pri)
