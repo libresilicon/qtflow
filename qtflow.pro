@@ -38,15 +38,9 @@ QMAKE_CXXFLAGS += -lpython2.7
 QMAKE_CXXFLAGS += -lPythonQt
 QMAKE_CXXFLAGS += -lPythonQt_QtAll
 
-FLEXSOURCES = \
-vcd_scanner.ll \
-lef_scanner.ll \
-def_scanner.ll
+FLEXSOURCES = def_scanner.ll
 
-BISONSOURCES = \
-vcd_parser.yy \
-lef_parser.yy \
-def_parser.yy
+BISONSOURCES = def_parser.yy
 
 OTHER_FILES +=  \
 $$FLEXSOURCES \
@@ -71,8 +65,6 @@ modulestreemodel.cpp \
 moduleslistmodel.cpp \
 new.cpp \
 wave.cpp \
-vcdtreemodel.cpp \
-vcdlistmodel.cpp \
 headlessmainapp.cpp \
 settings.cpp \
 fileselector.cpp \
@@ -81,16 +73,12 @@ moduleselector.cpp \
 editorwidget.cpp \
 editortabmanager.cpp \
 codeeditorwidget.cpp \
-vcdscanner.cpp \
-vcdata.cpp \
 deflayouteditorwidget.cpp \
 deflayouteditor.cpp \
 qtflowfilelist.cpp \
 testbenchtoolbox.cpp \
 synthesistoolbox.cpp \
 projectsettings.cpp \
-lefscanner.cpp \
-lefdata.cpp \
 defscanner.cpp \
 defdata.cpp \
 pythonconsoledockwidget.cpp \
@@ -115,8 +103,6 @@ modulestreemodel.h \
 moduleslistmodel.h \
 new.h \
 wave.h \
-vcdtreemodel.h \
-vcdlistmodel.h \
 headlessmainapp.h \
 settings.h \
 fileselector.h \
@@ -126,17 +112,12 @@ editorwidget.h \
 editortabmanager.h \
 codeeditorwidget.h \
 ieditor.h \
-vcdscanner.h \
-vcdata.h \
-vcdcommon.h \
 deflayouteditorwidget.h \
 deflayouteditor.h \
 qtflowfilelist.h \
 testbenchtoolbox.h \
 synthesistoolbox.h \
 projectsettings.h \
-lefscanner.h \
-lefdata.h \
 defdata.h \
 defscanner.h \
 pythonconsoledockwidget.h \
@@ -208,3 +189,5 @@ include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt
 include(PythonQt/generated_cpp_56/com_trolltech_qt_gui_builtin/com_trolltech_qt_gui_builtin.pri)
 include(schematics/schematics.pri)
 include(magic/magic.pri)
+include(vcd/vcd.pri)
+include(lef/lef.pri)
