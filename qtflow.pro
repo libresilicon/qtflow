@@ -38,10 +38,6 @@ QMAKE_CXXFLAGS += -lpython2.7
 QMAKE_CXXFLAGS += -lPythonQt
 QMAKE_CXXFLAGS += -lPythonQt_QtAll
 
-FLEXSOURCES = def_scanner.ll
-
-BISONSOURCES = def_parser.yy
-
 OTHER_FILES +=  \
 $$FLEXSOURCES \
 $$BISONSOURCES
@@ -73,14 +69,10 @@ moduleselector.cpp \
 editorwidget.cpp \
 editortabmanager.cpp \
 codeeditorwidget.cpp \
-deflayouteditorwidget.cpp \
-deflayouteditor.cpp \
 qtflowfilelist.cpp \
 testbenchtoolbox.cpp \
 synthesistoolbox.cpp \
 projectsettings.cpp \
-defscanner.cpp \
-defdata.cpp \
 pythonconsoledockwidget.cpp \
     pysettings.cpp \
     pyprojectsettings.cpp
@@ -112,14 +104,10 @@ editorwidget.h \
 editortabmanager.h \
 codeeditorwidget.h \
 ieditor.h \
-deflayouteditorwidget.h \
-deflayouteditor.h \
 qtflowfilelist.h \
 testbenchtoolbox.h \
 synthesistoolbox.h \
 projectsettings.h \
-defdata.h \
-defscanner.h \
 pythonconsoledockwidget.h \
     pysettings.h \
     pyprojectsettings.h
@@ -146,42 +134,6 @@ synthesistoolbox.ui \
 projectsettings.ui \
 console.ui
 
-flexsource.input = FLEXSOURCES
-flexsource.output = ${QMAKE_FILE_BASE}.cpp
-flexsource.commands = flex++ --header-file=${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
-flexsource.variable_out = SOURCES
-flexsource.name = Flex Sources ${QMAKE_FILE_IN}
-flexsource.CONFIG += target_predeps
-
-QMAKE_EXTRA_COMPILERS += flexsource
-
-flexheader.input = FLEXSOURCES
-flexheader.output = ${QMAKE_FILE_BASE}.h
-flexheader.commands = @true
-flexheader.variable_out = HEADERS
-flexheader.name = Flex Headers ${QMAKE_FILE_IN}
-flexheader.CONFIG += target_predeps no_link
-
-QMAKE_EXTRA_COMPILERS += flexheader
-
-bisonsource.input = BISONSOURCES
-bisonsource.output = ${QMAKE_FILE_BASE}.cpp
-bisonsource.commands = bison -Lc++ -d --defines=${QMAKE_FILE_BASE}.h -o ${QMAKE_FILE_BASE}.cpp ${QMAKE_FILE_IN}
-bisonsource.variable_out = SOURCES
-bisonsource.name = Bison Sources ${QMAKE_FILE_IN}
-bisonsource.CONFIG += target_predeps
-
-QMAKE_EXTRA_COMPILERS += bisonsource
-
-bisonheader.input = BISONSOURCES
-bisonheader.output = ${QMAKE_FILE_BASE}.h
-bisonheader.commands = @true
-bisonheader.variable_out = HEADERS
-bisonheader.name = Bison Headers ${QMAKE_FILE_IN}
-bisonheader.CONFIG += target_predeps no_link
-
-QMAKE_EXTRA_COMPILERS += bisonheader
-
 RESOURCES = qtflow.qrc
 
 include(PythonQt/src/src.pri)
@@ -191,3 +143,4 @@ include(schematics/schematics.pri)
 include(magic/magic.pri)
 include(vcd/vcd.pri)
 include(lef/lef.pri)
+include(def/def.pri)
