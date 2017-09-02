@@ -9,6 +9,9 @@ namespace vcd {
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
+		std::cout << "opening file: " << stdfilename << std::endl;
+
+		trace_scanning = true;
 
 		streamname = filename;
 		input.open(stdfilename, std::ios::in);

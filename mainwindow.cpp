@@ -231,7 +231,7 @@ void MainWindow::on_menuSimulation_triggered()
 {
 	if(project) {
 		project->simulation();
-		timingWidget->loadVcd(project->getSynthesisDir()+'/'+project->getVCDFile());
+		timingWidget->loadVcd(project->getVCDPath());
 		timingWidget->setEnabled(true);
 		timingWidget->setVisible(true);
 	}

@@ -50,18 +50,21 @@
 
 %token POINT
 
-%token <v_char> ALPHANUM
+%token DOLLAR
 %token <v_char> SPECIAL
-%token <v_char> character
 %token <v_str> STRING
 %token <v_int> INTEGER
 
 %start vcd_file
+
 %%
 
-vcd_file:
-	  vcd_file definition
+vcd_file: definitions signal_list;
+
+definitions:
+	  definition definitions
 	| definition
+	| ENDDEFINITIONS END
 	;
 
 definition:
@@ -71,10 +74,6 @@ definition:
 	| scope
 	| upscope
 	| var
-	| ENDDEFINITIONS END
-	| value
-	| DUMPVARS
-	| END
 	;
 
 date: DATE STRING END
@@ -112,10 +111,17 @@ var:
 value: word SPECIAL;
 
 word:
-	  word ALPHANUM
-	| ALPHANUM
+	  DOLLAR word
+	| DOLLAR END
 	| %empty
 ;
+
+signal_list:
+	  signal_state
+	| signal_state signal_list
+	;
+
+signal_state: STRING DOLLAR;
 
 %%
 

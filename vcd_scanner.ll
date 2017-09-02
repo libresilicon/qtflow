@@ -31,10 +31,11 @@ USCOPE				"$upscope"
 VAR					"$var"
 ENDDEFINITIONS		"$enddefinitions"
 DUMPVARS			"$dumpvars"
+DOLLAR				"$"
 
 %%
 
-[ \n\t\r]+	{}
+[ \n\t\r]+				{ /* skip spaces */ }
 
 END						{ return vcd::VCDParser::token::END;       }
 DATE					{ return vcd::VCDParser::token::DATE;      }
@@ -45,8 +46,8 @@ USCOPE					{ return vcd::VCDParser::token::UPSCOPE;   }
 VAR						{ return vcd::VCDParser::token::VAR;       }
 ENDDEFINITIONS			{ return vcd::VCDParser::token::ENDDEFINITIONS; }
 DUMPVARS				{ return vcd::VCDParser::token::DUMPVARS; }
+STRING					{ return vcd::VCDParser::token::STRING; }
 
-[[:alnum:]]				{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::ALPHANUM; }
-[[:cntrl:][:punct:]]	{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::SPECIAL;  }
+DOLLAR					{ vcdlval->v_char = yytext[0]; return vcd::VCDParser::token::DOLLAR; }
 
 %%

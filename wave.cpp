@@ -43,9 +43,8 @@ void Wave::loadVcd(QString path)
 {
 	QFile file(path);
 
-	if (file.exists()) if(file.open(QIODevice::ReadOnly)) {
-		QByteArray content(file.readAll());
-		vcd::VCData data(content);
+	if (file.exists()) {
+		vcd::VCData data(path);
 
 		list->reset();
 		tree->setVcd(data.getVCD());
