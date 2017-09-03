@@ -31,7 +31,7 @@ class Loader {
         bool load(std::string filename);
         bool load(std::istream& is, std::string filename="<inputstream>");
 
-        const VcdData& get_vcd_data() { return vcd_data_; };
+		VcdData get_vcd_data();
 
     protected:
         virtual void on_error(ParseError& error);

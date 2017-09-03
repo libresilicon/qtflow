@@ -8,7 +8,8 @@ SOURCES += \
 	$$PWD/vcd_data.cpp \
 	$$PWD/vcdlistmodel.cpp \
 	$$PWD/vcd_loader.cpp \
-	$$PWD/vcdtreemodel.cpp
+	$$PWD/vcdtreemodel.cpp \
+	$$PWD/vcdtreeitem.cpp
 
 HEADERS += \
 	$$PWD/vcdlistmodel.h \
@@ -18,4 +19,5 @@ HEADERS += \
 	$$PWD/vcd_error.hpp \
 	$$PWD/vcd_lexer.hpp \
 	$$PWD/vcd_loader.hpp \
-	$$PWD/vcdparse.hpp
+	$$PWD/vcdparse.hpp \
+	$$PWD/vcdtreeitem.h

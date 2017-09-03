@@ -27,6 +27,11 @@ bool Loader::load(std::string filename) {
     return load(is, filename);
 }
 
+VcdData Loader::get_vcd_data()
+{
+	return vcd_data_;
+}
+
 bool Loader::load(std::istream& is, std::string filename) {
     assert(is.good());
 
