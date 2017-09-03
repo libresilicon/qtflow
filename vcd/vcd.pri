@@ -5,14 +5,11 @@ FLEXSOURCES += $$PWD/vcd_scanner.ll
 BISONSOURCES += $$PWD/vcd_parser.yy
 
 SOURCES += \
-	$$PWD/vcdata.cpp \
 	$$PWD/vcdlistmodel.cpp \
-	$$PWD/vcdscanner.cpp \
 	$$PWD/vcdtreemodel.cpp \
 	$$PWD/vcd_loader.cpp
 
 HEADERS += \
-	$$PWD/vcdata.h \
 	$$PWD/vcdcommon.h \
 	$$PWD/vcderror.h \
 	$$PWD/vcdlistmodel.h \

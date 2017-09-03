@@ -26,9 +26,9 @@
 %define api.token.prefix {TOKEN_}
 
 /* Wrap everything in our namespace */
-%define api.namespace {vcd}
+%define api.namespace {vcdparse}
 
-%define parser_class_name {VCDParser}
+%define parser_class_name {Parser}
 
 /* Extra checks for correct usage */
 %define parse.assert
@@ -52,38 +52,41 @@
 %token-table
 
 /* The parser expects the lexer to be provided as a constructor argument */
-%parse-param {vcd::VCDScanner* lexer}
-%parse-param {vcd::VCDLoader* driver}
+%parse-param {vcdparse::Lexer& lexer}
+%parse-param {vcdparse::Loader& driver}
 
 /* Our yylex implementation expects the lexer to be passed as an argument */
-/* %lex-param {vcd::VCDScanner* lexer} */
+%lex-param {vcdparse::Lexer& lexer}
 
-%{
-	namespace vcd {
-		class VCDScanner;
-		class VCData;
+%code requires {
+    namespace vcdparse {
+        class Lexer;
+        class Loader;
     }
 
-	#include "vcd/vcderror.h"
-	#include "vcd/vcdata_types.h"
-	#include "vcd/vcdata.h"
-	#include "vcd_parser/vcd_parser.h"
-	#include "vcd/vcdscanner.h"
-	#include "vcd/vcd_loader.hpp"
+    #include "vcd_error.hpp"
+    #include "vcd_data.hpp"
 
     //This is not defined by default for some reason...
     #define YY_NULLPTR nullptr
-
-	#define vcdlex (vcdata->getLexer())->vcdlex
-	//#define yylex (vcdata->getLexer())->newlex
-	#define vcdlineno (int)(vcdata->getLexer())->lineno()
-%}
+}
 
 %code top {
-#include <iostream> //For cout in error reporting
-#include <sstream> //For cout in error reporting
-using std::cout;
-using std::stringstream;
+
+    #include "vcd_lexer.hpp"
+    #include "vcd_loader.hpp"
+
+    //Bison calls yylex() to get the next token.
+    //Since we have re-defined the equivalent function in the lexer
+    //we need to tell Bison how to get the next token.
+    static vcdparse::Parser::symbol_type yylex(vcdparse::Lexer& lexer) {
+        return lexer.next_token();
+    }
+
+    #include <iostream> //For cout in error reporting
+    #include <sstream> //For cout in error reporting
+    using std::cout;
+    using std::stringstream;
 }
 
 %token DATE "$date"
@@ -210,6 +213,6 @@ LogicValue : LOGIC_ONE    { $$ = vcdparse::LogicValue::ONE; }
 %%
 
 //We need to provide an implementation for parser error handling
-void vcd::VCDParser::error(const vcd::location& loc, const std::string& msg) {
-	throw vcd::ParseError(msg, loc);
+void vcdparse::Parser::error(const vcdparse::location& loc, const std::string& msg) {
+    throw vcdparse::ParseError(msg, loc);
 }
