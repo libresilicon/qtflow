@@ -34,6 +34,9 @@
 /* no default rule to echo unrecongaized tokens to output */
 %option nodefault
 
+%option debug
+%option verbose
+
 /* 
  * We want the yylex() member function to be implemented
  * in our class, rather than in the FlexLexer parent class.
@@ -244,14 +247,14 @@ $dumpvars                                       {
                                                 }
 
 <*>
-.                                               { 
-                                                    /*cout << "Unrecognized: " << YYText() << "\n";*/
-                                                    stringstream ss;
-                                                    ss << "Unexpected character '" << YYText() << "'";
-													throw vcd::ParseError(ss.str(), loc_);
-                                                }
+.                                               {
+													/*cout << "Unrecognized: " << YYText() << "\n";*/
+													//stringstream ss;
+													//ss << "Unexpected character '" << YYText() << "'";
+													//throw vcd::ParseError(ss.str(), loc_);
+												}
 
-<<EOF>>                                         { 
+<<EOF>>                                         {
                                                     /*cout << "EOF\n";*/
 													return vcd::Parser::make_EOF(loc_);
                                                 }

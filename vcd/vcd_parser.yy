@@ -47,6 +47,7 @@
 
 /* Track locations */
 %locations
+%debug
 
 /* Generate a table of token names */
 %token-table
@@ -127,7 +128,6 @@
 %type <LogicValue> LogicValue
 %type <std::vector<Var>> definitions
 
-
 %start vcd_file
 
 %initial-action {
@@ -181,28 +181,53 @@ var : VAR var_type Integer VarId String END {
         }
     ;
 
-var_type : WIRE { $$ = Var::Type::WIRE; }
-         | REG { $$ = Var::Type::REG; }
-         | PARAMETER { $$ = Var::Type::PARAMETER; }
-         ;
+var_type :
+WIRE
+{
+	$$ = Var::Type::WIRE;
+}
+|
+REG
+{
+	$$ = Var::Type::REG;
+}
+|
+PARAMETER
+{
+	$$ = Var::Type::PARAMETER;
+}
+;
 
 upscope : UPSCOPE END { }
         ;
 
 enddefinitions : ENDDEFINITIONS END { }
 
-change_list : Time DUMPVARS  { driver.curr_time_ = $1; }
-            | change_list Time  { driver.curr_time_ = $2; }
-            | change_list LogicValue VarId { 
-                    driver.time_values_.push_back(TimeValue(driver.curr_time_, driver.generate_var_id($3), $2));
+change_list :
+Time DUMPVARS
+{
+	driver.curr_time_ = $1;
+}
+|
+change_list Time
+{
+	driver.curr_time_ = $2;
+}
+|
+change_list LogicValue VarId
+{
+	driver.time_values_.push_back(TimeValue(driver.curr_time_, driver.generate_var_id($3), $2));
 
-                    driver.change_count_++;
-                    if(driver.change_count_ % 10000000 == 0) {
-                        cout << "Loaded " << driver.change_count_ / 1.e6 << "M changes" << std::endl;
-                    }
-                }
-            | change_list END { }
-            ;
+	driver.change_count_++;
+	if(driver.change_count_ % 10000000 == 0) {
+		cout << "Loaded " << driver.change_count_ / 1.e6 << "M changes" << std::endl;
+	}
+}
+|
+change_list END
+{
+}
+;
 
 LogicValue : LOGIC_ONE    { $$ = vcd::LogicValue::ONE; }
 		   | LOGIC_ZERO   { $$ = vcd::LogicValue::ZERO; }

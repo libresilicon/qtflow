@@ -2,7 +2,7 @@
 #include "ui_wave.h"
 
 #include "vcd_parser/location.hh"
-#include "vcd/vcd_data.hpp"
+#include "vcd/vcd_loader.hpp"
 
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),
@@ -45,11 +45,12 @@ void Wave::loadVcd(QString path)
 	QFile file(path);
 
 	if (file.exists()) {
-		//vcd::VCData data(path);
-
-		list->reset();
-		//tree->setVcd(data.getVCD());
-		scene->clear();
+		vcd::Loader loader;
+		if(loader.load(path.toStdString())) {
+			list->reset();
+			//tree->setVcd(data.getVCD());
+			scene->clear();
+		}
 	}
 }
 

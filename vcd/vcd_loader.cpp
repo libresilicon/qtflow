@@ -7,10 +7,12 @@
 
 namespace vcd {
 
-Loader::Loader()
-    : filename_("") //Initialize the filename
-    , lexer_(new Lexer())
-    , parser_(new Parser(*lexer_, *this)) {
+Loader::Loader() :
+	filename_(""), //Initialize the filename
+	lexer_(new Lexer()),
+	parser_(new Parser(*lexer_, *this))
+{
+	//parser_->set_debug_level(true);
 }
 
 

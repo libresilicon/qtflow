@@ -12,8 +12,6 @@ SOURCES += \
 
 HEADERS += \
 	$$PWD/vcdlistmodel.h \
-	$$PWD/vcd_loader.h \
-	$$PWD/vcdscanner.h \
 	$$PWD/vcdtreemodel.h \
 	$$PWD/vcd_data_fwd.hpp \
 	$$PWD/vcd_data.hpp \
