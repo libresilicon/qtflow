@@ -14,8 +14,8 @@ namespace vcd {
 	{
 	public:
 		VCDScanner(std::istream* in = 0, std::ostream* out = &std::cout);
-		int vcdlex(vcd::VCDParser::semantic_type* yylval, vcd::VCData *vcdata);
-		int yylex();
+		vcd::VCDParser::symbol_type vcdlex(vcd::VCDParser::semantic_type* yylval, vcd::VCData *vcdata);
+		vcd::VCDParser::symbol_type newlex();
 	};
 }
 

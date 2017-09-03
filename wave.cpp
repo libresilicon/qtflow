@@ -1,6 +1,8 @@
 #include "wave.h"
 #include "ui_wave.h"
 
+#include "vcd_parser/location.hh"
+#include "vcd/vcdata_types.h"
 #include "vcd/vcdata.h"
 
 Wave::Wave(QWidget *parent) :

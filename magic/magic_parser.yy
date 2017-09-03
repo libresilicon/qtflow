@@ -49,12 +49,9 @@
 %token RLABEL
 %token FLABEL
 
-%token INTEGER
-%type <v_int> INTEGER
-%token STRING
-%type <v_str> STRING
-%token DOUBLE
-%type <v_double> DOUBLE
+%token <v_int> INTEGER
+%token <v_str> STRING
+%token <v_double> DOUBLE
 
 %start magic_file
 %%

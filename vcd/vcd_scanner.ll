@@ -1,26 +1,25 @@
 %{
-    #include <iostream>
-    #include <sstream>
-    #include <cassert>
+#include <iostream>
+#include <sstream>
+#include <cassert>
 
-    using std::cout;
-    using std::stringstream;
+#include "vcd_parser/location.hh"
+#include "vcd/vcdata_types.h"
+#include "vcd/vcdata.h"
+#include "vcd_parser/vcd_parser.h"
+#include "vcd/vcdscanner.h"
+#include "vcd_parser/location.hh"
 
-    //Called everytime a token matches
-    //This advances the end of the location to the end
-    //of the token.
-	//#define YY_USER_ACTION loc_.columns(YYLeng());
-	#include "vcd/vcdata.h"
-	//#define YY_DECL int vcd::VCDScanner::vcdlex(\
-	//	vcd::VCDParser::semantic_type* vcdlval,\
-	//	vcd::VCDData *vcddata)
+//Called everytime a token matches
+//This advances the end of the location to the end
+//of the token.
+#define YY_DECL vcd::VCDParser::symbol_type vcd::VCDScanner::vcdlex(\
+	vcd::VCDParser::semantic_type* vcdlval,\
+	vcd::VCData *vcdata)
+
+static vcd::location loc_;
 
 %}
-
-%top{
-#include "vcd_parser/vcd_parser.h"
-#include "vcd_parser/location.hh"
-}
 
 /* Generate a C++ lexer */
 %option c++
@@ -153,18 +152,18 @@ $var                                            {
 													return vcd::VCDParser::make_END(loc_);
                                                 }
 <var>{DIGIT}+                                   {
-                                                    size_t val;
-                                                    stringstream ss(YYText());
-                                                    ss >> val;
+														size_t val;
+														std::stringstream ss(YYText());
+														ss >> val;
 
-                                                    if(ss.fail() || !ss.eof()) {
-                                                        stringstream msg_ss;
-                                                        msg_ss << "Failed to parse var width '" << YYText() << "'";
-														throw vcd::ParseError(msg_ss.str(), loc_);
-                                                    }
-                                                    BEGIN(varid);
-                                                    /*cout << "Time: " << val << " '" << YYText() << "'\n";*/
-													return vcd::VCDParser::make_Integer(val, loc_);
+														if(ss.fail() || !ss.eof()) {
+															std::stringstream msg_ss;
+															msg_ss << "Failed to parse var width '" << YYText() << "'";
+															throw vcd::VCDParser::syntax_error(loc_, msg_ss.str());
+														}
+														BEGIN(varid);
+														/*cout << "Time: " << val << " '" << YYText() << "'\n";*/
+														return vcd::VCDParser::make_Integer(val, loc_);
                                                 }
 ({ALPHA}|{SYMBOL})({ALPHA}{DIGIT}{SYMBOL})+     { 
                                                     /*cout << "Var String: " << YYText() << "\n"; */
@@ -188,11 +187,11 @@ $dumpvars                                       {
 													return vcd::VCDParser::make_END(loc_);
                                                 }
 <changevalues>
-^1                                              { 
-                                                     /*cout << "Logic_val: " << YYText() << "\n"; */
-                                                    BEGIN(change_varid);
+^1												{
+													/*cout << "Logic_val: " << YYText() << "\n"; */
+													BEGIN(change_varid);
 													return vcd::VCDParser::make_LOGIC_ONE(loc_);
-                                                }
+												}
 <changevalues>
 ^0                                              { 
                                                      /*cout << "Logic_val: " << YYText() << "\n"; */
@@ -232,15 +231,15 @@ $dumpvars                                       {
                                                     const char* begin = YYText() + 1;
                                                     const char* end = YYText() + YYLeng();
                                                     std::string str(begin, end);
-                                                    stringstream ss;
+													std::stringstream ss;
                                                     ss << str;
                                                     size_t val;
                                                     ss >> val;
 
                                                     if(ss.fail() || !ss.eof()) {
-                                                        stringstream msg_ss;
+														std::stringstream msg_ss;
                                                         msg_ss << "Failed to parse Time value '" << YYText() << "'";
-														throw vcd::ParseError(msg_ss.str(), loc_);
+														throw vcd::VCDParser::syntax_error(loc_, msg_ss.str());
                                                     }
                                                     /*cout << "Time: " << YYText() << "\n";*/
 													return vcd::VCDParser::make_Time(val, loc_);
@@ -254,9 +253,9 @@ $dumpvars                                       {
 <*>
 .                                               { 
                                                     /*cout << "Unrecognized: " << YYText() << "\n";*/
-                                                    stringstream ss;
+													std::stringstream ss;
                                                     ss << "Unexpected character '" << YYText() << "'";
-													throw vcd::ParseError(ss.str(), loc_);
+													throw vcd::VCDParser::syntax_error(loc_, ss.str());
                                                 }
 
 <<EOF>>                                         { 

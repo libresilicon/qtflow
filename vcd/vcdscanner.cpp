@@ -1,3 +1,6 @@
+#include "vcd_parser/location.hh"
+#include "vcd/vcdata_types.h"
+#include "vcd/vcdata.h"
 #include "vcd_parser/vcd_parser.h"
 #include "vcdscanner.h"
 

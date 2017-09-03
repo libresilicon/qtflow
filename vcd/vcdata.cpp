@@ -1,5 +1,7 @@
-#include "vcd_parser/vcd_parser.h"
+#include "vcd_parser/location.hh"
+#include "vcdata_types.h"
 #include "vcdata.h"
+#include "vcd_parser/vcd_parser.h"
 #include "vcdscanner.h"
 
 namespace vcd {
@@ -26,4 +28,9 @@ namespace vcd {
 		parser->parse();
 		input.close();
 	}
+
+	void newHeader(const Header new_header, std::vector<Var> new_vars, TimeValues new_time_values)
+	{
+	}
+
 }
