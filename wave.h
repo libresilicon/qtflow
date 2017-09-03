@@ -33,9 +33,9 @@ public slots:
 
 private:
     Ui::Wave *ui;
-    VcdTreeModel *tree;
-    VcdListModel *list;
     QGraphicsScene *scene;
+	VcdTreeModel *tree;
+	VcdListModel *list;
 
     void drawSignals();
 };

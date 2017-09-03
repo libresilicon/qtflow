@@ -7,16 +7,12 @@
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),
     ui(new Ui::Wave),
-    tree(new VcdTreeModel),
-    list(new VcdListModel),
-    scene(new QGraphicsScene)
+	scene(new QGraphicsScene),
+	tree(NULL),
+	list(NULL)
 {
     ui->setupUi(this);
-    ui->treeView->setModel(tree);
-    ui->listView->setModel(list);
     ui->graphicsView->setScene(scene);
-
-    connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
 
     ui->treeView->setDragEnabled(true);
     ui->treeView->setDragDropMode(QAbstractItemView::DragOnly);
@@ -35,8 +31,6 @@ Wave::Wave(QWidget *parent) :
 Wave::~Wave()
 {
     delete ui;
-    delete tree;
-    delete list;
     delete scene;
 }
 
@@ -47,8 +41,12 @@ void Wave::loadVcd(QString path)
 	if (file.exists()) {
 		vcd::Loader loader;
 		if(loader.load(path.toStdString())) {
-			list->reset();
-			//tree->setVcd(data.getVCD());
+			if(tree) delete tree;
+			tree = new VcdTreeModel(loader.get_vcd_data());
+			ui->treeView->setModel(tree);
+
+			//ui->listView->setModel(list);
+			//connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
 			scene->clear();
 		}
 	}
@@ -62,9 +60,9 @@ void Wave::onSignalsChanged()
 
 void Wave::drawSignals()
 {
-    QList<int> sig = list->getSignals();
-    for (int i = 0; i < sig.size(); ++i)
-    {
+	//QList<int> sig = list->getSignals();
+	//for (int i = 0; i < sig.size(); ++i)
+	//{
 		/*vcd_changes_t::iterator it;
         vcd_changes_t changes = tree->getValues(sig.at(i));
 
@@ -112,5 +110,5 @@ void Wave::drawSignals()
             time = it->first;
             state = it->second;
 		}*/
-    }
+	//}
 }

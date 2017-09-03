@@ -42,6 +42,7 @@ namespace vcd {
             Type type() const { return type_; }
             size_t width() const { return width_; }
             std::string str_id() const { return str_id_; }
+			std::string str_type();
             Id id() const { return id_; }
             std::vector<std::string> hierarchical_name() const { return hierarchical_name_; }
             std::string name() const { return *(--hierarchical_name_.end()); }

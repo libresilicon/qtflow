@@ -2,6 +2,19 @@
 #include <iostream>
 
 namespace vcd {
+
+	std::string Var::str_type()
+	{
+		std::string ret;
+		if(type_==Type::WIRE)
+			ret = "WIRE";
+		if(type_==Type::REG)
+			ret = "REG";
+		if(type_==Type::PARAMETER)
+			ret = "PARAMETER";
+		return ret;
+	}
+
     std::ostream& operator<<(std::ostream& os, LogicValue val) {
         if(val == LogicValue::ONE) os << "1";
         else if(val == LogicValue::ZERO) os << "0";

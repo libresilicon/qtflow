@@ -1,20 +1,37 @@
+#include "vcd/vcd_data.hpp"
 #include "vcdtreeitem.h"
 #include "vcdtreemodel.h"
 
 #include <QStringList>
 
-VcdTreeModel::VcdTreeModel(const QString &data, QObject *parent)
+VcdTreeModel::VcdTreeModel(const vcd::VcdData &data, QObject *parent)
 	: QAbstractItemModel(parent)
 {
 	QList<QVariant> rootData;
-	rootData << "Title" << "Summary";
+	rootData << "SST";
 	rootItem = new VcdTreeItem(rootData);
-	setupModelData(data.split(QString("\n")), rootItem);
+	buildTree(data.vars());
 }
 
 VcdTreeModel::~VcdTreeModel()
 {
 	delete rootItem;
+}
+
+void VcdTreeModel::buildTree(std::vector<vcd::Var> data)
+{
+	VcdTreeItem *subItem = rootItem;
+	VcdTreeItem *subSubItem = NULL;
+	foreach(vcd::Var var, data) {
+		foreach(std::string s, var.hierarchical_name()) {
+			QList<QVariant> subData;
+			subData << QString::fromStdString(s);
+			subSubItem = new VcdTreeItem(subData,subItem);
+			subItem->appendChild(subSubItem);
+			subItem = subSubItem;
+		}
+		subItem = rootItem;
+	}
 }
 
 int VcdTreeModel::columnCount(const QModelIndex &parent) const
@@ -92,8 +109,8 @@ QModelIndex VcdTreeModel::parent(const QModelIndex &index) const
 int VcdTreeModel::rowCount(const QModelIndex &parent) const
 {
 	VcdTreeItem *parentItem;
-	if (parent.column() > 0)
-		return 0;
+	//if (parent.column() > 0)
+	//	return 0;
 
 	if (!parent.isValid())
 		parentItem = rootItem;
@@ -101,53 +118,4 @@ int VcdTreeModel::rowCount(const QModelIndex &parent) const
 		parentItem = static_cast<VcdTreeItem*>(parent.internalPointer());
 
 	return parentItem->childCount();
-}
-
-void VcdTreeModel::setupModelData(const QStringList &lines, VcdTreeItem *parent)
-{
-	QList<VcdTreeItem*> parents;
-	QList<int> indentations;
-	parents << parent;
-	indentations << 0;
-
-	int number = 0;
-
-	while (number < lines.count()) {
-		int position = 0;
-		while (position < lines[number].length()) {
-			if (lines[number].at(position) != ' ')
-				break;
-			position++;
-		}
-
-		QString lineData = lines[number].mid(position).trimmed();
-
-		if (!lineData.isEmpty()) {
-			// Read the column data from the rest of the line.
-			QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
-			QList<QVariant> columnData;
-			for (int column = 0; column < columnStrings.count(); ++column)
-				columnData << columnStrings[column];
-
-			if (position > indentations.last()) {
-				// The last child of the current parent is now the new parent
-				// unless the current parent has no children.
-
-				if (parents.last()->childCount() > 0) {
-					parents << parents.last()->child(parents.last()->childCount()-1);
-					indentations << position;
-				}
-			} else {
-				while (position < indentations.last() && parents.count() > 0) {
-					parents.pop_back();
-					indentations.pop_back();
-				}
-			}
-
-			// Append a new item to the current parent's list of children.
-			parents.last()->appendChild(new VcdTreeItem(columnData, parents.last()));
-		}
-
-		++number;
-	}
 }
