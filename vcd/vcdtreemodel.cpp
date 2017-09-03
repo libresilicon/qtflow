@@ -6,6 +6,7 @@
 #include <QDirIterator>
 #include <QTextStream>
 #include <QMimeData>
+#include <QDataStream>
 
 VcdItem::VcdItem(const QVector<QVariant> &data, VcdItem *parentItem)
 {
@@ -106,10 +107,9 @@ bool VcdItem::removeChildren(int position, int count)
 
 VcdTreeModel::VcdTreeModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , values(vcd_t())
 {
     QVector<QVariant> rootData;
-    rootData << "Scopes";
+	rootData << "Scopes";
     rootItem = new VcdItem(rootData);
 }
 
@@ -126,43 +126,6 @@ void VcdTreeModel::reset()
     rootData << "Scopes";
     rootItem = new VcdItem(rootData);
     endResetModel();
-}
-
-void VcdTreeModel::setVcd(vcd_t v)
-{
-    values = v;
-    reset();
-	setScopes(values.scope, rootItem);
-}
-
-vcd_changes_t VcdTreeModel::getValues(int index)
-{
-    if (values.changes.contains(index))
-        return values.changes[index];
-    return vcd_changes_t();
-}
-
-void VcdTreeModel::setScopes(vcd_scopes_t scopes, VcdItem *item)
-{
-    item->insertChildren(item->childCount(), 1, item->columnCount());
-    VcdItem *current = item->child(item->childCount() - 1);
-    current->setData(0, scopes.name);
-
-    QHash<int, QString>::const_iterator it;
-    for (it = scopes.alias.constBegin(); it != scopes.alias.constEnd(); ++it)
-    {
-        current->insertChildren(current->childCount(), 1, current->columnCount());
-        current->child(current->childCount() - 1)->setEnum(it.key());
-        current->child(current->childCount() - 1)->setData(0, it.value());
-    }
-
-    foreach (const vcd_scopes_t &s, scopes.scopes)
-        setScopes(s, current);
-}
-
-vcd_t& VcdTreeModel::vcd()
-{
-    return values;
 }
 
 QVariant VcdTreeModel::headerData(int section, Qt::Orientation orientation, int role) const

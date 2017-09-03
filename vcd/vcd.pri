@@ -11,10 +11,13 @@ SOURCES += \
 	$$PWD/vcdtreemodel.cpp
 
 HEADERS += \
-	$$PWD/vcdcommon.h \
-	$$PWD/vcderror.h \
 	$$PWD/vcdlistmodel.h \
+	$$PWD/vcd_loader.h \
 	$$PWD/vcdscanner.h \
 	$$PWD/vcdtreemodel.h \
-	$$PWD/vcdata_types.h \
-	$$PWD/vcd_loader.h
+	$$PWD/vcd_data_fwd.hpp \
+	$$PWD/vcd_data.hpp \
+	$$PWD/vcd_error.hpp \
+	$$PWD/vcd_lexer.hpp \
+	$$PWD/vcd_loader.hpp \
+	$$PWD/vcdparse.hpp

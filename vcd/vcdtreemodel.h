@@ -2,7 +2,6 @@
 #define VCDTREEMODEL_H
 
 #include <QAbstractItemModel>
-#include "vcdcommon.h"
 
 class VcdItem
 {
@@ -43,13 +42,6 @@ public:
 
     void reset();
 
-    void setVcd(vcd_t);
-    vcd_t& vcd();
-
-    vcd_changes_t getValues(int);
-
-    void setScopes(vcd_scopes_t scopes, VcdItem *item);
-
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -69,8 +61,6 @@ public:
 
 private:
     VcdItem *rootItem;
-
-    vcd_t values;
 };
 
 #endif // VCDTREEMODEL_H

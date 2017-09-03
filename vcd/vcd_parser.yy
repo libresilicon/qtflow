@@ -26,7 +26,7 @@
 %define api.token.prefix {TOKEN_}
 
 /* Wrap everything in our namespace */
-%define api.namespace {vcdparse}
+%define api.namespace {vcd}
 
 %define parser_class_name {Parser}
 
@@ -52,20 +52,20 @@
 %token-table
 
 /* The parser expects the lexer to be provided as a constructor argument */
-%parse-param {vcdparse::Lexer& lexer}
-%parse-param {vcdparse::Loader& driver}
+%parse-param {vcd::Lexer& lexer}
+%parse-param {vcd::Loader& driver}
 
 /* Our yylex implementation expects the lexer to be passed as an argument */
-%lex-param {vcdparse::Lexer& lexer}
+%lex-param {vcd::Lexer& lexer}
 
 %code requires {
-    namespace vcdparse {
+    namespace vcd {
         class Lexer;
         class Loader;
     }
 
-    #include "vcd_error.hpp"
-    #include "vcd_data.hpp"
+	#include "vcd/vcd_error.hpp"
+	#include "vcd/vcd_data.hpp"
 
     //This is not defined by default for some reason...
     #define YY_NULLPTR nullptr
@@ -73,13 +73,13 @@
 
 %code top {
 
-    #include "vcd_lexer.hpp"
-    #include "vcd_loader.hpp"
+	#include "vcd/vcd_lexer.hpp"
+	#include "vcd/vcd_loader.hpp"
 
     //Bison calls yylex() to get the next token.
     //Since we have re-defined the equivalent function in the lexer
     //we need to tell Bison how to get the next token.
-    static vcdparse::Parser::symbol_type yylex(vcdparse::Lexer& lexer) {
+	static vcd::Parser::symbol_type yylex(vcd::Lexer& lexer) {
         return lexer.next_token();
     }
 
@@ -87,6 +87,7 @@
     #include <sstream> //For cout in error reporting
     using std::cout;
     using std::stringstream;
+
 }
 
 %token DATE "$date"
@@ -203,16 +204,16 @@ change_list : Time DUMPVARS  { driver.curr_time_ = $1; }
             | change_list END { }
             ;
 
-LogicValue : LOGIC_ONE    { $$ = vcdparse::LogicValue::ONE; }
-           | LOGIC_ZERO   { $$ = vcdparse::LogicValue::ZERO; }
-           | LOGIC_UNKOWN { $$ = vcdparse::LogicValue::UNKOWN; }
-           | LOGIC_HIGHZ  { $$ = vcdparse::LogicValue::HIGHZ; }
+LogicValue : LOGIC_ONE    { $$ = vcd::LogicValue::ONE; }
+		   | LOGIC_ZERO   { $$ = vcd::LogicValue::ZERO; }
+		   | LOGIC_UNKOWN { $$ = vcd::LogicValue::UNKOWN; }
+		   | LOGIC_HIGHZ  { $$ = vcd::LogicValue::HIGHZ; }
            | BitString    { /* ignore for now */ }
            ;
 
 %%
 
 //We need to provide an implementation for parser error handling
-void vcdparse::Parser::error(const vcdparse::location& loc, const std::string& msg) {
-    throw vcdparse::ParseError(msg, loc);
+void vcd::Parser::error(const vcd::location& loc, const std::string& msg) {
+	throw vcd::ParseError(msg, loc);
 }

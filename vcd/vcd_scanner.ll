@@ -2,9 +2,9 @@
     #include <iostream>
     #include <sstream>
     #include <cassert>
-    #include "vcd_lexer.hpp"
-    #include "vcd_parser.gen.hpp"
-    #include "location.hh"
+	#include "vcd/vcd_lexer.hpp"
+	#include "vcd_parser/vcd_parser.h"
+	#include "vcd_parser/location.hh"
 
     using std::cout;
     using std::stringstream;
@@ -47,7 +47,7 @@
  * Use a prefix to avoid name clashes with other
  * flex lexers
  */
-%option prefix="VcdParse_" 
+%option prefix="vcd"
 
 /* Character classes */
 ALPHA [a-zA-Z]
@@ -82,67 +82,67 @@ ENDL (\n|\n\r)
 
 $end                                            {
                                                      /*cout << "END\n";  */
-                                                    return vcdparse::Parser::make_END(loc_); 
+													return vcd::Parser::make_END(loc_);
                                                 }
 
 $date                                           {
                                                      /*cout << "DATE\n";  */
                                                     BEGIN(multiline); 
-                                                    return vcdparse::Parser::make_DATE(loc_); 
+													return vcd::Parser::make_DATE(loc_);
                                                 }
 $version                                        { 
                                                     /* cout << "VERSION\n"; */ 
                                                     BEGIN(multiline); 
-                                                    return vcdparse::Parser::make_VERSION(loc_); 
+													return vcd::Parser::make_VERSION(loc_);
                                                 }
 $timescale                                      {
                                                      /*cout << "TIMESCALE\n";  */
                                                     BEGIN(multiline); 
-                                                    return vcdparse::Parser::make_TIMESCALE(loc_); 
+													return vcd::Parser::make_TIMESCALE(loc_);
                                                 }
 <multiline>.*                                   { 
                                                     /*cout << "Multiline: " << YYText() << "\n"; */
                                                     BEGIN(INITIAL);
-                                                    return vcdparse::Parser::make_Multiline(YYText(), loc_); 
+													return vcd::Parser::make_Multiline(YYText(), loc_);
                                                 }
 $scope                                          { 
                                                      /*cout << "SCOPE\n";  */
-                                                    return vcdparse::Parser::make_SCOPE(loc_); 
+													return vcd::Parser::make_SCOPE(loc_);
                                                 }
 module                                          { 
                                                      /*cout << "MODULE\n";  */
-                                                    return vcdparse::Parser::make_MODULE(loc_); 
+													return vcd::Parser::make_MODULE(loc_);
                                                 }
 $upscope                                        { 
                                                      /*cout << "UPSCOPE\n";  */
-                                                    return vcdparse::Parser::make_UPSCOPE(loc_); 
+													return vcd::Parser::make_UPSCOPE(loc_);
                                                 }
 $enddefinitions                                 { 
                                                      /*cout << "ENDDEFINITIONS\n";  */
-                                                    return vcdparse::Parser::make_ENDDEFINITIONS(loc_); 
+													return vcd::Parser::make_ENDDEFINITIONS(loc_);
                                                 }
 
 $var                                            { 
                                                     /*cout << "VAR\n";*/
                                                     BEGIN(var); 
-                                                    return vcdparse::Parser::make_VAR(loc_); 
+													return vcd::Parser::make_VAR(loc_);
                                                 }
 <var>wire                                       { 
                                                     /*cout << "WIRE\n"; */
-                                                    return vcdparse::Parser::make_WIRE(loc_); 
+													return vcd::Parser::make_WIRE(loc_);
                                                 }
 <var>reg                                        { 
                                                     /*cout << "REG\n"; */
-                                                    return vcdparse::Parser::make_REG(loc_); 
+													return vcd::Parser::make_REG(loc_);
                                                 }
 <var>parameter                                  { 
                                                     /*cout << "REG\n"; */
-                                                    return vcdparse::Parser::make_PARAMETER(loc_); 
+													return vcd::Parser::make_PARAMETER(loc_);
                                                 }
 <var>$end                                       { 
                                                     /*cout << "END\n"; */
                                                     BEGIN(INITIAL); 
-                                                    return vcdparse::Parser::make_END(loc_); 
+													return vcd::Parser::make_END(loc_);
                                                 }
 <var>{DIGIT}+                                   {
                                                     size_t val;
@@ -152,56 +152,56 @@ $var                                            {
                                                     if(ss.fail() || !ss.eof()) {
                                                         stringstream msg_ss;
                                                         msg_ss << "Failed to parse var width '" << YYText() << "'";
-                                                        throw vcdparse::ParseError(msg_ss.str(), loc_);
+														throw vcd::ParseError(msg_ss.str(), loc_);
                                                     }
                                                     BEGIN(varid);
                                                     /*cout << "Time: " << val << " '" << YYText() << "'\n";*/
-                                                    return vcdparse::Parser::make_Integer(val, loc_); 
+													return vcd::Parser::make_Integer(val, loc_);
                                                 }
 ({ALPHA}|{SYMBOL})({ALPHA}{DIGIT}{SYMBOL})+     { 
                                                     /*cout << "Var String: " << YYText() << "\n"; */
-                                                    return vcdparse::Parser::make_String(YYText(), loc_); 
+													return vcd::Parser::make_String(YYText(), loc_);
                                                 }
 
 <varid>{ID_VALUE}+                               {
                                                     BEGIN(INITIAL);
-                                                    return vcdparse::Parser::make_VarId(YYText(), loc_);
+													return vcd::Parser::make_VarId(YYText(), loc_);
                                                 }
 
 
 $dumpvars                                       { 
                                                      /*cout << "DUMPVARS\n";  */
                                                     BEGIN(changevalues); 
-                                                    return vcdparse::Parser::make_DUMPVARS(loc_); 
+													return vcd::Parser::make_DUMPVARS(loc_);
                                                 }
 <changevalues>$end                              { 
                                                     /*cout << "END\n"; */
                                                     /*BEGIN(INITIAL); */
-                                                    return vcdparse::Parser::make_END(loc_); 
+													return vcd::Parser::make_END(loc_);
                                                 }
 <changevalues>
 ^1                                              { 
                                                      /*cout << "Logic_val: " << YYText() << "\n"; */
                                                     BEGIN(change_varid);
-                                                    return vcdparse::Parser::make_LOGIC_ONE(loc_); 
+													return vcd::Parser::make_LOGIC_ONE(loc_);
                                                 }
 <changevalues>
 ^0                                              { 
                                                      /*cout << "Logic_val: " << YYText() << "\n"; */
                                                     BEGIN(change_varid);
-                                                    return vcdparse::Parser::make_LOGIC_ZERO(loc_); 
+													return vcd::Parser::make_LOGIC_ZERO(loc_);
                                                 }
 <changevalues>
 ^(x|X)                                          { 
                                                      /*cout << "Logic_val: " << YYText() << "\n"; */
                                                     BEGIN(change_varid);
-                                                    return vcdparse::Parser::make_LOGIC_UNKOWN(loc_); 
+													return vcd::Parser::make_LOGIC_UNKOWN(loc_);
                                                 }
 <changevalues>
 ^(z|Z)                                          { 
                                                      /*cout << "Logic_val: " << YYText() << "\n"; */
                                                     BEGIN(change_varid);
-                                                    return vcdparse::Parser::make_LOGIC_HIGHZ(loc_); 
+													return vcd::Parser::make_LOGIC_HIGHZ(loc_);
                                                 }
 <changevalues>
 ^b{DIGIT}+                                      {
@@ -210,14 +210,14 @@ $dumpvars                                       {
                                                     std::string str(begin, end);
                                                     /*cout << "Logic_val: " << YYText() << "\n";*/
                                                     BEGIN(change_varid);
-                                                    return vcdparse::Parser::make_BitString(str, loc_);
+													return vcd::Parser::make_BitString(str, loc_);
                                                 }
 
 <change_varid>
 {ID_VALUE}+$                                    {
                                                     /*cout << "ID: '" << YYText() << "'\n";*/
                                                     BEGIN(changevalues);
-                                                    return vcdparse::Parser::make_VarId(YYText(), loc_); 
+													return vcd::Parser::make_VarId(YYText(), loc_);
                                                 }
 <*>
 ^#{DIGIT}+                                    {
@@ -232,15 +232,15 @@ $dumpvars                                       {
                                                     if(ss.fail() || !ss.eof()) {
                                                         stringstream msg_ss;
                                                         msg_ss << "Failed to parse Time value '" << YYText() << "'";
-                                                        throw vcdparse::ParseError(msg_ss.str(), loc_);
+														throw vcd::ParseError(msg_ss.str(), loc_);
                                                     }
                                                     /*cout << "Time: " << YYText() << "\n";*/
-                                                    return vcdparse::Parser::make_Time(val, loc_); 
+													return vcd::Parser::make_Time(val, loc_);
                                                 }
 
 ({ALPHA}|{SYMBOL})({ALPHA}|{DIGIT}|{SYMBOL})* { 
                                                     /*cout << "String: " << YYText() << "\n"; */
-                                                    return vcdparse::Parser::make_String(YYText(), loc_); 
+													return vcd::Parser::make_String(YYText(), loc_);
                                                 }
 
 <*>
@@ -248,12 +248,12 @@ $dumpvars                                       {
                                                     /*cout << "Unrecognized: " << YYText() << "\n";*/
                                                     stringstream ss;
                                                     ss << "Unexpected character '" << YYText() << "'";
-                                                    throw vcdparse::ParseError(ss.str(), loc_);
+													throw vcd::ParseError(ss.str(), loc_);
                                                 }
 
 <<EOF>>                                         { 
                                                     /*cout << "EOF\n";*/
-                                                    return vcdparse::Parser::make_EOF(loc_);
+													return vcd::Parser::make_EOF(loc_);
                                                 }
 
 %%
