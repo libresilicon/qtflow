@@ -12,6 +12,7 @@
 class SchematicsEditorWidget : public EditorWidget
 {
 	Q_OBJECT
+
 public:
 	explicit SchematicsEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);

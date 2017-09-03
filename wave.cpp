@@ -2,8 +2,7 @@
 #include "ui_wave.h"
 
 #include "vcd_parser/location.hh"
-#include "vcd/vcdata_types.h"
-#include "vcd/vcdata.h"
+#include "vcd/vcd_data.hpp"
 
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),
@@ -46,7 +45,7 @@ void Wave::loadVcd(QString path)
 	QFile file(path);
 
 	if (file.exists()) {
-		vcd::VCData data(path);
+		//vcd::VCData data(path);
 
 		list->reset();
 		//tree->setVcd(data.getVCD());
@@ -65,7 +64,7 @@ void Wave::drawSignals()
     QList<int> sig = list->getSignals();
     for (int i = 0; i < sig.size(); ++i)
     {
-        vcd_changes_t::iterator it;
+		/*vcd_changes_t::iterator it;
         vcd_changes_t changes = tree->getValues(sig.at(i));
 
         int high_ = 1;
@@ -111,6 +110,6 @@ void Wave::drawSignals()
 
             time = it->first;
             state = it->second;
-        }
+		}*/
     }
 }

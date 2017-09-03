@@ -16,7 +16,7 @@ SOURCES += \
 	$$PWD/schematicsscanner.cpp
  
 HEADERS += \
-	$$PWD/schematicsdata.h
-	$$PWD/schematicseditor.h
-	$$PWD/schematicseditorwidget.h
+	$$PWD/schematicsdata.h \
+	$$PWD/schematicseditor.h \
+	$$PWD/schematicseditorwidget.h \
 	$$PWD/schematicsscanner.h
