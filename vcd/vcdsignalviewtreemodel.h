@@ -14,7 +14,7 @@ namespace vcd {
 	class Var;
 }
 
-class VcdSignalTreeItem;
+class VcdSignalViewTreeItem;
 
 class VcdSignalViewTreeModel : public QAbstractItemModel
 {
@@ -35,7 +35,7 @@ public:
 	void showSignals(QVector<QString> filter);
 
 private:
-	VcdSignalTreeItem *rootItem;
+	VcdSignalViewTreeItem *rootItem;
 	vcd::VcdData vcdData;
 	QList<QVariant> rootData;
 
