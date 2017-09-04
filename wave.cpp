@@ -15,14 +15,16 @@ Wave::Wave(QWidget *parent) :
     ui->setupUi(this);
     ui->graphicsView->setScene(scene);
 
-	ui->treeSelectionView->setDragDropMode(QAbstractItemView::InternalMove);
+	ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragDrop);
 	ui->treeSelectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	ui->treeSelectionView->setDefaultDropAction(Qt::MoveAction);
 	ui->treeSelectionView->setDragEnabled(true);
 	ui->treeSelectionView->setAcceptDrops(true);
 	ui->treeSelectionView->setDropIndicatorShown(true);
 
-	ui->treeSignalView->setDragDropMode(QAbstractItemView::InternalMove);
+	ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
 	ui->treeSignalView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
 	ui->treeSignalView->setDragEnabled(true);
 	ui->treeSignalView->setAcceptDrops(true);
 	ui->treeSignalView->setDropIndicatorShown(true);
@@ -32,8 +34,6 @@ Wave::Wave(QWidget *parent) :
 	//ui->treeSelectionView->setDefaultDropAction(Qt::CopyAction);
 
 	//ui->treeSignalView->setAcceptDrops(true);
-	//ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
-	//ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
 	//ui->treeSignalView->setDragDropOverwriteMode(true);
 	//ui->treeSignalView->setItemDelegate(new VcdListDelegate(ui->treeSignalView));
 
