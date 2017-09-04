@@ -49,6 +49,11 @@ int VcdSignalTreeModel::columnCount(const QModelIndex &parent) const
 		return rootItem->columnCount();
 }
 
+Qt::DropActions VcdSignalTreeModel::supportedDropActions() const
+{
+	return Qt::CopyAction | Qt::MoveAction;
+}
+
 QVariant VcdSignalTreeModel::data(const QModelIndex &index, int role) const
 {
 	if (!index.isValid())

@@ -32,6 +32,8 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+	Qt::DropActions supportedDropActions() const;
+
 	void showSignals(QVector<QString> filter);
 
 private:

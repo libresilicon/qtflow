@@ -35,6 +35,11 @@ void VcdSignalViewTreeModel::showSignals(QVector<QString> filter)
 	}
 }
 
+Qt::DropActions VcdSignalViewTreeModel::supportedDropActions() const
+{
+	return Qt::CopyAction | Qt::MoveAction;
+}
+
 int VcdSignalViewTreeModel::columnCount(const QModelIndex &parent) const
 {
 	if (parent.isValid())

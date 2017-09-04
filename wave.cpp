@@ -16,12 +16,21 @@ Wave::Wave(QWidget *parent) :
     ui->graphicsView->setScene(scene);
 
 	ui->treeSelectionView->setDragEnabled(true);
-	ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragOnly);
-	ui->treeSelectionView->setDefaultDropAction(Qt::CopyAction);
+	ui->treeSelectionView->setAcceptDrops(true);
+	ui->treeSelectionView->setDropIndicatorShown(true);
+
+	ui->treeSignalView->setDragEnabled(true);
 	ui->treeSignalView->setAcceptDrops(true);
-	ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
-	ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
-	ui->treeSignalView->setDragDropOverwriteMode(true);
+	ui->treeSignalView->setDropIndicatorShown(true);
+
+	//ui->treeSelectionView->setDragEnabled(true);
+	//ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragOnly);
+	//ui->treeSelectionView->setDefaultDropAction(Qt::CopyAction);
+
+	//ui->treeSignalView->setAcceptDrops(true);
+	//ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
+	//ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
+	//ui->treeSignalView->setDragDropOverwriteMode(true);
 	//ui->treeSignalView->setItemDelegate(new VcdListDelegate(ui->treeSignalView));
 
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
