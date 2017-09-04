@@ -40,7 +40,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QListView" name="listView"/>
+     <widget class="QTreeView" name="treeSignalView"/>
     </item>
     <item>
      <widget class="QGraphicsView" name="graphicsView"/>

@@ -15,20 +15,20 @@ Wave::Wave(QWidget *parent) :
     ui->setupUi(this);
     ui->graphicsView->setScene(scene);
 
-    ui->treeView->setDragEnabled(true);
-    ui->treeView->setDragDropMode(QAbstractItemView::DragOnly);
-    ui->treeView->setDefaultDropAction(Qt::CopyAction);
-    ui->listView->setAcceptDrops(true);
-    ui->listView->setDragDropMode(QAbstractItemView::DragDrop);
-    ui->listView->setDefaultDropAction(Qt::MoveAction);
-    ui->listView->setDragDropOverwriteMode(true);
-
-    ui->listView->setItemDelegate(new VcdListDelegate(ui->listView));
+	ui->treeSelectionView->setDragEnabled(true);
+	ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragOnly);
+	ui->treeSelectionView->setDefaultDropAction(Qt::CopyAction);
+	ui->treeSignalView->setAcceptDrops(true);
+	ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
+	ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
+	ui->treeSignalView->setDragDropOverwriteMode(true);
+	//ui->treeSignalView->setItemDelegate(new VcdListDelegate(ui->treeSignalView));
 
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
 
 	connect(ui->treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSelectScope(QModelIndex)));
+	connect(ui->treeSelectionView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSelectSignal(QModelIndex)));
 }
 
 Wave::~Wave()
@@ -75,6 +75,12 @@ void Wave::onSelectScope(QModelIndex i)
 	if(signalTree) delete signalTree;
 	signalTree = new VcdSignalTreeModel(vcd_data,par,this);
 	ui->treeSelectionView->setModel(signalTree);
+}
+
+void Wave::onSelectSignal(QModelIndex i)
+{
+	i.data().toString();
+	list;
 }
 
 void Wave::drawSignals()

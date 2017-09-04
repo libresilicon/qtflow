@@ -32,6 +32,7 @@ public:
 public slots:
     void onSignalsChanged();
 	void onSelectScope(QModelIndex);
+	void onSelectSignal(QModelIndex);
 
 private:
     Ui::Wave *ui;
