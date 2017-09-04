@@ -13,9 +13,18 @@ VcdTreeItem::~VcdTreeItem()
 	qDeleteAll(m_childItems);
 }
 
-void VcdTreeItem::appendChild(VcdTreeItem *item)
+VcdTreeItem * VcdTreeItem::appendChild(QString key)
 {
-	m_childItems.append(item);
+	QList<QVariant> data;
+
+	if(m_childItemMap.contains(key)) {
+		return m_childItemMap[key];
+	} else {
+		data << key;
+		m_childItemMap[key] = new VcdTreeItem(data,this);
+		m_childItems.append(m_childItemMap[key]);
+		return m_childItemMap[key];
+	}
 }
 
 VcdTreeItem *VcdTreeItem::child(int row)

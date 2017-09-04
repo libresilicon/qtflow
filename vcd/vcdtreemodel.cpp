@@ -21,14 +21,9 @@ VcdTreeModel::~VcdTreeModel()
 void VcdTreeModel::buildTree(std::vector<vcd::Var> data)
 {
 	VcdTreeItem *subItem = rootItem;
-	VcdTreeItem *subSubItem = NULL;
 	foreach(vcd::Var var, data) {
 		foreach(std::string s, var.hierarchical_name()) {
-			QList<QVariant> subData;
-			subData << QString::fromStdString(s);
-			subSubItem = new VcdTreeItem(subData,subItem);
-			subItem->appendChild(subSubItem);
-			subItem = subSubItem;
+			subItem = subItem->appendChild(QString::fromStdString(s));
 		}
 		subItem = rootItem;
 	}
