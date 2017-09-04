@@ -15,10 +15,14 @@ Wave::Wave(QWidget *parent) :
     ui->setupUi(this);
     ui->graphicsView->setScene(scene);
 
+	ui->treeSelectionView->setDragDropMode(QAbstractItemView::InternalMove);
+	ui->treeSelectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	ui->treeSelectionView->setDragEnabled(true);
 	ui->treeSelectionView->setAcceptDrops(true);
 	ui->treeSelectionView->setDropIndicatorShown(true);
 
+	ui->treeSignalView->setDragDropMode(QAbstractItemView::InternalMove);
+	ui->treeSignalView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	ui->treeSignalView->setDragEnabled(true);
 	ui->treeSignalView->setAcceptDrops(true);
 	ui->treeSignalView->setDropIndicatorShown(true);
