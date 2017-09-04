@@ -17,9 +17,15 @@ VcdSignalTreeItem::~VcdSignalTreeItem()
 
 void VcdSignalTreeItem::appendChild(vcd::Var var)
 {
+	QString displayName;
+	foreach(std::string s, var.hierarchical_name()) {
+		displayName += '/';
+		displayName += QString::fromStdString(s);
+	}
+
 	QList<QVariant> data;
 	data << QString::fromStdString(var.str_type());
-	data << QString::fromStdString(var.name());
+	data << displayName;
 	m_childItems.append(new VcdSignalTreeItem(data,this));
 }
 
