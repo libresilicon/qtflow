@@ -22,7 +22,9 @@ void VcdTreeModel::buildTree(std::vector<vcd::Var> data)
 {
 	VcdTreeItem *subItem = rootItem;
 	foreach(vcd::Var var, data) {
-		foreach(std::string s, var.hierarchical_name()) {
+		std::string s;
+		for(int i=0; i+1 < var.hierarchical_name().size(); i++) {
+			s = var.hierarchical_name().at(i);
 			subItem = subItem->appendChild(QString::fromStdString(s));
 		}
 		subItem = rootItem;
