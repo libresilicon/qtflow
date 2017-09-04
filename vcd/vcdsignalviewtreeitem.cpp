@@ -58,13 +58,13 @@ QVector<QString> VcdSignalViewTreeItem::getBus(QString s)
 	int lowerAddress = 0;
 	int higherAddress = 0;
 	int a,b;
+	int pos;
 	QVector<QString> ret;
 	QStringList spltst;
+
 	QRegExp rx("\\[(.*)\\]");
 	rx.setMinimal(true);
-	qInfo() << "Getting name: " << s;
-
-	int pos = rx.indexIn(s);
+	pos = rx.indexIn(s);
 	if (pos > -1) {
 		foreach(QString st, rx.capturedTexts()) {
 			if(st.contains('[')||st.contains(']'))
@@ -77,9 +77,23 @@ QVector<QString> VcdSignalViewTreeItem::getBus(QString s)
 				higherAddress = (a>b)?a:b;
 			}
 		}
-		for(int i=lowerAddress;i<=higherAddress;i++) {
-			ret.append(QString("foo[")+i+"]");
+	}
+
+	QString busName;
+	QRegExp rx2("(.*)\\[");
+	rx2.setMinimal(true);
+	pos = rx2.indexIn(s);
+	if (pos > -1) {
+		foreach(QString st, rx2.capturedTexts()) {
+			if(st.contains('[')||st.contains(']'))
+				continue;
+			busName = st;
+			break;
 		}
+	}
+
+	for(int i=lowerAddress;i<=higherAddress;i++) {
+		ret.append(QString().sprintf("%s[%d]", busName.toStdString().c_str(), i));
 	}
 
 	return ret;
