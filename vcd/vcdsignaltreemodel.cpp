@@ -33,8 +33,9 @@ void VcdSignalTreeModel::showSignals(QVector<QString> filter)
 			if(filter.count()) {
 				if(i<filter.count()) {
 					ok=(filter.at(i)==s)&&(filter.count()+1==var.hierarchical_name().size());
-				} else if(i==filter.count())
+				} else if(i==filter.count()) {
 					if(ok) rootItem->appendChild(var);
+				}
 			}
 		}
 	}

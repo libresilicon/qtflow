@@ -46,17 +46,31 @@ bool VcdSignalViewTreeItem::isBus(QString s)
 
 QVector<QString> VcdSignalViewTreeItem::getBus(QString s)
 {
+	int lowerAddress = 0;
+	int higherAddress = 0;
+	int a,b;
 	QVector<QString> ret;
-	QRegExp rx("\\[*0-9+:\\]");
+	QStringList spltst;
+	QRegExp rx("\\[(.*)\\]");
 	rx.setMinimal(true);
 	qInfo() << "Getting name: " << s;
 
 	int pos = rx.indexIn(s);
 	if (pos > -1) {
-		qInfo() << "Captured texts: " << rx.capturedTexts();
-		qInfo() << "timestamp cap: " <<rx.cap(0);
-		qInfo() << "timestamp cap: " <<rx.cap(1);
-		qInfo() << "timestamp cap: " <<rx.cap(2);
+		foreach(QString st, rx.capturedTexts()) {
+			if(st.contains('[')||st.contains(']'))
+				continue;
+			if(st.contains(':')) {
+				spltst = st.split(':');
+				a = spltst.at(0).toInt();
+				b = spltst.at(1).toInt();
+				lowerAddress = (a<b)?a:b;
+				higherAddress = (a>b)?a:b;
+			}
+		}
+		for(int i=lowerAddress;i<=higherAddress;i++) {
+			ret.append(QString("foo[")+i+"]");
+		}
 	}
 
 	return ret;

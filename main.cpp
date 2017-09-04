@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		ha->run();
 	} else {
 		w = new MainWindow(parser, &mainContext);
-		w->show();
+		w->showMaximized();
 		return app.exec();
 	}
 }
