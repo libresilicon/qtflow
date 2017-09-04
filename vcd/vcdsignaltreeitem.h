@@ -23,6 +23,9 @@ public:
 	int row() const;
 	VcdSignalTreeItem *parentItem();
 
+	bool isBus(QString);
+	QVector<QString> getBus(QString s);
+
 private:
 	QList<VcdSignalTreeItem*> m_childItems;
 	QMap<QString,VcdSignalTreeItem*> m_childItemMap;

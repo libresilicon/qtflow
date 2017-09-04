@@ -26,7 +26,23 @@ void VcdSignalTreeItem::appendChild(vcd::Var var)
 	QList<QVariant> data;
 	data << QString::fromStdString(var.str_type());
 	data << displayName;
-	m_childItems.append(new VcdSignalTreeItem(data,this));
+	VcdSignalTreeItem* signal = new VcdSignalTreeItem(data,this);
+	m_childItems.append(signal);
+
+	if(isBus(QString::fromStdString(var.name()))) {
+		foreach(QString bit, getBus(QString::fromStdString(var.name()))) {
+		}
+	}
+}
+
+bool VcdSignalTreeItem::isBus(QString s)
+{
+
+}
+
+QVector<QString> VcdSignalTreeItem::getBus(QString s)
+{
+
 }
 
 VcdSignalTreeItem *VcdSignalTreeItem::child(int row)

@@ -12,7 +12,8 @@ SOURCES += \
 	$$PWD/vcdtreeitem.cpp \
     $$PWD/vcdsignaltreemodel.cpp \
     $$PWD/vcdsignaltreeitem.cpp \
-    $$PWD/vcdsignalviewtreemodel.cpp
+    $$PWD/vcdsignalviewtreemodel.cpp \
+    $$PWD/vcdsignalviewtreeitem.cpp
 
 HEADERS += \
 	$$PWD/vcdlistmodel.h \
@@ -26,4 +27,5 @@ HEADERS += \
 	$$PWD/vcdtreeitem.h \
     $$PWD/vcdsignaltreemodel.h \
     $$PWD/vcdsignaltreeitem.h \
-    $$PWD/vcdsignalviewtreemodel.h
+    $$PWD/vcdsignalviewtreemodel.h \
+    $$PWD/vcdsignalviewtreeitem.h
