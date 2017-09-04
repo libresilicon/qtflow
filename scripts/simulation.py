@@ -1,3 +1,4 @@
+from os import path
 from os import popen
 from os import listdir
 from os import remove
@@ -108,26 +109,31 @@ def simulation():
 	binary += "/"
 	binary += project_settings.getTestBench()
 
-	for f in listdir(project_settings.getSourceDir()):
-		filepath=project_settings.getSourceDir()+'/'+f
-		file = open(filepath, "r")
-		for line in file:
-			if search(project_settings.getTestBench(), line):
-				print line
-				check_and_fix(filepath)
-				break;
+        if path(source).isfile():
 
-	simulationCommand = settings.getIcarus()
-	simulationCommand += " -s "
-	simulationCommand += project_settings.getTestBench()
-	simulationCommand += " "
-	simulationCommand += source
-	simulationCommand += " -o "
-	simulationCommand += binary
+            for f in listdir(project_settings.getSourceDir()):
+                    filepath=project_settings.getSourceDir()+'/'+f
+                    file = open(filepath, "r")
+                    for line in file:
+                            if search(project_settings.getTestBench(), line):
+                                    print line
+                                    check_and_fix(filepath)
+                                    break;
 
-	print(popen(simulationCommand).read())
-	print(popen(binary).read())
+            simulationCommand = settings.getIcarus()
+            simulationCommand += " -s "
+            simulationCommand += project_settings.getTestBench()
+            simulationCommand += " "
+            simulationCommand += source
+            simulationCommand += " -o "
+            simulationCommand += binary
 
-	move(project_settings.getVCDFile(),project_settings.getVCDPath())
+            print(popen(simulationCommand).read())
+            print(popen(binary).read())
+
+            move(project_settings.getVCDFile(),project_settings.getVCDPath())
+
+        else:
+            print("Error: File "+source+" doesn't exist\n")
 
 simulation()
