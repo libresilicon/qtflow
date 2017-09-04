@@ -3,6 +3,7 @@
 
 #include "vcd/vcdtreemodel.h"
 #include "vcd/vcdlistmodel.h"
+#include "vcd/vcdsignaltreemodel.h"
 
 #include <QGraphicsScene>
 #include <QDockWidget>
@@ -36,6 +37,7 @@ private:
     Ui::Wave *ui;
     QGraphicsScene *scene;
 	VcdTreeModel *tree;
+	VcdSignalTreeModel *signalTree;
 	VcdListModel *list;
 
     void drawSignals();

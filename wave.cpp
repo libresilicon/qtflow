@@ -9,7 +9,8 @@ Wave::Wave(QWidget *parent) :
     ui(new Ui::Wave),
 	scene(new QGraphicsScene),
 	tree(NULL),
-	list(NULL)
+	list(NULL),
+	signalTree(NULL)
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(scene);
@@ -46,6 +47,8 @@ void Wave::loadVcd(QString path)
 			if(tree) delete tree;
 			tree = new VcdTreeModel(loader.get_vcd_data());
 			ui->treeView->setModel(tree);
+			signalTree = new VcdSignalTreeModel(loader.get_vcd_data());
+			ui->treeSelectionView->setModel(signalTree);
 
 			//ui->listView->setModel(list);
 			//connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
@@ -62,11 +65,14 @@ void Wave::onSignalsChanged()
 
 void Wave::onSelectScope(QModelIndex i)
 {
-	QModelIndex m;
+	QStringList par;
 	while(i.isValid()) {
-		QTextStream(stdout) << "Scope selected " <<  i.data().toString() << '\n';
-
+		par.prepend(i.data().toString());
 		i=i.parent();
+	}
+	if(signalTree) {
+		signalTree->showSignals(par);
+		ui->treeSelectionView->setModel(signalTree);
 	}
 }
 

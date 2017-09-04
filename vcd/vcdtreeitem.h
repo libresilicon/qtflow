@@ -10,7 +10,7 @@ public:
 	explicit VcdTreeItem(const QList<QVariant> &data, VcdTreeItem *parentItem = 0);
 	~VcdTreeItem();
 
-	VcdTreeItem *appendChild(QString key);
+	VcdTreeItem * appendChild(QString key);
 
 	VcdTreeItem *child(int row);
 	int childCount() const;

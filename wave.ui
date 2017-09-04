@@ -34,7 +34,7 @@
         <widget class="QTreeView" name="treeView"/>
        </item>
        <item>
-        <widget class="QListView" name="listSelectionView"/>
+        <widget class="QTreeView" name="treeSelectionView"/>
        </item>
       </layout>
      </widget>
