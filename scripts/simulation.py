@@ -40,7 +40,7 @@ def add_initial(filepath):
 		else:
 			if start_found and search("endmodule", line):
 				if not done:
-					n.write("\ninitial begin\n\nend\n")
+					n.write("\ninitial begin\nend\n")
 					done = True
 		n.write(line)
 
@@ -102,6 +102,8 @@ def check_and_fix(filepath):
 		add_finish(filepath)
 
 def simulation():
+	test_bench_found = False
+
 	source = project_settings.getSourceDir() 
 	source += "/*.v"
 
@@ -109,31 +111,39 @@ def simulation():
 	binary += "/"
 	binary += project_settings.getTestBench()
 
-        if path(source).isfile():
+	for f in listdir(project_settings.getSourceDir()):
+		filepath=project_settings.getSourceDir()+'/'+f
+		file = open(filepath, "r")
+		for line in file:
+			if search(project_settings.getTestBench(), line):
+				test_bench_found = True
+				check_and_fix(filepath)
+				break;
 
-            for f in listdir(project_settings.getSourceDir()):
-                    filepath=project_settings.getSourceDir()+'/'+f
-                    file = open(filepath, "r")
-                    for line in file:
-                            if search(project_settings.getTestBench(), line):
-                                    print line
-                                    check_and_fix(filepath)
-                                    break;
+	simulationCommand = settings.getIcarus()
+	if not path.isfile(simulationCommand):
+		print("Error: No verilog compiler defined!\n")
+		return
 
-            simulationCommand = settings.getIcarus()
-            simulationCommand += " -s "
-            simulationCommand += project_settings.getTestBench()
-            simulationCommand += " "
-            simulationCommand += source
-            simulationCommand += " -o "
-            simulationCommand += binary
+	if not test_bench_found:
+		print("Error: No test bench defined!\n")
+		return
 
-            print(popen(simulationCommand).read())
-            print(popen(binary).read())
+	simulationCommand += " -s "
+	simulationCommand += project_settings.getTestBench()
+	simulationCommand += " "
+	simulationCommand += source
+	simulationCommand += " -o "
+	simulationCommand += binary
 
-            move(project_settings.getVCDFile(),project_settings.getVCDPath())
-
-        else:
-            print("Error: File "+source+" doesn't exist\n")
+	result = popen(simulationCommand).read()
+	if path.isfile(binary):
+		result=popen(binary).read()
+		print(result)
+		move(project_settings.getVCDFile(),project_settings.getVCDPath())
+	else:
+		print("Error: No simulator generated!\n")
+		print(result)
+		return
 
 simulation()
