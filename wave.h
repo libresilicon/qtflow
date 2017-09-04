@@ -4,6 +4,7 @@
 #include "vcd/vcdtreemodel.h"
 #include "vcd/vcdlistmodel.h"
 #include "vcd/vcdsignaltreemodel.h"
+#include "vcd/vcdsignalviewtreemodel.h"
 
 #include <QGraphicsScene>
 #include <QDockWidget>
@@ -39,7 +40,8 @@ private:
     QGraphicsScene *scene;
 	VcdTreeModel *tree;
 	VcdSignalTreeModel *signalTree;
-	VcdListModel *list;
+	VcdSignalViewTreeModel *signalViewTree;
+	QVector<QString> signalViewFilter;
 
 	vcd::VcdData vcd_data;
 

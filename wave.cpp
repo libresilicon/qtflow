@@ -9,8 +9,8 @@ Wave::Wave(QWidget *parent) :
     ui(new Ui::Wave),
 	scene(new QGraphicsScene),
 	tree(NULL),
-	list(NULL),
-	signalTree(NULL)
+	signalTree(NULL),
+	signalViewTree(NULL)
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(scene);
@@ -51,6 +51,8 @@ void Wave::loadVcd(QString path)
 			ui->treeView->setModel(tree);
 			signalTree = new VcdSignalTreeModel(vcd_data,QVector<QString>(),this);
 			ui->treeSelectionView->setModel(signalTree);
+			signalViewTree = new VcdSignalViewTreeModel(vcd_data,QVector<QString>(),this);
+			ui->treeSignalView->setModel(signalViewTree);
 
 			//ui->listView->setModel(list);
 			//connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
@@ -79,8 +81,10 @@ void Wave::onSelectScope(QModelIndex i)
 
 void Wave::onSelectSignal(QModelIndex i)
 {
-	i.data().toString();
-	list;
+	signalViewFilter.append(i.data().toString());
+	if(signalViewTree) delete signalViewTree;
+	signalViewTree = new VcdSignalViewTreeModel(vcd_data,signalViewFilter,this);
+	ui->treeSignalView->setModel(signalViewTree);
 }
 
 void Wave::drawSignals()
