@@ -44,10 +44,12 @@ void Wave::loadVcd(QString path)
 	if (file.exists()) {
 		vcd::Loader loader;
 		if(loader.load(path.toStdString())) {
+			vcd_data = loader.get_vcd_data();
+
 			if(tree) delete tree;
-			tree = new VcdTreeModel(loader.get_vcd_data());
+			tree = new VcdTreeModel(vcd_data);
 			ui->treeView->setModel(tree);
-			signalTree = new VcdSignalTreeModel(loader.get_vcd_data());
+			signalTree = new VcdSignalTreeModel(vcd_data,QVector<QString>(),this);
 			ui->treeSelectionView->setModel(signalTree);
 
 			//ui->listView->setModel(list);
@@ -65,15 +67,14 @@ void Wave::onSignalsChanged()
 
 void Wave::onSelectScope(QModelIndex i)
 {
-	QStringList par;
+	QVector<QString> par;
 	while(i.isValid()) {
 		par.prepend(i.data().toString());
 		i=i.parent();
 	}
-	if(signalTree) {
-		signalTree->showSignals(par);
-		ui->treeSelectionView->setModel(signalTree);
-	}
+	if(signalTree) delete signalTree;
+	signalTree = new VcdSignalTreeModel(vcd_data,par,this);
+	ui->treeSelectionView->setModel(signalTree);
 }
 
 void Wave::drawSignals()

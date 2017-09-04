@@ -14,14 +14,14 @@ namespace vcd {
 	class Var;
 }
 
-class VcdTreeItem;
+class VcdSignalTreeItem;
 
 class VcdSignalTreeModel : public QAbstractItemModel
 {
 	Q_OBJECT
 
 public:
-	explicit VcdSignalTreeModel(const vcd::VcdData &data, QObject *parent = 0);
+	explicit VcdSignalTreeModel(vcd::VcdData data, QVector<QString> filter, QObject *parent = 0);
 	~VcdSignalTreeModel();
 
 	QVariant data(const QModelIndex &index, int role) const override;
@@ -32,11 +32,12 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-	void showSignals(QStringList);
+	void showSignals(QVector<QString> filter);
 
 private:
-	VcdTreeItem *rootItem;
+	VcdSignalTreeItem *rootItem;
 	vcd::VcdData vcdData;
+	QList<QVariant> rootData;
 
 };
 

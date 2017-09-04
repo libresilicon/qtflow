@@ -40,6 +40,8 @@ private:
 	VcdSignalTreeModel *signalTree;
 	VcdListModel *list;
 
+	vcd::VcdData vcd_data;
+
     void drawSignals();
 };
 

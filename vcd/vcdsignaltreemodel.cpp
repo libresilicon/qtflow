@@ -1,15 +1,18 @@
-#include "vcdtreeitem.h"
+#include "vcdsignaltreeitem.h"
 #include "vcdsignaltreemodel.h"
 
 #include <QStringList>
+#include <QTextStream>
 
-VcdSignalTreeModel::VcdSignalTreeModel(const vcd::VcdData &data, QObject *parent)
-	: QAbstractItemModel(parent)
+VcdSignalTreeModel::VcdSignalTreeModel(vcd::VcdData data, QVector<QString> filter, QObject *parent) :
+	QAbstractItemModel(parent),
+	vcdData(data)
 {
-	QList<QVariant> rootData;
+	rootData << "Type";
 	rootData << "Signals";
-	rootItem = new VcdTreeItem(rootData);
-	vcdData = data;
+	rootItem = new VcdSignalTreeItem(rootData);
+
+	showSignals(filter);
 }
 
 VcdSignalTreeModel::~VcdSignalTreeModel()
@@ -17,13 +20,22 @@ VcdSignalTreeModel::~VcdSignalTreeModel()
 	delete rootItem;
 }
 
-void VcdSignalTreeModel::showSignals(QStringList list)
+void VcdSignalTreeModel::showSignals(QVector<QString> filter)
 {
+	if(rootItem) delete rootItem;
+	rootItem = new VcdSignalTreeItem(rootData);
+
+	bool ok;
 	foreach(vcd::Var var, vcdData.vars()) {
-		std::string s;
+		QString s;
 		for(int i=0; i < var.hierarchical_name().size(); i++) {
-			s = var.hierarchical_name().at(i);
-			rootItem->appendChild(QString::fromStdString(s));
+			s = QString::fromStdString(var.hierarchical_name().at(i));
+			if(filter.count()) {
+				if(i<filter.count()) {
+					ok=(filter.at(i)==s)&&(filter.count()+1==var.hierarchical_name().size());
+				} else if(i==filter.count())
+					if(ok) rootItem->appendChild(var);
+			}
 		}
 	}
 }
@@ -31,7 +43,7 @@ void VcdSignalTreeModel::showSignals(QStringList list)
 int VcdSignalTreeModel::columnCount(const QModelIndex &parent) const
 {
 	if (parent.isValid())
-		return static_cast<VcdTreeItem*>(parent.internalPointer())->columnCount();
+		return static_cast<VcdSignalTreeItem*>(parent.internalPointer())->columnCount();
 	else
 		return rootItem->columnCount();
 }
@@ -44,7 +56,7 @@ QVariant VcdSignalTreeModel::data(const QModelIndex &index, int role) const
 	if (role != Qt::DisplayRole)
 		return QVariant();
 
-	VcdTreeItem *item = static_cast<VcdTreeItem*>(index.internalPointer());
+	VcdSignalTreeItem *item = static_cast<VcdSignalTreeItem*>(index.internalPointer());
 
 	return item->data(index.column());
 }
@@ -72,14 +84,14 @@ QModelIndex VcdSignalTreeModel::index(int row, int column, const QModelIndex &pa
 	if (!hasIndex(row, column, parent))
 		return QModelIndex();
 
-	VcdTreeItem *parentItem;
+	VcdSignalTreeItem *parentItem;
 
 	if (!parent.isValid())
 		parentItem = rootItem;
 	else
-		parentItem = static_cast<VcdTreeItem*>(parent.internalPointer());
+		parentItem = static_cast<VcdSignalTreeItem*>(parent.internalPointer());
 
-	VcdTreeItem *childItem = parentItem->child(row);
+	VcdSignalTreeItem *childItem = parentItem->child(row);
 	if (childItem)
 		return createIndex(row, column, childItem);
 	else
@@ -91,8 +103,8 @@ QModelIndex VcdSignalTreeModel::parent(const QModelIndex &index) const
 	if (!index.isValid())
 		return QModelIndex();
 
-	VcdTreeItem *childItem = static_cast<VcdTreeItem*>(index.internalPointer());
-	VcdTreeItem *parentItem = childItem->parentItem();
+	VcdSignalTreeItem *childItem = static_cast<VcdSignalTreeItem*>(index.internalPointer());
+	VcdSignalTreeItem *parentItem = childItem->parentItem();
 
 	if (parentItem == rootItem)
 		return QModelIndex();
@@ -102,12 +114,12 @@ QModelIndex VcdSignalTreeModel::parent(const QModelIndex &index) const
 
 int VcdSignalTreeModel::rowCount(const QModelIndex &parent) const
 {
-	VcdTreeItem *parentItem;
+	VcdSignalTreeItem *parentItem;
 
 	if (!parent.isValid())
 		parentItem = rootItem;
 	else
-		parentItem = static_cast<VcdTreeItem*>(parent.internalPointer());
+		parentItem = static_cast<VcdSignalTreeItem*>(parent.internalPointer());
 
 	return parentItem->childCount();
 }
