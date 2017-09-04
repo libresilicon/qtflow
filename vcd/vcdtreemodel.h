@@ -1,5 +1,5 @@
-#ifndef VCDVcdTreeModel_H
-#define VCDVcdTreeModel_H
+#ifndef VCD_SST_TREE_MODEL_H
+#define VCD_SST_TREE_MODEL_H
 
 #include <QAbstractItemModel>
 
@@ -38,4 +38,4 @@ protected:
 
 };
 
-#endif // VCDVcdTreeModel_H
+#endif // VCD_SST_TREE_MODEL_H

@@ -106,8 +106,6 @@ QModelIndex VcdTreeModel::parent(const QModelIndex &index) const
 int VcdTreeModel::rowCount(const QModelIndex &parent) const
 {
 	VcdTreeItem *parentItem;
-	//if (parent.column() > 0)
-	//	return 0;
 
 	if (!parent.isValid())
 		parentItem = rootItem;

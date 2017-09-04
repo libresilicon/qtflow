@@ -26,6 +26,8 @@ Wave::Wave(QWidget *parent) :
 
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+
+	connect(ui->treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSelectScope(QModelIndex)));
 }
 
 Wave::~Wave()
@@ -56,6 +58,16 @@ void Wave::onSignalsChanged()
 {
     scene->clear();
     drawSignals();
+}
+
+void Wave::onSelectScope(QModelIndex i)
+{
+	QModelIndex m;
+	while(i.isValid()) {
+		QTextStream(stdout) << "Scope selected " <<  i.data().toString() << '\n';
+
+		i=i.parent();
+	}
 }
 
 void Wave::drawSignals()
