@@ -18,6 +18,11 @@ VcdSignalViewTreeItem::~VcdSignalViewTreeItem()
 	qDeleteAll(m_childItems);
 }
 
+void VcdSignalViewTreeItem::appendChildItem(VcdSignalViewTreeItem *m)
+{
+	m_childItems.append(m);
+}
+
 void VcdSignalViewTreeItem::appendChild(vcd::Var var)
 {
 	QString displayName;
@@ -31,9 +36,13 @@ void VcdSignalViewTreeItem::appendChild(vcd::Var var)
 	VcdSignalViewTreeItem* signal = new VcdSignalViewTreeItem(data,this);
 	m_childItems.append(signal);
 
+	VcdSignalViewTreeItem* wire;
 	if(isBus(QString::fromStdString(var.name()))) {
 		foreach(QString bit, getBus(QString::fromStdString(var.name()))) {
-			qInfo() << "Getting bit: " <<  bit;
+			QList<QVariant> data;
+			data << bit;
+			wire = new VcdSignalViewTreeItem(data,signal);
+			signal->appendChildItem(wire);
 		}
 	}
 }

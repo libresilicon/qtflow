@@ -15,6 +15,7 @@ public:
 	~VcdSignalViewTreeItem();
 
 	void appendChild(vcd::Var var);
+	void appendChildItem(VcdSignalViewTreeItem *m);
 
 	VcdSignalViewTreeItem *child(int row);
 	int childCount() const;
@@ -28,7 +29,6 @@ public:
 
 private:
 	QList<VcdSignalViewTreeItem*> m_childItems;
-	QMap<QString,VcdSignalViewTreeItem*> m_childItemMap;
 	QList<QVariant> m_itemData;
 	VcdSignalViewTreeItem *m_parentItem;
 };
