@@ -6,30 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>611</width>
-    <height>425</height>
+    <width>746</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Wa&amp;ve</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QWidget" name="widget" native="true">
-      <property name="minimumSize">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QFrame" name="selectionFrame">
+      <property name="maximumSize">
        <size>
         <width>200</width>
-        <height>0</height>
+        <height>16777215</height>
        </size>
       </property>
-      <property name="baseSize">
-       <size>
-        <width>100</width>
-        <height>100</height>
-       </size>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QTreeView" name="treeView"/>
        </item>
@@ -39,11 +39,16 @@
       </layout>
      </widget>
     </item>
-    <item>
-     <widget class="QTreeView" name="treeSignalView"/>
-    </item>
-    <item>
-     <widget class="QGraphicsView" name="graphicsView"/>
+    <item row="0" column="1">
+     <widget class="QFrame" name="signalFrame">
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2"/>
+     </widget>
     </item>
    </layout>
   </widget>

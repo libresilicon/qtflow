@@ -6,14 +6,15 @@
 
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),
-    ui(new Ui::Wave),
+	ui(new Ui::Wave),
 	scene(new QGraphicsScene),
 	tree(NULL),
-	signalTree(NULL),
-	signalViewTree(NULL)
+	signalTree(NULL)
 {
-    ui->setupUi(this);
-    ui->graphicsView->setScene(scene);
+	ui->setupUi(this);
+
+	signalView = new VcdSignalView(ui->signalFrame);
+	ui->signalFrame->layout()->addWidget(signalView);
 
 	ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragDrop);
 	ui->treeSelectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -22,12 +23,12 @@ Wave::Wave(QWidget *parent) :
 	ui->treeSelectionView->setAcceptDrops(true);
 	ui->treeSelectionView->setDropIndicatorShown(true);
 
-	ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
+	/*ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
 	ui->treeSignalView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 	ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
 	ui->treeSignalView->setDragEnabled(true);
 	ui->treeSignalView->setAcceptDrops(true);
-	ui->treeSignalView->setDropIndicatorShown(true);
+	ui->treeSignalView->setDropIndicatorShown(true);*/
 
 	//ui->treeSelectionView->setDragEnabled(true);
 	//ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragOnly);
@@ -37,8 +38,9 @@ Wave::Wave(QWidget *parent) :
 	//ui->treeSignalView->setDragDropOverwriteMode(true);
 	//ui->treeSignalView->setItemDelegate(new VcdListDelegate(ui->treeSignalView));
 
-    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+	//ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+	scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+	//ui->graphicsView->setScene(scene);
 
 	connect(ui->treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSelectScope(QModelIndex)));
 	connect(ui->treeSelectionView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSelectSignal(QModelIndex)));
@@ -62,10 +64,12 @@ void Wave::loadVcd(QString path)
 			if(tree) delete tree;
 			tree = new VcdTreeModel(vcd_data);
 			ui->treeView->setModel(tree);
+			if(signalTree) delete signalTree;
 			signalTree = new VcdSignalTreeModel(vcd_data,QVector<QString>(),this);
 			ui->treeSelectionView->setModel(signalTree);
-			signalViewTree = new VcdSignalViewTreeModel(vcd_data,QVector<QString>(),this);
-			ui->treeSignalView->setModel(signalViewTree);
+			//if(signalViewTree) delete signalViewTree;
+			//signalViewTree = new VcdSignalViewTreeModel(vcd_data,QVector<QString>(),this);
+			//ui->treeSignalView->setModel(signalViewTree);
 
 			//ui->listView->setModel(list);
 			//connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
@@ -77,7 +81,6 @@ void Wave::loadVcd(QString path)
 void Wave::onSignalsChanged()
 {
     scene->clear();
-	//drawSignals();
 }
 
 void Wave::onSelectScope(QModelIndex i)
@@ -95,24 +98,31 @@ void Wave::onSelectScope(QModelIndex i)
 void Wave::onSelectSignal(QModelIndex i)
 {
 	signalViewFilter.append(i.data().toString());
-	if(signalViewTree) delete signalViewTree;
-	signalViewTree = new VcdSignalViewTreeModel(vcd_data,signalViewFilter,this);
-	ui->treeSignalView->setModel(signalViewTree);
+	//if(signalViewTree) delete signalViewTree;
+	//signalViewTree = new VcdSignalViewTreeModel(vcd_data,signalViewFilter,this);
+	//ui->treeSignalView->setModel(signalViewTree);
+
+	//scene->clear();
+	foreach(QString s, signalViewFilter) {
+		drawSignal(s);
+	}
 }
 
 void Wave::drawSignal(QString var_id)
 {
-	QVector<vcd::LogicValue> signal;
+	QPen green(Qt::green);
 	foreach(vcd::TimeValue value, vcd_data.time_values()) {
 		if(value.var_id()==var_id) {
-			signal[value.time()]=value.value();
+			scene->addLine(value.time(), 0, value.time(), 1, green);
+			//scene->addLine(it->first * ws, h + state * hs, it->first * ws, h + it->second * hs, green);
 		}
 	}
+
 	//QList<int> sig = list->getSignals();
 	//for (int i = 0; i < sig.size(); ++i)
 	//{
 		/*vcd_changes_t::iterator it;
-        vcd_changes_t changes = tree->getValues(sig.at(i));
+	vcd_changes_t changes = tree->getValues(sig.at(i));
 
         int high_ = 1;
         int long_ = 0;
@@ -126,10 +136,10 @@ void Wave::drawSignal(QString var_id)
 
         int time = 0;
         int state = 0;
-		int h = i * ui->dockWidgetContents->height();
-		double hs = ui->dockWidgetContents->height() / high_;
-		double ws = tree->vcd().timescale * ui->dockWidgetContents->height() / 1000000;
-		int margin = ui->dockWidgetContents->width() / 10;
+                int h = i * ui->dockWidgetContents->height();
+                double hs = ui->dockWidgetContents->height() / high_;
+                double ws = tree->vcd().timescale * ui->dockWidgetContents->height() / 1000000;
+                int margin = ui->dockWidgetContents->width() / 10;
         QPen green(Qt::green);
         for (it = changes.begin(); it != changes.end(); ++it)
         {
@@ -143,9 +153,9 @@ void Wave::drawSignal(QString var_id)
             else
             {
                 scene->addLine(time * ws + margin, h + margin, it->first * ws - margin, h + margin, green);
-				scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + ui->dockWidgetContents->height() - margin, green);
-				scene->addLine(time * ws + margin, h + ui->dockWidgetContents->height() - margin, it->first * ws - margin, h + ui->dockWidgetContents->height() - margin, green);
-				scene->addLine(time * ws - margin, h + ui->dockWidgetContents->height() - margin, time * ws + margin, h + margin, green);
+                                scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + ui->dockWidgetContents->height() - margin, green);
+                                scene->addLine(time * ws + margin, h + ui->dockWidgetContents->height() - margin, it->first * ws - margin, h + ui->dockWidgetContents->height() - margin, green);
+                                scene->addLine(time * ws - margin, h + ui->dockWidgetContents->height() - margin, time * ws + margin, h + margin, green);
 
                 QGraphicsTextItem* ann = new QGraphicsTextItem;
                 ann->setPos(time * ws, h);
@@ -157,6 +167,6 @@ void Wave::drawSignal(QString var_id)
 
             time = it->first;
             state = it->second;
-		}*/
-	//}
+                }*/
+        //}
 }

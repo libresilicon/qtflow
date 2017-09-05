@@ -86,7 +86,6 @@ void MagicLayoutEditor::drawModuleInfo()
 		editScene->addRect(e.box, pen);
 		editScene->addItem(e.instance_name);
 		//editScene->addItem(e.module_name);
-
 	}
 }
 
@@ -141,7 +140,7 @@ QColor MagicLayoutEditor::colorMat(QString material)
 		mat = QColor("teal");
 	if (material == "m4contact")
 		mat = QColor("teal");
-	
+
 	mat.setAlphaF( 0.5 );
 
 	return mat;

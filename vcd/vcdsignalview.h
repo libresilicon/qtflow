@@ -1,18 +1,23 @@
 #ifndef VCDSIGNALVIEW_H
 #define VCDSIGNALVIEW_H
 
-#include <QObject>
-#include <QWidget>
+#include <QGraphicsView>
+#include <QMouseEvent>
 
-class VcdSignalView : public QWidget
+class VcdSignalView : public QGraphicsView
 {
-  Q_OBJECT
+	Q_OBJECT
+
 public:
-  explicit VcdSignalView(QWidget *parent = nullptr);
+	explicit VcdSignalView(QWidget *parent = nullptr);
 
 signals:
 
 public slots:
+	void mousePressEvent(QMouseEvent * e);
+
+private:
+	QGraphicsScene *signalScene;
 };
 
 #endif // VCDSIGNALVIEW_H
