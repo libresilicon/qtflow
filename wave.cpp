@@ -67,6 +67,8 @@ void Wave::loadVcd(QString path)
 			if(signalTree) delete signalTree;
 			signalTree = new VcdSignalTreeModel(vcd_data,QVector<QString>(),this);
 			ui->treeSelectionView->setModel(signalTree);
+
+			signalView->setVCD(vcd_data);
 			//if(signalViewTree) delete signalViewTree;
 			//signalViewTree = new VcdSignalViewTreeModel(vcd_data,QVector<QString>(),this);
 			//ui->treeSignalView->setModel(signalViewTree);
@@ -97,76 +99,6 @@ void Wave::onSelectScope(QModelIndex i)
 
 void Wave::onSelectSignal(QModelIndex i)
 {
-	signalViewFilter.append(i.data().toString());
-	//if(signalViewTree) delete signalViewTree;
-	//signalViewTree = new VcdSignalViewTreeModel(vcd_data,signalViewFilter,this);
-	//ui->treeSignalView->setModel(signalViewTree);
-
-	//scene->clear();
-	foreach(QString s, signalViewFilter) {
-		drawSignal(s);
-	}
+	signalView->append(i.data().toString());
 }
 
-void Wave::drawSignal(QString var_id)
-{
-	QPen green(Qt::green);
-	foreach(vcd::TimeValue value, vcd_data.time_values()) {
-		if(value.var_id()==var_id) {
-			scene->addLine(value.time(), 0, value.time(), 1, green);
-			//scene->addLine(it->first * ws, h + state * hs, it->first * ws, h + it->second * hs, green);
-		}
-	}
-
-	//QList<int> sig = list->getSignals();
-	//for (int i = 0; i < sig.size(); ++i)
-	//{
-		/*vcd_changes_t::iterator it;
-	vcd_changes_t changes = tree->getValues(sig.at(i));
-
-        int high_ = 1;
-        int long_ = 0;
-        for (it = changes.begin(); it != changes.end(); ++it)
-        {
-            if (it->first > long_)
-                long_ = it->first;
-            if (it->second > high_)
-                high_ = it->second;
-        }
-
-        int time = 0;
-        int state = 0;
-                int h = i * ui->dockWidgetContents->height();
-                double hs = ui->dockWidgetContents->height() / high_;
-                double ws = tree->vcd().timescale * ui->dockWidgetContents->height() / 1000000;
-                int margin = ui->dockWidgetContents->width() / 10;
-        QPen green(Qt::green);
-        for (it = changes.begin(); it != changes.end(); ++it)
-        {
-            // two state
-            if (high_ < 2)
-            {
-                scene->addLine(time * ws, h + state * hs, it->first * ws, h + state * hs, green);
-                scene->addLine(it->first * ws, h + state * hs, it->first * ws, h + it->second * hs, green);
-            }
-            // more than two states
-            else
-            {
-                scene->addLine(time * ws + margin, h + margin, it->first * ws - margin, h + margin, green);
-                                scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + ui->dockWidgetContents->height() - margin, green);
-                                scene->addLine(time * ws + margin, h + ui->dockWidgetContents->height() - margin, it->first * ws - margin, h + ui->dockWidgetContents->height() - margin, green);
-                                scene->addLine(time * ws - margin, h + ui->dockWidgetContents->height() - margin, time * ws + margin, h + margin, green);
-
-                QGraphicsTextItem* ann = new QGraphicsTextItem;
-                ann->setPos(time * ws, h);
-                ann->setDefaultTextColor(QColor(Qt::white));
-                ann->setPlainText(QString::number(it->second));
-
-                scene->addItem(ann);
-            }
-
-            time = it->first;
-            state = it->second;
-                }*/
-        //}
-}

@@ -23,31 +23,27 @@ class Wave;
 
 class Wave : public QDockWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit Wave(QWidget *parent = 0);
-    ~Wave();
+	explicit Wave(QWidget *parent = 0);
+	~Wave();
 
-    void loadVcd(QString);
+	void loadVcd(QString);
 
 public slots:
-    void onSignalsChanged();
-        void onSelectScope(QModelIndex);
-        void onSelectSignal(QModelIndex);
+	void onSignalsChanged();
+	void onSelectScope(QModelIndex);
+	void onSelectSignal(QModelIndex);
 
 private:
-    Ui::Wave *ui;
-    QGraphicsScene *scene;
-        VcdTreeModel *tree;
-        VcdSignalTreeModel *signalTree;
-        //VcdSignalViewTreeModel *signalViewTree;
-        QVector<QString> signalViewFilter;
-        VcdSignalView *signalView;
+	Ui::Wave *ui;
+	QGraphicsScene *scene;
+		VcdTreeModel *tree;
+		VcdSignalTreeModel *signalTree;
+		VcdSignalView *signalView;
 
-        vcd::VcdData vcd_data;
-
-        void drawSignal(QString var_id);
+		vcd::VcdData vcd_data;
 };
 
 #endif // WAVE_H
