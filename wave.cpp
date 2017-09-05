@@ -77,7 +77,7 @@ void Wave::loadVcd(QString path)
 void Wave::onSignalsChanged()
 {
     scene->clear();
-    drawSignals();
+	//drawSignals();
 }
 
 void Wave::onSelectScope(QModelIndex i)
@@ -100,8 +100,14 @@ void Wave::onSelectSignal(QModelIndex i)
 	ui->treeSignalView->setModel(signalViewTree);
 }
 
-void Wave::drawSignals()
+void Wave::drawSignal(QString var_id)
 {
+	QVector<vcd::LogicValue> signal;
+	foreach(vcd::TimeValue value, vcd_data.time_values()) {
+		if(value.var_id()==var_id) {
+			signal[value.time()]=value.value();
+		}
+	}
 	//QList<int> sig = list->getSignals();
 	//for (int i = 0; i < sig.size(); ++i)
 	//{

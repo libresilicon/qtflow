@@ -45,7 +45,7 @@ private:
 
 	vcd::VcdData vcd_data;
 
-    void drawSignals();
+	void drawSignal(QString var_id);
 };
 
 #endif // WAVE_H
