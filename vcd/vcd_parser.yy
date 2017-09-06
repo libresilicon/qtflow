@@ -242,7 +242,14 @@ change_list END
 
 LogicBusValue: BitString
 {
-
+	char c;
+	for(unsigned int i = 0; i < $1.length(); i++) {
+		char c = $1[i]; //this is your character
+		std::cout << c << std::endl;
+		//if(c==LOGIC_ONE) {
+			//TimeBusValue
+		//}
+	}
 }
 
 LogicValue :
