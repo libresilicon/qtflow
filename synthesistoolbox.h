@@ -20,8 +20,11 @@ public:
 	explicit SynthesisToolBox(QWidget *parent = nullptr);
 
 signals:
+	void runSynthesis();
 
 public slots:
+	void onRunSynthesis();
+
 private:
 	Ui::SynthesisToolBox *ui;
 };

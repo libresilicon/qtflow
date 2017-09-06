@@ -5,7 +5,7 @@
 /* Write-out tokens header file */
 %defines
 
-/* Use Bison's 'variant' to store values. 
+/* Use Bison's 'variant' to store values.
  * This allows us to use non POD types (e.g.
  * with constructors/destrictors), which is
  * not possible with the default mode which
@@ -13,7 +13,7 @@
  */
 %define api.value.type variant
 
-/* 
+/*
  * Use the 'complete' symbol type (i.e. variant)
  * in the lexer
  */
@@ -39,7 +39,7 @@
 /* Better error reporting */
 %define parse.error verbose
 
-/* 
+/*
  * Fixes inaccuracy in verbose error reporting.
  * May be slow for some grammars.
  */
@@ -80,7 +80,7 @@
     //Bison calls yylex() to get the next token.
     //Since we have re-defined the equivalent function in the lexer
     //we need to tell Bison how to get the next token.
-	static vcd::Parser::symbol_type yylex(vcd::Lexer& lexer) {
+        static vcd::Parser::symbol_type yylex(vcd::Lexer& lexer) {
         return lexer.next_token();
     }
 
@@ -126,6 +126,7 @@
 %type <Var> var
 %type <Var::Type> var_type
 %type <LogicValue> LogicValue
+%type <std::vector<LogicValue>> LogicBusValue
 %type <std::vector<Var>> definitions
 
 %start vcd_file
@@ -134,7 +135,7 @@
 }
 
 %%
-vcd_file : vcd_header definitions change_list { 
+vcd_file : vcd_header definitions change_list {
                 driver.vcd_data_ = VcdData(std::move($1), std::move($2), std::move(driver.time_values_));
             }
          ;
@@ -163,13 +164,13 @@ definitions : scope { driver.current_scope_.push_back($1); }
      | definitions enddefinitions { $$ = $1; }
      ;
 
-var : VAR var_type Integer VarId String END { 
+var : VAR var_type Integer VarId String END {
             auto hierarchy = driver.current_scope_;
             hierarchy.push_back($5); //Add name to current hierarchy
 
             $$ = Var($2, $3, driver.generate_var_id($4), $4, hierarchy);
         }
-    | VAR var_type Integer VarId String String END { 
+    | VAR var_type Integer VarId String String END {
 
             auto hierarchy = driver.current_scope_;
 
@@ -184,17 +185,17 @@ var : VAR var_type Integer VarId String END {
 var_type :
 WIRE
 {
-	$$ = Var::Type::WIRE;
+        $$ = Var::Type::WIRE;
 }
 |
 REG
 {
-	$$ = Var::Type::REG;
+        $$ = Var::Type::REG;
 }
 |
 PARAMETER
 {
-	$$ = Var::Type::PARAMETER;
+        $$ = Var::Type::PARAMETER;
 }
 ;
 
@@ -224,17 +225,47 @@ change_list LogicValue VarId
 	}
 }
 |
+change_list LogicBusValue VarId
+{
+	driver.time_bus_values_.push_back(TimeBusValue(driver.curr_time_, driver.generate_var_id($3), $2));
+
+	driver.change_count_++;
+	if(driver.change_count_ % 10000000 == 0) {
+		cout << "Loaded " << driver.change_count_ / 1.e6 << "M changes" << std::endl;
+	}
+}
+|
 change_list END
 {
 }
 ;
 
-LogicValue : LOGIC_ONE    { $$ = vcd::LogicValue::ONE; }
-		   | LOGIC_ZERO   { $$ = vcd::LogicValue::ZERO; }
-		   | LOGIC_UNKOWN { $$ = vcd::LogicValue::UNKOWN; }
-		   | LOGIC_HIGHZ  { $$ = vcd::LogicValue::HIGHZ; }
-           | BitString    { /* ignore for now */ }
-           ;
+LogicBusValue: BitString
+{
+
+}
+
+LogicValue :
+LOGIC_ONE
+{
+	$$ = vcd::LogicValue::ONE;
+}
+|
+LOGIC_ZERO
+{
+	$$ = vcd::LogicValue::ZERO;
+}
+|
+LOGIC_UNKOWN
+{
+	$$ = vcd::LogicValue::UNKOWN;
+}
+|
+LOGIC_HIGHZ
+{
+	$$ = vcd::LogicValue::HIGHZ;
+}
+;
 
 %%
 

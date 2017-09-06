@@ -44,6 +44,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	toolBoxWidgetSynthesis = new SynthesisToolBox(this);
 	toolBoxWidgetSynthesis->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetSynthesis);
+	connect(toolBoxWidgetSynthesis,SIGNAL(runSynthesis()),this,SLOT(on_menuSynthesis_triggered()));
 
 	modulesWidget = new ModuleSelector(this);
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -179,7 +180,7 @@ void MainWindow::on_analogSimulationMode_triggered()
 void MainWindow::on_synthesisMode_triggered()
 {
 	hideAllDockerWidgets();
-	//toolBoxWidgetTestBench->setVisible(true);
+	toolBoxWidgetSynthesis->setVisible(true);
 	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
@@ -239,10 +240,9 @@ void MainWindow::on_menuSimulation_triggered()
 
 void MainWindow::on_menuSynthesis_triggered()
 {
-	ui->menuSynthesis->setDisabled(true);
-	ui->menuPlacement->setDisabled(true);
-	ui->menuRouting->setDisabled(true);
-	ui->buildAll->setDisabled(true);
+	if(project) {
+		project->synthesis();
+	}
 }
 
 void MainWindow::on_menuPlacement_triggered()

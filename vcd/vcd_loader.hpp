@@ -16,7 +16,7 @@ class ParseError;
 //Class for loading an SDF file.
 //
 //The vcd file can be parsed using load(), which returns true
-//if successful - after which the loaded data can be accessed via 
+//if successful - after which the loaded data can be accessed via
 //get_vcd_data().
 //
 //The virtual method on_error() can be overriding to control
@@ -24,38 +24,38 @@ class ParseError;
 //but it could also be defined to (re-)throw an exception.
 class Loader {
 
-    public:
-        Loader();
-        ~Loader();
+	public:
+		Loader();
+		~Loader();
 
-        bool load(std::string filename);
-        bool load(std::istream& is, std::string filename="<inputstream>");
+		bool load(std::string filename);
+		bool load(std::istream& is, std::string filename="<inputstream>");
 
 		VcdData get_vcd_data();
 
-    protected:
-        virtual void on_error(ParseError& error);
+	protected:
+		virtual void on_error(ParseError& error);
 
-    private:
-        Var::Id generate_var_id(std::string str_id);
-    private:
-        friend Parser;
-        std::string filename_;
-        std::unique_ptr<Lexer> lexer_;
-        std::unique_ptr<Parser> parser_;
+	private:
+		Var::Id generate_var_id(std::string str_id);
+	private:
+		friend Parser;
+		std::string filename_;
+		std::unique_ptr<Lexer> lexer_;
+		std::unique_ptr<Parser> parser_;
 
-        bool pre_allocate_time_values_ = true;
+		bool pre_allocate_time_values_ = true;
 
-        VcdData vcd_data_;
-        std::vector<std::string> current_scope_;
-        size_t curr_time_;
-        size_t change_count_;
+		VcdData vcd_data_;
+		std::vector<std::string> current_scope_;
+		size_t curr_time_;
+		size_t change_count_;
 
-        VcdData::TimeValues time_values_;
+		VcdData::TimeValues time_values_;
+		VcdData::TimeBusValues time_bus_values_;
 
-        std::map<std::string,Var::Id> var_str_to_id_;
-        Var::Id max_var_id_ = 0;
-
+		std::map<std::string,Var::Id> var_str_to_id_;
+		Var::Id max_var_id_ = 0;
 };
 
 } //vcdparse

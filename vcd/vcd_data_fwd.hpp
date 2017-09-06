@@ -1,5 +1,5 @@
 #pragma once
 
 namespace sdfparse {
-    class VcdData;
+        class VcdData;
 }
