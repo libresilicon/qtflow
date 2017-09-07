@@ -5,6 +5,7 @@
 #include <map>
 #include <cassert>
 #include <limits>
+#include <QDebug>
 
 #include "vcd_data_fwd.hpp"
 
@@ -76,20 +77,20 @@ namespace vcd {
 
 	class TimeBusValue {
 		public:
-			TimeBusValue(size_t new_time, Var::Id new_var_id, std::vector<vcd::LogicValue> new_value)
+			TimeBusValue(size_t new_time, Var::Id new_var_id, std::vector<vcd::LogicValue> new_values)
 				: time_(new_time)
 				, var_id_(new_var_id)
-				, value_(new_value)
+				, values_(std::move(new_values))
 				{}
 
 			size_t time() const { return time_; }
 			Var::Id var_id() const { return var_id_; }
-			std::vector<vcd::LogicValue> values() const { return value_; }
+			std::vector<vcd::LogicValue> values() const { return values_; }
 
 		private:
 			size_t time_;
 			Var::Id var_id_;
-			std::vector<vcd::LogicValue> value_;
+			std::vector<vcd::LogicValue> values_;
 	};
 
 	class Header {
@@ -112,20 +113,23 @@ namespace vcd {
 			typedef std::vector<TimeValue> TimeValues;
 			typedef std::vector<TimeBusValue> TimeBusValues;
 			VcdData() = default;
-			VcdData(const Header new_header, std::vector<Var> new_vars, TimeValues new_time_values)
+			VcdData(const Header new_header, std::vector<Var> new_vars, TimeValues new_time_values, TimeBusValues new_time_bus_values)
 				: header_(std::move(new_header))
 				, vars_(std::move(new_vars))
 				, time_values_(std::move(new_time_values))
+				, time_bus_values_(std::move(new_time_bus_values))
 				{}
 
 			const Header& header() const { return header_; }
 			const std::vector<Var>& vars() const { return vars_; }
 			const TimeValues& time_values() const { return time_values_; }
+			const TimeBusValues& time_bus_values() const { return time_bus_values_; }
 
 		private:
 			Header header_;
 			std::vector<Var> vars_;
 			TimeValues time_values_;
+			TimeBusValues time_bus_values_;
 
 	};
 

@@ -19,6 +19,7 @@ signals:
 
 protected:
 	void drawSignal(QString signal_name, int idx);
+	void drawSignalBus(QString signal_name, int idx);
 	void drawTimeScale();
 
 public slots:

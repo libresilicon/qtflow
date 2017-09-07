@@ -126,7 +126,6 @@
 %type <Var> var
 %type <Var::Type> var_type
 %type <LogicValue> LogicValue
-%type <std::vector<LogicValue>> LogicBusValue
 %type <std::vector<Var>> definitions
 
 %start vcd_file
@@ -136,7 +135,7 @@
 
 %%
 vcd_file : vcd_header definitions change_list {
-                driver.vcd_data_ = VcdData(std::move($1), std::move($2), std::move(driver.time_values_));
+				driver.vcd_data_ = VcdData(std::move($1), std::move($2), std::move(driver.time_values_), std::move(driver.time_bus_values_));
             }
          ;
 
@@ -225,9 +224,27 @@ change_list LogicValue VarId
 	}
 }
 |
-change_list LogicBusValue VarId
+change_list BitString VarId
 {
-	driver.time_bus_values_.push_back(TimeBusValue(driver.curr_time_, driver.generate_var_id($3), $2));
+	char c;
+
+	std::vector<LogicValue> bits;
+	for(unsigned int i = 0; i < $2.length(); i++) {
+		char c = $2[i];
+		if(c=='1') {
+			bits.push_back(LogicValue::ONE);
+		} else if(c=='0') {
+			bits.push_back(LogicValue::ZERO);
+		} else if(c=='x') {
+			bits.push_back(LogicValue::UNKOWN);
+		} else if(c=='z') {
+			bits.push_back(LogicValue::HIGHZ);
+		} else {
+			bits.push_back(LogicValue::UNKOWN);
+		}
+	}
+
+	driver.time_bus_values_.push_back(std::move(TimeBusValue(driver.curr_time_, driver.generate_var_id($3), std::move(bits))));
 
 	driver.change_count_++;
 	if(driver.change_count_ % 10000000 == 0) {
@@ -239,18 +256,6 @@ change_list END
 {
 }
 ;
-
-LogicBusValue: BitString
-{
-	char c;
-	for(unsigned int i = 0; i < $1.length(); i++) {
-		char c = $1[i]; //this is your character
-		std::cout << c << std::endl;
-		//if(c==LOGIC_ONE) {
-			//TimeBusValue
-		//}
-	}
-}
 
 LogicValue :
 LOGIC_ONE
