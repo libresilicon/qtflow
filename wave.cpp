@@ -13,8 +13,8 @@ Wave::Wave(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	signalView = new VcdSignalView(ui->signalFrame);
-	ui->signalFrame->layout()->addWidget(signalView);
+	signalView = new VcdSignalView(ui->viewerWidget);
+	ui->viewerWidget->layout()->addWidget(signalView);
 
 	ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragDrop);
 	ui->treeSelectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);

@@ -39,11 +39,11 @@ public slots:
 private:
 	Ui::Wave *ui;
 	QGraphicsScene *scene;
-		VcdTreeModel *tree;
-		VcdSignalTreeModel *signalTree;
-		VcdSignalView *signalView;
+	VcdTreeModel *tree;
+	VcdSignalTreeModel *signalTree;
+	VcdSignalView *signalView;
 
-		vcd::VcdData vcd_data;
+	vcd::VcdData vcd_data;
 };
 
 #endif // WAVE_H
