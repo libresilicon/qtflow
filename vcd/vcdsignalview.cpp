@@ -127,6 +127,8 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 {
 	if(!mapIdName.contains(signal_name)) return;
 
+	bool drawn = false;
+
 	int height = this->height();
 	height /= signalViewFilter.count();
 	height /= 2;
@@ -155,11 +157,14 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 			}
 			lastValue = value.value();
 			lastTime = time;
+			drawn = true;
 		}
 	}
 
-	signalScene->addLine(0, idx*height, this->width(), idx*height, white);
-	signalScene->addLine(0, (idx+1)*height, this->width(), (idx+1)*height, white);
+	if(drawn) {
+		signalScene->addLine(0, idx*height, this->width(), idx*height, white);
+		signalScene->addLine(0, (idx+1)*height, this->width(), (idx+1)*height, white);
+	}
 
 	//QList<int> sig = list->getSignals();
 	//for (int i = 0; i < sig.size(); ++i)
