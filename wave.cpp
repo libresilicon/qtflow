@@ -44,6 +44,9 @@ Wave::Wave(QWidget *parent) :
 
 	connect(ui->treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSelectScope(QModelIndex)));
 	connect(ui->treeSelectionView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSelectSignal(QModelIndex)));
+
+	connect(ui->pushZoomIn,SIGNAL(clicked(bool)),signalView,SLOT(onZoomIn()));
+	connect(ui->pushZoomOut,SIGNAL(clicked(bool)),signalView,SLOT(onZoomOut()));
 }
 
 Wave::~Wave()

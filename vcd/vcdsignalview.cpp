@@ -4,18 +4,67 @@
 
 VcdSignalView::VcdSignalView(QWidget *parent) :
 	QGraphicsView(parent),
-	signalScene(new QGraphicsScene(this))
+	signalScene(new QGraphicsScene(this)),
+	timeScale(1)
 {
 	signalScene->setBackgroundBrush(Qt::black);
 	setScene(signalScene);
 }
 
 
+void VcdSignalView::onZoomIn()
+{
+	timeScale++;
+	redraw();
+}
+
+void VcdSignalView::onZoomOut()
+{
+	if(timeScale>1) timeScale--;
+	redraw();
+}
+
 void VcdSignalView::mousePressEvent(QMouseEvent * e)
 {
-	double rad = 10;
-	//QPointF pt = mapToScene(e->pos());
-	//signalScene->addEllipse(pt.x()-rad, pt.y()-rad, rad*2.0, rad*2.0, QPen(), QBrush(Qt::SolidPattern));
+	QPointF pt = mapToScene(e->pos());
+	int x = pt.x();
+	redraw();
+	signalScene->addLine(x,0,x,this->height(),QPen(Qt::red));
+
+}
+
+void VcdSignalView::mouseDoubleClickEvent(QMouseEvent * e)
+{
+	QPointF pt = mapToScene(e->pos());
+	int x = pt.x();
+	//redraw();
+	//signalScene->addLine(x,0,x,this->height(),QPen(Qt::red));
+
+}
+
+void VcdSignalView::contextMenuEvent(QContextMenuEvent *event)
+{
+
+}
+
+void VcdSignalView::dragEnterEvent(QDragEnterEvent *event)
+{
+
+}
+
+void VcdSignalView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+
+}
+
+void VcdSignalView::dragMoveEvent(QDragMoveEvent *event)
+{
+
+}
+
+void VcdSignalView::dropEvent(QDropEvent *event)
+{
+
 }
 
 void VcdSignalView::setVCD(vcd::VcdData d)
@@ -41,21 +90,25 @@ void VcdSignalView::setVCD(vcd::VcdData d)
 	foreach(vcd::TimeValue value, vcd_data.time_values()) {
 		if(value.time()<lowest_time) lowest_time = value.time();
 	}
-
 }
 
 void VcdSignalView::append(QString s)
 {
 	if(!signalViewFilter.contains(s)) {
 		signalViewFilter.append(s);
-		signalScene->clear();
-		drawTimeScale();
-		int idx = 0;
-		foreach(QString s, signalViewFilter) {
-			drawSignal(s,idx);
-			drawSignalBus(s,idx);
-			idx++;
-		}
+	}
+	redraw();
+}
+
+void VcdSignalView::redraw()
+{
+	signalScene->clear();
+	drawTimeScale();
+	int idx = 0;
+	foreach(QString s, signalViewFilter) {
+		drawSignal(s,idx);
+		drawSignalBus(s,idx);
+		idx++;
 	}
 }
 
@@ -87,6 +140,8 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 {
 	if(!mapIdName.contains(signal_name)) return;
 
+	bool drawn = false;
+
 	int height = this->height();
 	height /= signalViewFilter.count();
 	height /= 2;
@@ -103,7 +158,7 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 	foreach(vcd::TimeBusValue bus, vcd_data.time_bus_values()) {
 		if(bus.var_id()==mapIdName[signal_name]) {
 			foreach(vcd::LogicValue value, bus.values()) {
-				time = this->width()*(bus.time()-lowest_time)/(highest_time-lowest_time);
+				time = timeScale*this->width()*(bus.time()-lowest_time)/(highest_time-lowest_time);
 				sigPen.setColor(Qt::green);
 				signalScene->addLine(time, idx*height+space, time, (idx+1)*height-space, sigPen);
 				if(lastValue==vcd::LogicValue::ONE) {
@@ -119,7 +174,12 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 				lastValue = value;
 				lastTime = time;
 			}
+			drawn = true;
 		}
+	}
+
+	if(drawn) {
+		signalScene->addRect(0, idx*height, lastTime, height, QPen(Qt::white));
 	}
 }
 
@@ -135,14 +195,13 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 	int space = height/10;
 
 	QPen sigPen(Qt::green);
-	QPen white(Qt::white);
 
 	vcd::LogicValue lastValue;
 	int lastTime = 0;
 	int time;
 	foreach(vcd::TimeValue value, vcd_data.time_values()) {
 		if(value.var_id()==mapIdName[signal_name]) {
-			time = this->width()*(value.time()-lowest_time)/(highest_time-lowest_time);
+			time = timeScale*this->width()*(value.time()-lowest_time)/(highest_time-lowest_time);
 			sigPen.setColor(Qt::green);
 			signalScene->addLine(time, idx*height+space, time, (idx+1)*height-space, sigPen);
 			if(lastValue==vcd::LogicValue::ONE) {
@@ -162,59 +221,6 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 	}
 
 	if(drawn) {
-		signalScene->addLine(0, idx*height, this->width(), idx*height, white);
-		signalScene->addLine(0, (idx+1)*height, this->width(), (idx+1)*height, white);
+		signalScene->addRect(0, idx*height, lastTime, height, QPen(Qt::white));
 	}
-
-	//QList<int> sig = list->getSignals();
-	//for (int i = 0; i < sig.size(); ++i)
-	//{
-		/*vcd_changes_t::iterator it;
-	vcd_changes_t changes = tree->getValues(sig.at(i));
-
-        int high_ = 1;
-        int long_ = 0;
-        for (it = changes.begin(); it != changes.end(); ++it)
-        {
-            if (it->first > long_)
-                long_ = it->first;
-            if (it->second > high_)
-                high_ = it->second;
-        }
-
-        int time = 0;
-        int state = 0;
-                int h = i * ui->dockWidgetContents->height();
-                double hs = ui->dockWidgetContents->height() / high_;
-                double ws = tree->vcd().timescale * ui->dockWidgetContents->height() / 1000000;
-                int margin = ui->dockWidgetContents->width() / 10;
-        QPen green(Qt::green);
-        for (it = changes.begin(); it != changes.end(); ++it)
-        {
-            // two state
-            if (high_ < 2)
-            {
-                scene->addLine(time * ws, h + state * hs, it->first * ws, h + state * hs, green);
-                scene->addLine(it->first * ws, h + state * hs, it->first * ws, h + it->second * hs, green);
-            }
-            // more than two states
-            else
-            {
-                scene->addLine(time * ws + margin, h + margin, it->first * ws - margin, h + margin, green);
-                                scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + ui->dockWidgetContents->height() - margin, green);
-                                scene->addLine(time * ws + margin, h + ui->dockWidgetContents->height() - margin, it->first * ws - margin, h + ui->dockWidgetContents->height() - margin, green);
-                                scene->addLine(time * ws - margin, h + ui->dockWidgetContents->height() - margin, time * ws + margin, h + margin, green);
-
-                QGraphicsTextItem* ann = new QGraphicsTextItem;
-                ann->setPos(time * ws, h);
-                ann->setDefaultTextColor(QColor(Qt::white));
-                ann->setPlainText(QString::number(it->second));
-
-                scene->addItem(ann);
-            }
-
-            time = it->first;
-            state = it->second;
-                }*/
-        //}
 }
