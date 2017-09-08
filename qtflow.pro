@@ -75,7 +75,8 @@ synthesistoolbox.cpp \
 projectsettings.cpp \
 pythonconsoledockwidget.cpp \
     pysettings.cpp \
-    pyprojectsettings.cpp
+    pyprojectsettings.cpp \
+    qtreeviewdragdrop.cpp
 
 HEADERS  += \
 mainwindow.h \
@@ -110,7 +111,8 @@ synthesistoolbox.h \
 projectsettings.h \
 pythonconsoledockwidget.h \
     pysettings.h \
-    pyprojectsettings.h
+    pyprojectsettings.h \
+    qtreeviewdragdrop.h
 
 FORMS    += \
 mainwindow.ui \

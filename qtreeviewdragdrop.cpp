@@ -1,6 +1,7 @@
 #include "qtreeviewdragdrop.h"
 
-QTreeViewDragDrop::QTreeViewDragDrop(QWidget *parent) : QWidget(parent)
+QTreeViewDragDrop::QTreeViewDragDrop(QWidget *parent)
+	: QTreeView(parent)
 {
 
 }

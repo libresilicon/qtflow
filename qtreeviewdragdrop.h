@@ -1,10 +1,9 @@
 #ifndef QTREEVIEWDRAGDROP_H
 #define QTREEVIEWDRAGDROP_H
 
-#include <QObject>
-#include <QWidget>
+#include <QTreeView>
 
-class QTreeViewDragDrop : public QWidget
+class QTreeViewDragDrop : public QTreeView
 {
 	Q_OBJECT
 public:
