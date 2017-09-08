@@ -11,11 +11,17 @@
 #include <QGraphicsTextItem>
 #include <QMimeData>
 
+#include "qtreeviewdragdrop.h"
+
+#include "ui_wave.h"
+
 #include "vcd/vcdtreemodel.h"
 #include "vcd/vcdlistmodel.h"
 #include "vcd/vcdsignaltreemodel.h"
 #include "vcd/vcdsignalviewtreemodel.h"
 #include "vcd/vcdsignalview.h"
+#include "vcd_parser/location.hh"
+#include "vcd/vcd_loader.hpp"
 
 namespace Ui {
 class Wave;
@@ -42,6 +48,7 @@ private:
 	VcdTreeModel *tree;
 	VcdSignalTreeModel *signalTree;
 	VcdSignalView *signalView;
+	QTreeViewDragDrop *treeSelectionView;
 
 	vcd::VcdData vcd_data;
 };

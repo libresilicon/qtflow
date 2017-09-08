@@ -3,6 +3,8 @@
 
 #include <QGraphicsView>
 #include <QMouseEvent>
+#include <QMenu>
+#include <QAction>
 
 #include "vcd/vcd_data.hpp"
 
@@ -22,18 +24,28 @@ protected:
 	void drawSignalBus(QString signal_name, int idx);
 	void drawTimeScale();
 	void redraw();
+	void rescale();
 
 public slots:
-	void mousePressEvent(QMouseEvent * e);
+	void mousePressEvent(QMouseEvent *e);
+	void mouseReleaseEvent(QMouseEvent *e);
 	void mouseDoubleClickEvent(QMouseEvent *e);
+	void mouseMoveEvent(QMouseEvent *e);
+
 	void contextMenuEvent(QContextMenuEvent *event);
+
 	void dragEnterEvent(QDragEnterEvent *event);
-	void dragLeaveEvent(QDragLeaveEvent *event);
-	void dragMoveEvent(QDragMoveEvent *event);
+	void dragLeaveEvent(QDragLeaveEvent *e);
+	void dragMoveEvent(QDragMoveEvent *e);
 	void dropEvent(QDropEvent *event);
 
 	void onZoomIn();
 	void onZoomOut();
+	void onZoomFitWidth();
+	void onMoveRight();
+	void onMoveLeft();
+
+	void resizeEvent(QResizeEvent *event);
 
 private:
 	QVector<QString> signalViewFilter;
@@ -43,6 +55,9 @@ private:
 	int lowest_time;
 	int highest_time;
 	int timeScale;
+	int recentZeroTime;
+
+	int moveDragLastX;
 };
 
 #endif // VCDSIGNALVIEW_H

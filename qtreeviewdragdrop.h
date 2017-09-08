@@ -2,6 +2,7 @@
 #define QTREEVIEWDRAGDROP_H
 
 #include <QTreeView>
+#include <QDragEnterEvent>
 
 class QTreeViewDragDrop : public QTreeView
 {
@@ -12,6 +13,8 @@ public:
 signals:
 
 public slots:
+	void dragEnterEvent(QDragEnterEvent *event);
+
 };
 
 #endif // QTREEVIEWDRAGDROP_H

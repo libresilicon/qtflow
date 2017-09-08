@@ -5,8 +5,11 @@
 VcdSignalView::VcdSignalView(QWidget *parent) :
 	QGraphicsView(parent),
 	signalScene(new QGraphicsScene(this)),
-	timeScale(1)
+	timeScale(1),
+	recentZeroTime(0),
+	moveDragLastX(0)
 {
+	setAcceptDrops(true);
 	signalScene->setBackgroundBrush(Qt::black);
 	setScene(signalScene);
 }
@@ -24,19 +27,64 @@ void VcdSignalView::onZoomOut()
 	redraw();
 }
 
-void VcdSignalView::mousePressEvent(QMouseEvent * e)
+void VcdSignalView::onZoomFitWidth()
 {
-	QPointF pt = mapToScene(e->pos());
-	int x = pt.x();
+	timeScale=1;
 	redraw();
-	signalScene->addLine(x,0,x,this->height(),QPen(Qt::red));
+}
+
+void VcdSignalView::onMoveRight()
+{
+	recentZeroTime++;
+	redraw();
+}
+
+void VcdSignalView::onMoveLeft()
+{
+	if(recentZeroTime>1) recentZeroTime--;
+	redraw();
+}
+
+void VcdSignalView::resizeEvent(QResizeEvent *event)
+{
+	redraw();
+}
+
+void VcdSignalView::mousePressEvent(QMouseEvent *e)
+{
+	if (e->button() == Qt::MiddleButton)
+	{
+		QPointF pt = mapToScene(e->pos());
+		moveDragLastX = pt.x();
+	}
+}
+
+void VcdSignalView::mouseMoveEvent(QMouseEvent *e)
+{
+	int x;
+	if (e->buttons() & Qt::MidButton)
+	{
+		QPointF pt = mapToScene(e->pos());
+		x = pt.x();
+		recentZeroTime+=(x-moveDragLastX);
+		moveDragLastX=x;
+		redraw();
+	}
+}
+
+void VcdSignalView::mouseReleaseEvent(QMouseEvent * e)
+{
+	//QPointF pt = mapToScene(e->pos());
+	//int x = pt.x();
+	//redraw();
+	//signalScene->addLine(x,0,x,this->height(),QPen(Qt::red));
 
 }
 
 void VcdSignalView::mouseDoubleClickEvent(QMouseEvent * e)
 {
-	QPointF pt = mapToScene(e->pos());
-	int x = pt.x();
+	//QPointF pt = mapToScene(e->pos());
+	//int x = pt.x();
 	//redraw();
 	//signalScene->addLine(x,0,x,this->height(),QPen(Qt::red));
 
@@ -44,22 +92,31 @@ void VcdSignalView::mouseDoubleClickEvent(QMouseEvent * e)
 
 void VcdSignalView::contextMenuEvent(QContextMenuEvent *event)
 {
-
+	QMenu menu(this);
+	menu.addAction("Test");
+	menu.exec(event->globalPos());
 }
 
 void VcdSignalView::dragEnterEvent(QDragEnterEvent *event)
 {
-
 }
 
-void VcdSignalView::dragLeaveEvent(QDragLeaveEvent *event)
+void VcdSignalView::dragLeaveEvent(QDragLeaveEvent *e)
 {
-
 }
 
-void VcdSignalView::dragMoveEvent(QDragMoveEvent *event)
+void VcdSignalView::dragMoveEvent(QDragMoveEvent *e)
 {
-
+	QPointF pt = mapToScene(e->pos());
+	int x = pt.x();
+	if(moveDragLastX<x) {
+		onMoveRight();
+		moveDragLastX = x;
+	}
+	if(moveDragLastX>x) {
+		onMoveLeft();
+		moveDragLastX = x;
+	}
 }
 
 void VcdSignalView::dropEvent(QDropEvent *event)
@@ -110,6 +167,12 @@ void VcdSignalView::redraw()
 		drawSignalBus(s,idx);
 		idx++;
 	}
+	rescale();
+}
+
+void VcdSignalView::rescale()
+{
+	signalScene->setSceneRect(recentZeroTime,0,this->width()-20,this->height()-20);
 }
 
 void VcdSignalView::drawTimeScale()
@@ -142,9 +205,8 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 
 	bool drawn = false;
 
-	int height = this->height();
+	int height = this->height()-20;
 	height /= signalViewFilter.count();
-	height /= 2;
 	int space = height/10;
 
 	QPen sigPen(Qt::green);
@@ -189,9 +251,8 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 
 	bool drawn = false;
 
-	int height = this->height();
+	int height = this->height()-20;
 	height /= signalViewFilter.count();
-	height /= 2;
 	int space = height/10;
 
 	QPen sigPen(Qt::green);

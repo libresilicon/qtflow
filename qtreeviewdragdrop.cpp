@@ -5,3 +5,8 @@ QTreeViewDragDrop::QTreeViewDragDrop(QWidget *parent)
 {
 
 }
+
+void QTreeViewDragDrop::dragEnterEvent(QDragEnterEvent *event)
+{
+	event->acceptProposedAction();
+}

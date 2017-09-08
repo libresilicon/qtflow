@@ -86,7 +86,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pushMoveLeft">
             <property name="text">
              <string/>
             </property>
@@ -123,7 +123,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="pushMoveRight">
             <property name="text">
              <string/>
             </property>
