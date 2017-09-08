@@ -66,10 +66,31 @@ void VcdSignalView::mouseMoveEvent(QMouseEvent *e)
 	{
 		QPointF pt = mapToScene(e->pos());
 		x = pt.x();
-		recentZeroTime+=(x-moveDragLastX);
-		moveDragLastX=x;
+
+		int newZeroTime=recentZeroTime+(x-moveDragLastX);
+		int rightLimit=(timeScale*this->width()*highest_time/(highest_time-lowest_time))-signalScene->sceneRect().width();
+
+		if((newZeroTime>=0)&&(newZeroTime<=rightLimit)) {
+			recentZeroTime=newZeroTime;
+			moveDragLastX=x;
+		}
 		redraw();
 	}
+}
+
+void VcdSignalView::wheelEvent(QWheelEvent *event)
+{
+	int numDegrees = event->delta() / 8;
+	int numSteps = numDegrees / 15;
+
+	int newZeroTime=recentZeroTime+numSteps*100;
+	int rightLimit=(timeScale*this->width()*highest_time/(highest_time-lowest_time))-signalScene->sceneRect().width();
+
+	if((newZeroTime>=0)&&(newZeroTime<=rightLimit)) {
+		recentZeroTime=newZeroTime;
+		event->accept();
+	}
+	redraw();
 }
 
 void VcdSignalView::mouseReleaseEvent(QMouseEvent * e)
@@ -196,6 +217,26 @@ void VcdSignalView::drawTimeScale()
 		for(int i=0; i < this->width()/10 ; i++) {
 			signalScene->addLine(i*10, 0, i*10, 10, white);
 		}
+	} else if(scale.contains("ns")) {
+		foreach(QChar c, scale) {
+			if(c=='n') break;
+			scaleValueString.append(c);
+			scaleValue = scaleValueString.toInt();
+		}
+		for(int i=0; i < this->width()/10 ; i++) {
+			signalScene->addLine(i*10, 0, i*10, 10, white);
+		}
+	} else if(scale.contains("s")) {
+		foreach(QChar c, scale) {
+			if(c=='s') break;
+			scaleValueString.append(c);
+			scaleValue = scaleValueString.toInt();
+		}
+		for(int i=0; i < this->width()/10 ; i++) {
+			signalScene->addLine(i*10, 0, i*10, 10, white);
+		}
+	} else {
+		qDebug() << "(not supported) time scale: " << scale;
 	}
 }
 

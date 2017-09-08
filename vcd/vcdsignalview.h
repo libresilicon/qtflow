@@ -32,6 +32,8 @@ public slots:
 	void mouseDoubleClickEvent(QMouseEvent *e);
 	void mouseMoveEvent(QMouseEvent *e);
 
+	void wheelEvent(QWheelEvent *event);
+
 	void contextMenuEvent(QContextMenuEvent *event);
 
 	void dragEnterEvent(QDragEnterEvent *event);
