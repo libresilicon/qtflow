@@ -260,10 +260,19 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 
 	foreach(vcd::TimeBusValue bus, vcd_data.time_bus_values()) {
 		if(bus.var_id()==mapIdName[signal_name]) {
-			foreach(vcd::LogicValue value, bus.values()) {
-				time = timeScale*this->width()*(bus.time()-lowest_time)/(highest_time-lowest_time);
-				sigPen.setColor(Qt::green);
-				signalScene->addLine(time, idx*height+space, time, (idx+1)*height-space, sigPen);
+			time = timeScale*this->width()*(bus.time()-lowest_time)/(highest_time-lowest_time);
+			sigPen.setColor(Qt::green);
+			if((time-RAISE_TIME)>0) {
+				signalScene->addLine(time+RAISE_TIME, idx*height+space, time-RAISE_TIME, (idx+1)*height-space, sigPen);
+				signalScene->addLine(time-RAISE_TIME, idx*height+space, time+RAISE_TIME, (idx+1)*height-space, sigPen);
+				signalScene->addLine(lastTime+RAISE_TIME, idx*height+space, time-RAISE_TIME, idx*height+space, sigPen);
+				signalScene->addLine(lastTime+RAISE_TIME, (idx+1)*height-space, time-RAISE_TIME, (idx+1)*height-space, sigPen);
+			} else {
+				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+space, sigPen);
+				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+height-space, sigPen);
+			}
+
+			/*foreach(vcd::LogicValue value, bus.values()) {
 				if(lastValue==vcd::LogicValue::ONE) {
 					sigPen.setColor(Qt::green);
 					signalScene->addLine(lastTime, (idx+1)*height-space, time, (idx+1)*height-space , sigPen);
@@ -275,9 +284,10 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 					signalScene->addLine(lastTime, idx*height+space, time, idx*height+space, sigPen);
 				}
 				lastValue = value;
-				lastTime = time;
-			}
+			}*/
+
 			drawn = true;
+			lastTime = time;
 		}
 	}
 

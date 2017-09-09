@@ -8,6 +8,8 @@
 
 #include "vcd/vcd_data.hpp"
 
+#define RAISE_TIME 10
+
 class VcdSignalView : public QGraphicsView
 {
 	Q_OBJECT
