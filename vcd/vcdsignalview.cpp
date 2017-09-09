@@ -244,6 +244,9 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 {
 	if(!mapIdName.contains(signal_name)) return;
 
+	QString busValue;
+	QGraphicsSimpleTextItem *text;
+
 	bool drawn = false;
 
 	int height = this->height()-20;
@@ -271,6 +274,23 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+space, sigPen);
 				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+height-space, sigPen);
 			}
+
+			busValue = "0b";
+			foreach(vcd::LogicValue value, bus.values()) {
+				if(value==vcd::LogicValue::ONE) {
+					busValue+="1";
+				} else if (value==vcd::LogicValue::ZERO) {
+					busValue+="0";
+				} else if (value==vcd::LogicValue::HIGHZ) {
+					busValue+="z";
+				} else if (value==vcd::LogicValue::UNKOWN) {
+					busValue+="x";
+				}
+			}
+
+			text = signalScene->addSimpleText(busValue);
+			text->setPos(time+BUS_VALUE_SPACING, (idx*height)+(height/2));
+			text->setBrush(QColor(Qt::white));
 
 			/*foreach(vcd::LogicValue value, bus.values()) {
 				if(lastValue==vcd::LogicValue::ONE) {

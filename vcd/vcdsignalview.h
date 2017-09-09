@@ -2,6 +2,7 @@
 #define VCDSIGNALVIEW_H
 
 #include <QGraphicsView>
+#include <QGraphicsTextItem>
 #include <QMouseEvent>
 #include <QMenu>
 #include <QAction>
@@ -9,6 +10,7 @@
 #include "vcd/vcd_data.hpp"
 
 #define RAISE_TIME 10
+#define BUS_VALUE_SPACING 5
 
 class VcdSignalView : public QGraphicsView
 {
