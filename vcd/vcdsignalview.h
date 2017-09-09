@@ -30,6 +30,8 @@ protected:
 	void redraw();
 	void rescale();
 
+	QString getHierarchyNameString(std::vector<std::string> l);
+
 public slots:
 	void mousePressEvent(QMouseEvent *e);
 	void mouseReleaseEvent(QMouseEvent *e);

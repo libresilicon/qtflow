@@ -51,8 +51,8 @@ class Loader {
 		size_t curr_time_;
 		size_t change_count_;
 
-		VcdData::TimeValues time_values_;
-		VcdData::TimeBusValues time_bus_values_;
+		TimeValues time_values_;
+		TimeBusValues time_bus_values_;
 
 		std::map<std::string,Var::Id> var_str_to_id_;
 		Var::Id max_var_id_ = 0;

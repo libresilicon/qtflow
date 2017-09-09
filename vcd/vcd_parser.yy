@@ -163,23 +163,25 @@ definitions : scope { driver.current_scope_.push_back($1); }
      | definitions enddefinitions { $$ = $1; }
      ;
 
-var : VAR var_type Integer VarId String END {
-            auto hierarchy = driver.current_scope_;
-            hierarchy.push_back($5); //Add name to current hierarchy
+var : VAR var_type Integer VarId String END
+{
+	auto hierarchy = driver.current_scope_;
+	hierarchy.push_back($5); //Add name to current hierarchy
 
-            $$ = Var($2, $3, driver.generate_var_id($4), $4, hierarchy);
-        }
-    | VAR var_type Integer VarId String String END {
+	$$ = Var($2, $3, driver.generate_var_id($4), $4, hierarchy);
+}
+|
+VAR var_type Integer VarId String String END
+{
+	auto hierarchy = driver.current_scope_;
 
-            auto hierarchy = driver.current_scope_;
+	//Sometimes VCD put the index (e.g. [0]) in a separate string after the base signal name
+	//so concatonate them
+	hierarchy.push_back($5 + $6);
 
-            //Sometimes VCD put the index (e.g. [0]) in a separate string after the base signal name
-            //so concatonate them
-            hierarchy.push_back($5 + $6);
-
-            $$ = Var($2, $3, driver.generate_var_id($4), $4, hierarchy);
-        }
-    ;
+	$$ = Var($2, $3, driver.generate_var_id($4), $4, hierarchy);
+}
+;
 
 var_type :
 WIRE
@@ -227,10 +229,9 @@ change_list LogicValue VarId
 change_list BitString VarId
 {
 	char c;
-
 	std::vector<LogicValue> bits;
 	for(unsigned int i = 0; i < $2.length(); i++) {
-		char c = $2[i];
+		c = $2[i];
 		if(c=='1') {
 			bits.push_back(LogicValue::ONE);
 		} else if(c=='0') {
@@ -244,7 +245,8 @@ change_list BitString VarId
 		}
 	}
 
-	driver.time_bus_values_.push_back(std::move(TimeBusValue(driver.curr_time_, driver.generate_var_id($3), std::move(bits))));
+	TimeBusValue bus(driver.curr_time_, driver.generate_var_id($3), std::move(bits));
+	driver.time_bus_values_.push_back(std::move(bus));
 
 	driver.change_count_++;
 	if(driver.change_count_ % 10000000 == 0) {

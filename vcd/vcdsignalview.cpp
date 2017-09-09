@@ -240,12 +240,29 @@ void VcdSignalView::drawTimeScale()
 	}
 }
 
+QString VcdSignalView::getHierarchyNameString(std::vector<std::string> l)
+{
+	QString ret = "";
+	std::string s;
+	foreach(s,l) {
+		ret+='/';
+		ret+=QString::fromStdString(s);
+	}
+	return ret;
+}
+
 void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 {
 	if(!mapIdName.contains(signal_name)) return;
 
 	QString busValue;
 	QGraphicsSimpleTextItem *text;
+	int width = 1;
+	foreach(vcd::Var var, vcd_data.vars()) {
+		if(getHierarchyNameString(var.hierarchical_name())==signal_name) {
+			width = var.width();
+		}
+	}
 
 	bool drawn = false;
 
@@ -258,8 +275,6 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 	vcd::LogicValue lastValue;
 	int lastTime = 0;
 	int time;
-
-	qDebug() << "bus.var_id()" << vcd_data.time_bus_values().size();
 
 	foreach(vcd::TimeBusValue bus, vcd_data.time_bus_values()) {
 		if(bus.var_id()==mapIdName[signal_name]) {
@@ -275,19 +290,29 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+height-space, sigPen);
 			}
 
+			int i;
 			busValue = "0b";
-			foreach(vcd::LogicValue value, bus.values()) {
-				if(value==vcd::LogicValue::ONE) {
-					busValue+="1";
-				} else if (value==vcd::LogicValue::ZERO) {
-					busValue+="0";
-				} else if (value==vcd::LogicValue::HIGHZ) {
-					busValue+="z";
-				} else if (value==vcd::LogicValue::UNKOWN) {
-					busValue+="x";
-				}
+			char busValueStd[width+1];
+			busValueStd[width]='\0';
+			for(i=0;i<width;i++) {
+				busValueStd[i]='0';
 			}
 
+			i = 1;
+			foreach(vcd::LogicValue value, bus.values()) {
+				if(value==vcd::LogicValue::ONE) {
+					busValueStd[width-i]='1';
+				} else if (value==vcd::LogicValue::ZERO) {
+					busValueStd[width-i]='0';
+				} else if (value==vcd::LogicValue::HIGHZ) {
+					busValueStd[width-i]='z';
+				} else if (value==vcd::LogicValue::UNKOWN) {
+					busValueStd[width-i]='x';
+				}
+				i++;
+			}
+			busValue += busValueStd;
+			qDebug() << busValue;
 			text = signalScene->addSimpleText(busValue);
 			text->setPos(time+BUS_VALUE_SPACING, (idx*height)+(height/2));
 			text->setBrush(QColor(Qt::white));
