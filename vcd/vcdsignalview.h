@@ -11,6 +11,15 @@
 
 #define RAISE_TIME 10
 #define BUS_VALUE_SPACING 5
+#define BOX_SPACE 15
+
+class SignalBusArea
+{
+public:
+	SignalBusArea() : isUnfolded(false) {}
+	QRect area;
+	bool isUnfolded;
+};
 
 class VcdSignalView : public QGraphicsView
 {
@@ -24,8 +33,9 @@ public:
 signals:
 
 protected:
-	void drawSignal(QString signal_name, int idx);
-	void drawSignalBus(QString signal_name, int idx);
+	bool drawSignal(QString signal_name);
+	bool drawSignalBus(QString signal_name);
+	bool drawSubSignals(QString signal_name);
 	void drawTimeScale();
 	void redraw();
 	void rescale();
@@ -53,10 +63,14 @@ public slots:
 	void onMoveRight();
 	void onMoveLeft();
 
+	void onRemoveSignal();
+	void onUnFoldSignalBus();
+	void onFoldSignalBus();
+
 	void resizeEvent(QResizeEvent *event);
 
 private:
-	QVector<QString> signalViewFilter;
+	QStringList signalViewFilter;
 	QGraphicsScene *signalScene;
 	vcd::VcdData vcd_data;
 	QMap<QString,vcd::Var::Id> mapIdName;
@@ -65,7 +79,12 @@ private:
 	int timeScale;
 	int recentZeroTime;
 
+	QMap<QString,SignalBusArea> busSignalAreas;
+	QMap<QString,QRect> signalAreas;
+
 	int moveDragLastX;
+
+	int drawingIndex;
 };
 
 #endif // VCDSIGNALVIEW_H

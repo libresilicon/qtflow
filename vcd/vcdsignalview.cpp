@@ -111,11 +111,82 @@ void VcdSignalView::mouseDoubleClickEvent(QMouseEvent * e)
 
 }
 
-void VcdSignalView::contextMenuEvent(QContextMenuEvent *event)
+void VcdSignalView::contextMenuEvent(QContextMenuEvent *e)
 {
+	int y1, y2;
+	QPointF pt = mapToScene(e->pos());
 	QMenu menu(this);
-	menu.addAction("Test");
-	menu.exec(event->globalPos());
+	QAction *action;
+
+	foreach(QString key, busSignalAreas.keys()) {
+		y1 = busSignalAreas[key].area.y();
+		y2 = y1+busSignalAreas[key].area.height();
+		if((pt.y()>=y1)&&(pt.y()<=y2)) {
+			action = menu.addAction("Remove signal bus");
+			action->setData(key);
+			connect(action,SIGNAL(triggered(bool)),this, SLOT(onRemoveSignal()));
+
+			if(busSignalAreas[key].isUnfolded) {
+				action = menu.addAction("Fold bus");
+				action->setData(key);
+				connect(action,SIGNAL(triggered(bool)),this, SLOT(onFoldSignalBus()));
+			} else {
+				action = menu.addAction("Unfold bus");
+				action->setData(key);
+				connect(action,SIGNAL(triggered(bool)),this, SLOT(onUnFoldSignalBus()));
+			}
+		}
+	}
+
+	foreach(QString key, signalAreas.keys()) {
+		y1 = signalAreas[key].y();
+		y2 = y1+signalAreas[key].height();
+		if((pt.y()>=y1)&&(pt.y()<=y2)) {
+			action = menu.addAction("Remove signal");
+			action->setData(key);
+			connect(action,SIGNAL(triggered(bool)),this, SLOT(onRemoveSignal()));
+		}
+	}
+
+	menu.exec(e->globalPos());
+}
+
+void VcdSignalView::onFoldSignalBus()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	QString key = action->data().toString();
+
+	if(busSignalAreas.contains(key)) {
+		busSignalAreas[key].isUnfolded = false;
+	}
+
+	redraw();
+}
+
+void VcdSignalView::onUnFoldSignalBus()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	QString key = action->data().toString();
+
+	if(busSignalAreas.contains(key)) {
+		busSignalAreas[key].isUnfolded = true;
+	}
+
+	redraw();
+}
+
+void VcdSignalView::onRemoveSignal()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	QString key = action->data().toString();
+
+	for(int i=0;i<signalViewFilter.count();i++) {
+		if(signalViewFilter.at(i)==key) {
+			signalViewFilter.removeAt(i);
+		}
+	}
+
+	redraw();
 }
 
 void VcdSignalView::dragEnterEvent(QDragEnterEvent *event)
@@ -182,12 +253,13 @@ void VcdSignalView::redraw()
 {
 	signalScene->clear();
 	drawTimeScale();
-	int idx = 0;
+
+	drawingIndex = 0;
 	foreach(QString s, signalViewFilter) {
-		drawSignal(s,idx);
-		drawSignalBus(s,idx);
-		idx++;
+		drawSignalBus(s);
+		drawSignal(s);
 	}
+
 	rescale();
 }
 
@@ -251,10 +323,12 @@ QString VcdSignalView::getHierarchyNameString(std::vector<std::string> l)
 	return ret;
 }
 
-void VcdSignalView::drawSignalBus(QString signal_name, int idx)
+bool VcdSignalView::drawSignalBus(QString signal_name)
 {
-	if(!mapIdName.contains(signal_name)) return;
+	if(!mapIdName.contains(signal_name)) return false;
 
+	bool unfold = false;
+	int height;
 	QString busValue;
 	QGraphicsSimpleTextItem *text;
 	int width = 1;
@@ -266,9 +340,20 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 
 	bool drawn = false;
 
-	int height = this->height()-20;
-	height /= signalViewFilter.count();
-	int space = height/10;
+	if(busSignalAreas.contains(signal_name)) {
+		unfold=busSignalAreas[signal_name].isUnfolded;
+	}
+
+	int divisor = signalViewFilter.count();
+	if(unfold) {
+		divisor += width;
+	}
+
+	height = this->height()-10;
+	height /= divisor;
+
+	int space = height;
+	space /= 10;
 
 	QPen sigPen(Qt::green);
 
@@ -281,13 +366,13 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 			time = timeScale*this->width()*(bus.time()-lowest_time)/(highest_time-lowest_time);
 			sigPen.setColor(Qt::green);
 			if((time-RAISE_TIME)>0) {
-				signalScene->addLine(time+RAISE_TIME, idx*height+space, time-RAISE_TIME, (idx+1)*height-space, sigPen);
-				signalScene->addLine(time-RAISE_TIME, idx*height+space, time+RAISE_TIME, (idx+1)*height-space, sigPen);
-				signalScene->addLine(lastTime+RAISE_TIME, idx*height+space, time-RAISE_TIME, idx*height+space, sigPen);
-				signalScene->addLine(lastTime+RAISE_TIME, (idx+1)*height-space, time-RAISE_TIME, (idx+1)*height-space, sigPen);
+				signalScene->addLine(time+RAISE_TIME, drawingIndex*height+space+BOX_SPACE, time-RAISE_TIME, (drawingIndex+1)*height-space-BOX_SPACE, sigPen);
+				signalScene->addLine(time-RAISE_TIME, drawingIndex*height+space+BOX_SPACE, time+RAISE_TIME, (drawingIndex+1)*height-space-BOX_SPACE, sigPen);
+				signalScene->addLine(lastTime+RAISE_TIME, drawingIndex*height+space+BOX_SPACE, time-RAISE_TIME, drawingIndex*height+space+BOX_SPACE, sigPen);
+				signalScene->addLine(lastTime+RAISE_TIME, (drawingIndex+1)*height-space-BOX_SPACE, time-RAISE_TIME, (drawingIndex+1)*height-space-BOX_SPACE, sigPen);
 			} else {
-				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+space, sigPen);
-				signalScene->addLine(0, (idx*height)+(height/2), RAISE_TIME, (idx*height)+height-space, sigPen);
+				signalScene->addLine(0, (drawingIndex*height)+BOX_SPACE+space+((height-2*(BOX_SPACE+space))/2), RAISE_TIME, (drawingIndex*height)+space+BOX_SPACE, sigPen);
+				signalScene->addLine(0, (drawingIndex*height)+BOX_SPACE+space+((height-2*(BOX_SPACE+space))/2), RAISE_TIME, (drawingIndex*height)+height-BOX_SPACE-space, sigPen);
 			}
 
 			int i;
@@ -312,12 +397,73 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 				i++;
 			}
 			busValue += busValueStd;
-			qDebug() << busValue;
 			text = signalScene->addSimpleText(busValue);
-			text->setPos(time+BUS_VALUE_SPACING, (idx*height)+(height/2));
+			text->setPos(time+BUS_VALUE_SPACING, (drawingIndex*height)+(height/2));
 			text->setBrush(QColor(Qt::white));
 
-			/*foreach(vcd::LogicValue value, bus.values()) {
+			drawn = true;
+			lastTime = time;
+		}
+	}
+
+	if(drawn) {
+		// box around bus signal:
+		signalScene->addRect(0, drawingIndex*height+BOX_SPACE, lastTime, height-BOX_SPACE*2, QPen(Qt::white));
+
+		// add it to the list
+		busSignalAreas[signal_name]=SignalBusArea();
+		busSignalAreas[signal_name].area=QRect(0, drawingIndex*height+BOX_SPACE, lastTime, height-BOX_SPACE*2);
+		busSignalAreas[signal_name].isUnfolded = unfold;
+
+		// name of the signal bus:
+		text = signalScene->addSimpleText(signal_name);
+		text->setPos(recentZeroTime+space, drawingIndex*height+BOX_SPACE);
+		text->setBrush(QColor(Qt::white));
+
+		drawingIndex++;
+
+		if(unfold) {
+			drawSubSignals(signal_name);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool VcdSignalView::drawSubSignals(QString signal_name)
+{
+	if(!mapIdName.contains(signal_name)) return false;
+
+	int height;
+	int width = 1;
+	foreach(vcd::Var var, vcd_data.vars()) {
+		if(getHierarchyNameString(var.hierarchical_name())==signal_name) {
+			width = var.width();
+		}
+	}
+
+	height = this->height()-10;
+	height /= signalViewFilter.count();
+
+	int space = height;
+	space /= 10;
+
+	QPen sigPen(Qt::green);
+
+	vcd::LogicValue lastValue;
+	int lastTime = 0;
+	int time;
+
+	int idx;
+	foreach(vcd::TimeBusValue bus, vcd_data.time_bus_values()) {
+		if(bus.var_id()==mapIdName[signal_name]) {
+			qDebug() << "Drawing: " << signal_name;
+
+			idx = drawingIndex;
+			time = timeScale*this->width()*(bus.time()-lowest_time)/(highest_time-lowest_time);
+			foreach(vcd::LogicValue value, bus.values()) {
 				if(lastValue==vcd::LogicValue::ONE) {
 					sigPen.setColor(Qt::green);
 					signalScene->addLine(lastTime, (idx+1)*height-space, time, (idx+1)*height-space , sigPen);
@@ -329,27 +475,27 @@ void VcdSignalView::drawSignalBus(QString signal_name, int idx)
 					signalScene->addLine(lastTime, idx*height+space, time, idx*height+space, sigPen);
 				}
 				lastValue = value;
-			}*/
+				idx++;
+			}
 
-			drawn = true;
 			lastTime = time;
 		}
 	}
-
-	if(drawn) {
-		signalScene->addRect(0, idx*height, lastTime, height, QPen(Qt::white));
-	}
 }
 
-void VcdSignalView::drawSignal(QString signal_name, int idx)
+bool VcdSignalView::drawSignal(QString signal_name)
 {
-	if(!mapIdName.contains(signal_name)) return;
+	if(!mapIdName.contains(signal_name)) return false;
 
 	bool drawn = false;
+	int height;
+	QGraphicsSimpleTextItem *text;
 
-	int height = this->height()-20;
+	height = this->height()-10;
 	height /= signalViewFilter.count();
-	int space = height/10;
+
+	int space = height;
+	space /= 10;
 
 	QPen sigPen(Qt::green);
 
@@ -360,16 +506,16 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 		if(value.var_id()==mapIdName[signal_name]) {
 			time = timeScale*this->width()*(value.time()-lowest_time)/(highest_time-lowest_time);
 			sigPen.setColor(Qt::green);
-			signalScene->addLine(time, idx*height+space, time, (idx+1)*height-space, sigPen);
+			signalScene->addLine(time, drawingIndex*height+space+BOX_SPACE, time, (drawingIndex+1)*height-space-BOX_SPACE, sigPen);
 			if(lastValue==vcd::LogicValue::ONE) {
 				sigPen.setColor(Qt::green);
-				signalScene->addLine(lastTime, (idx+1)*height-space, time, (idx+1)*height-space , sigPen);
+				signalScene->addLine(lastTime, (drawingIndex+1)*height-space-BOX_SPACE, time, (drawingIndex+1)*height-space-BOX_SPACE , sigPen);
 			} else if (lastValue==vcd::LogicValue::ZERO) {
 				sigPen.setColor(Qt::green);
-				signalScene->addLine(lastTime, idx*height+space, time, idx*height+space, sigPen);
+				signalScene->addLine(lastTime, drawingIndex*height+space+BOX_SPACE, time, drawingIndex*height+space+BOX_SPACE, sigPen);
 			} else if (lastValue==vcd::LogicValue::HIGHZ) {
 				sigPen.setColor(Qt::red);
-				signalScene->addLine(lastTime, idx*height+space, time, idx*height+space, sigPen);
+				signalScene->addLine(lastTime, drawingIndex*height+space+BOX_SPACE, time, drawingIndex*height+space+BOX_SPACE, sigPen);
 			}
 			lastValue = value.value();
 			lastTime = time;
@@ -378,6 +524,21 @@ void VcdSignalView::drawSignal(QString signal_name, int idx)
 	}
 
 	if(drawn) {
-		signalScene->addRect(0, idx*height, lastTime, height, QPen(Qt::white));
+		// box for the signal
+		signalScene->addRect(0, drawingIndex*height+BOX_SPACE, lastTime, height-BOX_SPACE*2, QPen(Qt::white));
+
+		// add it to the list
+		signalAreas[signal_name]=QRect(0, drawingIndex*height+BOX_SPACE, lastTime, height-BOX_SPACE*2);
+
+		// name of the signal bus:
+		text = signalScene->addSimpleText(signal_name);
+		text->setPos(recentZeroTime+space, drawingIndex*height+BOX_SPACE);
+		text->setBrush(QColor(Qt::white));
+
+		drawingIndex++;
+
+		return true;
 	}
+
+	return false;
 }
