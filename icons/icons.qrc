@@ -6,6 +6,10 @@
 <file>./media-playback-pause.svg</file>
 <file>./media-playback-start.svg</file>
 <file>./media-playback-stop.svg</file>
+<file>./media-seek-backward.svg</file>
+<file>./media-seek-forward.svg</file>
+<file>./media-skip-backward.svg</file>
+<file>./media-skip-forward.svg</file>
 <file>./qflow_logo.png</file>
 <file>./zoom-fit-width.svg</file>
 <file>./zoom-in.svg</file>

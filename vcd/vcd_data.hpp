@@ -65,10 +65,10 @@ namespace vcd {
 
 	class TimeBusValue {
 		public:
-			TimeBusValue(size_t new_time, Var::Id new_var_id, std::vector<vcd::LogicValue> new_values);
+			TimeBusValue(size_t new_time, Var::Id new_var_id, std::vector<LogicValue> new_values);
 			size_t time() const;
 			Var::Id var_id() const;
-			std::vector<vcd::LogicValue> values() const;
+			std::vector<vcd::LogicValue> values();
 
 		private:
 			size_t time_;
@@ -101,10 +101,10 @@ namespace vcd {
 			VcdData() = default;
 			VcdData(const Header new_header, std::vector<Var> new_vars, TimeValues new_time_values, TimeBusValues new_time_bus_values);
 
-			const Header& header() const;
-			const std::vector<Var>& vars() const;
-			const TimeValues& time_values() const;
-			const TimeBusValues& time_bus_values() const;
+			const Header &header() const;
+			const std::vector<Var> &vars() const;
+			const TimeValues &time_values() const;
+			const TimeBusValues &time_bus_values() const;
 
 		private:
 			Header header_;

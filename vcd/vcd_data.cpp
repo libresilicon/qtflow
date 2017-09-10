@@ -26,7 +26,8 @@ namespace vcd {
 		, id_(new_id)
 		, str_id_(new_str_id)
 		, hierarchical_name_(new_hierarchical_name)
-		{}
+	{
+	}
 
 	Var::Type Var::type() const
 	{
@@ -94,8 +95,9 @@ namespace vcd {
 	TimeBusValue::TimeBusValue(size_t new_time, Var::Id new_var_id, std::vector<vcd::LogicValue> new_values) :
 		time_(new_time),
 		var_id_(new_var_id),
-		values_(std::move(new_values))
-	{}
+		values_(new_values)
+	{
+	}
 
 	size_t TimeBusValue::time() const
 	{
@@ -107,7 +109,7 @@ namespace vcd {
 		return var_id_;
 	}
 
-	std::vector<vcd::LogicValue> TimeBusValue::values() const
+	std::vector<vcd::LogicValue> TimeBusValue::values()
 	{
 		return values_;
 	}
@@ -143,28 +145,28 @@ namespace vcd {
 	}
 
 	VcdData::VcdData(const Header new_header, std::vector<Var> new_vars, TimeValues new_time_values, TimeBusValues new_time_bus_values) :
-		header_(std::move(new_header)),
-		vars_(std::move(new_vars)),
-		time_values_(std::move(new_time_values)),
-		time_bus_values_(std::move(new_time_bus_values))
+		header_(new_header),
+		vars_(new_vars),
+		time_values_(new_time_values),
+		time_bus_values_(new_time_bus_values)
 	{}
 
-	const Header& VcdData::header() const
+	const Header &VcdData::header() const
 	{
 		return header_;
 	}
 
-	const std::vector<Var>& VcdData::vars() const
+	const std::vector<Var> &VcdData::vars() const
 	{
 		return vars_;
 	}
 
-	const TimeValues& VcdData::time_values() const
+	const TimeValues &VcdData::time_values() const
 	{
 		return time_values_;
 	}
 
-	const TimeBusValues& VcdData::time_bus_values() const
+	const TimeBusValues &VcdData::time_bus_values() const
 	{
 		return time_bus_values_;
 	}

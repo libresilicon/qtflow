@@ -134,34 +134,82 @@
 }
 
 %%
-vcd_file : vcd_header definitions change_list {
-				driver.vcd_data_ = VcdData(std::move($1), std::move($2), std::move(driver.time_values_), std::move(driver.time_bus_values_));
-            }
-         ;
+vcd_file : vcd_header definitions change_list
+{
+	driver.vcd_data_ = VcdData($1, $2, driver.time_values_, driver.time_bus_values_);
+};
 
-vcd_header : date { $$ = Header(); $$.set_date($1); }
-           | vcd_header version { $$ = $1; $$.set_version($2); }
-           | vcd_header timescale { $$ = $1; $$.set_timescale($2); }
-           ;
+vcd_header :
+date
+{
+	$$ = Header(); $$.set_date($1);
+}
+|
+vcd_header version
+{
+	$$ = $1; $$.set_version($2);
+}
+|
+vcd_header timescale
+{
+	$$ = $1; $$.set_timescale($2);
+}
+;
 
-date : DATE Multiline END { $$ = $2; }
-     ;
+date :
+DATE Multiline END
+{
+	$$ = $2;
+}
+;
 
-version : VERSION Multiline END { $$ = $2; }
-        ;
+version :
+VERSION Multiline END
+{
+	$$ = $2;
+}
+;
 
-timescale : TIMESCALE Multiline END { $$ = $2; }
-          ;
+timescale :
+TIMESCALE Multiline END
+{
+	$$ = $2;
+}
+;
 
-scope : SCOPE MODULE String END { $$ = $3; }
-      ;
+scope :
+SCOPE MODULE String END
+{
+	$$ = $3;
+}
+;
 
-definitions : scope { driver.current_scope_.push_back($1); }
-     | definitions scope { $$ = $1; driver.current_scope_.push_back($2); }
-     | definitions var { $$ = $1; $$.push_back($2); }
-     | definitions upscope { $$ = $1; driver.current_scope_.pop_back(); }
-     | definitions enddefinitions { $$ = $1; }
-     ;
+definitions :
+scope
+{
+	driver.current_scope_.push_back($1);
+}
+|
+definitions scope
+{
+	$$ = $1; driver.current_scope_.push_back($2);
+}
+|
+definitions var
+{
+	$$ = $1; $$.push_back($2);
+}
+|
+definitions upscope
+{
+	$$ = $1; driver.current_scope_.pop_back();
+}
+|
+definitions enddefinitions
+{
+	$$ = $1;
+}
+;
 
 var : VAR var_type Integer VarId String END
 {
@@ -229,24 +277,23 @@ change_list LogicValue VarId
 change_list BitString VarId
 {
 	char c;
-	std::vector<LogicValue> bits;
+	std::vector<vcd::LogicValue> bits($2.length());
 	for(unsigned int i = 0; i < $2.length(); i++) {
+		bits[i]=vcd::LogicValue::ZERO;
 		c = $2[i];
 		if(c=='1') {
-			bits.push_back(LogicValue::ONE);
+			bits[i]=vcd::LogicValue::ONE;
 		} else if(c=='0') {
-			bits.push_back(LogicValue::ZERO);
+			bits[i]=vcd::LogicValue::ZERO;
 		} else if(c=='x') {
-			bits.push_back(LogicValue::UNKOWN);
+			bits[i]=vcd::LogicValue::UNKOWN;
 		} else if(c=='z') {
-			bits.push_back(LogicValue::HIGHZ);
-		} else {
-			bits.push_back(LogicValue::UNKOWN);
+			bits[i]=vcd::LogicValue::HIGHZ;
 		}
 	}
 
-	TimeBusValue bus(driver.curr_time_, driver.generate_var_id($3), std::move(bits));
-	driver.time_bus_values_.push_back(std::move(bus));
+	TimeBusValue bus(driver.curr_time_, driver.generate_var_id($3), bits);
+	driver.time_bus_values_.push_back(bus);
 
 	driver.change_count_++;
 	if(driver.change_count_ % 10000000 == 0) {
