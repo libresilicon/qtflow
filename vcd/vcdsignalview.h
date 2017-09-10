@@ -10,15 +10,14 @@
 #include "vcd/vcd_data.hpp"
 
 #define RAISE_TIME 10
-#define BUS_VALUE_SPACING 5
-#define BOX_SPACE 15
 
 class SignalBusArea
 {
 public:
-	SignalBusArea() : isUnfolded(false) {}
+	SignalBusArea() : isUnfolded(false), bus_width(1) {}
 	QRect area;
 	bool isUnfolded;
+	int bus_width;
 };
 
 class VcdSignalView : public QGraphicsView
