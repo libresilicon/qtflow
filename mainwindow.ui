@@ -23,7 +23,7 @@
    <string>QtFlow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="qtflow.qrc">
+   <iconset resource="icons/icons.qrc">
     <normaloff>:/qflow_logo.png</normaloff>:/qflow_logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -64,6 +64,14 @@
       <string>Recents &amp;Projects</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <addaction name="actionLEF_library_exchange_format"/>
+     <addaction name="actionGDSII"/>
+     <addaction name="actionMagic"/>
+    </widget>
     <addaction name="newProject"/>
     <addaction name="openProject"/>
     <addaction name="separator"/>
@@ -71,6 +79,10 @@
     <addaction name="separator"/>
     <addaction name="newFile"/>
     <addaction name="saveFile"/>
+    <addaction name="separator"/>
+    <addaction name="actionFabrication_Output"/>
+    <addaction name="actionImport"/>
+    <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="exit"/>
    </widget>
@@ -110,11 +122,27 @@
     <addaction name="setDigialSimulationMode"/>
     <addaction name="setAnalogSimulationMode"/>
    </widget>
+   <widget class="QMenu" name="menuDesign_Rules">
+    <property name="title">
+     <string>Desi&amp;gn Rules</string>
+    </property>
+    <addaction name="actionDesign_Rules"/>
+    <addaction name="actionLayer_Setup"/>
+   </widget>
+   <widget class="QMenu" name="menuTools_2">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionNetlist"/>
+    <addaction name="actionDRC"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuBuild"/>
    <addaction name="menuTools"/>
    <addaction name="menuProject"/>
+   <addaction name="menuTools_2"/>
+   <addaction name="menuDesign_Rules"/>
   </widget>
   <action name="openMagicFile">
    <property name="text">
@@ -305,10 +333,55 @@
     <string>&amp;Analog simulation mode</string>
    </property>
   </action>
+  <action name="actionDesign_Rules">
+   <property name="text">
+    <string>Design Rules</string>
+   </property>
+  </action>
+  <action name="actionLayer_Setup">
+   <property name="text">
+    <string>Layer Setup</string>
+   </property>
+  </action>
+  <action name="actionNetlist">
+   <property name="text">
+    <string>Netlist</string>
+   </property>
+  </action>
+  <action name="actionDRC">
+   <property name="text">
+    <string>DRC</string>
+   </property>
+  </action>
+  <action name="actionFabrication_Output">
+   <property name="text">
+    <string>Fabrication Outputs</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import</string>
+   </property>
+  </action>
+  <action name="actionLEF_library_exchange_format">
+   <property name="text">
+    <string>LEF (library exchange format)</string>
+   </property>
+  </action>
+  <action name="actionGDSII">
+   <property name="text">
+    <string>GDSII</string>
+   </property>
+  </action>
+  <action name="actionMagic">
+   <property name="text">
+    <string>Magic</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="qtflow.qrc"/>
+  <include location="icons/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

@@ -58,6 +58,7 @@
 %token ROUTED
 %token ASTERISK
 %token NEW
+%token SPECIALNETS
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -83,6 +84,7 @@ def_file_option:
 	| components
 	| pins
 	| nets
+	| special_nets
 	;
 
 design: DESIGN STRING;
@@ -166,9 +168,13 @@ net_list:
 	;
 
 net_list_element:
-	  MINUS STRING net_connections
+	  net_info
 	| routed_info
+	| new_metal
 ;
+
+net_name: MINUS STRING;
+net_info: net_name net_connections;
 
 net_connections:
 	  net_connection
@@ -178,8 +184,8 @@ net_connections:
 net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE;
 
 routed_info:
-	  routed_info_layer routed_info_tupels new_metal_list
-	| routed_info_layer routed_info_tupels STRING new_metal_list;
+	  routed_info_layer routed_info_tupels
+	| routed_info_layer routed_info_tupels STRING;
 
 routed_info_layer: PLUS ROUTED STRING;
 
@@ -205,14 +211,44 @@ new_metal_tupel:
 	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
 	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
 
-new_metal_list:
-	  new_metal
-	| new_metal new_metal_list
-	;
-
 new_metal:
 	  NEW STRING new_metal_tupels STRING
 	| NEW STRING new_metal_tupels;
+
+special_nets: SPECIALNETS INTEGER special_net_list END SPECIALNETS;
+
+special_net_list:
+		special_net_list special_net
+	  | special_net;
+
+special_net:
+	  special_net_name
+	| special_routed_info
+	| special_new_metal
+;
+
+special_net_name: MINUS STRING;
+
+special_routed_info:
+	  special_routed_info_layer special_routed_info_tupels
+	| special_routed_info_layer special_routed_info_tupels STRING;
+
+special_routed_info_layer: PLUS ROUTED STRING INTEGER;
+
+special_routed_info_tupels:
+	  special_routed_info_tupel
+	| special_routed_info_tupel routed_info_tupels
+;
+
+special_routed_info_tupel:
+	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+	| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+
+special_new_metal:
+	NEW STRING INTEGER new_metal_tupels STRING
+  | NEW STRING INTEGER new_metal_tupels;
 
 %%
 

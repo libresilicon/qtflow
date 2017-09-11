@@ -28,8 +28,8 @@ DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/$]
 
 ASTERISK			"*"
-PLUS			"+"
-MINUS			"-"
+PLUS				"+"
+MINUS				"-"
 SEMICOLON			";"
 BRACKETOPEN			"("
 BRACKETCLOSE		")"
@@ -40,52 +40,54 @@ BUSBITCHARS			"BUSBITCHARS"
 DIVIDERCHAR			"DIVIDERCHAR"
 UNITS				"UNITS"
 END					"END"
-DESIGN					"DESIGN"
+DESIGN				"DESIGN"
 MICRONS				"MICRONS"
 USEMINSPACING		"USEMINSPACING"
-DISTANCE				"DISTANCE"
+DISTANCE			"DISTANCE"
 DIEAREA				"DIEAREA"
-COMPONENTS				"COMPONENTS"
+COMPONENTS			"COMPONENTS"
 TRACKS				"TRACKS"
-DO				"DO"
+DO					"DO"
 LAYER				"LAYER"
 STEP				"STEP"
 PLACED				"PLACED"
-NET				"NET"
+NET					"NET"
 PINS				"PINS"
 NETS				"NETS"
 ROUTED				"ROUTED"
 NEW					"NEW"
+SPECIALNETS			"SPECIALNETS"
 
 %%
-{SEMICOLON}.*				{}
-{COMMENT}.*					{}
-{VERSION}+					{ return def::DEFParser::token::VERSION; }
-{NAMESCASESENSITIVE}+		{ return def::DEFParser::token::NAMESCASESENSITIVE; }
-{BUSBITCHARS}+				{ return def::DEFParser::token::BUSBITCHARS; }
-{DIVIDERCHAR}+				{ return def::DEFParser::token::DIVIDERCHAR; }
-{UNITS}+					{ return def::DEFParser::token::UNITS; }
-{END}+						{ return def::DEFParser::token::END; }
+{SEMICOLON}.*					{}
+{COMMENT}.*						{}
+{VERSION}+						{ return def::DEFParser::token::VERSION; }
+{NAMESCASESENSITIVE}+			{ return def::DEFParser::token::NAMESCASESENSITIVE; }
+{BUSBITCHARS}+					{ return def::DEFParser::token::BUSBITCHARS; }
+{DIVIDERCHAR}+					{ return def::DEFParser::token::DIVIDERCHAR; }
+{UNITS}+						{ return def::DEFParser::token::UNITS; }
+{END}+							{ return def::DEFParser::token::END; }
 {DISTANCE}+						{ return def::DEFParser::token::DISTANCE; }
 {MICRONS}+						{ return def::DEFParser::token::MICRONS; }
 {DESIGN}+						{ return def::DEFParser::token::DESIGN; }
-{BRACKETOPEN}+						{ return def::DEFParser::token::BRACKETOPEN; }
-{BRACKETCLOSE}+						{ return def::DEFParser::token::BRACKETCLOSE; }
+{BRACKETOPEN}+					{ return def::DEFParser::token::BRACKETOPEN; }
+{BRACKETCLOSE}+					{ return def::DEFParser::token::BRACKETCLOSE; }
 {DIEAREA}+						{ return def::DEFParser::token::DIEAREA; }
-{COMPONENTS}+						{ return def::DEFParser::token::COMPONENTS; }
+{COMPONENTS}+					{ return def::DEFParser::token::COMPONENTS; }
 {TRACKS}+						{ return def::DEFParser::token::TRACKS; }
-{DO}+						{ return def::DEFParser::token::DO; }
+{DO}+							{ return def::DEFParser::token::DO; }
 {LAYER}+						{ return def::DEFParser::token::LAYER; }
-{STEP}+						{ return def::DEFParser::token::STEP; }
+{STEP}+							{ return def::DEFParser::token::STEP; }
 {MINUS}+						{ return def::DEFParser::token::MINUS; }
-{PLUS}+						{ return def::DEFParser::token::PLUS; }
+{PLUS}+							{ return def::DEFParser::token::PLUS; }
 {PLACED}+						{ return def::DEFParser::token::PLACED; }
-{NETS}+						{ return def::DEFParser::token::NETS; }
-{NET}+						{ return def::DEFParser::token::NET; }
-{PINS}+						{ return def::DEFParser::token::PINS; }
+{NETS}+							{ return def::DEFParser::token::NETS; }
+{NET}+							{ return def::DEFParser::token::NET; }
+{PINS}+							{ return def::DEFParser::token::PINS; }
 {ROUTED}+						{ return def::DEFParser::token::ROUTED; }
 {ASTERISK}+						{ return def::DEFParser::token::ASTERISK; }
-{NEW}+						{ return def::DEFParser::token::NEW; }
+{NEW}+							{ return def::DEFParser::token::NEW; }
+{SPECIALNETS}+					{ return def::DEFParser::token::SPECIALNETS; }
 
 {INTEGER}* {
 	deflval->v_int = atoi(yytext);
