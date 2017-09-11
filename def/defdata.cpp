@@ -1,7 +1,11 @@
 #include "defdata.h"
 #include "defscanner.h"
 
+#include <QDebug>
+
 namespace def {
+	DEFModuleInfo::DEFModuleInfo() {}
+
 	DEFData::DEFData(QString filename) :
 		lexer(NULL),
 		parser(NULL),
@@ -24,24 +28,26 @@ namespace def {
 		input.close();
 	}
 
-	void DEFData::setLayer(std::string *s)
-	{
-		recentTitle = QString::fromStdString(*s);
-	}
-
-	void DEFData::setTechnology(std::string *s)
-	{
-		technology = QString::fromStdString(*s);
-	}
-	
 	void DEFData::setAmountComponents(int i)
 	{
-		
+		amountComponents = i;
 	}
 
-	QString DEFData::getTechnology()
+
+	void DEFData::addUsedModuleNames(std::string *module, std::string *name)
 	{
-		return technology;
+		recent_module.module_name = QString::fromStdString(*module);
+		recent_module.instance_name = QString::fromStdString(*name);
+	}
+
+	void DEFData::addUsedModulePlacement(double,double)
+	{
+
+	}
+
+	void DEFData::addUsedModule()
+	{
+		parsedModules.append(recent_module);
 	}
 
 	DEFScanner *DEFData::getLexer()
@@ -49,21 +55,11 @@ namespace def {
 		return lexer;
 	}
 
-	layer_rects_t DEFData::getBoxes()
-	{
-		return parsedBoxes;
-	}
-
-	layer_rects_t DEFData::getRectangles()
-	{
-		return parsedRectangles;
-	}
-
 	mods_t DEFData::getModules()
 	{
 		return parsedModules;
 	}
-	
+
 	void DEFData::setDistanceUnitMicrons(int t)
 	{
 		distanceMicrons = true;

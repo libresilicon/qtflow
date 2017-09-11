@@ -35,8 +35,6 @@ public slots:
 
 protected:
 	QColor colorMat(QString material);
-	void drawRectangles();
-	void drawModuleInfo();
 
 private:
 	QString filePath;

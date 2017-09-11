@@ -63,6 +63,8 @@
 %token <v_str> STRING
 %token <v_double> DOUBLE
 
+%type <v_double> placement_value
+
 %start def_file
 
 %%
@@ -99,18 +101,45 @@ diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBL
 	;
 
 tracks: TRACKS STRING DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | TRACKS STRING DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
+
 components: components_amount component_list END COMPONENTS;
+
 components_amount: COMPONENTS INTEGER
 	{
 		defdata->setAmountComponents($2);
 	}
 	;
+
 component_list:
 	  component_list_element
 	| component_list_element component_list
 	;
 
-component_list_element: MINUS STRING STRING PLUS PLACED BRACKETOPEN DOUBLE INTEGER BRACKETCLOSE STRING;
+component_list_element: component_name component_placement
+{
+	defdata->addUsedModule();
+};
+
+component_name: MINUS STRING STRING
+{
+	defdata->addUsedModuleNames($2,$3);
+};
+
+placement_value:
+DOUBLE
+{
+	$$=$1;
+}
+|
+INTEGER
+{
+	$$=(double)$1;
+};
+
+component_placement: PLUS PLACED BRACKETOPEN placement_value placement_value BRACKETCLOSE STRING
+{
+	defdata->addUsedModulePlacement($4,$5);
+};
 
 pins: PINS INTEGER pin_list END PINS;
 pin_list:
@@ -136,7 +165,10 @@ net_list:
 	| net_list_element net_list
 	;
 
-net_list_element: MINUS STRING net_connections routed_info;
+net_list_element:
+	  MINUS STRING net_connections
+	| routed_info
+;
 
 net_connections:
 	  net_connection
