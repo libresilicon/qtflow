@@ -247,8 +247,8 @@ special_routed_info_tupel:
 	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
 
 special_new_metal:
-	NEW STRING INTEGER new_metal_tupels STRING
-  | NEW STRING INTEGER new_metal_tupels;
+	  NEW STRING INTEGER new_metal_tupels STRING
+	| NEW STRING INTEGER new_metal_tupels;
 
 %%
 
