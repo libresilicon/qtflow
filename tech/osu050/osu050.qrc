@@ -1,0 +1,13 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file>./osu050.magicrc</file>
+<file>./osu050.par</file>
+<file>./osu050.prm</file>
+<file>./osu050.sh</file>
+<file>./osu050_stdcells.lef</file>
+<file>./osu050_stdcells.sp</file>
+<file>./osu05_stdcells.lib</file>
+<file>./osu05_stdcells.v</file>
+<file>./SCN3ME_SUBM.30.tech</file>
+</qresource>
+</RCC>

@@ -138,6 +138,9 @@ console.ui
 
 RESOURCES += qtflow.qrc
 RESOURCES += icons/icons.qrc
+RESOURCES += tech/osu018/osu018.qrc
+RESOURCES += tech/osu035/osu035.qrc
+RESOURCES += tech/osu050/osu050.qrc
 
 include(PythonQt/src/src.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
