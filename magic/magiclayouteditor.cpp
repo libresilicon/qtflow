@@ -1,13 +1,15 @@
 #include "magiclayouteditor.h"
 #include <QAbstractScrollArea>
-
-#include "magicdata.h"
-#include "../lef/lefdata.h"
+#include <QFileInfo>
+#include <QResource>
+#include <QDebug>
+#include <QTemporaryDir>
 
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
 	lefdata(NULL),
+	project(NULL),
 	filePath(QString()),
 	editScene(new QGraphicsScene(this))
 {
@@ -54,7 +56,7 @@ void MagicLayoutEditor::drawModuleInfo()
 	foreach (module_info e, mods)
 	{
 		// fill in library content:
-		if(lefdata->isDefinedMacro(e.module_name_plain)) {
+		if(lefdata) if(lefdata->isDefinedMacro(e.module_name_plain)) {
 			macro = lefdata->getMacro(e.module_name_plain);
 			macro->scaleMacro(e.box.width(),e.box.height());
 			foreach(pin, macro->getPins()) {
@@ -91,12 +93,24 @@ void MagicLayoutEditor::drawModuleInfo()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
+	QTemporaryDir temporaryDir;
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
 	magicdata->getTechnology(); // TODO: do something with this here
-	if(lefdata) delete lefdata;
-	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
+	if(lefdata) {
+		delete lefdata;
+		lefdata = NULL;
+	}
+
+	QFile::copy(":/osu035/osu035_stdcells.lef", temporaryDir.path()+"/osu035_stdcells.lef");
+	if(QFile(temporaryDir.path()+"/osu035_stdcells.lef").exists()) {
+		qDebug() << "Opening library file " << temporaryDir.path()+"/osu035_stdcells.lef";
+		lefdata = new lef::LEFData(temporaryDir.path()+"/osu035_stdcells.lef");
+	} else {
+		qDebug() << "Library file " << temporaryDir.path()+"/osu035_stdcells.lef" << "doesn't exist";
+	}
+
 	drawRectangles();
 	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
@@ -104,6 +118,11 @@ void MagicLayoutEditor::loadFile(QString file)
 
 void MagicLayoutEditor::saveFile()
 {
+}
+
+void MagicLayoutEditor::setProject(Project *p)
+{
+	project = p;
 }
 
 QString MagicLayoutEditor::getFilePath()

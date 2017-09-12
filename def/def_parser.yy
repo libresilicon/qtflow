@@ -93,24 +93,25 @@ cases: NAMESCASESENSITIVE STRING;
 bitchars: BUSBITCHARS STRING;
 dividechar: DIVIDERCHAR STRING;
 units: UNITS DISTANCE MICRONS INTEGER
-	{
+{
 	defdata->setDistanceUnitMicrons($4);
-	}
-	;
+}
+;
+
 diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE
-	{
-	}
-	;
+{
+}
+;
 
 tracks: TRACKS STRING DOUBLE DO INTEGER STEP DOUBLE LAYER STRING | TRACKS STRING DOUBLE DO INTEGER STEP INTEGER LAYER STRING;
 
 components: components_amount component_list END COMPONENTS;
 
 components_amount: COMPONENTS INTEGER
-	{
-		defdata->setAmountComponents($2);
-	}
-	;
+{
+	defdata->setAmountComponents($2);
+}
+;
 
 component_list:
 	  component_list_element
@@ -165,7 +166,7 @@ nets: NETS INTEGER net_list END NETS;
 net_list:
 	  net_list_element
 	| net_list_element net_list
-	;
+;
 
 net_list_element:
 	  net_info

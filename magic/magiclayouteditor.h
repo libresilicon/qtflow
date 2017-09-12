@@ -2,6 +2,9 @@
 #define MAGICLAYOUTEDITOR_H
 
 #include "ieditor.h"
+#include "magicdata.h"
+#include "lef/lefdata.h"
+#include "project.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -25,6 +28,7 @@ public:
 	explicit MagicLayoutEditor(QWidget *parent = nullptr);
 
 	void loadFile(QString);
+	void setProject(Project *p);
 	void saveFile();
 	QString getFilePath();
 
@@ -43,6 +47,8 @@ private:
 	QGraphicsScene *editScene;
 	magic::MagicData *magicdata;
 	lef::LEFData *lefdata;
+
+	Project *project;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

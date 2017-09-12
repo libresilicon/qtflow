@@ -38,7 +38,7 @@ namespace def {
 		void setDistanceUnitMicrons(int t);
 		void setAmountComponents(int i);
 		void addUsedModuleNames(std::string *module, std::string *name);
-		void addUsedModulePlacement(double,double);
+		void addUsedModulePlacement(double x, double y);
 		void addUsedModule();
 
 	private:
