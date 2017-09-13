@@ -13,6 +13,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QCommandLineParser>
+#include <QDomDocument>
 
 #include <PythonQt.h>
 
@@ -56,6 +57,7 @@ public:
 	QString getTestBench();
 	QString getTechnology();
 	QString getProcess();
+	QString getProcessFile();
 	QString getProjectType();
 	QString getSynthesisDir();
 	QString getLayoutDir();
@@ -68,6 +70,7 @@ private:
 	QString rootdir;
 	PythonQtObjectPtr *mainContext;
 	QFileDevice::Permissions executable;
+	QDomDocument *settingsFileProcess;
 };
 
 #endif // PROJECT_H

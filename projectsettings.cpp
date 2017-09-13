@@ -11,7 +11,7 @@ ProjectSettings::ProjectSettings(QWidget *parent) :
 	QDomNodeList nl;
 
 	settingsFileProcess = new QDomDocument();
-	QFile file( ":configs/process.xml" );
+	QFile file(":/process.xml");
 	if(file.open(QIODevice::ReadOnly)) {
 		settingsFileProcess->setContent(&file);
 		file.close();

@@ -8,7 +8,8 @@ IProject::IProject() : QObject()
 Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	IProject(),
 	settings(s),
-	mainContext(main)
+	mainContext(main),
+	settingsFileProcess(NULL)
 {
 	executable
 		= QFileDevice::ReadOwner
@@ -96,6 +97,10 @@ QString Project::getTechnology()
 QString Project::getProcess()
 {
 	return project_settings->value("process").toString();
+}
+
+QString Project::getProcessFile()
+{
 }
 
 QString Project::getProjectType()

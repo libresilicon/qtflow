@@ -97,23 +97,23 @@ void MagicLayoutEditor::loadFile(QString file)
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
-	magicdata->getTechnology(); // TODO: do something with this here
-	if(lefdata) {
-		delete lefdata;
-		lefdata = NULL;
-	}
+	if(project->getTechnology()==magicdata->getTechnology()) {
+		QFile::copy(":/osu035/osu035_stdcells.lef", temporaryDir.path()+"/stdcells.lef");
+		if(QFile(temporaryDir.path()+"/stdcells.lef").exists()) {
+			if(lefdata) {
+				delete lefdata;
+				lefdata = NULL;
+			}
+			qDebug() << "Opening library file " << temporaryDir.path()+"/stdcells.lef";
+			lefdata = new lef::LEFData(temporaryDir.path()+"/stdcells.lef");
+		} else {
+			qDebug() << "Library file " << temporaryDir.path()+"/stdcells.lef" << "doesn't exist";
+		}
 
-	QFile::copy(":/osu035/osu035_stdcells.lef", temporaryDir.path()+"/osu035_stdcells.lef");
-	if(QFile(temporaryDir.path()+"/osu035_stdcells.lef").exists()) {
-		qDebug() << "Opening library file " << temporaryDir.path()+"/osu035_stdcells.lef";
-		lefdata = new lef::LEFData(temporaryDir.path()+"/osu035_stdcells.lef");
-	} else {
-		qDebug() << "Library file " << temporaryDir.path()+"/osu035_stdcells.lef" << "doesn't exist";
+		drawRectangles();
+		drawModuleInfo();
+		//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 	}
-
-	drawRectangles();
-	drawModuleInfo();
-	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 }
 
 void MagicLayoutEditor::saveFile()
