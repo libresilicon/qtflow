@@ -136,7 +136,7 @@ synthesistoolbox.ui \
 projectsettings.ui \
 console.ui
 
-RESOURCES += qtflow.qrc
+RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
 RESOURCES += tech/tech.qrc
 
