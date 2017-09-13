@@ -27,5 +27,6 @@
 <file>./osu050/osu05_stdcells.lib</file>
 <file>./osu050/osu05_stdcells.v</file>
 <file>./osu050/SCN3ME_SUBM.30.tech</file>
+<file>./process.xml</file>
 </qresource>
 </RCC>
