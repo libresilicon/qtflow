@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <technologies>
 	<technology xml:id="xfab">
-		<title>X-Fab</title>
+	<title>X-Fab</title>
 		<description>A foundry somewhere in Germany</description>
-		<process name="xh035" description="350nm process"/>
+	
+		<process xml:id="xh035">
+			<description>X-Fabs 350nm process</description>
+		</process>
 	</technology>
+	
 	<technology xml:id="scmos">
 		<title>Generic free technology</title>
 		<description>Can be manufactured by LanceVille minifab</description>
-		<process name="osu018" description="180nm process"/>
-		<process name="osu035" description="350nm process"/>
-		<process name="osu050" description="500nm process"/>
+
+		<process xml:id="osu018">
+			<description>The SCMOS 180nm process</description>
+			<lef>
+				<file>:/osu018/osu018_stdcells.lef</file>
+			</lef>
+		</process>
+
+		<process xml:id="osu035">
+			<description>The SCMOS 350nm process</description>
+			<lef>
+				<file>:/osu035/osu035_stdcells.lef</file>
+			</lef>
+		</process>
+
+		<process xml:id="osu050">
+			<description>The SCMOS 500nm process</description>
+			<lef>
+				<file>:/osu050/osu050_stdcells.lef</file>
+			</lef>
+		</process>
+
 	</technology>
 </technologies>

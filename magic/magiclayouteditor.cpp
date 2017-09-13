@@ -93,25 +93,25 @@ void MagicLayoutEditor::drawModuleInfo()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
+	QString filedest;
 	QTemporaryDir temporaryDir;
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
 	if(project->getTechnology()==magicdata->getTechnology()) {
-		QFile::copy(":/osu035/osu035_stdcells.lef", temporaryDir.path()+"/stdcells.lef");
-		if(QFile(temporaryDir.path()+"/stdcells.lef").exists()) {
-			if(lefdata) {
-				delete lefdata;
-				lefdata = NULL;
+		if(lefdata) delete lefdata;
+		lefdata = new lef::LEFData();
+		foreach(QString filename, project->getProcessFiles()) {
+			filedest = temporaryDir.path()+"/cells.lef";
+			QFile::copy(filename, filedest);
+			if(QFile(filedest).exists()) {
+				lefdata->loadFile(filedest);
 			}
-			qDebug() << "Opening library file " << temporaryDir.path()+"/stdcells.lef";
-			lefdata = new lef::LEFData(temporaryDir.path()+"/stdcells.lef");
-		} else {
-			qDebug() << "Library file " << temporaryDir.path()+"/stdcells.lef" << "doesn't exist";
 		}
 
 		drawRectangles();
 		drawModuleInfo();
+
 		//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
 	}
 }

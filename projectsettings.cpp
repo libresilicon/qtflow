@@ -52,7 +52,7 @@ void ProjectSettings::technologyActivated(int i)
 					ui->techDescription->setText(pe.text());
 				}
 				if(pe.tagName()=="process") {
-					processName = pe.attribute("name");
+					processName = pe.attribute("xml:id");
 					ui->comboBoxProcess->addItem(processName,processName);
 				}
 			}
@@ -70,8 +70,14 @@ void ProjectSettings::processActivated(int i)
 	QDomNodeList nl = settingsFileProcess->elementsByTagName("process");
 	for(i = 0; i< nl.count(); i++) {
 		QDomElement e = nl.at(i).toElement();
-		if(currentProcess==e.attribute("name")) {
-			ui->processDescription->setText(e.attribute("description"));
+		if(currentProcess==e.attribute("xml:id")) {
+			QDomNodeList cn = e.childNodes();
+			for(int j = 0; j< cn.count(); j++) {
+				QDomElement pe = cn.at(j).toElement();
+				if(pe.tagName()=="description") {
+					ui->processDescription->setText(pe.text());
+				}
+			}
 		}
 	}
 }

@@ -57,7 +57,7 @@ public:
 	QString getTestBench();
 	QString getTechnology();
 	QString getProcess();
-	QString getProcessFile();
+	QStringList getProcessFiles();
 	QString getProjectType();
 	QString getSynthesisDir();
 	QString getLayoutDir();
