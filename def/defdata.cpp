@@ -40,9 +40,10 @@ namespace def {
 		recent_module.instance_name = QString::fromStdString(*name);
 	}
 
-	void DEFData::addUsedModulePlacement(double,double)
+	void DEFData::addUsedModulePlacement(double x, double y)
 	{
-
+		recent_module.x = x;
+		recent_module.y = y;
 	}
 
 	void DEFData::addUsedModule()

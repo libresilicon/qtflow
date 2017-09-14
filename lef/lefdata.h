@@ -110,7 +110,9 @@ namespace lef {
 	class LEFData
 	{
 	public:
+		LEFData();
 		LEFData(QString);
+		void loadFile(QString);
 		LEFScanner *getLexer();
 
 		bool isDefinedMacro(QString name);

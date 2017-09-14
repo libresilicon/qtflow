@@ -7,12 +7,15 @@
 #include "schematics/schematicseditorwidget.h"
 #include "magic/magiclayouteditorwidget.h"
 #include "def/deflayouteditorwidget.h"
+#include "project.h"
 
 class EditorTabManager : public QTabWidget
 {
 	Q_OBJECT
 public:
 	explicit EditorTabManager(QWidget *parent = nullptr);
+
+	void setProject(Project *p);
 
 signals:
 	void fileSaved();
@@ -28,6 +31,8 @@ private:
 	bool isCode(QString);
 	bool isSchematic(QString);
 	bool isLayout(QString suffix);
+
+	Project *project;
 
 };
 

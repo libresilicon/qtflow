@@ -1,8 +1,9 @@
 #include "magiclayouteditor.h"
 #include <QAbstractScrollArea>
-
-#include "magicdata.h"
-#include "../lef/lefdata.h"
+#include <QFileInfo>
+#include <QResource>
+#include <QDebug>
+#include <QTemporaryDir>
 
 ModuleAreaInfo::ModuleAreaInfo():
 	isSelected(false)
@@ -13,6 +14,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
 	lefdata(NULL),
+	project(NULL),
 	filePath(QString()),
 	editScene(new QGraphicsScene(this))
 {
@@ -125,12 +127,24 @@ void MagicLayoutEditor::drawModuleInfo()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
+	QString filedest;
+	QTemporaryDir temporaryDir;
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
-	magicdata->getTechnology(); // TODO: do something with this here
-	if(lefdata) delete lefdata;
-	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
+
+	if(project->getTechnology()==magicdata->getTechnology()) {
+		if(lefdata) delete lefdata;
+		lefdata = new lef::LEFData();
+		foreach(QString filename, project->getProcessFiles()) {
+			filedest = temporaryDir.path()+"/cells.lef";
+			QFile::copy(filename, filedest);
+			if(QFile(filedest).exists()) {
+				lefdata->loadFile(filedest);
+			}
+		}
+	}
+
 	redraw();
 }
 
@@ -143,6 +157,11 @@ void MagicLayoutEditor::redraw()
 
 void MagicLayoutEditor::saveFile()
 {
+}
+
+void MagicLayoutEditor::setProject(Project *p)
+{
+	project = p;
 }
 
 QString MagicLayoutEditor::getFilePath()

@@ -8,7 +8,8 @@ IProject::IProject() : QObject()
 Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	IProject(),
 	settings(s),
-	mainContext(main)
+	mainContext(main),
+	settingsFileProcess(NULL)
 {
 	executable
 		= QFileDevice::ReadOwner
@@ -41,6 +42,13 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	settings->setValue("recentProjects",recentProjectsList);
 	settings->endGroup();
 	settings->sync();
+
+	settingsFileProcess = new QDomDocument();
+	QFile file(":/process.xml");
+	if(file.open(QIODevice::ReadOnly)) {
+		settingsFileProcess->setContent(&file);
+		file.close();
+	}
 }
 
 Project::~Project()
@@ -96,6 +104,48 @@ QString Project::getTechnology()
 QString Project::getProcess()
 {
 	return project_settings->value("process").toString();
+}
+
+QStringList Project::getProcessFiles()
+{
+	QStringList ret;
+	
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3, e4;
+
+	QDomNodeList nl1, nl2, nl3, nl4;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="lef") {
+								nl4 = e3.childNodes();
+								for(int l = 0; l < nl4.count(); l++) {
+									e4 = nl4.at(l).toElement();
+									if(e4.tagName()=="file") {
+										ret.append(e4.text());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
 }
 
 QString Project::getProjectType()

@@ -17,11 +17,36 @@
    <item>
     <widget class="QListWidget" name="listWidget">
      <property name="currentRow">
-      <number>0</number>
+      <number>-1</number>
      </property>
      <item>
       <property name="text">
-       <string>Standard Qflow Project</string>
+       <string>Mixed signal asic</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Digital asic</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Analog asic</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Mixed signal macro cell</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Digital macro cell</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Analog macro cell</string>
       </property>
      </item>
     </widget>
