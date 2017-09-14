@@ -11,6 +11,7 @@ class MagicLayoutEditorWidget : public EditorWidget
 public:
 	MagicLayoutEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
+	void setProject(Project *p);
 	QString getFilePath();
 
 public slots:
@@ -19,6 +20,7 @@ public slots:
 
 private:
 	MagicLayoutEditor *editArea;
+	Project *project;
 };
 
 #endif // MAGICLAYOUTEDITORWIDGET_H

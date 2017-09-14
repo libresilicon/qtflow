@@ -1,8 +1,9 @@
 #include "magiclayouteditor.h"
 #include <QAbstractScrollArea>
-
-#include "magicdata.h"
-#include "../lef/lefdata.h"
+#include <QFileInfo>
+#include <QResource>
+#include <QDebug>
+#include <QTemporaryDir>
 
 ModuleAreaInfo::ModuleAreaInfo():
 	isSelected(false)
@@ -13,6 +14,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
 	lefdata(NULL),
+	project(NULL),
 	filePath(QString()),
 	editScene(new QGraphicsScene(this))
 {
@@ -80,9 +82,10 @@ void MagicLayoutEditor::drawModuleInfo()
 		QRect box( e.c, e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1) );
 
 		// fill in library content:
-		if(lefdata->isDefinedMacro(e.module_name)) {
+		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
 			macro = lefdata->getMacro(e.module_name);
 			macro->scaleMacro(box.width(),box.height());
+
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
@@ -96,6 +99,7 @@ void MagicLayoutEditor::drawModuleInfo()
 					}
 				}
 			}
+
 			foreach (layer, macro->getObstruction()->getLayers()) {
 				color = colorMat(layer->getName());
 				pen = QPen(color);
@@ -106,6 +110,7 @@ void MagicLayoutEditor::drawModuleInfo()
 					editScene->addRect(rect, pen, brush);
 				}
 			}
+
 		}
 
 		// write layout details:
@@ -125,12 +130,23 @@ void MagicLayoutEditor::drawModuleInfo()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
+	QString filedest;
+	QTemporaryDir temporaryDir;
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
-	magicdata->getTechnology(); // TODO: do something with this here
-	if(lefdata) delete lefdata;
-	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
+
+	if(project->getTechnology()==magicdata->getTechnology()) {
+		if(lefdata) delete lefdata;
+		lefdata = new lef::LEFData();
+		foreach(QString filename, project->getProcessFiles()) {
+			filedest = temporaryDir.path()+"/cells.lef";
+			QFile::copy(filename, filedest);
+			if(QFile(filedest).exists()) {
+				lefdata->loadFile(filedest);
+			}
+		}
+	}
 	redraw();
 }
 
@@ -143,6 +159,11 @@ void MagicLayoutEditor::redraw()
 
 void MagicLayoutEditor::saveFile()
 {
+}
+
+void MagicLayoutEditor::setProject(Project *p)
+{
+	project = p;
 }
 
 QString MagicLayoutEditor::getFilePath()

@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file>./simulation.py</file>
+<file>./synthesis.py</file>
+</qresource>
+</RCC>

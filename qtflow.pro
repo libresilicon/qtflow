@@ -135,8 +135,9 @@ synthesistoolbox.ui \
 projectsettings.ui \
 console.ui
 
-RESOURCES += qtflow.qrc
+RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
+RESOURCES += tech/tech.qrc
 
 include(PythonQt/src/src.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
