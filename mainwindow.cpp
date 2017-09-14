@@ -1,380 +1,352 @@
-#include <QMainWindow>
-
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
-#include "app.h"
-#include "environment.h"
-#include "lexmagic.h"
-#include "magicparser.h"
-#include "session.h"
-#include "templates.h"
-#include "grid.h"
-#include "edit.h"
-#include "welcome.h"
-
-#include <iostream>
-#include <string>
-
-#include <QDebug>
-#include <QFileDialog>
-#include <QPlainTextEdit>
-#include <QScrollBar>
-#include <QString>
-#include <QProcess>
-
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    App(),
-    ui(new Ui::MainWindow),
-    project(new Qflow),
-    dependencies(new Dependencies),
-    errorMessage(new QErrorMessage),
-    tcsh(new QProcess),
-    createWidget(new New),
-    welcomeWidget(new Welcome),
-    editWidget(new Edit),
-    timingWidget(new Wave),
-    buildEnvironment(new Environment),
-    qtflowEnvironment(new Environment),
-    iopads(new IOPads),
-    modules(new Modules),
-    session(Session::Instance())
+MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
+	QMainWindow(NULL),
+	parser(p),
+	ui(new Ui::MainWindow),
+	welcomeWidget(new Welcome),
+	createWidget(new New),
+	errorMessage(new QErrorMessage),
+	project(NULL),
+	mainContext(context)
 {
-    session.setApp(this);
-    ui->setupUi(this);
-    ui->consoleError->hide();
-    ui->tabWidget->tabBar()->hide();
-    ui->tabWidget->insertTab(0, welcomeWidget, "Welcome");
-    ui->tabWidget->insertTab(1, editWidget, "Edit");
-    ui->tabWidget->insertTab(2, timingWidget, "Timing");
-    ui->tabWidget->insertTab(3, new QWidget, "Design");
-    connect(tcsh, SIGNAL(readyReadStandardOutput()), this, SLOT(fireTcsh()));
-    connect(tcsh, SIGNAL(readyReadStandardError()), this, SLOT(errorTcsh()));
-    connect(tcsh, SIGNAL(finished(int)), this, SLOT(exitTcsh(int)));
+	ui->setupUi(this);
 
-    connect(createWidget, SIGNAL(fileCreated(QFileInfo&)), editWidget, SLOT(onLoadFile(QFileInfo&)));
+	connect(ui->setAnalogSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_analogSimulationMode_triggered()));
+	connect(ui->setDigialSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_digitalSimulationMode_triggered()));
+	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
 
-    connect(modules, SIGNAL(topModuleChanged()), this, SLOT(onTopModuleChanged()));
+	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
+	settingsDialog = new Settings(this, settings);
+	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
+	mainContext->addObject("settings", new PySettings(this, settings));
 
-    if (!dependencies->tcsh())
-        error("tcsh exectuable not found in PATH!");
+	projectSettingsDialog = new ProjectSettings(this);
+	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
 
-    if (!dependencies->qflow())
-        error("qflow executable not found / wrong qflowprefix: check ~/.qtflowrc");
+	iopadsWidget = new IOPads(this);
+	iopadsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, iopadsWidget);
+
+	filesWidget = new FileSelector(this);
+	filesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::LeftDockWidgetArea, filesWidget);
+
+	projectsWidget = new ProjectSelector(this);
+	projectsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::LeftDockWidgetArea, projectsWidget);
+
+	toolBoxWidgetTestBench = new TestBenchToolBox(this);
+	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetTestBench);
+	connect(toolBoxWidgetTestBench,SIGNAL(runSimulation()),this,SLOT(on_menuSimulation_triggered()));
+
+	toolBoxWidgetSynthesis = new SynthesisToolBox(this);
+	toolBoxWidgetSynthesis->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetSynthesis);
+	connect(toolBoxWidgetSynthesis,SIGNAL(runSynthesis()),this,SLOT(on_menuSynthesis_triggered()));
+
+	modulesWidget = new ModuleSelector(this);
+	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
+	connect(modulesWidget, SIGNAL(setTopLevel(QString)), this, SLOT(setTopLevel(QString)));
+	connect(modulesWidget, SIGNAL(setTestBench(QString)), this, SLOT(setTestBench(QString)));
+	connect(modulesWidget, SIGNAL(setTestBench(QString)), filesWidget, SLOT(refresh()));
+	connect(modulesWidget, SIGNAL(setTopLevel(QString)), filesWidget, SLOT(refresh()));
+
+	timingWidget = new Wave(this);
+	timingWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::BottomDockWidgetArea, timingWidget);
+
+	pythonConsoleWidget = new PythonConsoleDockWidget(this, mainContext);
+	pythonConsoleWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::BottomDockWidgetArea, pythonConsoleWidget);
+
+	editArea = new EditorTabManager(ui->centralWidget);
+	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
+	connect(projectsWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
+	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));
+
+	mainToolBox = new MainToolBox(this);
+	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::TopDockWidgetArea, mainToolBox);
+
+	QMenu *recent = ui->menuRecentProjects;
+	QAction *recent_action;
+
+	settings->beginGroup("history");
+	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
+	settings->endGroup();
+
+	foreach(QString recentProject, recentProjectsList) {
+		recent_action=recent->addAction(recentProject);
+		recent_action->setData(recentProject);
+		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
+	}
+
+	hideAllDockerWidgets();
+	disableAllFunctions();
+
+	if(parser) {
+		if(parser->isSet("top-level")) {
+			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
+		}
+	}
+}
+
+void MainWindow::disableAllFunctions()
+{
+	ui->setLayoutMode->setEnabled(false);
+	ui->setDigialSimulationMode->setEnabled(false);
+	ui->setAnalogSimulationMode->setEnabled(false);
+	ui->setSynthesisMode->setEnabled(false);
+	ui->projectSettings->setEnabled(false);
+}
+
+void MainWindow::hideAllDockerWidgets()
+{
+	filesWidget->setVisible(false);
+	projectsWidget->setVisible(false);
+	modulesWidget->setVisible(false);
+	timingWidget->setVisible(false);
+	mainToolBox->setVisible(false);
+	iopadsWidget->setVisible(false);
+	toolBoxWidgetTestBench->setVisible(false);
+	toolBoxWidgetSynthesis->setVisible(false);
+	pythonConsoleWidget->setVisible(false);
+}
+
+void MainWindow::openProject(QString path)
+{
+	QFile project_path(path);
+	if (project_path.exists()) {
+		if(project) delete project;
+		project = new Project(settings, path, mainContext);
+		modulesWidget->setProject(project);
+		filesWidget->setProject(project);
+		projectsWidget->setProject(project);
+		projectSettingsDialog->setProject(project);
+		enableProject();
+	}
+}
+
+void MainWindow::openRecentProject()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	if(action) openProject(action->data().toString());
+}
+
+void MainWindow::syncSettings()
+{
+	settings->sync();
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
-    delete errorMessage;
-    delete project;
-    delete dependencies;
-    delete createWidget;
-    delete welcomeWidget;
-    delete editWidget;
-    delete timingWidget;
-    delete buildEnvironment;
-    delete qtflowEnvironment;
-    delete iopads;
+	delete ui;
+	delete errorMessage;
+	if(project) delete project;
+	//delete dependencies;
+	delete createWidget;
+	delete welcomeWidget;
+	delete timingWidget;
+	delete iopadsWidget;
 }
 
 void MainWindow::on_MainWindow_destroyed()
 {
+}
 
+void MainWindow::on_digitalSimulationMode_triggered()
+{
+	hideAllDockerWidgets();
+	toolBoxWidgetTestBench->setVisible(true);
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
+	pythonConsoleWidget->setVisible(true);
+}
+
+void MainWindow::on_analogSimulationMode_triggered()
+{
+	hideAllDockerWidgets();
+	//toolBoxWidgetTestBench->setVisible(true);
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
+	pythonConsoleWidget->setVisible(true);
+}
+
+void MainWindow::on_synthesisMode_triggered()
+{
+	hideAllDockerWidgets();
+	toolBoxWidgetSynthesis->setVisible(true);
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
+	pythonConsoleWidget->setVisible(true);
 }
 
 void MainWindow::on_newProject_triggered()
 {
-    Templates *t = new Templates(this);
-    t->show();
+	Templates *t = new Templates(this);
+	t->show();
+}
+
+void MainWindow::on_menuSettings_triggered()
+{
+	settingsDialog->show();
 }
 
 void MainWindow::on_openProject_triggered()
 {
-    QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
-    if (path == QString() || path == session.project())
-        return;
-
-    QFile project_vars(path + PROJECT_VARS);
-    if (!project_vars.exists())
-    {
-        error("Could not find project files.");
-        return;
-    }
-
-    session.setProject(path);
-    enableProject();
-    ui->tabWidget->setCurrentIndex(1);
+	QString filter = "File Description (*.pro)";
+	QString path = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath(), filter);
+	openProject(path);
 }
 
 void MainWindow::on_newFile_triggered()
 {
-    createWidget->suggest(Verilog, "new");
-    createWidget->show();
+	createWidget->suggest(Verilog, "new");
+	createWidget->show();
 }
 
 void MainWindow::on_saveFile_triggered()
 {
-    editWidget->saveFile(session.file());
-}
-
-void MainWindow::on_openMagicFile_triggered()
-{
-    QString name = QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Magic Files (*.mag)"));
-
-    if (name == QString())
-        return;
-
-    qDebug() << "Open magic file:" << name;
-    QFile file(name);
-    file.open(QFile::ReadOnly);
-    QByteArray content(file.readAll());
-    MagicParser parser(content);
-    rects_t grid = parser.getRectangles();
-    Grid *g = new Grid();
-    g->show();
-    g->RenderRectangles(grid);
 }
 
 void MainWindow::on_exit_triggered()
 {
-    close();
+	//close();
 }
 
 void MainWindow::on_buildAll_triggered()
 {
-    if (tcsh->state() == QProcess::Running)
-        return;
-
-    ui->menuSynthesis->setDisabled(true);
-    ui->menuPlacement->setDisabled(true);
-    ui->menuRouting->setDisabled(true);
-    ui->buildAll->setDisabled(true);
-    QString path = session.project();
-    QflowSettings env(path);
-    tcsh->setWorkingDirectory(path);
-    project->buildAll(env.value(DEFAULT_VERILOG), tcsh);
+	ui->menuSynthesis->setDisabled(true);
+	ui->menuPlacement->setDisabled(true);
+	ui->menuRouting->setDisabled(true);
+	ui->buildAll->setDisabled(true);
 }
 
-void MainWindow::on_buildEnvironment_triggered()
+void MainWindow::on_menuSimulation_triggered()
 {
-    buildEnvironment->set(new QflowEnvironment(this, session.project()));
-    buildEnvironment->show();
-}
-
-
-void MainWindow::on_buildVcd_triggered()
-{
-    if (tcsh->state() == QProcess::Running)
-        return;
-
-    ui->menuSynthesis->setDisabled(true);
-    ui->menuPlacement->setDisabled(true);
-    ui->menuRouting->setDisabled(true);
-    ui->buildAll->setDisabled(true);
-    QString path = session.project();
-    QflowSettings env(path);
-    tcsh->setWorkingDirectory(path);
-    project->valuedump(env.value(DEFAULT_VERILOG), tcsh);
+	if(project) {
+		project->simulation();
+		timingWidget->loadVcd(project->getVCDPath());
+		timingWidget->setEnabled(true);
+		timingWidget->setVisible(true);
+	}
 }
 
 void MainWindow::on_menuSynthesis_triggered()
 {
-    if (tcsh->state() == QProcess::Running)
-        return;
-
-    ui->menuSynthesis->setDisabled(true);
-    ui->menuPlacement->setDisabled(true);
-    ui->menuRouting->setDisabled(true);
-    ui->buildAll->setDisabled(true);
-    QString path = session.project();
-    QflowSettings env(path);
-    tcsh->setWorkingDirectory(path);
-    project->synthesis(env.value(DEFAULT_VERILOG), tcsh);
+	if(project) {
+		project->synthesis();
+	}
 }
 
 void MainWindow::on_menuPlacement_triggered()
 {
-    if (tcsh->state() == QProcess::Running)
-        return;
-
-    ui->menuSynthesis->setDisabled(true);
-    ui->menuPlacement->setDisabled(true);
-    ui->menuRouting->setDisabled(true);
-    ui->buildAll->setDisabled(true);
-    QString path = session.project();
-    QflowSettings env(path);
-    tcsh->setWorkingDirectory(path);
-    project->placement(env.value(DEFAULT_VERILOG), tcsh);
+	ui->menuSynthesis->setDisabled(true);
+	ui->menuPlacement->setDisabled(true);
+	ui->menuRouting->setDisabled(true);
+	ui->buildAll->setDisabled(true);
 }
 
 void MainWindow::on_menuRouting_triggered()
 {
-    if (tcsh->state() == QProcess::Running)
-        return;
-
-    ui->menuSynthesis->setDisabled(true);
-    ui->menuPlacement->setDisabled(true);
-    ui->menuRouting->setDisabled(true);
-    ui->buildAll->setDisabled(true);
-    QString path = session.project();
-    QflowSettings env(path);
-    tcsh->setWorkingDirectory(path);
-    project->routing(env.value(DEFAULT_VERILOG), tcsh);
+	ui->menuSynthesis->setDisabled(true);
+	ui->menuPlacement->setDisabled(true);
+	ui->menuRouting->setDisabled(true);
+	ui->buildAll->setDisabled(true);
 }
 
 void MainWindow::on_menuModules_triggered()
 {
-    modules->show();
-    modules->refresh(session.project());
+	//modules->show();
+	//modules->refresh();
 }
 
 void MainWindow::on_menuIOPads_triggered()
 {
-    iopads->show();
-}
-
-void MainWindow::on_menuOptions_triggered()
-{
-    qtflowEnvironment->set(new QtFlowEnvironment(this));
-    qtflowEnvironment->show();
+	iopadsWidget->show();
 }
 
 void MainWindow::on_toolRefresh_triggered()
 {
-    enableProject();
-}
-
-void MainWindow::on_mainWelcome_clicked()
-{
-    ui->tabWidget->show();
-    ui->tabWidget->setCurrentIndex(0);
-}
-
-void MainWindow::on_mainEdit_clicked()
-{
-    ui->tabWidget->show();
-    ui->tabWidget->setCurrentIndex(1);
-}
-
-void MainWindow::on_mainTiming_clicked()
-{
-    ui->tabWidget->show();
-    ui->tabWidget->setCurrentIndex(2);
-}
-
-void MainWindow::on_tcshExpand_clicked()
-{
-    ui->tabWidget->hide();
-    ui->consoleOut->show();
-    ui->consoleError->hide();
-}
-
-void MainWindow::on_tcshErrors_clicked()
-{
-    ui->tabWidget->hide();
-    ui->consoleOut->hide();
-    ui->consoleError->show();
-}
-
-void MainWindow::fireTcsh()
-{
-    QByteArray bytes = tcsh->read(4096);
-    ui->consoleOut->insertPlainText(bytes);
-    ui->consoleOut->verticalScrollBar()->setValue(ui->consoleOut->verticalScrollBar()->maximum());
-}
-
-void MainWindow::errorTcsh()
-{
-    QByteArray bytes = tcsh->readAllStandardError();
-    ui->consoleError->insertPlainText(bytes);
-    ui->consoleError->verticalScrollBar()->setValue(ui->consoleError->verticalScrollBar()->maximum());
-}
-
-void MainWindow::exitTcsh(int code)
-{
-    qDebug() << "Tcsh exited with code" << code;
-    ui->menuSynthesis->setDisabled(false);
-    ui->menuPlacement->setDisabled(false);
-    ui->menuRouting->setDisabled(false);
-    ui->buildAll->setDisabled(false);
-    enableTopModule();
-}
-
-void MainWindow::onTopModuleChanged()
-{
-    enableTopModule();
+	enableProject();
 }
 
 void MainWindow::enableProject()
 {
-    enableTopModule();
-    editWidget->loadProject(session.project());
-    ui->tabWidget->show();
+	if(!project) return;
 
-    ui->newFile->setDisabled(false);
-    ui->buildAll->setDisabled(false);
-    ui->buildSteps->setDisabled(false);
-    ui->buildEnvironment->setDisabled(false);
-    ui->buildVcd->setDisabled(false);
-    ui->menuSynthesis->setDisabled(false);
-    ui->menuPlacement->setDisabled(false);
-    ui->menuRouting->setDisabled(false);
-    ui->menuModules->setDisabled(false);
-    ui->toolRefresh->setDisabled(false);
-    ui->mainEdit->setDisabled(false);
+	disableAllFunctions();
+	if(project->getProjectType()=="asic_mixed" || project->getProjectType()=="asic_digital") {
+		ui->setLayoutMode->setEnabled(true);
+		ui->setDigialSimulationMode->setEnabled(true);
+		ui->setAnalogSimulationMode->setEnabled(true);
+		ui->setSynthesisMode->setEnabled(true);
+		ui->projectSettings->setEnabled(true);
+	}
+	if(project->getProjectType()=="asic_analog" || project->getProjectType()=="macro") {
+		ui->setLayoutMode->setEnabled(true);
+		ui->setAnalogSimulationMode->setEnabled(true);
+		ui->projectSettings->setEnabled(true);
+	}
+
+	ui->newFile->setDisabled(false);
+	ui->buildAll->setDisabled(false);
+	ui->buildSteps->setDisabled(false);
+	ui->buildEnvironment->setDisabled(false);
+	ui->buildVcd->setDisabled(false);
+	ui->menuSynthesis->setDisabled(false);
+	ui->menuPlacement->setDisabled(false);
+	ui->menuRouting->setDisabled(false);
+	ui->menuModules->setDisabled(false);
+	ui->toolRefresh->setDisabled(false);
+
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()
 {
-    ui->tabWidget->setCurrentIndex(0);
-    ui->tabWidget->show();
-
-    ui->newFile->setDisabled(true);
-    ui->buildAll->setDisabled(true);
-    ui->buildSteps->setDisabled(true);
-    ui->buildEnvironment->setDisabled(true);
-    ui->buildVcd->setDisabled(true);
-    ui->menuSynthesis->setDisabled(true);
-    ui->menuPlacement->setDisabled(true);
-    ui->menuRouting->setDisabled(true);
-    ui->menuModules->setDisabled(true);
-    ui->toolRefresh->setDisabled(true);
-    ui->mainEdit->setDisabled(true);
-    ui->mainDesign->setDisabled(true);
-    ui->tabWidget->setCurrentIndex(0);
+	ui->newFile->setDisabled(true);
+	ui->buildAll->setDisabled(true);
+	ui->buildSteps->setDisabled(true);
+	ui->buildEnvironment->setDisabled(true);
+	ui->buildVcd->setDisabled(true);
+	ui->menuSynthesis->setDisabled(true);
+	ui->menuPlacement->setDisabled(true);
+	ui->menuRouting->setDisabled(true);
+	ui->menuModules->setDisabled(true);
+	ui->toolRefresh->setDisabled(true);
 }
 
-void MainWindow::enableTopModule()
+void MainWindow::setTopLevel(QString name)
 {
-    QflowSettings env(session.project());
-    QString path = env.value("sourcedir") + "/" + env.value(DEFAULT_VERILOG) + ".vcd";
-    QFile file(path);
+	project->setTopLevel(name);
+}
 
-    if (!file.exists())
-    {
-        ui->mainTiming->setDisabled(true);
-        return;
-    }
-
-    timingWidget->loadVcd(path);
-    ui->mainTiming->setDisabled(false);
+void MainWindow::setTestBench(QString name)
+{
+	project->setTestBench(name);
 }
 
 void MainWindow::enableFile()
 {
-    ui->saveFile->setDisabled(false);
+	ui->saveFile->setDisabled(false);
 }
 
 void MainWindow::disableFile()
 {
-    ui->saveFile->setDisabled(true);
+	ui->saveFile->setDisabled(true);
 }
 
 void MainWindow::error(QString e)
 {
-    errorMessage->showMessage(e);
-    errorMessage->show();
+	errorMessage->showMessage(e);
+	errorMessage->show();
 }

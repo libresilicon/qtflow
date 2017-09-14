@@ -1,64 +1,38 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#ifndef Settings_H
+#define Settings_H
 
-#include "common.h"
-#include <QMap>
-#include <QVector>
+#include "ui_settings.h"
 
-class ISettings
+#include <QDialog>
+#include <QSettings>
+
+namespace Ui {
+	class Settings;
+}
+
+class Settings : public QDialog
 {
-public:
-    ISettings() {}
-    virtual ~ISettings() {}
-    virtual QString value(QString) { return ""; }
-    virtual void set(QString, QString) {}
-    virtual table_string_t table() { return table_string_t(); }
-    virtual void swap(map_string_t) {}
-    virtual void save() {}
-};
+	Q_OBJECT
 
-class QtFlowSettings : public ISettings
-{
 public:
-    QtFlowSettings();
-    ~QtFlowSettings();
-    QString value(QString);
-    void set(QString, QString);
-    table_string_t table();
-    void swap(map_string_t);
-    void save();
+	Settings(QWidget *parent, QSettings *s);
+
+signals:
+	void syncSettings();
+
+private slots:
+	void selectYosys_triggered();
+	void selectGraywolf_triggered();
+	void selectQRouter_triggered();
+	void selectIcarus_triggered();
+
+	void buttonBox_save();
+	void buttonBox_close();
+
 private:
-    map_string_t vars;
+	Ui::Settings *ui;
+	QSettings *settings;
+
 };
 
-class ProjectSettings : public ISettings
-{
-public:
-    ProjectSettings(QString);
-    ~ProjectSettings();
-    QString value(QString);
-    void set(QString, QString);
-    table_string_t table();
-    void swap(map_string_t);
-    void save();
-private:
-    QString cwd;
-    map_string_t vars;
-};
-
-class QflowSettings : public ISettings
-{
-public:
-    QflowSettings(QString);
-    ~QflowSettings();
-    QString value(QString);
-    void set(QString, QString);
-    table_string_t table();
-    void swap(map_string_t);
-    void save();
-private:
-    QString cwd;
-    map_string_t vars;
-};
-
-#endif // SETTINGS_H
+#endif // Settings_H

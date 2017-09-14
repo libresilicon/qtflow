@@ -1,43 +1,73 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include "constants.h"
-#include "settings.h"
-
 #include <QString>
+#include <QSettings>
 #include <QProcess>
 #include <QFileDevice>
+#include <QCommandLineParser>
+#include <QtScript>
+#include <QString>
+#include <QTextStream>
+#include <QDir>
+#include <QProcess>
+#include <QSettings>
+#include <QCommandLineParser>
 
-class IProject
+#include <PythonQt.h>
+
+class IProject: public QObject
 {
+	Q_OBJECT
+
 public:
-    IProject() {}
-    virtual ~IProject() {}
-    virtual bool create(QString) { return false; }
-    virtual bool valuedump(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
-    virtual bool synthesis(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
-    virtual bool timing(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
-    virtual bool placement(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
-    virtual bool routing(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
-    virtual bool buildAll(QString = DEFAULT_VERILOG, QProcess* = new QProcess) { return false; }
+	IProject();
+	virtual ~IProject() {}
+	virtual void create(QString) {}
+	virtual void simulation() {}
+	virtual void synthesis() {}
+	virtual void placement() {}
+	virtual void routing() {}
+	virtual void buildAll() {}
 };
 
-class Qflow : public IProject
+class Project : public IProject
 {
-public:
-    Qflow();
-    ~Qflow();
-    bool create(QString);
-    bool valuedump(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
-    bool synthesis(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
-    bool timing(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
-    bool placement(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
-    bool routing(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
-    bool buildAll(QString ident = DEFAULT_VERILOG, QProcess* = new QProcess);
-private:
-    ISettings *settings;
+	Q_OBJECT
 
-    QFileDevice::Permissions executable;
+public:
+	Project(QSettings *settings, QString path, PythonQtObjectPtr *main);
+	~Project();
+	void create(QString);
+	void synthesis();
+	void simulation();
+	void placement();
+	void routing();
+	void buildAll();
+	void setTechnology(QString tech);
+	void setProcess(QString proc);
+	void setTopLevel(QString mod);
+	void setTestBench(QString mod);
+	void setProjectType(QString proc);
+
+	QString getSourceDir();
+	QString getTopLevel();
+	QString getRootDir();
+	QString getTestBench();
+	QString getTechnology();
+	QString getProcess();
+	QString getProjectType();
+	QString getSynthesisDir();
+	QString getLayoutDir();
+	QString getVCDFile();
+	QString getVCDPath();
+
+private:
+	QSettings *settings;
+	QSettings *project_settings;
+	QString rootdir;
+	PythonQtObjectPtr *mainContext;
+	QFileDevice::Permissions executable;
 };
 
 #endif // PROJECT_H

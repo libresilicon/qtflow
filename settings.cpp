@@ -1,187 +1,60 @@
-
-#include "constants.h"
 #include "settings.h"
-#include "settingsparser.h"
 
-#include <QDir>
-#include <QFile>
 #include <QTextStream>
+#include <QFileDialog>
 
-QtFlowSettings::QtFlowSettings() :
-    ISettings()
+Settings::Settings(QWidget *parent, QSettings *s) :
+	QDialog(parent),
+	ui(new Ui::Settings),
+	settings(s)
 {
-    QString home = QDir::homePath();
-    QFile rc(home + QTFLOWRC);
-    if (rc.exists())
-    {
-        rc.open(QIODevice::ReadOnly);
-        QByteArray content(rc.readAll());
-        SettingsParser settings(content);
-        vars = settings.getVariables();
-        if (!vars.contains(DEFAULT_VERILOG))
-            set(DEFAULT_VERILOG, DEFAULT_VERILOG);
-    }
-    else
-    {
-        set("qflowprefix", "/usr/local/share/qflow");
-        set(DEFAULT_VERILOG, DEFAULT_VERILOG);
-        set("terminal", "urxvt -e");
-        save();
-    }
-    rc.close();
+	ui->setupUi(this);
+	connect(ui->yosysButton,SIGNAL(clicked(bool)),this,SLOT(selectYosys_triggered()));
+	connect(ui->graywolfButton,SIGNAL(clicked(bool)),this,SLOT(selectGraywolf_triggered()));
+	connect(ui->qrouterButton,SIGNAL(clicked(bool)),this,SLOT(selectQRouter_triggered()));
+	connect(ui->icarusButton,SIGNAL(clicked(bool)),this,SLOT(selectIcarus_triggered()));
+	connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(buttonBox_save()));
+	connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(buttonBox_close()));
+
+	// loading config
+	ui->pathYosys->setText(settings->value("yosys").toString());
+	ui->pathGraywolf->setText(settings->value("graywolf").toString());
+	ui->pathQRouter->setText(settings->value("qrouter").toString());
+	ui->pathIcarus->setText(settings->value("icarus").toString());
 }
 
-QtFlowSettings::~QtFlowSettings()
+void Settings::selectYosys_triggered()
 {
+	ui->pathYosys->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-QString QtFlowSettings::value(QString k)
+void Settings::selectGraywolf_triggered()
 {
-    return vars.value(k);
+	ui->pathGraywolf->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-void QtFlowSettings::set(QString k, QString v)
+void Settings::selectQRouter_triggered()
 {
-    vars.insert(k, v);
+	ui->pathQRouter->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-table_string_t QtFlowSettings::table()
+void Settings::selectIcarus_triggered()
 {
-   table_string_t list;
-   for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
-        list.append(QPair<QString, QString>(begin.key(), begin.value()));
-   return list;
+	ui->pathIcarus->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
 }
 
-void QtFlowSettings::swap(map_string_t re)
+void Settings::buttonBox_save()
 {
-    vars.swap(re);
+	settings->setValue("yosys",ui->pathYosys->displayText());
+	settings->setValue("graywolf",ui->pathGraywolf->displayText());
+	settings->setValue("qrouter",ui->pathQRouter->displayText());
+	settings->setValue("icarus",ui->pathIcarus->displayText());
+
+	emit(syncSettings());
+	emit(buttonBox_close());
 }
 
-void QtFlowSettings::save()
+void Settings::buttonBox_close()
 {
-    QString home = QDir::homePath();
-    QFile rc(home + QTFLOWRC);
-    if (rc.open(QIODevice::ReadWrite | QIODevice::Truncate))
-    {
-        QTextStream stream(&rc);
-        stream << TCSH_SHEBANG << endl << "# qtflowrc" << endl;
-        for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
-            stream << "set " << begin.key() << "=" << begin.value() << endl;
-        rc.close();
-    }
-}
-
-
-ProjectSettings::ProjectSettings(QString path) :
-    ISettings(),
-    cwd(path)
-{
-    QFile rc(cwd + PROJECT_VARS);
-    if (rc.exists())
-    {
-        rc.open(QIODevice::ReadOnly);
-        QByteArray content(rc.readAll());
-        SettingsParser settings(content);
-        vars = settings.getVariables();
-        rc.close();
-    }
-}
-
-ProjectSettings::~ProjectSettings()
-{
-}
-
-QString ProjectSettings::value(QString k)
-{
-    return vars.value(k);
-}
-
-void ProjectSettings::set(QString k, QString v)
-{
-    vars.insert(k, v);
-}
-
-table_string_t ProjectSettings::table()
-{
-   table_string_t list;
-   for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
-        list.append(QPair<QString, QString>(begin.key(), begin.value()));
-   return list;
-}
-
-void ProjectSettings::swap(map_string_t re)
-{
-    vars.swap(re);
-}
-
-void ProjectSettings::save()
-{
-    QFile project_vars(cwd + PROJECT_VARS);
-    if (project_vars.open(QIODevice::ReadWrite | QIODevice::Truncate))
-    {
-        QTextStream stream(&project_vars);
-        stream << TCSH_SHEBANG << endl;
-        for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
-            stream << "set " << begin.key() << "=" << begin.value() << endl;
-        project_vars.close();
-    }
-}
-
-
-QflowSettings::QflowSettings(QString path) :
-    ISettings(),
-    cwd(path)
-{
-    QFile rc(cwd + QFLOW_VARS);
-    if (rc.exists())
-    {
-        rc.open(QIODevice::ReadOnly);
-        QByteArray content(rc.readAll());
-        SettingsParser settings(content);
-        vars = settings.getVariables();
-        rc.close();
-    }
-    if (!vars.contains(DEFAULT_VERILOG))
-        set(DEFAULT_VERILOG, DEFAULT_VERILOG);
-}
-
-QflowSettings::~QflowSettings()
-{
-}
-
-QString QflowSettings::value(QString k)
-{
-    return vars.value(k);
-}
-
-void QflowSettings::set(QString k, QString v)
-{
-    vars.insert(k, v);
-}
-
-table_string_t QflowSettings::table()
-{
-   table_string_t list;
-   for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
-       list.append(QPair<QString, QString>(begin.key(), begin.value()));
-   return list;
-}
-
-void QflowSettings::swap(map_string_t re)
-{
-    vars.swap(re);
-}
-
-void QflowSettings::save()
-{
-    QFile qflow_vars(cwd + QFLOW_VARS);
-    if (qflow_vars.open(QIODevice::ReadWrite | QIODevice::Truncate))
-    {
-        QTextStream stream(&qflow_vars);
-        stream << TCSH_SHEBANG << endl;
-        for (auto begin = vars.begin(), end = vars.end(); begin != end; ++begin)
-            stream << "set " << begin.key() << "=" << begin.value() << endl;
-        qflow_vars.close();
-    }
+	close();
 }

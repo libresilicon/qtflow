@@ -1,13 +1,13 @@
 #ifndef IOPADS_H
 #define IOPADS_H
 
-#include <QWidget>
+#include <QDockWidget>
 
 namespace Ui {
 class IOPads;
 }
 
-class IOPads : public QWidget
+class IOPads : public QDockWidget
 {
     Q_OBJECT
 

@@ -1,0 +1,3 @@
+[submodule "PythonQt"]
+	path = PythonQt
+	url = git@github.com:leviathanch/PythonQt.git

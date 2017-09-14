@@ -77,7 +77,7 @@
         <string notr="true">QTabBar::tab { height: 0px;  }</string>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="tabFilesystem">
         <attribute name="title">

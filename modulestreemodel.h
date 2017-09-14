@@ -60,6 +60,8 @@ public:
 
     bool topModule(const QModelIndex &index) const;
     void setTopModule(QString);
+	void setTestBench(QString);
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
@@ -71,6 +73,7 @@ private:
     ModulesItem *sourceItem;
 
     QString top;
+	QString testbench;
 
     QFileSystemWatcher *watcher;
 };

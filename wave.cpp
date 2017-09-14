@@ -1,129 +1,106 @@
 #include "wave.h"
-#include "ui_wave.h"
-
-#include "vcdparser.h"
-
-#include <QDebug>
-#include <QFile>
-#include <QTreeView>
-#include <QListView>
-#include <QGraphicsView>
-#include <QGraphicsTextItem>
-#include <QMimeData>
 
 Wave::Wave(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Wave),
-    tree(new VcdTreeModel),
-    list(new VcdListModel),
-    scene(new QGraphicsScene)
+	QDockWidget(parent),
+	ui(new Ui::Wave),
+	scene(new QGraphicsScene),
+	tree(NULL),
+	signalTree(NULL)
 {
-    ui->setupUi(this);
-    ui->treeView->setModel(tree);
-    ui->listView->setModel(list);
-    ui->graphicsView->setScene(scene);
+	ui->setupUi(this);
 
-    connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
+	signalView = new VcdSignalView(ui->viewerWidget);
+	ui->viewerWidget->layout()->addWidget(signalView);
 
-    ui->treeView->setDragEnabled(true);
-    ui->treeView->setDragDropMode(QAbstractItemView::DragOnly);
-    ui->treeView->setDefaultDropAction(Qt::CopyAction);
-    ui->listView->setAcceptDrops(true);
-    ui->listView->setDragDropMode(QAbstractItemView::DragDrop);
-    ui->listView->setDefaultDropAction(Qt::MoveAction);
-    ui->listView->setDragDropOverwriteMode(true);
+	ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragDrop);
+	ui->treeSelectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	ui->treeSelectionView->setDefaultDropAction(Qt::MoveAction);
+	ui->treeSelectionView->setDragEnabled(true);
+	ui->treeSelectionView->setAcceptDrops(true);
+	ui->treeSelectionView->setDropIndicatorShown(true);
 
-    ui->listView->setItemDelegate(new VcdListDelegate(ui->listView));
+	/*ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
+	ui->treeSignalView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+	ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
+	ui->treeSignalView->setDragEnabled(true);
+	ui->treeSignalView->setAcceptDrops(true);
+	ui->treeSignalView->setDropIndicatorShown(true);*/
 
-    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-    scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+	//ui->treeSelectionView->setDragEnabled(true);
+	//ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragOnly);
+	//ui->treeSelectionView->setDefaultDropAction(Qt::CopyAction);
+
+	//ui->treeSignalView->setAcceptDrops(true);
+	//ui->treeSignalView->setDragDropOverwriteMode(true);
+	//ui->treeSignalView->setItemDelegate(new VcdListDelegate(ui->treeSignalView));
+
+	//ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
+	scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
+	//ui->graphicsView->setScene(scene);
+
+	connect(ui->treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSelectScope(QModelIndex)));
+	connect(ui->treeSelectionView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSelectSignal(QModelIndex)));
+
+	connect(ui->pushZoomIn,SIGNAL(clicked(bool)),signalView,SLOT(onZoomIn()));
+	connect(ui->pushZoomOut,SIGNAL(clicked(bool)),signalView,SLOT(onZoomOut()));
+	connect(ui->pushZoomFitWidth,SIGNAL(clicked(bool)),signalView,SLOT(onZoomFitWidth()));
+	connect(ui->pushMoveLeft,SIGNAL(clicked(bool)),signalView,SLOT(onMoveLeft()));
+	connect(ui->pushMoveRight,SIGNAL(clicked(bool)),signalView,SLOT(onMoveRight()));
 }
 
 Wave::~Wave()
 {
     delete ui;
-    delete tree;
-    delete list;
     delete scene;
 }
 
 void Wave::loadVcd(QString path)
 {
-    QFile file(path);
+	QFile file(path);
 
-    if (!file.exists())
-        return;
+	if (file.exists()) {
+		vcd::Loader loader;
+		if(loader.load(path.toStdString())) {
+			vcd_data = loader.get_vcd_data();
 
-    if (!file.open(QIODevice::ReadOnly))
-        return;
+			if(tree) delete tree;
+			tree = new VcdTreeModel(vcd_data);
+			ui->treeView->setModel(tree);
+			if(signalTree) delete signalTree;
+			signalTree = new VcdSignalTreeModel(vcd_data,QVector<QString>(),this);
+			ui->treeSelectionView->setModel(signalTree);
 
-    QByteArray content(file.readAll());
-    VcdParser parser(content);
+			signalView->setVCD(vcd_data);
+			//if(signalViewTree) delete signalViewTree;
+			//signalViewTree = new VcdSignalViewTreeModel(vcd_data,QVector<QString>(),this);
+			//ui->treeSignalView->setModel(signalViewTree);
 
-    file.close();
-
-    list->reset();
-    tree->setVcd(parser.getVcd());
-    scene->clear();
+			//ui->listView->setModel(list);
+			//connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
+			scene->clear();
+		}
+	}
 }
 
 void Wave::onSignalsChanged()
 {
     scene->clear();
-    drawSignals();
 }
 
-void Wave::drawSignals()
+void Wave::onSelectScope(QModelIndex i)
 {
-    QList<int> sig = list->getSignals();
-    for (int i = 0; i < sig.size(); ++i)
-    {
-        vcd_changes_t::iterator it;
-        vcd_changes_t changes = tree->getValues(sig.at(i));
-
-        int high_ = 1;
-        int long_ = 0;
-        for (it = changes.begin(); it != changes.end(); ++it)
-        {
-            if (it->first > long_)
-                long_ = it->first;
-            if (it->second > high_)
-                high_ = it->second;
-        }
-
-        int time = 0;
-        int state = 0;
-        int h = i * WAVE_ITEM_HEIGHT;
-        double hs = WAVE_ITEM_HEIGHT / high_;
-        double ws = tree->vcd().timescale * WAVE_STRETCH / 1000000;
-        int margin = WAVE_STRETCH / 10;
-        QPen green(Qt::green);
-        for (it = changes.begin(); it != changes.end(); ++it)
-        {
-            // two state
-            if (high_ < 2)
-            {
-                scene->addLine(time * ws, h + state * hs, it->first * ws, h + state * hs, green);
-                scene->addLine(it->first * ws, h + state * hs, it->first * ws, h + it->second * hs, green);
-            }
-            // more than two states
-            else
-            {
-                scene->addLine(time * ws + margin, h + margin, it->first * ws - margin, h + margin, green);
-                scene->addLine(time * ws - margin, h + margin, time * ws + margin, h + WAVE_ITEM_HEIGHT - margin, green);
-                scene->addLine(time * ws + margin, h + WAVE_ITEM_HEIGHT - margin, it->first * ws - margin, h + WAVE_ITEM_HEIGHT - margin, green);
-                scene->addLine(time * ws - margin, h + WAVE_ITEM_HEIGHT - margin, time * ws + margin, h + margin, green);
-
-                QGraphicsTextItem* ann = new QGraphicsTextItem;
-                ann->setPos(time * ws, h);
-                ann->setDefaultTextColor(QColor(Qt::white));
-                ann->setPlainText(QString::number(it->second));
-
-                scene->addItem(ann);
-            }
-
-            time = it->first;
-            state = it->second;
-        }
-    }
+	QVector<QString> par;
+	while(i.isValid()) {
+		par.prepend(i.data().toString());
+		i=i.parent();
+	}
+	if(signalTree) delete signalTree;
+	signalTree = new VcdSignalTreeModel(vcd_data,par,this);
+	ui->treeSelectionView->setModel(signalTree);
 }
+
+void Wave::onSelectSignal(QModelIndex i)
+{
+	signalView->append(i.data().toString());
+}
+

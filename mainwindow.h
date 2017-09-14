@@ -1,105 +1,134 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "app.h"
-#include "project.h"
-#include "session.h"
-#include "common.h"
-#include "edit.h"
-#include "environment.h"
-#include "dependencies.h"
-#include "modules.h"
-#include "new.h"
-#include "iopads.h"
-#include "wave.h"
-#include "welcome.h"
-
 #include <QMainWindow>
+#include <QDebug>
+#include <QFileDialog>
+#include <QPlainTextEdit>
+#include <QScrollBar>
+#include <QString>
+#include <QProcess>
+#include <QDockWidget>
 #include <QVBoxLayout>
 #include <QErrorMessage>
 
+#include <iostream>
+#include <string>
+
+#include "ui_mainwindow.h"
+
+#include "projectselector.h"
+#include "fileselector.h"
+#include "moduleselector.h"
+#include "testbenchtoolbox.h"
+#include "synthesistoolbox.h"
+
+#include "editortabmanager.h"
+
+#include "projectsettings.h"
+
+#include "templates.h"
+#include "welcome.h"
+#include "settings.h"
+#include "project.h"
+#include "dependencies.h"
+#include "new.h"
+#include "iopads.h"
+#include "wave.h"
+#include "maintoolbox.h"
+#include "pysettings.h"
+
+#include "pythonconsoledockwidget.h"
+
 namespace Ui {
-class MainWindow;
+	class MainWindow;
 }
 
-class MainWindow : public QMainWindow, public App
+class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+	explicit MainWindow(QCommandLineParser *parser = nullptr, PythonQtObjectPtr *context = nullptr);
+	~MainWindow();
 
-    void enableProject();
-    void disableProject();
+	void enableProject();
+	void disableProject();
 
-    void enableTopModule();
+	void enableFile();
+	void disableFile();
 
-    void enableFile();
-    void disableFile();
-
-    void error(QString);
-
-public slots:
-    void fireTcsh();
-    void errorTcsh();
-    void exitTcsh(int);
-
-    void onTopModuleChanged();
-
-private slots:
-    void on_MainWindow_destroyed();
-
-    void on_newProject_triggered();
-    void on_openProject_triggered();
-
-    void on_openMagicFile_triggered();
-
-    void on_saveFile_triggered();
-
-    void on_exit_triggered();
-
-    void on_buildAll_triggered();
-    void on_buildEnvironment_triggered();
-    void on_menuModules_triggered();
-    void on_menuSynthesis_triggered();
-    void on_menuPlacement_triggered();
-    void on_menuRouting_triggered();
-
-    void on_menuIOPads_triggered();
-    void on_menuOptions_triggered();
-
-    void on_mainWelcome_clicked();
-    void on_mainEdit_clicked();
-
-    void on_tcshExpand_clicked();
-
-    void on_tcshErrors_clicked();
-
-    void on_toolRefresh_triggered();
-
-    void on_newFile_triggered();
-
-    void on_buildVcd_triggered();
-
-    void on_mainTiming_clicked();
+	void error(QString);
 
 private:
-    Ui::MainWindow *ui;
-    IProject *project;
-    IDependencies *dependencies;
-    QErrorMessage *errorMessage;
-    QProcess *tcsh;
-    New *createWidget;
-    Welcome *welcomeWidget;
-    Edit *editWidget;
-    Wave *timingWidget;
-    Environment *buildEnvironment;
-    Environment *qtflowEnvironment;
-    IOPads *iopads;
-    Modules *modules;
+	void openProject(QString file);
+	bool isCode(QString suffix);
+	bool isSchematic(QString suffix);
+	void hideAllDockerWidgets();
+	void disableAllFunctions();
 
-    Session &session;
+private slots:
+	void on_MainWindow_destroyed();
+
+	void on_newProject_triggered();
+	void on_openProject_triggered();
+
+	void on_saveFile_triggered();
+
+	void on_exit_triggered();
+
+	void on_buildAll_triggered();
+	void on_menuModules_triggered();
+	void on_menuSimulation_triggered();
+	void on_menuSynthesis_triggered();
+	void on_menuPlacement_triggered();
+	void on_menuRouting_triggered();
+
+	void on_menuIOPads_triggered();
+	void on_menuSettings_triggered();
+
+	void on_toolRefresh_triggered();
+
+	void on_newFile_triggered();
+
+	void openRecentProject();
+
+	void on_digitalSimulationMode_triggered();
+	void on_analogSimulationMode_triggered();
+	void on_synthesisMode_triggered();
+
+	void setTopLevel(QString);
+	void setTestBench(QString);
+	void syncSettings();
+
+private:
+	Ui::MainWindow *ui;
+
+	Project *project;
+	Dependencies *dependencies;
+	QErrorMessage *errorMessage;
+	New *createWidget;
+	Welcome *welcomeWidget;
+	Wave *timingWidget;
+	IOPads *iopadsWidget;
+
+	QSettings *settings;
+	Settings *settingsDialog;
+	ProjectSettings *projectSettingsDialog;
+	QCommandLineParser *parser;
+
+	FileSelector *filesWidget;
+	ProjectSelector *projectsWidget;
+	ModuleSelector *modulesWidget;
+	PythonConsoleDockWidget *pythonConsoleWidget;
+
+	TestBenchToolBox *toolBoxWidgetTestBench;
+	SynthesisToolBox *toolBoxWidgetSynthesis;
+	MainToolBox *mainToolBox;
+
+	EditorTabManager *editArea;
+
+	PythonQtObjectPtr *mainContext;
 };
 
 #endif // MAINWINDOW_H

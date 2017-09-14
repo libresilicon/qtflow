@@ -6,30 +6,30 @@
 
 class VerilogHighlight : public QSyntaxHighlighter
 {
-    Q_OBJECT
+		Q_OBJECT
 
 public:
-    VerilogHighlight(QTextDocument *parent = 0);
+		VerilogHighlight(QTextDocument *parent = 0);
 
 protected:
-    void highlightBlock(const QString &text) override;
+		void highlightBlock(const QString &text) override;
 
 private:
-    struct HighlightingRule
-    {
-        QRegularExpression pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> rules;
+		struct HighlightingRule
+		{
+				QRegularExpression pattern;
+				QTextCharFormat format;
+		};
+		QVector<HighlightingRule> rules;
 
-    QRegularExpression commentStartExpression;
-    QRegularExpression commentEndExpression;
+		QRegularExpression commentStartExpression;
+		QRegularExpression commentEndExpression;
 
-    QStringList keywordPatterns;
+		QStringList keywordPatterns;
 
-    QTextCharFormat keywordFormat;
-    QTextCharFormat singleLineCommentFormat;
-    QTextCharFormat multiLineCommentFormat;
+		QTextCharFormat keywordFormat;
+		QTextCharFormat singleLineCommentFormat;
+		QTextCharFormat multiLineCommentFormat;
 };
 
 #endif // VERILOG_H

@@ -2,7 +2,7 @@
 #include "ui_iopads.h"
 
 IOPads::IOPads(QWidget *parent) :
-    QWidget(parent),
+	QDockWidget(parent),
     ui(new Ui::IOPads)
 {
     ui->setupUi(this);
