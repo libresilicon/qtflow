@@ -17,6 +17,10 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	editScene(new QGraphicsScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
+	//sceneRect = QRectF(0,0,this->width(),this->height());
+	//editScene->setSceneRect(sceneRect);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setScene(editScene);
 }
 
@@ -28,6 +32,18 @@ void MagicLayoutEditor::mousePressEvent(QMouseEvent * e)
 			moduleAreas[key].isSelected = true;
 		}
 	}
+	redraw();
+}
+
+void MagicLayoutEditor::resizeEvent(QResizeEvent *event)
+{
+	redraw();
+}
+
+void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
+{
+	//sceneRect = QRectF(sceneRect.x()+dx,sceneRect.y()+dy,this->width(),this->height());
+	//editScene->setSceneRect(sceneRect);
 	redraw();
 }
 

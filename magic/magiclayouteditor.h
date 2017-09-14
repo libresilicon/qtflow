@@ -42,6 +42,8 @@ public:
 
 public slots:
 	void mousePressEvent(QMouseEvent * e);
+	void resizeEvent(QResizeEvent *event);
+	void scrollContentsBy(int dx, int dy);
 
 protected:
 	QColor colorMat(QString material);
@@ -55,6 +57,7 @@ private:
 	lef::LEFData *lefdata;
 
 	QMap<QString,ModuleAreaInfo> moduleAreas;
+	QRectF sceneRect;
 };
 
 #endif // MAGICLAYOUTEDITOR_H
