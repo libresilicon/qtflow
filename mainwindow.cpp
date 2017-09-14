@@ -190,7 +190,7 @@ void MainWindow::on_synthesisMode_triggered()
 
 void MainWindow::on_newProject_triggered()
 {
-	Templates *t = new Templates(this);
+	Templates *t = new Templates(this, settings, mainContext);
 	t->show();
 }
 

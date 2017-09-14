@@ -14,7 +14,7 @@ class Templates : public QDialog
 	Q_OBJECT
 
 public:
-	explicit Templates(QWidget *parent = 0);
+	explicit Templates(QWidget *parent = 0, QSettings *settings = 0, PythonQtObjectPtr *main = 0);
 	~Templates();
 
 private slots:
@@ -26,6 +26,7 @@ private:
 	Ui::Templates *ui;
 	Project *project;
 	QSettings *settings;
+	PythonQtObjectPtr *mainContext;
 };
 
 #endif // TEMPLATES_H
