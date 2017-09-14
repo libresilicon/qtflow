@@ -17,6 +17,14 @@ namespace lef {
 	class LEFData;
 }
 
+class ModuleAreaInfo
+{
+public:
+	ModuleAreaInfo();
+	bool isSelected;
+	QRect area;
+};
+
 class MagicLayoutEditor : public QGraphicsView, public IEditor
 {
 	Q_OBJECT
@@ -27,6 +35,8 @@ public:
 	void loadFile(QString);
 	void saveFile();
 	QString getFilePath();
+
+	void redraw();
 
 	bool changes();
 
@@ -43,6 +53,8 @@ private:
 	QGraphicsScene *editScene;
 	magic::MagicData *magicdata;
 	lef::LEFData *lefdata;
+
+	QMap<QString,ModuleAreaInfo> moduleAreas;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

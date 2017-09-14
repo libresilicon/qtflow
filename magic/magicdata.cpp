@@ -101,26 +101,21 @@ namespace magic {
 	void MagicData::addUsedModule()
 	{
 		module_info info;
-		info.box = QRect(
-				recent_module.c,
-				recent_module.f,
-				recent_module.a*(recent_module.x2-recent_module.x1),
-				recent_module.e*(recent_module.y2-recent_module.y1)
-				);
+		info.a = recent_module.a;
+		info.b = recent_module.b;
+		info.c = recent_module.c;
+		info.d = recent_module.d;
+		info.e = recent_module.e;
+		info.f = recent_module.f;
 
-		info.xoffset = recent_module.c;
-		info.yoffset = recent_module.f;
+		info.x1 = recent_module.x1;
+		info.x2 = recent_module.x2;
 
-		info.xsign = recent_module.a;
-		info.ysign = recent_module.e;
+		info.y1 = recent_module.y1;
+		info.y2 = recent_module.y2;
 
-		info.module_name = new QGraphicsTextItem;
-		info.module_name->setPlainText(recent_module.module_name);
-		info.module_name->setPos(recent_module.c,recent_module.f);
-		info.instance_name = new QGraphicsTextItem;
-		info.instance_name->setPlainText(recent_module.instance_name);
-		info.instance_name->setPos(recent_module.c,recent_module.f+recent_module.e*(recent_module.y2-recent_module.y1));
-		info.module_name_plain = recent_module.module_name; // for looking up in LEF file
+		info.module_name = recent_module.module_name;
+		info.instance_name = recent_module.instance_name;
 
 		parsedModules.append(info);
 	}

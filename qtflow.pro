@@ -119,7 +119,6 @@ mainwindow.ui \
 grid.ui \
 templates.ui \
 environment.ui \
-edit.ui \
 savechanges.ui \
 welcome.ui \
 iopads.ui \

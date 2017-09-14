@@ -20,15 +20,6 @@ typedef struct {
 	QString instance_name;
 	int x1,y1,x2,y2;
 	int a,b,c,d,e,f;
-} module_info_buffer;
-
-typedef struct {
-	QString module_name_plain;
-	QGraphicsTextItem *module_name;
-	QGraphicsTextItem *instance_name;
-	QRect box;
-	double xoffset, yoffset;
-	int xsign, ysign;
 } module_info;
 
 typedef QVector<module_info> mods_t;
@@ -68,7 +59,7 @@ namespace magic {
 		bool trace_parsing;
 		bool trace_scanning;
 		QString streamname;
-		module_info_buffer recent_module;
+		module_info recent_module;
 	};
 }
 

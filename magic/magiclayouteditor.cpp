@@ -4,6 +4,11 @@
 #include "magicdata.h"
 #include "../lef/lefdata.h"
 
+ModuleAreaInfo::ModuleAreaInfo():
+	isSelected(false)
+{
+}
+
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
@@ -17,10 +22,13 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 
 void MagicLayoutEditor::mousePressEvent(QMouseEvent * e)
 {
-	double rad = 10;
 	QPointF pt = mapToScene(e->pos());
-	editScene->addEllipse(pt.x()-rad, pt.y()-rad, rad*2.0, rad*2.0, QPen(), QBrush(Qt::SolidPattern));
-	QTextStream(stdout) << "Drawing here " << "\t x:" << pt.x() << "\t y:" << pt.y()  << '\n';
+	foreach(QString key, moduleAreas.keys()) {
+		if(moduleAreas[key].area.contains(pt.x(),pt.y())) {
+			moduleAreas[key].isSelected = true;
+		}
+	}
+	redraw();
 }
 
 void MagicLayoutEditor::drawRectangles()
@@ -53,18 +61,20 @@ void MagicLayoutEditor::drawModuleInfo()
 	mods_t mods = magicdata->getModules();
 	foreach (module_info e, mods)
 	{
+		QRect box( e.c, e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1) );
+
 		// fill in library content:
-		if(lefdata->isDefinedMacro(e.module_name_plain)) {
-			macro = lefdata->getMacro(e.module_name_plain);
-			macro->scaleMacro(e.box.width(),e.box.height());
+		if(lefdata->isDefinedMacro(e.module_name)) {
+			macro = lefdata->getMacro(e.module_name);
+			macro->scaleMacro(box.width(),box.height());
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
 					color = colorMat(layer->getName());
 					pen = QPen(color);
 					brush = QBrush(color);
-					layer->setOffsetX(e.xoffset);
-					layer->setOffsetY(e.yoffset);
+					layer->setOffsetX(e.c);
+					layer->setOffsetY(e.f);
 					foreach(QRect rect, layer->getRects()) {
 						editScene->addRect(rect, pen, brush);
 					}
@@ -74,17 +84,25 @@ void MagicLayoutEditor::drawModuleInfo()
 				color = colorMat(layer->getName());
 				pen = QPen(color);
 				brush = QBrush(color);
-				layer->setOffsetX(e.xoffset);
-				layer->setOffsetY(e.yoffset);
+				layer->setOffsetX(e.c);
+				layer->setOffsetY(e.f);
 				foreach(QRect rect, layer->getRects()) {
 					editScene->addRect(rect, pen, brush);
 				}
 			}
 		}
+
 		// write layout details:
 		pen = QPen(Qt::black);
-		editScene->addRect(e.box, pen);
-		editScene->addItem(e.instance_name);
+		QGraphicsTextItem *instance_name = new QGraphicsTextItem(e.instance_name);
+		instance_name->setPos(e.c,e.f);
+
+		moduleAreas[e.instance_name].area = box;
+		if(moduleAreas[e.instance_name].isSelected) {
+			pen.setColor(Qt::red);
+		}
+		editScene->addRect(box, pen);
+		editScene->addItem(instance_name);
 		//editScene->addItem(e.module_name);
 	}
 }
@@ -97,6 +115,11 @@ void MagicLayoutEditor::loadFile(QString file)
 	magicdata->getTechnology(); // TODO: do something with this here
 	if(lefdata) delete lefdata;
 	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
+	redraw();
+}
+
+void MagicLayoutEditor::redraw()
+{
 	drawRectangles();
 	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
