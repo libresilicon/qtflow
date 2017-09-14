@@ -4,44 +4,50 @@
 #include "project.h"
 
 #include <QFileDialog>
+#include <QInputDialog>
 
 Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
 	QDialog(parent),
 	ui(new Ui::Templates),
 	mainContext(main),
-	settings(s)
+	settings(s),
+	project(NULL)
 {
 	ui->setupUi(this);
-	connect(ui->buttonBox,SIGNAL(accepted()),this,SLOT(on_buttonBox_accepted()));
-	connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(on_buttonBox_rejected()));
 }
 
 Templates::~Templates()
 {
-	delete ui;
-	delete project;
+	if(ui) delete ui;
+	if(project) delete project;
 }
 
 void Templates::on_buttonBox_accepted()
 {
-	//QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	QString path;
+	QString name;
+	bool ok;
 
-	//if (path == QString())
-	//	return;
+	name = QInputDialog::getText(this, tr("New project"), tr("Project name:"), QLineEdit::Normal, QString(), &ok);
+	if (ok && !name.isEmpty()) {
+		path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-	//if(project) delete project;
-	//project = new Project(settings, path, mainContext);
+		if (path == QString())
+			return;
 
-	foreach(QListWidgetItem *w, ui->listWidget->selectedItems()) {
-		if(w->text()=="Mixed signal asic") {
-		} else if(w->text()=="Analog macro cell") {
-		} else {
-			qDebug() << w->text();
+		if(project) delete project;
+		project = new Project(settings, path+'/'+name+".pro", mainContext);
+
+		foreach(QListWidgetItem *w, ui->listWidget->selectedItems()) {
+			if(w->text()=="Mixed signal asic") {
+			} else if(w->text()=="Analog macro cell") {
+			} else {
+				qDebug() << w->text();
+			}
 		}
 	}
 }
 
 void Templates::on_buttonBox_rejected()
 {
-
 }
