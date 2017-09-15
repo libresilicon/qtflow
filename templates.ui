@@ -114,15 +114,6 @@
       <string>Manufacturing</string>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
-      <item row="0" column="1">
-       <widget class="QWidget" name="widget_5" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QComboBox" name="comboTechnology"/>
-         </item>
-        </layout>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QWidget" name="widget_7" native="true">
         <property name="minimumSize">
@@ -165,7 +156,36 @@
        <widget class="QWidget" name="widget_6" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QComboBox" name="comboProcess"/>
+          <widget class="QComboBox" name="comboProcess">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QWidget" name="widget_5" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QComboBox" name="comboTechnology">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>300</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

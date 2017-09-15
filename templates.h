@@ -19,8 +19,8 @@ public:
 
 private slots:
 	void on_buttonBox_accepted();
-
-	void on_buttonBox_rejected();
+	void on_comboTechnology_activated();
+	void on_pushPath_clicked();
 
 signals:
 	void projectCreated(QString);
@@ -30,6 +30,7 @@ private:
 	Project *project;
 	QSettings *settings;
 	PythonQtObjectPtr *mainContext;
+	QDomDocument *settingsFileProcess;
 };
 
 #endif // TEMPLATES_H
