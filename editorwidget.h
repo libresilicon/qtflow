@@ -6,6 +6,7 @@
 #include <QToolBar>
 #include <QFileInfo>
 
+
 class EditorWidget : public QWidget
 {
 	Q_OBJECT

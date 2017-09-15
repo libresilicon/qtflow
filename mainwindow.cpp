@@ -66,6 +66,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 	connect(projectsWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));
+	connect(editArea,SIGNAL(currentChanged(int)),this,SLOT(onCurrentChanged(int)));
 
 	mainToolBox = new MainToolBox(this);
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -92,6 +93,12 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
 		}
 	}
+}
+
+void MainWindow::onCurrentChanged(int id)
+{
+	EditorWidget *w = (EditorWidget*)editArea->find(id);
+	qDebug() << "Current changed " << id;
 }
 
 void MainWindow::disableAllFunctions()

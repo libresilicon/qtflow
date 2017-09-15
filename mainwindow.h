@@ -100,6 +100,7 @@ private slots:
 	void setTopLevel(QString);
 	void setTestBench(QString);
 	void syncSettings();
+	void onCurrentChanged(int);
 
 private:
 	Ui::MainWindow *ui;
