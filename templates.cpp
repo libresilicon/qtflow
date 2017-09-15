@@ -13,7 +13,26 @@ Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
 	settings(s),
 	project(NULL)
 {
+	QMap<QString,QString> ptypes;
+	QListWidgetItem *w;
 	ui->setupUi(this);
+
+	// bonded chips
+	ptypes["asic_mixed"] = "Mixed signal ASIC";
+	ptypes["asic_digital"] = "Pure digital ASIC";
+	ptypes["asic_analog"] = "Analog signal ASIC";
+
+	// cells:
+	ptypes["cell_mixed"] = "Mixed signal macro cell";
+	ptypes["cell_digital"] = "Pure digital macro cell";
+	ptypes["cell_analog"] = "Analog signal macro cell";
+
+	foreach(QString key, ptypes.keys()) {
+		w = new QListWidgetItem;
+		w->setData(Qt::UserRole, QVariant(key));
+		w->setText(ptypes[key]);
+		ui->listWidget->addItem(w);
+	}
 }
 
 Templates::~Templates()
@@ -25,27 +44,33 @@ Templates::~Templates()
 void Templates::on_buttonBox_accepted()
 {
 	QString path;
+	QString ppath;
+	QString technology;
+	QString process;
+	QString ptype;
 	QString name;
-	bool ok;
+	QVariant data;
 
-	name = QInputDialog::getText(this, tr("New project"), tr("Project name:"), QLineEdit::Normal, QString(), &ok);
-	if (ok && !name.isEmpty()) {
-		path = QFileDialog::getExistingDirectory(this, tr("Open Directory..."), ".", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+	path = ui->projectPath->text();
+	name = ui->projectName->text();
 
-		if (path == QString())
-			return;
+	if (path == QString())
+		return;
 
-		if(project) delete project;
-		project = new Project(settings, path+'/'+name+".pro", mainContext);
+	ppath = path+'/'+name+".pro";
 
-		foreach(QListWidgetItem *w, ui->listWidget->selectedItems()) {
-			if(w->text()=="Mixed signal asic") {
-			} else if(w->text()=="Analog macro cell") {
-			} else {
-				qDebug() << w->text();
-			}
+	if(project) delete project;
+	project = new Project(settings, ppath, mainContext);
+
+	foreach(QListWidgetItem *w, ui->listWidget->selectedItems()) {
+		if (w != 0) {
+			data = w->data(Qt::UserRole);
+			ptype = data.toString();
+			project->setProjectType(ptype);
+			project->setTopLevel(name);
 		}
 	}
+	emit(projectCreated(ppath));
 }
 
 void Templates::on_buttonBox_rejected()

@@ -22,6 +22,9 @@ private slots:
 
 	void on_buttonBox_rejected();
 
+signals:
+	void projectCreated(QString);
+
 private:
 	Ui::Templates *ui;
 	Project *project;

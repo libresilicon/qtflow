@@ -97,6 +97,7 @@ private slots:
 	void on_analogSimulationMode_triggered();
 	void on_synthesisMode_triggered();
 
+	void onProjectCreated(QString);
 	void setTopLevel(QString);
 	void setTestBench(QString);
 	void syncSettings();

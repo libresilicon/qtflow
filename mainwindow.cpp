@@ -191,7 +191,13 @@ void MainWindow::on_synthesisMode_triggered()
 void MainWindow::on_newProject_triggered()
 {
 	Templates *t = new Templates(this, settings, mainContext);
+	connect(t,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
 	t->show();
+}
+
+void MainWindow::onProjectCreated(QString s)
+{
+	openProject(s);
 }
 
 void MainWindow::on_menuSettings_triggered()
@@ -281,16 +287,23 @@ void MainWindow::on_toolRefresh_triggered()
 void MainWindow::enableProject()
 {
 	if(!project) return;
+	QStringList filter;
 
 	disableAllFunctions();
-	if(project->getProjectType()=="asic_mixed" || project->getProjectType()=="asic_digital") {
+
+	filter.clear();
+	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
+	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
 		ui->setDigialSimulationMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->setSynthesisMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
 	}
-	if(project->getProjectType()=="asic_analog" || project->getProjectType()=="macro") {
+
+	filter.clear();
+	filter << "asic_analog" << "cell_analog";
+	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
