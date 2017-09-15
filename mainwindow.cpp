@@ -147,7 +147,6 @@ MainWindow::~MainWindow()
 	delete ui;
 	delete errorMessage;
 	if(project) delete project;
-	//delete dependencies;
 	delete createWidget;
 	delete welcomeWidget;
 	delete timingWidget;

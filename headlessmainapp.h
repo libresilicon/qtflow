@@ -2,8 +2,6 @@
 #define HEADLESSMAINAPP_H
 
 #include "project.h"
-#include "edit.h"
-#include "dependencies.h"
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
@@ -34,7 +32,6 @@ public:
 
 private:
 	Project *project;
-	Dependencies *dependencies;
 	QSettings *settings;
 	QCommandLineParser *parser;
 	PythonQtObjectPtr *mainContext;

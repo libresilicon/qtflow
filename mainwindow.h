@@ -31,7 +31,6 @@
 #include "welcome.h"
 #include "settings.h"
 #include "project.h"
-#include "dependencies.h"
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
@@ -106,7 +105,6 @@ private:
 	Ui::MainWindow *ui;
 
 	Project *project;
-	Dependencies *dependencies;
 	QErrorMessage *errorMessage;
 	New *createWidget;
 	Welcome *welcomeWidget;

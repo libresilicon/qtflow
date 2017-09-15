@@ -49,13 +49,11 @@ mainwindow.cpp \
 grid.cpp \
 templates.cpp \
 project.cpp \
-edit.cpp \
 editor.cpp \
 verilog.cpp \
 savechanges.cpp \
 welcome.cpp \
 iopads.cpp \
-dependencies.cpp \
 projectstreemodel.cpp \
 modulestreemodel.cpp \
 moduleslistmodel.cpp \
@@ -84,13 +82,11 @@ maintoolbox.h \
 grid.h \
 templates.h \
 project.h \
-edit.h \
 editor.h \
 verilog.h \
 savechanges.h \
 welcome.h \
 iopads.h \
-dependencies.h \
 projectstreemodel.h \
 modulestreemodel.h \
 moduleslistmodel.h \
