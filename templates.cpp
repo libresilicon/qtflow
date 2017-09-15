@@ -23,7 +23,6 @@ Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
 	ui->setupUi(this);
 
 	connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(close()));
-	//connect(ui->comboTechnology, SIGNAL(activated(int)), this, SLOT(on_comboTechnology_activated()));
 
 	// bonded chips
 	ptypes["asic_mixed"] = "Mixed signal ASIC";
@@ -64,7 +63,7 @@ Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
 		}
 		ui->comboTechnology->addItem(tech,techID);
 	}
-	on_comboTechnology_activated();
+	on_comboTechnology_activated(0);
 }
 
 Templates::~Templates()
@@ -129,7 +128,7 @@ void Templates::on_pushPath_clicked()
 	ui->projectPath->setText(f);
 }
 
-void Templates::on_comboTechnology_activated()
+void Templates::on_comboTechnology_activated(int)
 {
 	QDomNodeList nl1, nl2, nl3;
 	QDomElement e1, e2, e3;

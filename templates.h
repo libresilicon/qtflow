@@ -19,7 +19,7 @@ public:
 
 private slots:
 	void on_buttonBox_accepted();
-	void on_comboTechnology_activated();
+	void on_comboTechnology_activated(int);
 	void on_pushPath_clicked();
 
 signals:
