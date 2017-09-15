@@ -319,9 +319,7 @@ void MainWindow::enableProject()
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
 
-	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
-	modulesWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()

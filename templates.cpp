@@ -114,6 +114,7 @@ void Templates::on_buttonBox_accepted()
 	project->setTopLevel(name);
 	project->setTechnology(technology);
 	project->setProcess(process);
+	project->createFiles();
 
 	emit(projectCreated(ppath));
 
