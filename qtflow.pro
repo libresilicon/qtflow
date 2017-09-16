@@ -129,7 +129,9 @@ wave.ui \
 testbenchtoolbox.ui \
 synthesistoolbox.ui \
 projectsettings.ui \
-console.ui
+console.ui \
+    schematicstoolbox.ui \
+    layouttoolbox.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
