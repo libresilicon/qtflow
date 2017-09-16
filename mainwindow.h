@@ -31,7 +31,6 @@
 #include "welcome.h"
 #include "settings.h"
 #include "project.h"
-#include "dependencies.h"
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
@@ -97,15 +96,16 @@ private slots:
 	void on_analogSimulationMode_triggered();
 	void on_synthesisMode_triggered();
 
+	void onProjectCreated(QString);
 	void setTopLevel(QString);
 	void setTestBench(QString);
 	void syncSettings();
+	void onCurrentChanged(int);
 
 private:
 	Ui::MainWindow *ui;
 
 	Project *project;
-	Dependencies *dependencies;
 	QErrorMessage *errorMessage;
 	New *createWidget;
 	Welcome *welcomeWidget;

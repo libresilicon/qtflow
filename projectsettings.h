@@ -23,8 +23,8 @@ public:
 signals:
 	
 public slots:
-	void technologyActivated(int);
-	void processActivated(int);
+	void technologyActivated();
+	void processActivated();
 	void storeData();
 
 private:

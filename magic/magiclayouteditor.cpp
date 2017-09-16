@@ -82,9 +82,10 @@ void MagicLayoutEditor::drawModuleInfo()
 		QRect box( e.c, e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1) );
 
 		// fill in library content:
-		if(lefdata->isDefinedMacro(e.module_name)) {
+		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
 			macro = lefdata->getMacro(e.module_name);
 			macro->scaleMacro(box.width(),box.height());
+
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
@@ -98,6 +99,7 @@ void MagicLayoutEditor::drawModuleInfo()
 					}
 				}
 			}
+
 			foreach (layer, macro->getObstruction()->getLayers()) {
 				color = colorMat(layer->getName());
 				pen = QPen(color);
@@ -108,6 +110,7 @@ void MagicLayoutEditor::drawModuleInfo()
 					editScene->addRect(rect, pen, brush);
 				}
 			}
+
 		}
 
 		// write layout details:
@@ -144,7 +147,6 @@ void MagicLayoutEditor::loadFile(QString file)
 			}
 		}
 	}
-
 	redraw();
 }
 

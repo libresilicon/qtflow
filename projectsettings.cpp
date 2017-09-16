@@ -25,14 +25,14 @@ ProjectSettings::ProjectSettings(QWidget *parent) :
 		ui->comboBoxTechnology->addItem(tech,tech);
 	}
 
-	connect(ui->comboBoxTechnology,SIGNAL(activated(int)), this, SLOT(technologyActivated(int)));
-	connect(ui->comboBoxProcess,SIGNAL(activated(int)), this, SLOT(processActivated(int)));
+	connect(ui->comboBoxTechnology,SIGNAL(activated(int)), this, SLOT(technologyActivated()));
+	connect(ui->comboBoxProcess,SIGNAL(activated(int)), this, SLOT(processActivated()));
 	connect(ui->buttonBox,SIGNAL(accepted()), this, SLOT(storeData()));
 
-	technologyActivated(0);
+	technologyActivated();
 }
 
-void ProjectSettings::technologyActivated(int i)
+void ProjectSettings::technologyActivated()
 {
 	QString currentTech = ui->comboBoxTechnology->currentText();
 	ui->comboBoxProcess->clear();
@@ -61,14 +61,14 @@ void ProjectSettings::technologyActivated(int i)
 
 	if(project) ui->comboBoxProcess->setCurrentIndex(ui->comboBoxProcess->findData(project->getProcess()));
 
-	processActivated(i);
+	processActivated();
 }
 
-void ProjectSettings::processActivated(int i)
+void ProjectSettings::processActivated()
 {
 	QString currentProcess = ui->comboBoxProcess->currentText();
 	QDomNodeList nl = settingsFileProcess->elementsByTagName("process");
-	for(i = 0; i< nl.count(); i++) {
+	for(int i = 0; i< nl.count(); i++) {
 		QDomElement e = nl.at(i).toElement();
 		if(currentProcess==e.attribute("xml:id")) {
 			QDomNodeList cn = e.childNodes();
@@ -95,6 +95,6 @@ void ProjectSettings::setProject(Project *p)
 	project = p;
 	if(project) {
 		ui->comboBoxTechnology->setCurrentIndex(ui->comboBoxTechnology->findData(project->getTechnology()));
-		technologyActivated(0);
+		technologyActivated();
 	}
 }

@@ -177,6 +177,38 @@ void Project::setProcess(QString proc)
 	project_settings->sync();
 }
 
+void Project::createFiles()
+{
+	QStringList folders;
+	QString magicLayout;
+
+	folders << getSourceDir();
+	folders << getLayoutDir();
+	folders << getSynthesisDir();
+
+	QDir folder;
+	foreach(QString f, folders) {
+		folder = QDir(f);
+		if(!folder.exists()) folder.mkdir(f);
+	}
+
+	magicLayout = getLayoutDir();
+	magicLayout += '/';
+	magicLayout += getTopLevel();
+	magicLayout += ".mag";
+
+	QFile magicFile(magicLayout);
+	if(magicFile.open(QIODevice::WriteOnly)) {
+		QTextStream outputStream(&magicFile);
+		outputStream << "magic" << endl;
+		outputStream << "tech " << getTechnology() << endl;
+		outputStream << "magscale 1 2" << endl;
+		outputStream << "timestamp " << QDateTime::currentMSecsSinceEpoch() << endl;
+		outputStream << "<< end >>" << endl;
+		magicFile.close();
+	}
+}
+
 void Project::setProjectType(QString proc)
 {
 	project_settings->setValue("projectType",proc);
@@ -190,17 +222,13 @@ void Project::create(QString path)
 	project_settings = new QSettings(path, QSettings::NativeFormat);
 	project_settings->setValue("technology", "osu035");
 	project_settings->sync();
+
 	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
 	project_settings->setValue("rootdir", rootdir);
 	project_settings->setValue("sourcedir", rootdir+"/source");
 	project_settings->setValue("synthesis", rootdir+"/synthesis");
 	project_settings->setValue("layout", rootdir+"/layout");
 	project_settings->sync();
-
-	QDir dir(rootdir);
-	if(!QDir(rootdir+"/source").exists()) dir.mkdir("source");
-	if(!QDir(rootdir+"/synthesis").exists()) dir.mkdir("synthesis");
-	if(!QDir(rootdir+"/layout").exists()) dir.mkdir("layout");
 }
 
 void Project::synthesis()

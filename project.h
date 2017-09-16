@@ -50,6 +50,7 @@ public:
 	void setTopLevel(QString mod);
 	void setTestBench(QString mod);
 	void setProjectType(QString proc);
+	void createFiles();
 
 	QString getSourceDir();
 	QString getTopLevel();

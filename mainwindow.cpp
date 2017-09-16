@@ -66,6 +66,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	connect(filesWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 	connect(projectsWidget, SIGNAL(openFile(QString)), editArea, SLOT(openFile(QString)));
 	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));
+	connect(editArea,SIGNAL(currentChanged(int)),this,SLOT(onCurrentChanged(int)));
 
 	mainToolBox = new MainToolBox(this);
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -92,6 +93,12 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
 		}
 	}
+}
+
+void MainWindow::onCurrentChanged(int id)
+{
+	EditorWidget *w = (EditorWidget*)editArea->find(id);
+	qDebug() << "Current changed " << id;
 }
 
 void MainWindow::disableAllFunctions()
@@ -147,7 +154,6 @@ MainWindow::~MainWindow()
 	delete ui;
 	delete errorMessage;
 	if(project) delete project;
-	//delete dependencies;
 	delete createWidget;
 	delete welcomeWidget;
 	delete timingWidget;
@@ -190,8 +196,14 @@ void MainWindow::on_synthesisMode_triggered()
 
 void MainWindow::on_newProject_triggered()
 {
-	Templates *t = new Templates(this);
+	Templates *t = new Templates(this, settings, mainContext);
+	connect(t,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
 	t->show();
+}
+
+void MainWindow::onProjectCreated(QString s)
+{
+	openProject(s);
 }
 
 void MainWindow::on_menuSettings_triggered()
@@ -281,16 +293,23 @@ void MainWindow::on_toolRefresh_triggered()
 void MainWindow::enableProject()
 {
 	if(!project) return;
+	QStringList filter;
 
 	disableAllFunctions();
-	if(project->getProjectType()=="asic_mixed" || project->getProjectType()=="asic_digital") {
+
+	filter.clear();
+	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
+	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
 		ui->setDigialSimulationMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->setSynthesisMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
 	}
-	if(project->getProjectType()=="asic_analog" || project->getProjectType()=="macro") {
+
+	filter.clear();
+	filter << "asic_analog" << "cell_analog";
+	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
@@ -307,9 +326,7 @@ void MainWindow::enableProject()
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
 
-	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
-	modulesWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()
