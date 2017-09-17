@@ -4,6 +4,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
 	editArea(new Editor(this))
 {
+	setType(VerilogCodeEditorWidgetType);
 	setEditWidget(editArea);
 	connect(editArea,SIGNAL(blockCountChanged(int)),this,SLOT(onContentChanged()));
 }

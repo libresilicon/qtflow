@@ -102,6 +102,9 @@ void MainWindow::onCurrentChanged(int id)
 			case MagicLayoutEditorWidgetType:
 				on_setLayoutMode_triggered();
 				break;
+			case VerilogCodeEditorWidgetType:
+				on_setDigitalSimulationMode_triggered();
+				break;
 			default:
 				qDebug() << "Current changed " << w->getType();
 				break;
