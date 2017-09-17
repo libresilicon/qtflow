@@ -112,10 +112,19 @@ void MainWindow::onCurrentChanged(int id)
 void MainWindow::disableAllFunctions()
 {
 	ui->setLayoutMode->setEnabled(false);
-	ui->setDigialSimulationMode->setEnabled(false);
+	ui->setDigitalSimulationMode->setEnabled(false);
 	ui->setAnalogSimulationMode->setEnabled(false);
 	ui->setSynthesisMode->setEnabled(false);
 	ui->projectSettings->setEnabled(false);
+}
+
+void MainWindow::enableAllFunctions()
+{
+	ui->setLayoutMode->setEnabled(true);
+	ui->setDigitalSimulationMode->setEnabled(true);
+	ui->setAnalogSimulationMode->setEnabled(true);
+	ui->setSynthesisMode->setEnabled(true);
+	ui->projectSettings->setEnabled(true);
 }
 
 void MainWindow::hideAllDockerWidgets()
@@ -309,13 +318,14 @@ void MainWindow::enableProject()
 	if(!project) return;
 	QStringList filter;
 
-	disableAllFunctions();
+	//disableAllFunctions();
+	enableAllFunctions();
 
 	filter.clear();
 	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
 	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
-		ui->setDigialSimulationMode->setEnabled(true);
+		ui->setDigitalSimulationMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->setSynthesisMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);

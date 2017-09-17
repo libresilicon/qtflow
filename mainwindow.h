@@ -65,6 +65,7 @@ private:
 	bool isSchematic(QString suffix);
 	void hideAllDockerWidgets();
 	void disableAllFunctions();
+	void enableAllFunctions();
 
 private slots:
 	void on_MainWindow_destroyed();

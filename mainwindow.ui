@@ -105,7 +105,7 @@
     </property>
     <addaction name="projectSettings"/>
     <addaction name="setSynthesisMode"/>
-    <addaction name="setDigialSimulationMode"/>
+    <addaction name="setDigitalSimulationMode"/>
     <addaction name="setAnalogSimulationMode"/>
     <addaction name="setLayoutMode"/>
    </widget>
@@ -299,7 +299,7 @@
     <string>&amp;Settings</string>
    </property>
   </action>
-  <action name="setDigialSimulationMode">
+  <action name="setDigitalSimulationMode">
    <property name="text">
     <string>&amp;Digital simulation mode</string>
    </property>
