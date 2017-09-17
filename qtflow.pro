@@ -43,95 +43,96 @@ $$FLEXSOURCES \
 $$BISONSOURCES
 
 SOURCES += \
-main.cpp\
-maintoolbox.cpp\
-mainwindow.cpp \
-grid.cpp \
-templates.cpp \
-project.cpp \
-editor.cpp \
-verilog.cpp \
-savechanges.cpp \
-welcome.cpp \
-iopads.cpp \
-projectstreemodel.cpp \
-modulestreemodel.cpp \
-moduleslistmodel.cpp \
-new.cpp \
-wave.cpp \
-headlessmainapp.cpp \
-settings.cpp \
-fileselector.cpp \
-projectselector.cpp \
-moduleselector.cpp \
-editorwidget.cpp \
-editortabmanager.cpp \
-codeeditorwidget.cpp \
-qtflowfilelist.cpp \
-testbenchtoolbox.cpp \
-synthesistoolbox.cpp \
-projectsettings.cpp \
-pythonconsoledockwidget.cpp \
-    pysettings.cpp \
-    pyprojectsettings.cpp \
-    qtreeviewdragdrop.cpp
+	main.cpp\
+	maintoolbox.cpp\
+	mainwindow.cpp \
+	grid.cpp \
+	templates.cpp \
+	project.cpp \
+	editor.cpp \
+	verilog.cpp \
+	savechanges.cpp \
+	welcome.cpp \
+	iopads.cpp \
+	projectstreemodel.cpp \
+	modulestreemodel.cpp \
+	moduleslistmodel.cpp \
+	new.cpp \
+	wave.cpp \
+	headlessmainapp.cpp \
+	settings.cpp \
+	fileselector.cpp \
+	projectselector.cpp \
+	moduleselector.cpp \
+	editorwidget.cpp \
+	editortabmanager.cpp \
+	codeeditorwidget.cpp \
+	qtflowfilelist.cpp \
+	testbenchtoolbox.cpp \
+	synthesistoolbox.cpp \
+	projectsettings.cpp \
+	pythonconsoledockwidget.cpp \
+	pysettings.cpp \
+	pyprojectsettings.cpp \
+	qtreeviewdragdrop.cpp
 
 HEADERS  += \
-mainwindow.h \
-maintoolbox.h \
-grid.h \
-templates.h \
-project.h \
-editor.h \
-verilog.h \
-savechanges.h \
-welcome.h \
-iopads.h \
-projectstreemodel.h \
-modulestreemodel.h \
-moduleslistmodel.h \
-new.h \
-wave.h \
-headlessmainapp.h \
-settings.h \
-fileselector.h \
-projectselector.h \
-moduleselector.h \
-editorwidget.h \
-editortabmanager.h \
-codeeditorwidget.h \
-ieditor.h \
-qtflowfilelist.h \
-testbenchtoolbox.h \
-synthesistoolbox.h \
-projectsettings.h \
-pythonconsoledockwidget.h \
-    pysettings.h \
-    pyprojectsettings.h \
-    qtreeviewdragdrop.h
+	mainwindow.h \
+	maintoolbox.h \
+	grid.h \
+	templates.h \
+	project.h \
+	editor.h \
+	verilog.h \
+	savechanges.h \
+	welcome.h \
+	iopads.h \
+	projectstreemodel.h \
+	modulestreemodel.h \
+	moduleslistmodel.h \
+	new.h \
+	wave.h \
+	headlessmainapp.h \
+	settings.h \
+	fileselector.h \
+	projectselector.h \
+	moduleselector.h \
+	editorwidget.h \
+	editortabmanager.h \
+	codeeditorwidget.h \
+	ieditor.h \
+	qtflowfilelist.h \
+	testbenchtoolbox.h \
+	synthesistoolbox.h \
+	projectsettings.h \
+	pythonconsoledockwidget.h \
+	pysettings.h \
+	pyprojectsettings.h \
+	qtreeviewdragdrop.h
 
 FORMS    += \
-mainwindow.ui \
-grid.ui \
-templates.ui \
-environment.ui \
-savechanges.ui \
-welcome.ui \
-iopads.ui \
-modules.ui \
-new.ui \
-mainwindow.ui \
-settings.ui \
-modules.ui \
-projects.ui \
-files.ui \
-wave.ui \
-testbenchtoolbox.ui \
-synthesistoolbox.ui \
-projectsettings.ui \
-console.ui \
-    schematicstoolbox.ui \
-    layouttoolbox.ui
+	mainwindow.ui \
+	grid.ui \
+	templates.ui \
+	environment.ui \
+	savechanges.ui \
+	welcome.ui \
+	iopads.ui \
+	modules.ui \
+	new.ui \
+	mainwindow.ui \
+	settings.ui \
+	modules.ui \
+	projects.ui \
+	files.ui \
+	wave.ui \
+	testbenchtoolbox.ui \
+	synthesistoolbox.ui \
+	projectsettings.ui \
+	console.ui \
+	schematicstoolbox.ui \
+	layouttoolbox.ui \
+	layoutvisibles.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
