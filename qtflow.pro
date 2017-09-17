@@ -74,7 +74,8 @@ SOURCES += \
 	pythonconsoledockwidget.cpp \
 	pysettings.cpp \
 	pyprojectsettings.cpp \
-	qtreeviewdragdrop.cpp
+	qtreeviewdragdrop.cpp \
+    layoutvisibles.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -108,7 +109,8 @@ HEADERS  += \
 	pythonconsoledockwidget.h \
 	pysettings.h \
 	pyprojectsettings.h \
-	qtreeviewdragdrop.h
+	qtreeviewdragdrop.h \
+    layoutvisibles.h
 
 FORMS    += \
 	mainwindow.ui \
