@@ -4,6 +4,7 @@ DEFLayoutEditorWidget::DEFLayoutEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
 	editArea(new DEFLayoutEditor(this))
 {
+	setType(DEFLayoutEditorWidgetType);
 	setEditWidget(editArea);
 }
 

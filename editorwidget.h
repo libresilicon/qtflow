@@ -13,6 +13,7 @@ enum WidgetType {
 	BareEditorWidgetType,
 	SchematicsEditorWidgetType,
 	MagicLayoutEditorWidgetType,
+	DEFLayoutEditorWidgetType,
 	VerilogCodeEditorWidgetType
 };
 

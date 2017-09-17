@@ -12,10 +12,6 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 {
 	ui->setupUi(this);
 
-	connect(ui->setAnalogSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_analogSimulationMode_triggered()));
-	connect(ui->setDigialSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_digitalSimulationMode_triggered()));
-	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
-
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
@@ -99,7 +95,17 @@ void MainWindow::onCurrentChanged(int id)
 {
 	EditorWidget *w = (EditorWidget *)editArea->widget(id);
 	if(w) {
-		qDebug() << "Current changed " << w->getType();
+		switch(w->getType()) {
+			case DEFLayoutEditorWidgetType:
+				on_setLayoutMode_triggered();
+				break;
+			case MagicLayoutEditorWidgetType:
+				on_setLayoutMode_triggered();
+				break;
+			default:
+				qDebug() << "Current changed " << w->getType();
+				break;
+		}
 	}
 }
 
@@ -166,7 +172,7 @@ void MainWindow::on_MainWindow_destroyed()
 {
 }
 
-void MainWindow::on_digitalSimulationMode_triggered()
+void MainWindow::on_setDigitalSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	toolBoxWidgetTestBench->setVisible(true);
@@ -176,7 +182,7 @@ void MainWindow::on_digitalSimulationMode_triggered()
 	pythonConsoleWidget->setVisible(true);
 }
 
-void MainWindow::on_analogSimulationMode_triggered()
+void MainWindow::on_setAnalogSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	//toolBoxWidgetTestBench->setVisible(true);
@@ -186,7 +192,7 @@ void MainWindow::on_analogSimulationMode_triggered()
 	pythonConsoleWidget->setVisible(true);
 }
 
-void MainWindow::on_synthesisMode_triggered()
+void MainWindow::on_setSynthesisMode_triggered()
 {
 	hideAllDockerWidgets();
 	toolBoxWidgetSynthesis->setVisible(true);
@@ -194,6 +200,12 @@ void MainWindow::on_synthesisMode_triggered()
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
 	pythonConsoleWidget->setVisible(true);
+}
+
+void MainWindow::on_setLayoutMode_triggered()
+{
+	hideAllDockerWidgets();
+	// show layout tools
 }
 
 void MainWindow::on_newProject_triggered()
