@@ -2,10 +2,19 @@
 #define EDITORWIDGET_H
 
 #include <QWidget>
-#include <QVBoxLayout>
 #include <QToolBar>
 #include <QFileInfo>
+#include <QShortcut>
+#include <QVBoxLayout>
 
+#include "ieditor.h"
+
+enum WidgetType {
+	BareEditorWidgetType,
+	SchematicsEditorWidgetType,
+	MagicLayoutEditorWidgetType,
+	VerilogCodeEditorWidgetType
+};
 
 class EditorWidget : public QWidget
 {
@@ -15,6 +24,9 @@ public:
 	explicit EditorWidget(QWidget *parent = nullptr);
 	virtual void loadFile(QString);
 	virtual QString getFilePath();
+
+	virtual WidgetType getType();
+	void setType(WidgetType);
 
 	bool getStatusChanged();
 	void setEditWidget(QWidget *editArea);
@@ -37,6 +49,8 @@ private:
 	bool statusChanged;
 
 	QString filePath;
+
+	WidgetType widgetType;
 };
 
 #endif // EDITORWIDGET_H

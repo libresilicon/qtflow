@@ -1,6 +1,8 @@
 #ifndef MAGICLAYOUTEDITORWIDGET_H
 #define MAGICLAYOUTEDITORWIDGET_H
 
+#include <QDockWidget>
+
 #include "magiclayouteditor.h"
 #include "editorwidget.h"
 

@@ -5,6 +5,7 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	project(NULL),
 	editArea(new MagicLayoutEditor(this))
 {
+	setType(MagicLayoutEditorWidgetType);
 	setEditWidget(editArea);
 }
 

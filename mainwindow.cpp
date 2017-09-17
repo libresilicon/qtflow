@@ -97,8 +97,10 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 
 void MainWindow::onCurrentChanged(int id)
 {
-	EditorWidget *w = (EditorWidget*)editArea->find(id);
-	qDebug() << "Current changed " << id;
+	EditorWidget *w = (EditorWidget *)editArea->widget(id);
+	if(w) {
+		qDebug() << "Current changed " << w->getType();
+	}
 }
 
 void MainWindow::disableAllFunctions()
