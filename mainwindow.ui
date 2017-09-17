@@ -66,7 +66,7 @@
     </widget>
     <widget class="QMenu" name="menuExport">
      <property name="title">
-      <string>Export</string>
+      <string>E&amp;xport</string>
      </property>
      <addaction name="actionLEF_library_exchange_format"/>
      <addaction name="actionGDSII"/>
@@ -91,20 +91,6 @@
      <string>E&amp;dit</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuBuild">
-    <property name="title">
-     <string>B&amp;uild</string>
-    </property>
-    <addaction name="buildEnvironment"/>
-    <addaction name="menuModules"/>
-    <addaction name="separator"/>
-    <addaction name="menuSynthesis"/>
-    <addaction name="menuPlacement"/>
-    <addaction name="menuRouting"/>
-    <addaction name="separator"/>
-    <addaction name="buildVcd"/>
-    <addaction name="buildAll"/>
-   </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>&amp;Tools</string>
@@ -119,15 +105,16 @@
     </property>
     <addaction name="projectSettings"/>
     <addaction name="setSynthesisMode"/>
-    <addaction name="setDigialSimulationMode"/>
+    <addaction name="setDigitalSimulationMode"/>
     <addaction name="setAnalogSimulationMode"/>
+    <addaction name="setLayoutMode"/>
    </widget>
    <widget class="QMenu" name="menuDesign_Rules">
     <property name="title">
      <string>Desi&amp;gn Rules</string>
     </property>
-    <addaction name="actionDesign_Rules"/>
-    <addaction name="actionLayer_Setup"/>
+    <addaction name="actionDesignRules"/>
+    <addaction name="actionLayerSetup"/>
    </widget>
    <widget class="QMenu" name="menuTools_2">
     <property name="title">
@@ -138,7 +125,6 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuBuild"/>
    <addaction name="menuTools"/>
    <addaction name="menuProject"/>
    <addaction name="menuTools_2"/>
@@ -313,7 +299,7 @@
     <string>&amp;Settings</string>
    </property>
   </action>
-  <action name="setDigialSimulationMode">
+  <action name="setDigitalSimulationMode">
    <property name="text">
     <string>&amp;Digital simulation mode</string>
    </property>
@@ -323,59 +309,59 @@
     <string>Synthesis &amp;mode</string>
    </property>
   </action>
-  <action name="setLayoutMode">
-   <property name="text">
-    <string>&amp;Layout mode</string>
-   </property>
-  </action>
   <action name="setAnalogSimulationMode">
    <property name="text">
     <string>&amp;Analog simulation mode</string>
    </property>
   </action>
-  <action name="actionDesign_Rules">
+  <action name="actionDesignRules">
    <property name="text">
-    <string>Design Rules</string>
+    <string>&amp;Design Rules</string>
    </property>
   </action>
-  <action name="actionLayer_Setup">
+  <action name="actionLayerSetup">
    <property name="text">
-    <string>Layer Setup</string>
+    <string>&amp;Layer Setup</string>
    </property>
   </action>
   <action name="actionNetlist">
    <property name="text">
-    <string>Netlist</string>
+    <string>&amp;Netlist</string>
    </property>
   </action>
   <action name="actionDRC">
    <property name="text">
-    <string>DRC</string>
+    <string>&amp;DRC</string>
    </property>
   </action>
   <action name="actionFabrication_Output">
    <property name="text">
-    <string>Fabrication Outputs</string>
+    <string>Fa&amp;brication Outputs</string>
    </property>
   </action>
   <action name="actionImport">
    <property name="text">
-    <string>Import</string>
+    <string>&amp;Import</string>
    </property>
   </action>
   <action name="actionLEF_library_exchange_format">
    <property name="text">
-    <string>LEF (library exchange format)</string>
+    <string>&amp;LEF (library exchange format)</string>
    </property>
   </action>
   <action name="actionGDSII">
    <property name="text">
-    <string>GDSII</string>
+    <string>&amp;GDSII</string>
    </property>
   </action>
   <action name="actionMagic">
    <property name="text">
-    <string>Magic</string>
+    <string>&amp;Magic</string>
+   </property>
+  </action>
+  <action name="setLayoutMode">
+   <property name="text">
+    <string>&amp;Layout mode</string>
    </property>
   </action>
  </widget>

@@ -1,12 +1,11 @@
 #include "editorwidget.h"
 
-#include <QShortcut>
-
 EditorWidget::EditorWidget(QWidget *parent) :
 	QWidget(parent),
 	toolbar(new QToolBar(this)),
 	layout(new QGridLayout(this)),
-	statusChanged(false)
+	statusChanged(false),
+	widgetType(BareEditorWidgetType)
 {
 	QPixmap pixmapDocumentSave(":/document-save.svg");
 	QAction *saveButton;
@@ -43,3 +42,6 @@ QString EditorWidget::getFilePath() { return filePath; }
 void EditorWidget::onContentChanged() {}
 void EditorWidget::saveFile() {}
 void EditorWidget::closeFile() {}
+
+WidgetType EditorWidget::getType() { return widgetType; }
+void EditorWidget::setType(WidgetType t) { widgetType = t; }

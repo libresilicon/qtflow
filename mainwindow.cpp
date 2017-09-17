@@ -12,10 +12,6 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 {
 	ui->setupUi(this);
 
-	connect(ui->setAnalogSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_analogSimulationMode_triggered()));
-	connect(ui->setDigialSimulationMode,SIGNAL(triggered(bool)),this,SLOT(on_digitalSimulationMode_triggered()));
-	connect(ui->setSynthesisMode,SIGNAL(triggered(bool)),this,SLOT(on_synthesisMode_triggered()));
-
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
@@ -97,17 +93,38 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 
 void MainWindow::onCurrentChanged(int id)
 {
-	EditorWidget *w = (EditorWidget*)editArea->find(id);
-	qDebug() << "Current changed " << id;
+	EditorWidget *w = (EditorWidget *)editArea->widget(id);
+	if(w) {
+		switch(w->getType()) {
+			case DEFLayoutEditorWidgetType:
+				on_setLayoutMode_triggered();
+				break;
+			case MagicLayoutEditorWidgetType:
+				on_setLayoutMode_triggered();
+				break;
+			default:
+				qDebug() << "Current changed " << w->getType();
+				break;
+		}
+	}
 }
 
 void MainWindow::disableAllFunctions()
 {
 	ui->setLayoutMode->setEnabled(false);
-	ui->setDigialSimulationMode->setEnabled(false);
+	ui->setDigitalSimulationMode->setEnabled(false);
 	ui->setAnalogSimulationMode->setEnabled(false);
 	ui->setSynthesisMode->setEnabled(false);
 	ui->projectSettings->setEnabled(false);
+}
+
+void MainWindow::enableAllFunctions()
+{
+	ui->setLayoutMode->setEnabled(true);
+	ui->setDigitalSimulationMode->setEnabled(true);
+	ui->setAnalogSimulationMode->setEnabled(true);
+	ui->setSynthesisMode->setEnabled(true);
+	ui->projectSettings->setEnabled(true);
 }
 
 void MainWindow::hideAllDockerWidgets()
@@ -164,7 +181,7 @@ void MainWindow::on_MainWindow_destroyed()
 {
 }
 
-void MainWindow::on_digitalSimulationMode_triggered()
+void MainWindow::on_setDigitalSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	toolBoxWidgetTestBench->setVisible(true);
@@ -174,7 +191,7 @@ void MainWindow::on_digitalSimulationMode_triggered()
 	pythonConsoleWidget->setVisible(true);
 }
 
-void MainWindow::on_analogSimulationMode_triggered()
+void MainWindow::on_setAnalogSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
 	//toolBoxWidgetTestBench->setVisible(true);
@@ -184,7 +201,7 @@ void MainWindow::on_analogSimulationMode_triggered()
 	pythonConsoleWidget->setVisible(true);
 }
 
-void MainWindow::on_synthesisMode_triggered()
+void MainWindow::on_setSynthesisMode_triggered()
 {
 	hideAllDockerWidgets();
 	toolBoxWidgetSynthesis->setVisible(true);
@@ -192,6 +209,12 @@ void MainWindow::on_synthesisMode_triggered()
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
 	pythonConsoleWidget->setVisible(true);
+}
+
+void MainWindow::on_setLayoutMode_triggered()
+{
+	hideAllDockerWidgets();
+	// show layout tools
 }
 
 void MainWindow::on_newProject_triggered()
@@ -295,13 +318,14 @@ void MainWindow::enableProject()
 	if(!project) return;
 	QStringList filter;
 
-	disableAllFunctions();
+	//disableAllFunctions();
+	enableAllFunctions();
 
 	filter.clear();
 	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
 	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
-		ui->setDigialSimulationMode->setEnabled(true);
+		ui->setDigitalSimulationMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->setSynthesisMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
