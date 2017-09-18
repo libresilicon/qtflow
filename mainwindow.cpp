@@ -240,6 +240,11 @@ void MainWindow::on_actionPythonShell_triggered()
 	pythonConsoleWidget->setVisible(!pythonConsoleWidget->isVisible());
 }
 
+void MainWindow::on_actionWaveViewer_triggered()
+{
+	timingWidget->setVisible(!timingWidget->isVisible());
+}
+
 void MainWindow::onProjectCreated(QString s)
 {
 	openProject(s);

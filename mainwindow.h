@@ -85,6 +85,7 @@ private slots:
 	void on_menuPlacement_triggered();
 	void on_menuRouting_triggered();
 	void on_actionPythonShell_triggered();
+	void on_actionWaveViewer_triggered();
 
 	void on_menuIOPads_triggered();
 	void on_menuSettings_triggered();
