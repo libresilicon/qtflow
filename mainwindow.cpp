@@ -68,6 +68,10 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::TopDockWidgetArea, mainToolBox);
 
+	layoutVisibles = new LayoutVisibles(this);
+	layoutVisibles->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
+
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
 
