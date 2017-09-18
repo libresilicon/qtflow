@@ -145,6 +145,7 @@ void MainWindow::hideAllDockerWidgets()
 	toolBoxWidgetTestBench->setVisible(false);
 	toolBoxWidgetSynthesis->setVisible(false);
 	pythonConsoleWidget->setVisible(false);
+	layoutVisibles->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
@@ -221,6 +222,9 @@ void MainWindow::on_setSynthesisMode_triggered()
 void MainWindow::on_setLayoutMode_triggered()
 {
 	hideAllDockerWidgets();
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
 	// show layout tools
 }
 
@@ -229,6 +233,11 @@ void MainWindow::on_newProject_triggered()
 	Templates *t = new Templates(this, settings, mainContext);
 	connect(t,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
 	t->show();
+}
+
+void MainWindow::on_actionPythonShell_triggered()
+{
+	pythonConsoleWidget->setVisible(!pythonConsoleWidget->isVisible());
 }
 
 void MainWindow::onProjectCreated(QString s)
