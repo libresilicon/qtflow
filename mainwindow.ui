@@ -52,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>22</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -122,6 +122,8 @@
     </property>
     <addaction name="actionNetlist"/>
     <addaction name="actionDRC"/>
+    <addaction name="actionPythonShell"/>
+    <addaction name="actionWaveViewer"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -300,6 +302,10 @@
    </property>
   </action>
   <action name="setDigitalSimulationMode">
+   <property name="icon">
+    <iconset resource="icons/icons.qrc">
+     <normaloff>:/recent.svg</normaloff>:/recent.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Digital simulation mode</string>
    </property>
@@ -310,6 +316,10 @@
    </property>
   </action>
   <action name="setAnalogSimulationMode">
+   <property name="icon">
+    <iconset resource="icons/icons.qrc">
+     <normaloff>:/simulator.svg</normaloff>:/simulator.svg</iconset>
+   </property>
    <property name="text">
     <string>&amp;Analog simulation mode</string>
    </property>
@@ -362,6 +372,24 @@
   <action name="setLayoutMode">
    <property name="text">
     <string>&amp;Layout mode</string>
+   </property>
+  </action>
+  <action name="actionPythonShell">
+   <property name="icon">
+    <iconset resource="icons/icons.qrc">
+     <normaloff>:/py_script.svg</normaloff>:/py_script.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Python shell</string>
+   </property>
+  </action>
+  <action name="actionWaveViewer">
+   <property name="icon">
+    <iconset resource="icons/icons.qrc">
+     <normaloff>:/simulator.svg</normaloff>:/simulator.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Wave viewer</string>
    </property>
   </action>
  </widget>
