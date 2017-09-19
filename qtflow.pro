@@ -75,7 +75,7 @@ SOURCES += \
 	pysettings.cpp \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
-    layoutvisibles.cpp
+	layoutvisibles.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -110,7 +110,7 @@ HEADERS  += \
 	pysettings.h \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
-    layoutvisibles.h
+	layoutvisibles.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -134,8 +134,7 @@ FORMS    += \
 	console.ui \
 	schematicstoolbox.ui \
 	layouttoolbox.ui \
-	layoutvisibles.ui \
-	magic3d/magic3d.ui
+	layoutvisibles.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
@@ -165,6 +164,7 @@ QMAKE_EXTRA_COMPILERS += bison
 
 include(schematics/schematics.pri)
 include(magic/magic.pri)
+include(magic3d/magic3d.pri)
 include(vcd/vcd.pri)
 include(lef/lef.pri)
 include(def/def.pri)
