@@ -135,7 +135,7 @@ FORMS    += \
 	schematicstoolbox.ui \
 	layouttoolbox.ui \
 	layoutvisibles.ui \
-    magic3d.ui
+	magic3d/magic3d.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
