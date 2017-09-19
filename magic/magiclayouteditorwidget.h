@@ -5,6 +5,7 @@
 
 #include "magiclayouteditor.h"
 #include "editorwidget.h"
+#include "magic3d/magic3d.h"
 
 class MagicLayoutEditorWidget : public EditorWidget
 {
@@ -19,10 +20,12 @@ public:
 public slots:
 	void onContentChanged();
 	void saveFile();
+	void show3D();
 
 private:
 	MagicLayoutEditor *editArea;
 	Project *project;
+	Magic3D *view3D;
 };
 
 #endif // MAGICLAYOUTEDITORWIDGET_H

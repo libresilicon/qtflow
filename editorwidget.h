@@ -33,6 +33,8 @@ public:
 	void setEditWidget(QWidget *editArea);
 	void setStatusChanged(bool);
 	
+	QToolBar *getToolBar();
+	
 	virtual void closeFile();
 
 signals:

@@ -1,9 +1,4 @@
 #include "magiclayouteditor.h"
-#include <QAbstractScrollArea>
-#include <QFileInfo>
-#include <QResource>
-#include <QDebug>
-#include <QTemporaryDir>
 
 ModuleAreaInfo::ModuleAreaInfo():
 	isSelected(false)
@@ -19,6 +14,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	editScene(new QGraphicsScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
+	
 	//sceneRect = QRectF(0,0,this->width(),this->height());
 	//editScene->setSceneRect(sceneRect);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);

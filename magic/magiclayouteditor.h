@@ -11,6 +11,12 @@
 #include <QGraphicsView>
 #include <QGraphicsWidget>
 #include <QGridLayout>
+#include <QAbstractScrollArea>
+#include <QFileInfo>
+#include <QResource>
+#include <QDebug>
+#include <QTemporaryDir>
+#include <QAction>
 
 namespace magic {
 	class MagicData;
