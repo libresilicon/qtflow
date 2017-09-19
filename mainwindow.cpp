@@ -226,6 +226,8 @@ void MainWindow::on_setLayoutMode_triggered()
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
 	// show layout tools
+	layoutVisibles->setVisible(true);
+
 }
 
 void MainWindow::on_newProject_triggered()
