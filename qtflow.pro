@@ -134,7 +134,8 @@ FORMS    += \
 	console.ui \
 	schematicstoolbox.ui \
 	layouttoolbox.ui \
-	layoutvisibles.ui
+	layoutvisibles.ui \
+    magic3d.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
