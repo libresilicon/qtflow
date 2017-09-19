@@ -337,12 +337,11 @@ void MainWindow::on_toolRefresh_triggered()
 void MainWindow::enableProject()
 {
 	if(!project) return;
-	QStringList filter;
+	//QStringList filter;
 
-	//disableAllFunctions();
 	enableAllFunctions();
 
-	filter.clear();
+	/*filter.clear();
 	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
 	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
@@ -358,7 +357,7 @@ void MainWindow::enableProject()
 		ui->setLayoutMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
-	}
+	}*/
 
 	ui->newFile->setDisabled(false);
 	ui->buildAll->setDisabled(false);
@@ -370,8 +369,6 @@ void MainWindow::enableProject()
 	ui->menuRouting->setDisabled(false);
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
-
-	projectsWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()
