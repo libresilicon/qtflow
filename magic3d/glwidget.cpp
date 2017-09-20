@@ -2,7 +2,9 @@
 
 GLWidget::GLWidget(QWidget *parent):
 	m_mainWindow(parent),
-	m_fAngle(1.0),
+	m_fAngle1(0),
+	m_fAngle2(0),
+	m_fAngle3(0),
 	m_fScale(1.0),
 	m_context(NULL)
 {
@@ -14,13 +16,15 @@ void GLWidget::resizeGL(int, int)
 
 void GLWidget::paintGL()
 {
+	QMutexLocker locker(&m_windowLock);
+
 	QMatrix4x4 modelview;
 	QColor back("white");
 	QColor front("red");
 
-	modelview.rotate(m_fAngle, 0.0f, 1.0f, 0.0f);
-	modelview.rotate(m_fAngle, 1.0f, 0.0f, 0.0f);
-	modelview.rotate(m_fAngle, 0.0f, 0.0f, 1.0f);
+	modelview.rotate(m_fAngle1, 0.0f, 1.0f, 0.0f);
+	modelview.rotate(m_fAngle2, 1.0f, 0.0f, 0.0f);
+	modelview.rotate(m_fAngle3, 0.0f, 0.0f, 1.0f);
 	modelview.scale(m_fScale);
 	modelview.translate(0.0f, -0.2f, 0.0f);
 
@@ -54,8 +58,11 @@ void GLWidget::paintGL()
 void GLWidget::initializeGL()
 {
 	initializeOpenGLFunctions();
+
 	if(m_context) delete m_context;
 	m_context = new QOpenGLContext(this);
+
+	m_vbo.create();
 
 	QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
 	vshader->compileSourceCode(
@@ -95,7 +102,6 @@ void GLWidget::initializeGL()
 
 	createGeometry();
 
-	m_vbo.create();
 	m_vbo.bind();
 	const int verticesSize = vertices.count() * 3 * sizeof(GLfloat);
 	m_vbo.allocate(verticesSize * 2);
@@ -127,31 +133,6 @@ void GLWidget::createGeometry()
 	extrude(x3, y3, x4, y4);
 	extrude(x4, y4, y4, x4);
 	extrude(y4, x4, y3, x3);
-
-	const qreal Pi = 3.14159f;
-	const int NumSectors = 100;
-
-	for (int i = 0; i < NumSectors; ++i) {
-		qreal angle1 = (i * 2 * Pi) / NumSectors;
-		qreal x5 = 0.30 * qSin(angle1);
-		qreal y5 = 0.30 * qCos(angle1);
-		qreal x6 = 0.20 * qSin(angle1);
-		qreal y6 = 0.20 * qCos(angle1);
-
-		qreal angle2 = ((i + 1) * 2 * Pi) / NumSectors;
-		qreal x7 = 0.20 * qSin(angle2);
-		qreal y7 = 0.20 * qCos(angle2);
-		qreal x8 = 0.30 * qSin(angle2);
-		qreal y8 = 0.30 * qCos(angle2);
-
-		quad(x5, y5, x6, y6, x7, y7, x8, y8);
-
-		extrude(x6, y6, x7, y7);
-		extrude(x8, y8, x5, y5);
-	}
-
-	for (int i = 0;i < vertices.size();i++)
-		vertices[i] *= 2.0f;
 }
 
 void GLWidget::quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4)
@@ -214,3 +195,15 @@ void GLWidget::extrude(qreal x1, qreal y1, qreal x2, qreal y2)
 	normals << n;
 }
 
+void GLWidget::mouseMoveEvent(QMouseEvent *event)
+{
+	int dx = event->x() - lastPos.x();
+	int dy = event->y() - lastPos.y();
+
+	if (event->buttons() & Qt::LeftButton) {
+		m_fAngle1+=dx;
+		m_fAngle2+=dy;
+	}
+
+   lastPos = event->pos();
+}

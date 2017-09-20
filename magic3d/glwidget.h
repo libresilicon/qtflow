@@ -7,6 +7,8 @@
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 #include <QWidget>
+#include <QMouseEvent>
+#include <QMutexLocker>
 
 #include <qmath.h>
 
@@ -21,6 +23,7 @@ protected:
 	void resizeGL(int w, int h) override;
 	void paintGL() override;
 	void initializeGL() override;
+	void mouseMoveEvent(QMouseEvent *event);
 
 private:
 	void createGeometry();
@@ -31,7 +34,8 @@ private:
 	QOpenGLShaderProgram *m_program;
 	QOpenGLBuffer m_vbo;
 	QOpenGLContext *m_context;
-	qreal m_fAngle;
+	QMutex m_windowLock;
+	qreal m_fAngle1, m_fAngle2, m_fAngle3;
 	qreal m_fScale;
 
 	int vertexAttr;
@@ -41,6 +45,8 @@ private:
 
 	QVector<QVector3D> vertices;
 	QVector<QVector3D> normals;
+
+	QPoint lastPos;
 };
 
 #endif // GLWIDGET_H
