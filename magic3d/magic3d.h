@@ -2,9 +2,12 @@
 #define MAGIC3D_H
 
 #include <QDialog>
+#include <QOpenGLBuffer>
+#include <QVector3D>
+#include <QVBoxLayout>
 
-#include "ui_magic3d.h"
 #include "project.h"
+#include "glwidget.h"
 
 class Magic3D : public QDialog
 {
@@ -16,8 +19,9 @@ class Magic3D : public QDialog
 		void loadFile(QString file);
 
 	private:
-		Ui::Magic3D *ui;
 		Project *project;
+		GLWidget *view;
+		QVBoxLayout *layout;
 };
 
 #endif // MAGIC3D_H

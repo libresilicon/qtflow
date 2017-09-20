@@ -2,10 +2,14 @@
 
 Magic3D::Magic3D(QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::Magic3D),
-	project(NULL)
+	project(NULL),
+	view(new GLWidget(this)),
+	layout(new QVBoxLayout(this))
 {
-	ui->setupUi(this);
+	layout->addWidget(view);
+	setLayout(layout);
+	setMinimumWidth(500);
+	setMinimumHeight(500);
 }
 
 void Magic3D::setProject(Project *p)
@@ -15,6 +19,4 @@ void Magic3D::setProject(Project *p)
 
 void Magic3D::loadFile(QString file)
 {
-	ui->layoutView;
-	qDebug() << file;
 }

@@ -11,11 +11,12 @@ win32:QMAKE_CXXFLAGS += /bigobj
 #	$$PWD/magicscanner.h
 
 
-FORMS    += \
-	$$PWD/magic3d.ui
+FORMS    +=
 
 HEADERS += \
-    $$PWD/magic3d.h
+    $$PWD/magic3d.h \
+    $$PWD/glwidget.h
 
 SOURCES += \
-    $$PWD/magic3d.cpp
+    $$PWD/magic3d.cpp \
+    $$PWD/glwidget.cpp
