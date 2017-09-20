@@ -4,6 +4,10 @@
 #include "project.h"
 
 #include <QDialog>
+#include <QFileDialog>
+#include <QInputDialog>
+#include <QListWidgetItem>
+
 
 namespace Ui {
 class Templates;
@@ -21,6 +25,7 @@ private slots:
 	void on_buttonBox_accepted();
 	void on_comboTechnology_activated(int);
 	void on_pushPath_clicked();
+	void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *b);
 
 signals:
 	void projectCreated(QString);
