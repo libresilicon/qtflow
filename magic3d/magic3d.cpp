@@ -3,8 +3,8 @@
 Magic3D::Magic3D(QWidget *parent) :
 	QDialog(parent),
 	project(NULL),
-	view(new GLWidget(this)),
-	layout(new QVBoxLayout(this))
+	layout(new QVBoxLayout(this)),
+	view(new GLWidget(this))
 {
 	layout->addWidget(view);
 	setLayout(layout);
