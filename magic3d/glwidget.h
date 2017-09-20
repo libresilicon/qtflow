@@ -9,8 +9,13 @@
 #include <QWidget>
 #include <QMouseEvent>
 #include <QMutexLocker>
+#include <QTemporaryDir>
 
 #include <qmath.h>
+
+#include "magic/magicdata.h"
+#include "lef/lefdata.h"
+#include "project.h"
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -18,6 +23,8 @@ class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 
 public:
 	GLWidget(QWidget *parent);
+	void loadFile(QString file);
+	void setProject(Project *p);
 
 protected:
 	void resizeGL(int w, int h) override;
@@ -48,6 +55,10 @@ private:
 	QVector<QVector3D> normals;
 
 	QPoint lastPos;
+	QString filePath;
+	magic::MagicData *magicdata;
+	lef::LEFData *lefdata;
+	Project *project;
 };
 
 #endif // GLWIDGET_H

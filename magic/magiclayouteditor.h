@@ -2,7 +2,7 @@
 #define MAGICLAYOUTEDITOR_H
 
 #include "ieditor.h"
-#include "magicdata.h"
+#include "magic/magicdata.h"
 #include "lef/lefdata.h"
 #include "project.h"
 

@@ -6,12 +6,36 @@ GLWidget::GLWidget(QWidget *parent):
 	m_fAngle2(0),
 	m_fAngle3(0),
 	m_fScale(1.0),
-	m_context(NULL)
+	m_context(NULL),
+	magicdata(NULL),
+	lefdata(NULL),
+	project(NULL)
 {
 }
 
 void GLWidget::resizeGL(int, int)
 {
+}
+
+void GLWidget::loadFile(QString file)
+{
+	QString filedest;
+	QTemporaryDir temporaryDir;
+	filePath = file;
+	if(magicdata) delete magicdata;
+	magicdata = new magic::MagicData(file);
+
+	if(project->getTechnology()==magicdata->getTechnology()) {
+		if(lefdata) delete lefdata;
+		lefdata = new lef::LEFData();
+		foreach(QString filename, project->getProcessFiles()) {
+			filedest = temporaryDir.path()+"/cells.lef";
+			QFile::copy(filename, filedest);
+			if(QFile(filedest).exists()) {
+				lefdata->loadFile(filedest);
+			}
+		}
+	}
 }
 
 void GLWidget::paintGL()
@@ -77,8 +101,7 @@ void GLWidget::initializeGL()
 		"    float angle = max(dot(normal, toLight), 0.0);"
 		"    vec3 col = sourceColor.rgb;"
 		"    color = vec4(col*0.5 + col*0.2*angle, 0.5);"
-//		"    color = vec4(col * 0.2 + col * 0.6 * angle, 1.0);"
-//		"    color = clamp(color, 0.0, 0.5);"
+		"    color = clamp(color, 0.0, 0.5);"
 		"    gl_Position = matrix * vertex;"
 		"}");
 
@@ -187,6 +210,11 @@ void GLWidget::extrude(qreal x1, qreal y1, qreal x2, qreal y2)
 	normals << n;
 	normals << n;
 	normals << n;
+}
+
+void GLWidget::setProject(Project *p)
+{
+	project = p;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
