@@ -24,6 +24,7 @@ protected:
 	void paintGL() override;
 	void initializeGL() override;
 	void mouseMoveEvent(QMouseEvent *event);
+	void wheelEvent(QWheelEvent *event);
 
 private:
 	void createGeometry();

@@ -73,11 +73,12 @@ void GLWidget::initializeGL()
 		"varying mediump vec4 color;"
 		"void main(void)"
 		"{"
-		"    vec3 toLight = normalize(vec3(0.0, 0.3, 1.0));"
+		"    vec3 toLight = normalize(vec3(10.0, 10.0, 10.0));"
 		"    float angle = max(dot(normal, toLight), 0.0);"
 		"    vec3 col = sourceColor.rgb;"
-		"    color = vec4(col * 0.2 + col * 0.8 * angle, 1.0);"
-		"    color = clamp(color, 0.0, 1.0);"
+		"    color = vec4(col*0.5 + col*0.2*angle, 0.5);"
+//		"    color = vec4(col * 0.2 + col * 0.6 * angle, 1.0);"
+//		"    color = clamp(color, 0.0, 0.5);"
 		"    gl_Position = matrix * vertex;"
 		"}");
 
@@ -116,23 +117,16 @@ void GLWidget::createGeometry()
 
 	qreal x1 = +0.06f;
 	qreal y1 = -0.14f;
+
 	qreal x2 = +0.14f;
 	qreal y2 = -0.06f;
-	qreal x3 = +0.08f;
-	qreal y3 = +0.00f;
-	qreal x4 = +0.30f;
-	qreal y4 = +0.22f;
 
 	quad(x1, y1, x2, y2, y2, x2, y1, x1);
-	quad(x3, y3, x4, y4, y4, x4, y3, x3);
 
 	extrude(x1, y1, x2, y2);
 	extrude(x2, y2, y2, x2);
 	extrude(y2, x2, y1, x1);
 	extrude(y1, x1, x1, y1);
-	extrude(x3, y3, x4, y4);
-	extrude(x4, y4, y4, x4);
-	extrude(y4, x4, y3, x3);
 }
 
 void GLWidget::quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4)
@@ -145,7 +139,7 @@ void GLWidget::quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, 
 	vertices << QVector3D(x4, y4, -0.05f);
 	vertices << QVector3D(x2, y2, -0.05f);
 
-	QVector3D n = QVector3D::normal(QVector3D(x2 - x1, y2 - y1, 0.0f), QVector3D(x4 - x1, y4 - y1, 0.0f));
+	QVector3D n = QVector3D::normal(QVector3D(x2-x1, y2-y1, 0.0f), QVector3D(x4-x1, y4-y1, 0.0f));
 
 	normals << n;
 	normals << n;
@@ -163,7 +157,7 @@ void GLWidget::quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, 
 	vertices << QVector3D(x4, y4, 0.05f);
 	vertices << QVector3D(x3, y3, 0.05f);
 
-	n = QVector3D::normal(QVector3D(x2 - x4, y2 - y4, 0.0f), QVector3D(x1 - x4, y1 - y4, 0.0f));
+	n = QVector3D::normal(QVector3D(x2-x4, y2-y4, 0.0f), QVector3D(x1-x4, y1-y4, 0.0f));
 
 	normals << n;
 	normals << n;
@@ -184,7 +178,7 @@ void GLWidget::extrude(qreal x1, qreal y1, qreal x2, qreal y2)
 	vertices << QVector3D(x1, y1, -0.05f);
 	vertices << QVector3D(x2, y2, +0.05f);
 
-	QVector3D n = QVector3D::normal(QVector3D(x2 - x1, y2 - y1, 0.0f), QVector3D(0.0f, 0.0f, -0.1f));
+	QVector3D n = QVector3D::normal(QVector3D(x2-x1, y2-y1, 0.0f), QVector3D(0.0f, 0.0f, -0.1f));
 
 	normals << n;
 	normals << n;
@@ -206,4 +200,15 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 	}
 
    lastPos = event->pos();
+}
+
+void GLWidget::wheelEvent(QWheelEvent *event)
+{
+	int numDegrees = event->delta() / 8;
+	int numSteps = numDegrees / 15;
+
+	if((m_fScale+(numSteps))>0) {
+		m_fScale+=(numSteps);
+		event->accept();
+	}
 }
