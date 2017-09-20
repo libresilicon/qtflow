@@ -204,11 +204,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::wheelEvent(QWheelEvent *event)
 {
-	int numDegrees = event->delta() / 8;
-	int numSteps = numDegrees / 15;
-
-	if((m_fScale+(numSteps))>0) {
-		m_fScale+=(numSteps);
+	int numSteps = event->delta()/120;
+	if((m_fScale+numSteps)>0) {
+		m_fScale+=numSteps;
 		event->accept();
 	}
 }
