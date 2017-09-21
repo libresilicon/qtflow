@@ -34,7 +34,9 @@ protected:
 	void wheelEvent(QWheelEvent *event);
 
 private:
+	void paintLayer();
 	void createGeometry();
+	void showWire(qreal x1, qreal y1, qreal x2, qreal y2);
 	void quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4);
 	void extrude(qreal x1, qreal y1, qreal x2, qreal y2);
 
