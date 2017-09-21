@@ -10,6 +10,7 @@
 #include <QMouseEvent>
 #include <QMutexLocker>
 #include <QTemporaryDir>
+#include <QGLWidget>
 
 #include <qmath.h>
 
@@ -17,7 +18,9 @@
 #include "lef/lefdata.h"
 #include "project.h"
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
+typedef QVector<QVector3D> shapes;
+
+class GLWidget : public QGLWidget
 {
 	Q_OBJECT
 
@@ -27,34 +30,21 @@ public:
 	void setProject(Project *p);
 
 protected:
-	void resizeGL(int w, int h) override;
 	void paintGL() override;
 	void initializeGL() override;
+	void resizeGL(int w, int h);
 	void mouseMoveEvent(QMouseEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
 private:
-	void paintLayer();
-	void createGeometry();
-	void showWire(qreal x1, qreal y1, qreal x2, qreal y2);
-	void quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4);
-	void extrude(qreal x1, qreal y1, qreal x2, qreal y2);
+	void addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
 
 	QWidget *m_mainWindow;
-	QOpenGLShaderProgram *m_program;
-	QOpenGLBuffer m_vbo;
-	QOpenGLContext *m_context;
-	QMutex m_windowLock;
+
 	qreal m_fAngle1, m_fAngle2, m_fAngle3;
 	qreal m_fScale;
-
-	int vertexAttr;
-	int normalAttr;
-	int matrixUniform;
-	int colorUniform;
-
-	QVector<QVector3D> vertices;
-	QVector<QVector3D> normals;
+	qreal m_wireScale;
+	qreal m_offsetX, m_offsetY;
 
 	QPoint lastPos;
 	QString filePath;

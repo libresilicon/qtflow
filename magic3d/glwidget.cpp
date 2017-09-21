@@ -6,19 +6,19 @@ GLWidget::GLWidget(QWidget *parent):
 	m_fAngle2(0),
 	m_fAngle3(0),
 	m_fScale(1.0),
-	m_context(NULL),
+	m_wireScale(0),
+	m_offsetX(0),
+	m_offsetY(0),
 	magicdata(NULL),
 	lefdata(NULL),
 	project(NULL)
 {
 }
 
-void GLWidget::resizeGL(int, int)
-{
-}
-
 void GLWidget::loadFile(QString file)
 {
+	layer_rects_t layers;
+	rects_t layer;
 	QString filedest;
 	QTemporaryDir temporaryDir;
 	filePath = file;
@@ -36,185 +36,101 @@ void GLWidget::loadFile(QString file)
 			}
 		}
 	}
+
+	layers = magicdata->getRectangles();
+	foreach(QString layerN, layers.keys()) {
+		layer = layers[layerN];
+		foreach (rect_t e, layer)
+		{
+			if(e.x1 > m_wireScale) {
+				m_wireScale = e.x1;
+			}
+			if(e.x2 > m_wireScale) {
+				m_wireScale = e.x2;
+			}
+			if(e.y1 > m_wireScale) {
+				m_wireScale = e.y1;
+			}
+			if(e.y2 > m_wireScale) {
+				m_wireScale = e.y2;
+			}
+		}
+	}
 }
 
 void GLWidget::paintGL()
 {
-	QMutexLocker locker(&m_windowLock);
+	rects_t layer;
+	layer_rects_t layers = magicdata->getRectangles();
 
-	QMatrix4x4 modelview;
-	QColor back("white");
-	QColor front("red");
-
-	modelview.rotate(m_fAngle1, 0.0f, 1.0f, 0.0f);
-	modelview.rotate(m_fAngle2, 1.0f, 0.0f, 0.0f);
-	modelview.rotate(m_fAngle3, 0.0f, 0.0f, 1.0f);
-	modelview.scale(m_fScale);
-	modelview.translate(0.0f, -0.2f, 0.0f);
-
-	glClearColor(back.redF(), back.greenF(), back.blueF(), 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glFrontFace(GL_CW);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-
-	m_program->bind();
-	m_vbo.bind();
-
-	m_program->enableAttributeArray(vertexAttr);
-	m_program->enableAttributeArray(normalAttr);
-	m_program->setAttributeBuffer(vertexAttr, GL_FLOAT, 0, 3);
-	const int verticesSize = vertices.count() * 3 * sizeof(GLfloat);
-	m_program->setAttributeBuffer(normalAttr, GL_FLOAT, verticesSize, 3);
-
-	m_program->setUniformValue(matrixUniform, modelview);
-	m_program->setUniformValue(colorUniform, front);
-
-	m_context->functions()->glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-
-	update();
+	foreach(QString layerN, layers.keys()) {
+		layer = layers[layerN];
+		foreach (rect_t e, layer) {
+			addWire(layerN, e.x1, e.y1, e.x2, e.y2);
+		}
+	}
 }
 
 void GLWidget::initializeGL()
 {
-	initializeOpenGLFunctions();
-
-	if(m_context) delete m_context;
-	m_context = new QOpenGLContext(this);
-
-	m_vbo.create();
-
-	QOpenGLShader *vshader = new QOpenGLShader(QOpenGLShader::Vertex, this);
-	vshader->compileSourceCode(
-		"attribute highp vec4 vertex;"
-		"attribute mediump vec3 normal;"
-		"uniform mediump mat4 matrix;"
-		"uniform lowp vec4 sourceColor;"
-		"varying mediump vec4 color;"
-		"void main(void)"
-		"{"
-		"    vec3 toLight = normalize(vec3(10.0, 10.0, 10.0));"
-		"    float angle = max(dot(normal, toLight), 0.0);"
-		"    vec3 col = sourceColor.rgb;"
-		"    color = vec4(col*0.5 + col*0.2*angle, 0.5);"
-		"    color = clamp(color, 0.0, 0.5);"
-		"    gl_Position = matrix * vertex;"
-		"}");
-
-	QOpenGLShader *fshader = new QOpenGLShader(QOpenGLShader::Fragment, this);
-	fshader->compileSourceCode(
-		"varying mediump vec4 color;"
-		"void main(void)"
-		"{"
-		"    gl_FragColor = color;"
-		"}");
-
-	m_program = new QOpenGLShaderProgram;
-	m_program->addShader(vshader);
-	m_program->addShader(fshader);
-	m_program->link();
-	m_program->bind();
-
-	vertexAttr = m_program->attributeLocation("vertex");
-	normalAttr = m_program->attributeLocation("normal");
-	matrixUniform = m_program->uniformLocation("matrix");
-	colorUniform = m_program->uniformLocation("sourceColor");
-
-	createGeometry();
-
-	m_vbo.bind();
-	const int verticesSize = vertices.count() * 3 * sizeof(GLfloat);
-	m_vbo.allocate(verticesSize * 2);
-	m_vbo.write(0, vertices.constData(), verticesSize);
-	m_vbo.write(verticesSize, normals.constData(), verticesSize);
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_BLEND);
+	glEnable(GL_POLYGON_SMOOTH);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	qglClearColor( Qt::white );
 }
 
-void GLWidget::createGeometry()
+void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
 {
-	vertices.clear();
-	normals.clear();
+	x1/=m_wireScale;
+	y1/=m_wireScale;
+	x2/=m_wireScale;
+	y2/=m_wireScale;
 
-	qreal x1 = +0.06f;
-	qreal y1 = -0.14f;
+	x1*=m_fScale;
+	y1*=m_fScale;
+	x2*=m_fScale;
+	y2*=m_fScale;
 
-	qreal x2 = +0.14f;
-	qreal y2 = -0.06f;
+	x1+=m_offsetX;
+	x2+=m_offsetX;
+	y1+=m_offsetY;
+	y2+=m_offsetY;
 
-	quad(x1, y1, x2, y2, y2, x2, y1, x1);
+	QColor color = project->colorMat(layerN);
 
-	extrude(x1, y1, x2, y2);
-	extrude(x2, y2, y2, x2);
-	extrude(y2, x2, y1, x1);
-	extrude(y1, x1, x1, y1);
-}
+	qDebug() << __FUNCTION__ << '\t' << x1 << '\t' << y1 << '\t' << x2 << '\t' << y2;
 
-void GLWidget::quad(qreal x1, qreal y1, qreal x2, qreal y2, qreal x3, qreal y3, qreal x4, qreal y4)
-{
-	vertices << QVector3D(x1, y1, -0.05f);
-	vertices << QVector3D(x2, y2, -0.05f);
-	vertices << QVector3D(x4, y4, -0.05f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
 
-	vertices << QVector3D(x3, y3, -0.05f);
-	vertices << QVector3D(x4, y4, -0.05f);
-	vertices << QVector3D(x2, y2, -0.05f);
+	glBegin(GL_POLYGON);
 
-	QVector3D n = QVector3D::normal(QVector3D(x2-x1, y2-y1, 0.0f), QVector3D(x4-x1, y4-y1, 0.0f));
+	glColor3f( 1.0, 0.0, 0.0 );
 
-	normals << n;
-	normals << n;
-	normals << n;
+	glVertex3f( x1, y1, 0 );
+	glVertex3f( x1, y2, 0 );
+	glVertex3f( x2, y1, 0 );
+	glVertex3f( x2, y2, 0 );
 
-	normals << n;
-	normals << n;
-	normals << n;
+	glEnd();
 
-	vertices << QVector3D(x4, y4, 0.05f);
-	vertices << QVector3D(x2, y2, 0.05f);
-	vertices << QVector3D(x1, y1, 0.05f);
-
-	vertices << QVector3D(x2, y2, 0.05f);
-	vertices << QVector3D(x4, y4, 0.05f);
-	vertices << QVector3D(x3, y3, 0.05f);
-
-	n = QVector3D::normal(QVector3D(x2-x4, y2-y4, 0.0f), QVector3D(x1-x4, y1-y4, 0.0f));
-
-	normals << n;
-	normals << n;
-	normals << n;
-
-	normals << n;
-	normals << n;
-	normals << n;
-}
-
-void GLWidget::extrude(qreal x1, qreal y1, qreal x2, qreal y2)
-{
-	vertices << QVector3D(x1, y1, +0.05f);
-	vertices << QVector3D(x2, y2, +0.05f);
-	vertices << QVector3D(x1, y1, -0.05f);
-
-	vertices << QVector3D(x2, y2, -0.05f);
-	vertices << QVector3D(x1, y1, -0.05f);
-	vertices << QVector3D(x2, y2, +0.05f);
-
-	QVector3D n = QVector3D::normal(QVector3D(x2-x1, y2-y1, 0.0f), QVector3D(0.0f, 0.0f, -0.1f));
-
-	normals << n;
-	normals << n;
-	normals << n;
-
-	normals << n;
-	normals << n;
-	normals << n;
+	update();
 }
 
 void GLWidget::setProject(Project *p)
 {
 	project = p;
+}
+
+void GLWidget::resizeGL(int w, int h) {
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -227,14 +143,25 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 		m_fAngle2+=dy;
 	}
 
+	glRotatef( m_fAngle1, 0.0f, 1.0f, 0.0f );
+	//glRotatef( m_fAngle2, 0.0f, 0.0f, 1.0f );
+
+	update();
+
    lastPos = event->pos();
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event)
 {
 	int numSteps = event->delta()/120;
-	if((m_fScale+numSteps)>0) {
-		m_fScale+=numSteps;
-		event->accept();
+	if( event->modifiers() & Qt::ShiftModifier ) {
+		m_offsetX+=numSteps;
+	} else if( event->modifiers() & Qt::ControlModifier ) {
+		m_offsetY+=numSteps;
+	} else {
+		if((m_fScale-numSteps)>0) {
+			m_fScale-=numSteps;
+			event->accept();
+		}
 	}
 }
