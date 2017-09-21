@@ -57,7 +57,12 @@ namespace magic {
 	void MagicData::addRectangle(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
-		QRect objR(x1,y1,x2-x1,y2-y1);
+		rect_t objR;
+		objR.x1 = x1;
+		objR.x2 = x2;
+		objR.y1 = y1;
+		objR.y2 = y2;
+
 		if(!parsedRectangles.contains(recentTitle)){
 			parsedRectangles[recentTitle]=list;
 		}
@@ -67,7 +72,12 @@ namespace magic {
 	void MagicData::addBox(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
-		QRect objR(x1,y1,x2-x1,y2-y1);
+		rect_t objR;
+		objR.x1 = x1;
+		objR.x2 = x2;
+		objR.y1 = y1;
+		objR.y2 = y2;
+
 		if(!parsedBoxes.contains(recentTitle)){
 			parsedBoxes[recentTitle]=list;
 		}

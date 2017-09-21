@@ -12,7 +12,12 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-typedef QVector<QRect> rects_t;
+
+typedef struct {
+	int x1,y1,x2,y2;
+} rect_t;
+
+typedef QVector<rect_t> rects_t;
 typedef QMap<QString,rects_t> layer_rects_t;
 
 typedef struct {

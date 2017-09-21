@@ -55,9 +55,9 @@ void MagicLayoutEditor::drawRectangles()
 		layer = layers[layerN];
 		QPen pen = QPen(color);
 		QBrush brush = QBrush(color);
-		foreach (const QRect& e, layer)
+		foreach (rect_t e, layer)
 		{
-			editScene->addRect(e, pen, brush);
+			editScene->addRect(QRect(e.x1,e.y1,e.x2-e.x1,e.y2-e.y1), pen, brush);
 		}
 	}
 }
