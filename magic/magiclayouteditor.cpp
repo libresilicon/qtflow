@@ -51,7 +51,7 @@ void MagicLayoutEditor::drawRectangles()
 	rects_t layer;
 	layer_rects_t layers = magicdata->getRectangles();
 	foreach(QString layerN, layers.keys()) {
-		color = colorMat(layerN);
+		color = project->colorMat(layerN);
 		layer = layers[layerN];
 		QPen pen = QPen(color);
 		QBrush brush = QBrush(color);
@@ -85,7 +85,7 @@ void MagicLayoutEditor::drawModuleInfo()
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
-					color = colorMat(layer->getName());
+					color = project->colorMat(layer->getName());
 					pen = QPen(color);
 					brush = QBrush(color);
 					layer->setOffsetX(e.c);
@@ -97,7 +97,7 @@ void MagicLayoutEditor::drawModuleInfo()
 			}
 
 			foreach (layer, macro->getObstruction()->getLayers()) {
-				color = colorMat(layer->getName());
+				color = project->colorMat(layer->getName());
 				pen = QPen(color);
 				brush = QBrush(color);
 				layer->setOffsetX(e.c);
@@ -170,34 +170,4 @@ QString MagicLayoutEditor::getFilePath()
 bool MagicLayoutEditor::changes()
 {
 	return false;
-}
-
-QColor MagicLayoutEditor::colorMat(QString material)
-{
-	// TODO:
-	// make this configuration based!
-	// don't hardcode this!
-	QColor mat = QColor("black");
-
-	if (material == "metal1")
-		mat = QColor("lightblue");
-	if (material == "metal2")
-		mat = QColor("blue");
-	if (material == "metal3")
-		mat = QColor("teal");
-	if (material == "metal4")
-		mat = QColor("purple");
-
-	if (material == "m1contact")
-		mat = QColor("yellow");
-	if (material == "m2contact")
-		mat = QColor("green");
-	if (material == "m3contact")
-		mat = QColor("teal");
-	if (material == "m4contact")
-		mat = QColor("teal");
-
-	mat.setAlphaF( 0.5 );
-
-	return mat;
 }

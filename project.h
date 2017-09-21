@@ -52,6 +52,8 @@ public:
 	void setProjectType(QString proc);
 	void createFiles();
 
+	QColor colorMat(QString material);
+
 	QString getSourceDir();
 	QString getTopLevel();
 	QString getRootDir();

@@ -56,7 +56,6 @@ public slots:
 	void scrollContentsBy(int dx, int dy);
 
 protected:
-	QColor colorMat(QString material);
 	void drawRectangles();
 	void drawModuleInfo();
 

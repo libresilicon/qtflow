@@ -252,3 +252,33 @@ void Project::routing()
 void Project::buildAll()
 {
 }
+
+QColor Project::colorMat(QString material)
+{
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+	QColor mat = QColor("black");
+
+	if (material == "metal1")
+		mat = QColor("lightblue");
+	if (material == "metal2")
+		mat = QColor("blue");
+	if (material == "metal3")
+		mat = QColor("teal");
+	if (material == "metal4")
+		mat = QColor("purple");
+
+	if (material == "m1contact")
+		mat = QColor("yellow");
+	if (material == "m2contact")
+		mat = QColor("green");
+	if (material == "m3contact")
+		mat = QColor("teal");
+	if (material == "m4contact")
+		mat = QColor("teal");
+
+	mat.setAlphaF( 0.5 );
+
+	return mat;
+}
