@@ -53,6 +53,8 @@ public:
 	void createFiles();
 
 	QColor colorMat(QString material);
+	qreal posMat(QString material);
+	qreal thicknessMat(QString material);
 
 	QString getSourceDir();
 	QString getTopLevel();

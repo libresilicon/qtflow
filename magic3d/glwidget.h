@@ -43,7 +43,10 @@ private:
 
 	qreal m_fAngle1, m_fAngle2, m_fAngle3;
 	qreal m_fScale;
-	qreal m_wireScale;
+
+	qreal m_lowestX, m_highestX;
+	qreal m_lowestY, m_highestY;
+
 	qreal m_offsetX, m_offsetY;
 
 	QPoint lastPos;

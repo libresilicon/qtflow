@@ -282,3 +282,40 @@ QColor Project::colorMat(QString material)
 
 	return mat;
 }
+
+qreal Project::posMat(QString material)
+{
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+	qreal ret = 0;
+
+	if (material == "metal1")
+		ret = 0.1;
+	if (material == "metal2")
+		ret = 0.2;
+	if (material == "metal3")
+		ret = 0.3;
+	if (material == "metal4")
+		ret = 0.4;
+	if (material == "m1contact")
+		ret = 0.5;
+	if (material == "m2contact")
+		ret = 0.6;
+	if (material == "m3contact")
+		ret = 0.7;
+	if (material == "m4contact")
+		ret = 0.8;
+
+	return ret;
+}
+
+qreal Project::thicknessMat(QString material)
+{
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+	qreal ret = 0.1;
+
+	return ret;
+}
