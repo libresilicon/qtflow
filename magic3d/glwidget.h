@@ -29,6 +29,9 @@ public:
 	void loadFile(QString file);
 	void setProject(Project *p);
 
+public slots:
+	void keyPressEvent(QKeyEvent *event) override;
+
 protected:
 	void paintGL() override;
 	void initializeGL() override;
@@ -41,7 +44,7 @@ private:
 
 	QWidget *m_mainWindow;
 
-	qreal m_fAngle1, m_fAngle2, m_fAngle3;
+	qreal m_fAngle1, m_fAngle2;
 	qreal m_fScale;
 
 	qreal m_lowestX, m_highestX;

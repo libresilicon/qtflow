@@ -291,21 +291,21 @@ qreal Project::posMat(QString material)
 	qreal ret = 0;
 
 	if (material == "metal1")
-		ret = 0.1;
+		ret = 0.0;
 	if (material == "metal2")
-		ret = 0.2;
-	if (material == "metal3")
-		ret = 0.3;
-	if (material == "metal4")
 		ret = 0.4;
-	if (material == "m1contact")
-		ret = 0.5;
-	if (material == "m2contact")
-		ret = 0.6;
-	if (material == "m3contact")
-		ret = 0.7;
-	if (material == "m4contact")
+	if (material == "metal3")
 		ret = 0.8;
+	if (material == "metal4")
+		ret = 1.0;
+	if (material == "m1contact")
+		ret = 1.4;
+	if (material == "m2contact")
+		ret = 1.8;
+	if (material == "m3contact")
+		ret = 2.2;
+	if (material == "m4contact")
+		ret = 2.6;
 
 	return ret;
 }

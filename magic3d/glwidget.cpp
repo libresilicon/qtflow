@@ -2,9 +2,8 @@
 
 GLWidget::GLWidget(QWidget *parent):
 	m_mainWindow(parent),
-	m_fAngle1(0),
-	m_fAngle2(0),
-	m_fAngle3(0),
+	m_fAngle1(20.0f),
+	m_fAngle2(20.0f),
 	m_fScale(1.0),
 	m_offsetX(0),
 	m_offsetY(0),
@@ -12,6 +11,8 @@ GLWidget::GLWidget(QWidget *parent):
 	lefdata(NULL),
 	project(NULL)
 {
+	setFocusPolicy(Qt::StrongFocus);
+	grabKeyboard();
 }
 
 void GLWidget::loadFile(QString file)
@@ -97,6 +98,11 @@ void GLWidget::paintGL()
 			addWire(layerN, e.x1, e.y1, e.x2, e.y2);
 		}
 	}
+
+	glRotatef( 1, 0.0f, 1.0f, 0.0f );
+	glRotatef( 1, 0.0f, 0.0f, 1.0f );
+
+	update();
 }
 
 void GLWidget::initializeGL()
@@ -143,31 +149,47 @@ void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLflo
 	y1+=m_offsetY;
 	y2+=m_offsetY;
 
-	qDebug() << __FUNCTION__ << '\t' << x1 << '\t' << y1 << '\t' << x2 << '\t' << y2;
+	//qDebug() << __FUNCTION__ << '\t' << x1 << '\t' << y1 << '\t' << x2 << '\t' << y2;
 
+	// bottom
 	glBegin(GL_POLYGON);
 	glVertex3f( x1, y1, z );
 	glVertex3f( x1, y2, z );
 	glVertex3f( x2, y2, z );
 	glVertex3f( x2, y1, z );
 	glEnd();
-	update();
 
+	// top
 	glBegin(GL_POLYGON);
 	glVertex3f( x1, y1, z+th );
 	glVertex3f( x1, y2, z+th );
 	glVertex3f( x2, y2, z+th );
 	glVertex3f( x2, y1, z+th );
 	glEnd();
-	update();
 
-	/*glBegin(GL_POLYGON);
+	// side 1
+	glBegin(GL_POLYGON);
 	glVertex3f( x1, y1, z+th );
 	glVertex3f( x2, y1, z+th );
 	glVertex3f( x2, y1, z );
 	glVertex3f( x1, y1, z );
-	glEnd();*/
-	update();
+	glEnd();
+
+	// side 2
+	glBegin(GL_POLYGON);
+	glVertex3f( x1, y1, z+th );
+	glVertex3f( x1, y2, z+th );
+	glVertex3f( x1, y2, z );
+	glVertex3f( x1, y1, z );
+	glEnd();
+
+	// side 3
+	glBegin(GL_POLYGON);
+	glVertex3f( x1, y2, z+th );
+	glVertex3f( x2, y2, z+th );
+	glVertex3f( x2, y2, z );
+	glVertex3f( x1, y2, z );
+	glEnd();
 }
 
 void GLWidget::setProject(Project *p)
@@ -191,9 +213,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 		m_fAngle2+=dy;
 	}
 
-	glRotatef( m_fAngle1, 0.0f, 1.0f, 0.0f );
-	glRotatef( m_fAngle2, 0.0f, 0.0f, 1.0f );
-
 	update();
 
    lastPos = event->pos();
@@ -212,4 +231,47 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 			event->accept();
 		}
 	}
+
+	update();
+}
+
+void GLWidget::keyPressEvent(QKeyEvent *event)
+{
+	switch(event->key()) {
+		case Qt::Key_Left:
+			if(event->modifiers() & Qt::ShiftModifier) {
+				m_offsetX--;
+			} else {
+				m_fAngle1--;
+			}
+			break;
+		case Qt::Key_Right:
+			if(event->modifiers() & Qt::ShiftModifier) {
+				m_offsetX++;
+			} else {
+				m_fAngle1++;
+			}
+			break;
+		case Qt::Key_Down:
+			if(event->modifiers() & Qt::ShiftModifier) {
+				m_offsetY--;
+			} else {
+				m_fAngle2--;
+			}
+			break;
+		case Qt::Key_Up:
+			if(event->modifiers() & Qt::ShiftModifier) {
+				m_offsetY++;
+			} else {
+				m_fAngle2++;
+			}
+			break;
+		case Qt::Key_Plus:
+			m_fScale++;
+			break;
+		case Qt::Key_Minus:
+			m_fScale--;
+			break;
+	}
+	update();
 }
