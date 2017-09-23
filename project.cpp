@@ -315,7 +315,7 @@ qreal Project::thicknessMat(QString material)
 	// TODO:
 	// make this configuration based!
 	// don't hardcode this!
-	qreal ret = 0.01;
+	qreal ret = 0.05;
 
 	return ret;
 }

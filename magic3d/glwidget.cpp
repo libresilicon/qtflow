@@ -96,7 +96,6 @@ void GLWidget::addModules()
 	lef::LEFPort *port;
 	lef::LEFLayer *layer;
 
-	QColor color;
 	mods_t mods = magicdata->getModules();
 	foreach (module_info e, mods)
 	{
@@ -110,7 +109,6 @@ void GLWidget::addModules()
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
-					color = project->colorMat(layer->getName());
 					layer->setOffsetX(e.c);
 					layer->setOffsetY(e.f);
 					foreach(QRect rect, layer->getRects()) {
@@ -120,7 +118,6 @@ void GLWidget::addModules()
 			}
 
 			foreach (layer, macro->getObstruction()->getLayers()) {
-				color = project->colorMat(layer->getName());
 				layer->setOffsetX(e.c);
 				layer->setOffsetY(e.f);
 				foreach(QRect rect, layer->getRects()) {
