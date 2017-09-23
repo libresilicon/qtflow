@@ -293,19 +293,19 @@ qreal Project::posMat(QString material)
 	if (material == "metal1")
 		ret = 0.0;
 	if (material == "metal2")
-		ret = 0.4;
+		ret = 0.1;
 	if (material == "metal3")
-		ret = 0.8;
+		ret = 0.2;
 	if (material == "metal4")
-		ret = 1.0;
+		ret = 0.3;
 	if (material == "m1contact")
-		ret = 1.4;
+		ret = 0.4;
 	if (material == "m2contact")
-		ret = 1.8;
+		ret = 0.5;
 	if (material == "m3contact")
-		ret = 2.2;
+		ret = 0.6;
 	if (material == "m4contact")
-		ret = 2.6;
+		ret = 0.7;
 
 	return ret;
 }
@@ -315,7 +315,7 @@ qreal Project::thicknessMat(QString material)
 	// TODO:
 	// make this configuration based!
 	// don't hardcode this!
-	qreal ret = 0.1;
+	qreal ret = 0.01;
 
 	return ret;
 }

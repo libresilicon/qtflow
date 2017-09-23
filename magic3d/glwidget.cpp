@@ -85,24 +85,64 @@ void GLWidget::loadFile(QString file)
 
 void GLWidget::paintGL()
 {
-	QColor color;
-	rects_t layer;
-	layer_rects_t layers = magicdata->getRectangles();
+	addWires();
+	addModules();
+}
 
-	foreach(QString layerN, layers.keys()) {
-		color = project->colorMat(layerN);
-		glClear(GL_COLOR_BUFFER_BIT);
-		glColor3f(color.redF(), color.greenF(), color.blueF());
-		layer = layers[layerN];
-		foreach (rect_t e, layer) {
-			addWire(layerN, e.x1, e.y1, e.x2, e.y2);
+void GLWidget::addModules()
+{
+	lef::LEFMacro *macro;
+	lef::LEFPin *pin;
+	lef::LEFPort *port;
+	lef::LEFLayer *layer;
+
+	QColor color;
+	mods_t mods = magicdata->getModules();
+	foreach (module_info e, mods)
+	{
+		QRect box( e.c, e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1) );
+
+		// fill in library content:
+		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
+			macro = lefdata->getMacro(e.module_name);
+			macro->scaleMacro(box.width(),box.height());
+
+			foreach(pin, macro->getPins()) {
+				port = pin->getPort();
+				foreach(layer, port->getLayers()) {
+					color = project->colorMat(layer->getName());
+					layer->setOffsetX(e.c);
+					layer->setOffsetY(e.f);
+					foreach(QRect rect, layer->getRects()) {
+						addBox(layer->getName(), rect.x(), rect.y(), rect.x()+rect.width(), rect.y()+rect.height());
+					}
+				}
+			}
+
+			foreach (layer, macro->getObstruction()->getLayers()) {
+				color = project->colorMat(layer->getName());
+				layer->setOffsetX(e.c);
+				layer->setOffsetY(e.f);
+				foreach(QRect rect, layer->getRects()) {
+					addBox(layer->getName(), rect.x(), rect.y(), rect.x()+rect.width(), rect.y()+rect.height());
+				}
+			}
+
 		}
 	}
+}
 
-	glRotatef( 1, 0.0f, 1.0f, 0.0f );
-	glRotatef( 1, 0.0f, 0.0f, 1.0f );
-
-	update();
+void GLWidget::addWires()
+{
+	layer_rects_t layers = magicdata->getRectangles();
+	rects_t layer;
+	foreach(QString layerN, layers.keys()) {
+		glClear(GL_COLOR_BUFFER_BIT);
+		layer = layers[layerN];
+		foreach (rect_t e, layer) {
+			addBox(layerN, e.x1, e.y1, e.x2, e.y2);
+		}
+	}
 }
 
 void GLWidget::initializeGL()
@@ -116,8 +156,9 @@ void GLWidget::initializeGL()
 	qglClearColor( Qt::white );
 }
 
-void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
 {
+	QColor color = project->colorMat(layerN);
 	qreal m_wireScaleX = m_highestX-m_lowestX;
 	qreal m_wireScaleY = m_highestY-m_lowestY;
 
@@ -153,6 +194,7 @@ void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLflo
 
 	// bottom
 	glBegin(GL_POLYGON);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y1, z );
 	glVertex3f( x1, y2, z );
 	glVertex3f( x2, y2, z );
@@ -161,6 +203,7 @@ void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLflo
 
 	// top
 	glBegin(GL_POLYGON);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y1, z+th );
 	glVertex3f( x1, y2, z+th );
 	glVertex3f( x2, y2, z+th );
@@ -169,6 +212,7 @@ void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLflo
 
 	// side 1
 	glBegin(GL_POLYGON);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y1, z+th );
 	glVertex3f( x2, y1, z+th );
 	glVertex3f( x2, y1, z );
@@ -177,6 +221,7 @@ void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLflo
 
 	// side 2
 	glBegin(GL_POLYGON);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y1, z+th );
 	glVertex3f( x1, y2, z+th );
 	glVertex3f( x1, y2, z );
@@ -185,6 +230,7 @@ void GLWidget::addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLflo
 
 	// side 3
 	glBegin(GL_POLYGON);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y2, z+th );
 	glVertex3f( x2, y2, z+th );
 	glVertex3f( x2, y2, z );
@@ -243,6 +289,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 				m_offsetX--;
 			} else {
 				m_fAngle1--;
+				glRotatef( m_fAngle1, 0.0f, 1.0f, 0.0f );
 			}
 			break;
 		case Qt::Key_Right:
@@ -250,6 +297,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 				m_offsetX++;
 			} else {
 				m_fAngle1++;
+				glRotatef( m_fAngle1, 0.0f, 1.0f, 0.0f );
 			}
 			break;
 		case Qt::Key_Down:
@@ -257,6 +305,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 				m_offsetY--;
 			} else {
 				m_fAngle2--;
+				glRotatef( m_fAngle2, 0.0f, 0.0f, 1.0f );
 			}
 			break;
 		case Qt::Key_Up:
@@ -264,6 +313,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 				m_offsetY++;
 			} else {
 				m_fAngle2++;
+				glRotatef( m_fAngle2, 0.0f, 0.0f, 1.0f );
 			}
 			break;
 		case Qt::Key_Plus:
@@ -274,4 +324,5 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 			break;
 	}
 	update();
+
 }

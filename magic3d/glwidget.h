@@ -40,7 +40,9 @@ protected:
 	void wheelEvent(QWheelEvent *event);
 
 private:
-	void addWire(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+	void addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);
+	void addWires();
+	void addModules();
 
 	QWidget *m_mainWindow;
 
