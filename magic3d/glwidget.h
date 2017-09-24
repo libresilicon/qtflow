@@ -18,6 +18,17 @@
 #include "lef/lefdata.h"
 #include "project.h"
 
+enum orient_mode {
+	ORIENT_NONE,
+	ORIENT_TOP,
+	ORIENT_BOTTOM,
+	ORIENT_FRONT,
+	ORIENT_BACK,
+	ORIENT_LEFT,
+	ORIENT_RIGHT,
+	ORIENT_SIDE
+};
+
 typedef QVector<QVector3D> shapes;
 
 class GLWidget : public QGLWidget
@@ -31,6 +42,13 @@ public:
 
 public slots:
 	void keyPressEvent(QKeyEvent *event) override;
+	void axis3d_back();
+	void axis3d_bottom();
+	void axis3d_front();
+	void axis3d_left();
+	void axis3d_right();
+	void axis3d_top();
+	void axis3d_side();
 
 protected:
 	void paintGL() override;
@@ -44,9 +62,10 @@ private:
 	void addWires();
 	void addModules();
 
+	void revert_orient();
+
 	QWidget *m_mainWindow;
 
-	qreal m_fAngle1, m_fAngle2;
 	qreal m_fScale;
 
 	qreal m_lowestX, m_highestX;
@@ -54,6 +73,7 @@ private:
 
 	qreal m_offsetX, m_offsetY;
 
+	orient_mode lastOrient;
 	QPoint lastPos;
 	QString filePath;
 	magic::MagicData *magicdata;

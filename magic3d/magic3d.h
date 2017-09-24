@@ -5,6 +5,7 @@
 #include <QOpenGLBuffer>
 #include <QVector3D>
 #include <QVBoxLayout>
+#include <QToolBar>
 
 #include "project.h"
 #include "glwidget.h"
@@ -22,6 +23,7 @@ class Magic3D : public QDialog
 		Project *project;
 		GLWidget *view;
 		QVBoxLayout *layout;
+		QToolBar *toolbar;
 };
 
 #endif // MAGIC3D_H

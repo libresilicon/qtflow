@@ -2,14 +2,13 @@
 
 GLWidget::GLWidget(QWidget *parent):
 	m_mainWindow(parent),
-	m_fAngle1(20.0f),
-	m_fAngle2(20.0f),
 	m_fScale(1.0),
 	m_offsetX(0),
 	m_offsetY(0),
 	magicdata(NULL),
 	lefdata(NULL),
-	project(NULL)
+	project(NULL),
+	lastOrient(ORIENT_NONE)
 {
 	setFocusPolicy(Qt::StrongFocus);
 	grabKeyboard();
@@ -150,7 +149,14 @@ void GLWidget::initializeGL()
 	glEnable(GL_BLEND);
 	glEnable(GL_POLYGON_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	qglClearColor( Qt::white );
+	//qglClearColor( Qt::white );
+
+	glEnable(GL_DEPTH_TEST);    //for opaque
+	glEnable(GL_NORMALIZE);     //normalize
+	glEnable(GL_SMOOTH);        //for smooth color
+	glEnable(GL_LIGHTING);  //light setting
+	glDepthMask(GL_TRUE);
+
 }
 
 void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
@@ -233,6 +239,15 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glVertex3f( x2, y2, z );
 	glVertex3f( x1, y2, z );
 	glEnd();
+
+	// side 4
+	glBegin(GL_POLYGON);
+	glColor3f(color.redF(), color.greenF(), color.blueF());
+	glVertex3f( x2, y1, z+th );
+	glVertex3f( x2, y2, z+th );
+	glVertex3f( x2, y2, z );
+	glVertex3f( x2, y1, z );
+	glEnd();
 }
 
 void GLWidget::setProject(Project *p)
@@ -252,11 +267,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 	int dy = event->y() - lastPos.y();
 
 	if (event->buttons() & Qt::LeftButton) {
-		m_fAngle1+=dx;
-		m_fAngle2+=dy;
+		glRotatef( dx, 0.0f, 1.0f, 0.0f );
+		glRotatef( dy, 1.0f, 0.0f, 0.0f );
+		update();
 	}
-
-	update();
 
    lastPos = event->pos();
 }
@@ -285,32 +299,28 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetX--;
 			} else {
-				m_fAngle1--;
-				glRotatef( m_fAngle1, 0.0f, 1.0f, 0.0f );
+				glRotatef( -1, 0.0f, 1.0f, 0.0f );
 			}
 			break;
 		case Qt::Key_Right:
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetX++;
 			} else {
-				m_fAngle1++;
-				glRotatef( m_fAngle1, 0.0f, 1.0f, 0.0f );
+				glRotatef( 1, 0.0f, 1.0f, 0.0f );
 			}
 			break;
 		case Qt::Key_Down:
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetY--;
 			} else {
-				m_fAngle2--;
-				glRotatef( m_fAngle2, 0.0f, 0.0f, 1.0f );
+				glRotatef( -1, 1.0f, 0.0f, 0.0f );
 			}
 			break;
 		case Qt::Key_Up:
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetY++;
 			} else {
-				m_fAngle2++;
-				glRotatef( m_fAngle2, 0.0f, 0.0f, 1.0f );
+				glRotatef( 1, 1.0f, 0.0f, 0.0f );
 			}
 			break;
 		case Qt::Key_Plus:
@@ -322,4 +332,105 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 	}
 	update();
 
+}
+
+void GLWidget::axis3d_front()
+{
+	if(lastOrient!=ORIENT_FRONT) {
+		revert_orient();
+		update();
+	}
+	lastOrient=ORIENT_FRONT;
+}
+
+void GLWidget::axis3d_back()
+{
+	if(lastOrient!=ORIENT_BACK) {
+		revert_orient();
+		glRotatef( -180, 0.0f, 1.0f, 0.0f );
+		update();
+	}
+	lastOrient=ORIENT_BACK;
+}
+
+void GLWidget::axis3d_top()
+{
+	if(lastOrient!=ORIENT_TOP) {
+		revert_orient();
+		glRotatef( 90, 1.0f, 0.0f, 0.0f );
+		update();
+	}
+	lastOrient=ORIENT_TOP;
+}
+
+void GLWidget::axis3d_bottom()
+{
+	if(lastOrient!=ORIENT_BOTTOM) {
+		revert_orient();
+		glRotatef( -90, 1.0f, 0.0f, 0.0f );
+		update();
+	}
+	lastOrient=ORIENT_BOTTOM;
+}
+
+void GLWidget::axis3d_left()
+{
+	if(lastOrient!=ORIENT_LEFT) {
+		revert_orient();
+		glRotatef( 90, 0.0f, 1.0f, 0.0f );
+		update();
+	}
+	lastOrient=ORIENT_LEFT;
+}
+
+void GLWidget::axis3d_right()
+{
+	if(lastOrient!=ORIENT_RIGHT) {
+		revert_orient();
+		glRotatef( -90, 0.0f, 1.0f, 0.0f );
+		update();
+	}
+	lastOrient=ORIENT_RIGHT;
+}
+
+void GLWidget::axis3d_side()
+{
+	if(lastOrient!=ORIENT_SIDE) {
+		revert_orient();
+		glRotatef( 45, 1.0f, 0.0f, 0.0f );
+		glRotatef( 45, 0.0f, 1.0f, 0.0f );
+		update();
+	}
+	lastOrient=ORIENT_SIDE;
+}
+
+void GLWidget::revert_orient()
+{
+	switch(lastOrient) {
+		case ORIENT_BACK:
+			glRotatef( 180, 0.0f, 1.0f, 0.0f );
+			break;
+
+		case ORIENT_TOP:
+			glRotatef( -90, 1.0f, 0.0f, 0.0f );
+			break;
+
+		case ORIENT_BOTTOM:
+			glRotatef( 90, 1.0f, 0.0f, 0.0f );
+			break;
+
+		case ORIENT_LEFT:
+			glRotatef( -90, 0.0f, 1.0f, 0.0f );
+			break;
+
+		case ORIENT_RIGHT:
+			glRotatef( 90, 0.0f, 1.0f, 0.0f );
+			break;
+
+		case ORIENT_SIDE:
+			glRotatef( -45, 1.0f, 0.0f, 0.0f );
+			glRotatef( -45, 0.0f, 1.0f, 0.0f );
+			break;
+
+	}
 }
