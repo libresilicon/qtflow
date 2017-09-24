@@ -1,6 +1,7 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
+#include <QtOpenGL>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -28,8 +29,6 @@ enum orient_mode {
 	ORIENT_RIGHT,
 	ORIENT_SIDE
 };
-
-typedef QVector<QVector3D> shapes;
 
 class GLWidget : public QGLWidget
 {
@@ -62,8 +61,6 @@ private:
 	void addWires();
 	void addModules();
 
-	void revert_orient();
-
 	QWidget *m_mainWindow;
 
 	qreal m_fScale;
@@ -72,6 +69,8 @@ private:
 	qreal m_lowestY, m_highestY;
 
 	qreal m_offsetX, m_offsetY;
+
+	GLfloat m_angle1, m_angle2;
 
 	orient_mode lastOrient;
 	QPoint lastPos;

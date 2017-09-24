@@ -1,6 +1,7 @@
 #include "glwidget.h"
 
 GLWidget::GLWidget(QWidget *parent):
+	QGLWidget(parent),
 	m_mainWindow(parent),
 	m_fScale(1.0),
 	m_offsetX(0),
@@ -8,7 +9,9 @@ GLWidget::GLWidget(QWidget *parent):
 	magicdata(NULL),
 	lefdata(NULL),
 	project(NULL),
-	lastOrient(ORIENT_NONE)
+	lastOrient(ORIENT_NONE),
+	m_angle1(0),
+	m_angle2(0)
 {
 	setFocusPolicy(Qt::StrongFocus);
 	grabKeyboard();
@@ -84,8 +87,15 @@ void GLWidget::loadFile(QString file)
 
 void GLWidget::paintGL()
 {
-	addWires();
+	glPushMatrix();
+	//glLoadIdentity();
+	glRotatef( m_angle1, 1.0f, 0.0f, 0.0f );
+	glRotatef( m_angle2, 0.0f, 1.0f, 0.0f );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	addModules();
+	addWires();
+	glPopMatrix();
 }
 
 void GLWidget::addModules()
@@ -133,7 +143,6 @@ void GLWidget::addWires()
 	layer_rects_t layers = magicdata->getRectangles();
 	rects_t layer;
 	foreach(QString layerN, layers.keys()) {
-		glClear(GL_COLOR_BUFFER_BIT);
 		layer = layers[layerN];
 		foreach (rect_t e, layer) {
 			addBox(layerN, e.x1, e.y1, e.x2, e.y2);
@@ -143,20 +152,21 @@ void GLWidget::addWires()
 
 void GLWidget::initializeGL()
 {
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_COLOR_MATERIAL);
-	glEnable(GL_BLEND);
-	glEnable(GL_POLYGON_SMOOTH);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//qglClearColor( Qt::white );
+	qglClearColor(QColor(Qt::white));
 
-	glEnable(GL_DEPTH_TEST);    //for opaque
-	glEnable(GL_NORMALIZE);     //normalize
-	glEnable(GL_SMOOTH);        //for smooth color
-	glEnable(GL_LIGHTING);  //light setting
-	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glShadeModel(GL_SMOOTH);
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_LIGHT0);
+	glEnable(GL_MULTISAMPLE);
+	//static GLfloat lightPosition[4] = { 0.5, 5.0, 7.0, 1.0 };
+	//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+}
 
+
+void GLWidget::resizeGL(int w, int h) {
+	glViewport(0,0,w,h);
 }
 
 void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
@@ -196,22 +206,31 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	//qDebug() << __FUNCTION__ << '\t' << x1 << '\t' << y1 << '\t' << x2 << '\t' << y2;
 
 	// bottom
-	glBegin(GL_POLYGON);
+	glBegin(GL_QUAD_STRIP);
 	glColor3f(color.redF(), color.greenF(), color.blueF());
+
 	glVertex3f( x1, y1, z );
 	glVertex3f( x1, y2, z );
-	glVertex3f( x2, y2, z );
 	glVertex3f( x2, y1, z );
+	glVertex3f( x2, y2, z );
+
+	glVertex3f( x2, y1, z+th );
+	glVertex3f( x2, y2, z+th );
+	glVertex3f( x1, y1, z+th );
+	glVertex3f( x1, y2, z+th );
+
 	glEnd();
+	glFlush();
 
 	// top
 	glBegin(GL_POLYGON);
 	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y1, z+th );
-	glVertex3f( x1, y2, z+th );
-	glVertex3f( x2, y2, z+th );
 	glVertex3f( x2, y1, z+th );
+	glVertex3f( x2, y2, z+th );
+	glVertex3f( x1, y2, z+th );
 	glEnd();
+	glFlush();
 
 	// side 1
 	glBegin(GL_POLYGON);
@@ -221,6 +240,7 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glVertex3f( x2, y1, z );
 	glVertex3f( x1, y1, z );
 	glEnd();
+	glFlush();
 
 	// side 2
 	glBegin(GL_POLYGON);
@@ -230,6 +250,7 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glVertex3f( x1, y2, z );
 	glVertex3f( x1, y1, z );
 	glEnd();
+	glFlush();
 
 	// side 3
 	glBegin(GL_POLYGON);
@@ -239,6 +260,7 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glVertex3f( x2, y2, z );
 	glVertex3f( x1, y2, z );
 	glEnd();
+	glFlush();
 
 	// side 4
 	glBegin(GL_POLYGON);
@@ -248,17 +270,13 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glVertex3f( x2, y2, z );
 	glVertex3f( x2, y1, z );
 	glEnd();
+	glFlush();
+
 }
 
 void GLWidget::setProject(Project *p)
 {
 	project = p;
-}
-
-void GLWidget::resizeGL(int w, int h) {
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -267,8 +285,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 	int dy = event->y() - lastPos.y();
 
 	if (event->buttons() & Qt::LeftButton) {
-		glRotatef( dx, 0.0f, 1.0f, 0.0f );
-		glRotatef( dy, 1.0f, 0.0f, 0.0f );
+		m_angle2+=dx;
+		m_angle1+=dy;
 		update();
 	}
 
@@ -299,28 +317,28 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetX--;
 			} else {
-				glRotatef( -1, 0.0f, 1.0f, 0.0f );
+				m_angle2--;
 			}
 			break;
 		case Qt::Key_Right:
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetX++;
 			} else {
-				glRotatef( 1, 0.0f, 1.0f, 0.0f );
+				m_angle2++;
 			}
 			break;
 		case Qt::Key_Down:
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetY--;
 			} else {
-				glRotatef( -1, 1.0f, 0.0f, 0.0f );
+				m_angle1--;
 			}
 			break;
 		case Qt::Key_Up:
 			if(event->modifiers() & Qt::ShiftModifier) {
 				m_offsetY++;
 			} else {
-				glRotatef( 1, 1.0f, 0.0f, 0.0f );
+				m_angle1++;
 			}
 			break;
 		case Qt::Key_Plus:
@@ -337,7 +355,8 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
 void GLWidget::axis3d_front()
 {
 	if(lastOrient!=ORIENT_FRONT) {
-		revert_orient();
+		m_angle1=0;
+		m_angle2=0;
 		update();
 	}
 	lastOrient=ORIENT_FRONT;
@@ -346,8 +365,8 @@ void GLWidget::axis3d_front()
 void GLWidget::axis3d_back()
 {
 	if(lastOrient!=ORIENT_BACK) {
-		revert_orient();
-		glRotatef( -180, 0.0f, 1.0f, 0.0f );
+		m_angle1=0;
+		m_angle2=180;
 		update();
 	}
 	lastOrient=ORIENT_BACK;
@@ -356,8 +375,8 @@ void GLWidget::axis3d_back()
 void GLWidget::axis3d_top()
 {
 	if(lastOrient!=ORIENT_TOP) {
-		revert_orient();
-		glRotatef( 90, 1.0f, 0.0f, 0.0f );
+		m_angle1=90;
+		m_angle2=0;
 		update();
 	}
 	lastOrient=ORIENT_TOP;
@@ -366,8 +385,8 @@ void GLWidget::axis3d_top()
 void GLWidget::axis3d_bottom()
 {
 	if(lastOrient!=ORIENT_BOTTOM) {
-		revert_orient();
-		glRotatef( -90, 1.0f, 0.0f, 0.0f );
+		m_angle1=-90;
+		m_angle2=0;
 		update();
 	}
 	lastOrient=ORIENT_BOTTOM;
@@ -376,8 +395,8 @@ void GLWidget::axis3d_bottom()
 void GLWidget::axis3d_left()
 {
 	if(lastOrient!=ORIENT_LEFT) {
-		revert_orient();
-		glRotatef( 90, 0.0f, 1.0f, 0.0f );
+		m_angle1=0;
+		m_angle2=90;
 		update();
 	}
 	lastOrient=ORIENT_LEFT;
@@ -386,8 +405,8 @@ void GLWidget::axis3d_left()
 void GLWidget::axis3d_right()
 {
 	if(lastOrient!=ORIENT_RIGHT) {
-		revert_orient();
-		glRotatef( -90, 0.0f, 1.0f, 0.0f );
+		m_angle1=0;
+		m_angle2=-90;
 		update();
 	}
 	lastOrient=ORIENT_RIGHT;
@@ -396,41 +415,9 @@ void GLWidget::axis3d_right()
 void GLWidget::axis3d_side()
 {
 	if(lastOrient!=ORIENT_SIDE) {
-		revert_orient();
-		glRotatef( 45, 1.0f, 0.0f, 0.0f );
-		glRotatef( 45, 0.0f, 1.0f, 0.0f );
+		m_angle1=45;
+		m_angle2=45;
 		update();
 	}
 	lastOrient=ORIENT_SIDE;
-}
-
-void GLWidget::revert_orient()
-{
-	switch(lastOrient) {
-		case ORIENT_BACK:
-			glRotatef( 180, 0.0f, 1.0f, 0.0f );
-			break;
-
-		case ORIENT_TOP:
-			glRotatef( -90, 1.0f, 0.0f, 0.0f );
-			break;
-
-		case ORIENT_BOTTOM:
-			glRotatef( 90, 1.0f, 0.0f, 0.0f );
-			break;
-
-		case ORIENT_LEFT:
-			glRotatef( -90, 0.0f, 1.0f, 0.0f );
-			break;
-
-		case ORIENT_RIGHT:
-			glRotatef( 90, 0.0f, 1.0f, 0.0f );
-			break;
-
-		case ORIENT_SIDE:
-			glRotatef( -45, 1.0f, 0.0f, 0.0f );
-			glRotatef( -45, 0.0f, 1.0f, 0.0f );
-			break;
-
-	}
 }

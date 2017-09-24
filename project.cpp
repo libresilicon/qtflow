@@ -268,7 +268,6 @@ QColor Project::colorMat(QString material)
 		mat = QColor("teal");
 	if (material == "metal4")
 		mat = QColor("purple");
-
 	if (material == "m1contact")
 		mat = QColor("yellow");
 	if (material == "m2contact")
