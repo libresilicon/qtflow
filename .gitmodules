@@ -1,6 +1,3 @@
 [submodule "PythonQt"]
 	path = PythonQt
 	url = git@github.com:leviathanch/PythonQt.git
-[submodule "kdevelop"]
-	path = kdevelop
-	url = https://github.com/KDE/kdevelop
