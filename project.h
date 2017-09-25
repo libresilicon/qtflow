@@ -6,7 +6,6 @@
 #include <QProcess>
 #include <QFileDevice>
 #include <QCommandLineParser>
-#include <QtScript>
 #include <QString>
 #include <QTextStream>
 #include <QDir>
@@ -14,6 +13,7 @@
 #include <QSettings>
 #include <QCommandLineParser>
 #include <QDomDocument>
+#include <QDateTime>
 
 #include <PythonQt.h>
 

@@ -6,7 +6,6 @@
 
 QT += core
 QT += gui
-QT += script
 QT += xml
 QT += widgets
 QT += opengl
