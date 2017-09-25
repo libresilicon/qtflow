@@ -157,6 +157,7 @@ void GLWidget::initializeGL()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glShadeModel(GL_SMOOTH);
+	glDepthFunc(GL_LESS);
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_LIGHT0);
 	glEnable(GL_MULTISAMPLE);
@@ -205,70 +206,42 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 
 	//qDebug() << __FUNCTION__ << '\t' << x1 << '\t' << y1 << '\t' << x2 << '\t' << y2;
 
-	// bottom
 	glBegin(GL_QUAD_STRIP);
 	glColor3f(color.redF(), color.greenF(), color.blueF());
 
+	// bottom
 	glVertex3f( x1, y1, z );
 	glVertex3f( x1, y2, z );
 	glVertex3f( x2, y1, z );
 	glVertex3f( x2, y2, z );
-
-	glVertex3f( x2, y1, z+th );
-	glVertex3f( x2, y2, z+th );
-	glVertex3f( x1, y1, z+th );
-	glVertex3f( x1, y2, z+th );
-
-	glEnd();
-	glFlush();
 
 	// top
-	glBegin(GL_POLYGON);
-	glColor3f(color.redF(), color.greenF(), color.blueF());
-	glVertex3f( x1, y1, z+th );
 	glVertex3f( x2, y1, z+th );
 	glVertex3f( x2, y2, z+th );
-	glVertex3f( x1, y2, z+th );
-	glEnd();
-	glFlush();
-
-	// side 1
-	glBegin(GL_POLYGON);
-	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y1, z+th );
-	glVertex3f( x2, y1, z+th );
-	glVertex3f( x2, y1, z );
+	glVertex3f( x1, y2, z+th );
+
+	// closing
 	glVertex3f( x1, y1, z );
+	glVertex3f( x1, y2, z );
+
 	glEnd();
 	glFlush();
 
-	// side 2
-	glBegin(GL_POLYGON);
+	glBegin(GL_QUAD_STRIP);
 	glColor3f(color.redF(), color.greenF(), color.blueF());
-	glVertex3f( x1, y1, z+th );
-	glVertex3f( x1, y2, z+th );
-	glVertex3f( x1, y2, z );
+
+	// bottom
 	glVertex3f( x1, y1, z );
-	glEnd();
-	glFlush();
+	glVertex3f( x2, y1, z );
+	glVertex3f( x1, y1, z+th );
+	glVertex3f( x2, y1, z+th );
 
-	// side 3
-	glBegin(GL_POLYGON);
-	glColor3f(color.redF(), color.greenF(), color.blueF());
 	glVertex3f( x1, y2, z+th );
 	glVertex3f( x2, y2, z+th );
-	glVertex3f( x2, y2, z );
 	glVertex3f( x1, y2, z );
-	glEnd();
-	glFlush();
-
-	// side 4
-	glBegin(GL_POLYGON);
-	glColor3f(color.redF(), color.greenF(), color.blueF());
-	glVertex3f( x2, y1, z+th );
-	glVertex3f( x2, y2, z+th );
 	glVertex3f( x2, y2, z );
-	glVertex3f( x2, y1, z );
+
 	glEnd();
 	glFlush();
 
