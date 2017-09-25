@@ -3,7 +3,7 @@
 ### Debian
 Install packages:
 
- sudo apt-get install qt5-qmake qtbase5-dev qtbase5-dev-tools qttools5-dev-tools qtscript-tools python-all-dev build-essential
+ sudo apt-get install qt5-qmake qtbase5-dev qtbase5-dev-tools qttools5-dev-tools qtscript-tools python-all-dev build-essential qt5-default
 
 ## Clone
 Clone submodules as well:
@@ -23,13 +23,9 @@ Change into it:
 
  cd build
 
-Set qt5 environment:
+Set qt5 environment and run qmake:
 
- export QT_SELECT=qt5
-
-Run qmake:
-
- qmake ..
+ QT_SELECT=qt5 qmake ..
 
 ## Build
 Compile with threads:
