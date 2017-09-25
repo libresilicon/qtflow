@@ -318,3 +318,18 @@ qreal Project::thicknessMat(QString material)
 
 	return ret;
 }
+
+
+QStringList Project::getLayers()
+{
+	QStringList ret;
+	ret << "metal1";
+	ret << "metal2";
+	ret << "metal3";
+	ret << "metal4";
+	return ret;
+}
+
+QStringList Project::getVisibles()
+{
+}

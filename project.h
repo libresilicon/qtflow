@@ -69,6 +69,9 @@ public:
 	QString getVCDFile();
 	QString getVCDPath();
 
+	QStringList getLayers();
+	QStringList getVisibles();
+
 private:
 	QSettings *settings;
 	QSettings *project_settings;

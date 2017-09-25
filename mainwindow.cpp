@@ -159,6 +159,7 @@ void MainWindow::openProject(QString path)
 		projectsWidget->setProject(project);
 		projectSettingsDialog->setProject(project);
 		editArea->setProject(project);
+		layoutVisibles->setProject(project);
 		enableProject();
 	}
 }

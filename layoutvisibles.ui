@@ -24,11 +24,21 @@
        <attribute name="title">
         <string>Layer</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QListWidget" name="layerList"/>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="render">
        <attribute name="title">
         <string>Render</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QListWidget" name="renderList"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
