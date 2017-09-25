@@ -3,7 +3,7 @@
 ### Debian
 Install packages:
 
- sudo apt-get install qt5-qmake qtbase5-dev qtbase5-dev-tools qttools5-dev-tools qtscript-tools python-all-dev build-essential qt5-default
+ sudo apt-get install qt5-qmake qtbase5-dev qtbase5-dev-tools qttools5-dev-tools qtscript-tools python-all-dev build-essential qt5-default bison flex
 
 ## Clone
 Clone submodules as well:
