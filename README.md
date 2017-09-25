@@ -1,18 +1,38 @@
 # qtflow
 ## Depencies
 ### Debian
-$ sudo apt-get install qt5-qmake qtbase5-dev-tools qttools5-dev-tools qtscript-tools
-$ sudo qtchooser -qt=qt5
+Install packages:
+
+ sudo apt-get install qt5-qmake qtbase5-dev-tools qttools5-dev-tools qtscript-tools
+
+Set qt5 environment:
+
+ sudo qtchooser -qt=qt5
 
 ## Clone
-$ git clone --recursive https://github.com/leviathanch/qtflow.git
-$ cd qtflow
+Clone submodules as well:
+
+ git clone --recursive https://github.com/leviathanch/qtflow.git
+
+Change into repo:
+
+ cd qtflow
 
 ## Configure
-$ mkdir build
-$ cd build
-$ qmake ..
+Create build dir:
+
+ mkdir build
+
+Change into it:
+
+ cd build
+
+Run qmake:
+
+ qmake ..
 
 ## Build
-$ make -j6 
+Compile with threads:
+
+ make -j6 
 
