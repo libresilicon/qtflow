@@ -332,4 +332,6 @@ QStringList Project::getLayers()
 
 QStringList Project::getVisibles()
 {
+	QStringList ret;
+	return ret;
 }

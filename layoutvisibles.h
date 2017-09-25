@@ -15,11 +15,16 @@ public:
 	explicit LayoutVisibles(QWidget *parent = nullptr);
 	void setProject(Project *p);
 
+	bool layerIsEnabled(QString s);
+	bool visibleIsEnabled(QString);
+
 signals:
+	void refreshLayout();
 
 public slots:
 	void changeColor();
 	void on_layerList_customContextMenuRequested(const QPoint &pos);
+	void handleClick(const QModelIndex &index);
 
 private:
 	void refreshLists();

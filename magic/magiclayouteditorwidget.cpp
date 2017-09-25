@@ -21,6 +21,8 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 void MagicLayoutEditorWidget::loadFile(QString path)
 {
 	editArea->setProject(project);
+	editArea->setVisibles(visibles);
+
 	editArea->loadFile(path);
 
 	view3D->setProject(project);
@@ -35,6 +37,12 @@ void MagicLayoutEditorWidget::show3D()
 void MagicLayoutEditorWidget::setProject(Project *p)
 {
 	project = p;
+}
+
+void MagicLayoutEditorWidget::setVisibles(LayoutVisibles *v)
+{
+	visibles = v;
+	editArea->setVisibles(visibles);
 }
 
 QString MagicLayoutEditorWidget::getFilePath()

@@ -7,6 +7,12 @@ LayoutVisibles::LayoutVisibles(QWidget *parent):
 {
 	ui->setupUi(this);
 	ui->layerList->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(ui->layerList,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
+}
+
+void LayoutVisibles::handleClick(const QModelIndex &index)
+{
+	emit(refreshLayout());
 }
 
 void LayoutVisibles::setProject(Project *p)
@@ -45,11 +51,34 @@ void LayoutVisibles::on_layerList_customContextMenuRequested(const QPoint &pos)
 	QMenu menu;
 
 	globalPos = ui->layerList->mapToGlobal(pos);
-	menu.addAction("This is a type 1");
+	menu.addAction("Change color");
 	menu.exec(globalPos);
 }
 
 void LayoutVisibles::changeColor()
 {
 
+}
+
+bool LayoutVisibles::layerIsEnabled(QString s)
+{
+	bool ret = true;
+	QListWidgetItem *m;
+	for(int i = 0; i < ui->layerList->count(); ++i){
+		m = ui->layerList->item(i);
+		if(m) if(m->text()==s)
+			ret = m->checkState();
+	}
+	return ret;
+}
+
+bool LayoutVisibles::visibleIsEnabled(QString)
+{
+	bool ret = true;
+	QListWidgetItem *m;
+	for(int i = 0; i < ui->renderList->count(); ++i){
+		m = ui->layerList->item(i);
+		qDebug() << m->text();
+	}
+	return ret;
 }

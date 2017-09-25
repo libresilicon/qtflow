@@ -5,6 +5,7 @@
 #include "magic/magicdata.h"
 #include "lef/lefdata.h"
 #include "project.h"
+#include "layoutvisibles.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -43,14 +44,14 @@ public:
 
 	void loadFile(QString);
 	void setProject(Project *p);
+	void setVisibles(LayoutVisibles *v);
 	void saveFile();
 	QString getFilePath();
-
-	void redraw();
 
 	bool changes();
 
 public slots:
+	void redraw();
 	void mousePressEvent(QMouseEvent * e);
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
@@ -68,6 +69,7 @@ private:
 	QMap<QString,ModuleAreaInfo> moduleAreas;
 	QRectF sceneRect;
 	Project *project;
+	LayoutVisibles *visibles;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

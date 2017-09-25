@@ -17,8 +17,8 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	
 	//sceneRect = QRectF(0,0,this->width(),this->height());
 	//editScene->setSceneRect(sceneRect);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	//setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	//setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setScene(editScene);
 }
 
@@ -51,13 +51,15 @@ void MagicLayoutEditor::drawRectangles()
 	rects_t layer;
 	layer_rects_t layers = magicdata->getRectangles();
 	foreach(QString layerN, layers.keys()) {
-		color = project->colorMat(layerN);
-		layer = layers[layerN];
-		QPen pen = QPen(color);
-		QBrush brush = QBrush(color);
-		foreach (rect_t e, layer)
-		{
-			editScene->addRect(QRect(e.x1,e.y1,e.x2-e.x1,e.y2-e.y1), pen, brush);
+		if(visibles) if(visibles->layerIsEnabled(layerN)) {
+			color = project->colorMat(layerN);
+			layer = layers[layerN];
+			QPen pen = QPen(color);
+			QBrush brush = QBrush(color);
+			foreach (rect_t e, layer)
+			{
+				editScene->addRect(QRect(e.x1,e.y1,e.x2-e.x1,e.y2-e.y1), pen, brush);
+			}
 		}
 	}
 }
@@ -85,6 +87,21 @@ void MagicLayoutEditor::drawModuleInfo()
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
+					if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
+						color = project->colorMat(layer->getName());
+						pen = QPen(color);
+						brush = QBrush(color);
+						layer->setOffsetX(e.c);
+						layer->setOffsetY(e.f);
+						foreach(QRect rect, layer->getRects()) {
+							editScene->addRect(rect, pen, brush);
+						}
+					}
+				}
+			}
+
+			foreach (layer, macro->getObstruction()->getLayers()) {
+				if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
 					color = project->colorMat(layer->getName());
 					pen = QPen(color);
 					brush = QBrush(color);
@@ -93,17 +110,6 @@ void MagicLayoutEditor::drawModuleInfo()
 					foreach(QRect rect, layer->getRects()) {
 						editScene->addRect(rect, pen, brush);
 					}
-				}
-			}
-
-			foreach (layer, macro->getObstruction()->getLayers()) {
-				color = project->colorMat(layer->getName());
-				pen = QPen(color);
-				brush = QBrush(color);
-				layer->setOffsetX(e.c);
-				layer->setOffsetY(e.f);
-				foreach(QRect rect, layer->getRects()) {
-					editScene->addRect(rect, pen, brush);
 				}
 			}
 
@@ -160,6 +166,12 @@ void MagicLayoutEditor::saveFile()
 void MagicLayoutEditor::setProject(Project *p)
 {
 	project = p;
+}
+
+void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
+{
+	visibles = v;
+	if(visibles) connect(visibles,SIGNAL(refreshLayout()),this,SLOT(redraw()));
 }
 
 QString MagicLayoutEditor::getFilePath()
