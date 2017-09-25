@@ -3,7 +3,7 @@
 ### Debian
 Install packages:
 
- sudo apt-get install qt5-qmake qtbase5-dev-tools qttools5-dev-tools qtscript-tools
+ sudo apt-get install qt5-qmake qtbase5-dev-tools qttools5-dev-tools qtscript-tools python-all-dev
 
 Set qt5 environment:
 
