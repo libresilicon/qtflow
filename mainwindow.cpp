@@ -68,6 +68,10 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::TopDockWidgetArea, mainToolBox);
 
+	layoutVisibles = new LayoutVisibles(this);
+	layoutVisibles->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
+
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
 
@@ -141,6 +145,7 @@ void MainWindow::hideAllDockerWidgets()
 	toolBoxWidgetTestBench->setVisible(false);
 	toolBoxWidgetSynthesis->setVisible(false);
 	pythonConsoleWidget->setVisible(false);
+	layoutVisibles->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
@@ -153,7 +158,9 @@ void MainWindow::openProject(QString path)
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);
 		projectSettingsDialog->setProject(project);
+		layoutVisibles->setProject(project);
 		editArea->setProject(project);
+		editArea->setVisibles(layoutVisibles);
 		enableProject();
 	}
 }
@@ -217,7 +224,12 @@ void MainWindow::on_setSynthesisMode_triggered()
 void MainWindow::on_setLayoutMode_triggered()
 {
 	hideAllDockerWidgets();
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
 	// show layout tools
+	layoutVisibles->setVisible(true);
+
 }
 
 void MainWindow::on_newProject_triggered()
@@ -225,6 +237,16 @@ void MainWindow::on_newProject_triggered()
 	Templates *t = new Templates(this, settings, mainContext);
 	connect(t,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
 	t->show();
+}
+
+void MainWindow::on_actionPythonShell_triggered()
+{
+	pythonConsoleWidget->setVisible(!pythonConsoleWidget->isVisible());
+}
+
+void MainWindow::on_actionWaveViewer_triggered()
+{
+	timingWidget->setVisible(!timingWidget->isVisible());
 }
 
 void MainWindow::onProjectCreated(QString s)
@@ -319,12 +341,11 @@ void MainWindow::on_toolRefresh_triggered()
 void MainWindow::enableProject()
 {
 	if(!project) return;
-	QStringList filter;
+	//QStringList filter;
 
-	//disableAllFunctions();
 	enableAllFunctions();
 
-	filter.clear();
+	/*filter.clear();
 	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
 	if(filter.contains(project->getProjectType())) {
 		ui->setLayoutMode->setEnabled(true);
@@ -340,7 +361,7 @@ void MainWindow::enableProject()
 		ui->setLayoutMode->setEnabled(true);
 		ui->setAnalogSimulationMode->setEnabled(true);
 		ui->projectSettings->setEnabled(true);
-	}
+	}*/
 
 	ui->newFile->setDisabled(false);
 	ui->buildAll->setDisabled(false);
@@ -352,8 +373,6 @@ void MainWindow::enableProject()
 	ui->menuRouting->setDisabled(false);
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
-
-	projectsWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()

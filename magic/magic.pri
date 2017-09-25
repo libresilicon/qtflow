@@ -15,3 +15,4 @@ HEADERS += \
 	$$PWD/magiclayouteditor.h \
 	$$PWD/magiclayouteditorwidget.h \
 	$$PWD/magicscanner.h
+

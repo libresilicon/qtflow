@@ -6,9 +6,9 @@
 
 QT += core
 QT += gui
-QT += script
 QT += xml
 QT += widgets
+QT += opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -75,7 +75,7 @@ SOURCES += \
 	pysettings.cpp \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
-    layoutvisibles.cpp
+	layoutvisibles.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -110,7 +110,7 @@ HEADERS  += \
 	pysettings.h \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
-    layoutvisibles.h
+	layoutvisibles.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -164,6 +164,8 @@ QMAKE_EXTRA_COMPILERS += bison
 
 include(schematics/schematics.pri)
 include(magic/magic.pri)
+include(magic3d/magic3d.pri)
 include(vcd/vcd.pri)
 include(lef/lef.pri)
 include(def/def.pri)
+include(tech_reader/tech_reader.pri)

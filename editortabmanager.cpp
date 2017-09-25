@@ -4,7 +4,8 @@
 
 EditorTabManager::EditorTabManager(QWidget *parent) :
 	QTabWidget(parent),
-	project(NULL)
+	project(NULL),
+	visibles(NULL)
 {
 	setTabsClosable(true);
 	parent->layout()->addWidget(this);
@@ -37,6 +38,7 @@ void EditorTabManager::openFile(QString filepath)
 		if(info.suffix()=="mag") {
 			MagicLayoutEditorWidget *editorWidget = new MagicLayoutEditorWidget(this);
 			editorWidget->setProject(project);
+			editorWidget->setVisibles(visibles);
 			editorWidget->loadFile(filepath);
 			addTab(editorWidget,info.fileName());
 			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
@@ -107,4 +109,9 @@ void EditorTabManager::closeFile(int idx)
 void EditorTabManager::setProject(Project *p)
 {
 	project = p;
+}
+
+void EditorTabManager::setVisibles(LayoutVisibles *v)
+{
+	visibles = v;
 }

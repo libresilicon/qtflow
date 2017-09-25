@@ -2,15 +2,22 @@
 #define MAGICLAYOUTEDITOR_H
 
 #include "ieditor.h"
-#include "magicdata.h"
+#include "magic/magicdata.h"
 #include "lef/lefdata.h"
 #include "project.h"
+#include "layoutvisibles.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
 #include <QGraphicsWidget>
 #include <QGridLayout>
+#include <QAbstractScrollArea>
+#include <QFileInfo>
+#include <QResource>
+#include <QDebug>
+#include <QTemporaryDir>
+#include <QAction>
 
 namespace magic {
 	class MagicData;
@@ -37,20 +44,19 @@ public:
 
 	void loadFile(QString);
 	void setProject(Project *p);
+	void setVisibles(LayoutVisibles *v);
 	void saveFile();
 	QString getFilePath();
-
-	void redraw();
 
 	bool changes();
 
 public slots:
+	void redraw();
 	void mousePressEvent(QMouseEvent * e);
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
 
 protected:
-	QColor colorMat(QString material);
 	void drawRectangles();
 	void drawModuleInfo();
 
@@ -63,6 +69,7 @@ private:
 	QMap<QString,ModuleAreaInfo> moduleAreas;
 	QRectF sceneRect;
 	Project *project;
+	LayoutVisibles *visibles;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

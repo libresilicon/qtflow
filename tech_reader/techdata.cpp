@@ -1,9 +1,9 @@
-#include "magic_parser/magic_parser.h"
-#include "magicscanner.h"
-#include "magicdata.h"
+#include "tech_parser/tech_parser.h"
+#include "techscanner.h"
+#include "techdata.h"
 
-namespace magic {
-	MagicData::MagicData(QString filename) :
+namespace tech {
+	TechData::TechData(QString filename) :
 		lexer(NULL),
 		parser(NULL),
 		trace_scanning(false),
@@ -15,46 +15,46 @@ namespace magic {
 		streamname = filename;
 		input.open(stdfilename, std::ios::in);
 
-		lexer = new MagicScanner(&input, &std::cout);
+		lexer = new TechScanner(&input, &std::cout);
 		lexer->set_debug(trace_scanning);
 
-		parser = new MagicParser(this);
+		parser = new TechParser(this);
 		parser->set_debug_level(trace_parsing);
 		parser->parse();
 		input.close();
 	}
 
-	void MagicData::setLayer(std::string *s)
+	void TechData::setLayer(std::string *s)
 	{
 		recentTitle = QString::fromStdString(*s);
 	}
 
-	void MagicData::setTechnology(std::string *s)
+	void TechData::setTechnology(std::string *s)
 	{
 		technology = QString::fromStdString(*s);
 	}
 
-	QString MagicData::getTechnology()
+	QString TechData::getTechnology()
 	{
 		return technology;
 	}
 
-	MagicScanner *MagicData::getLexer()
+	TechScanner *TechData::getLexer()
 	{
 		return lexer;
 	}
 
-	layer_rects_t MagicData::getBoxes()
+	layer_rects_t TechData::getBoxes()
 	{
 		return parsedBoxes;
 	}
 
-	layer_rects_t MagicData::getRectangles()
+	layer_rects_t TechData::getRectangles()
 	{
 		return parsedRectangles;
 	}
 
-	void MagicData::addRectangle(int x1, int y1, int x2, int y2)
+	void TechData::addRectangle(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
 		rect_t objR;
@@ -69,7 +69,7 @@ namespace magic {
 		parsedRectangles[recentTitle].append(objR);
 	}
 
-	void MagicData::addBox(int x1, int y1, int x2, int y2)
+	void TechData::addBox(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
 		rect_t objR;
@@ -84,7 +84,7 @@ namespace magic {
 		parsedBoxes[recentTitle].append(objR);
 	}
 
-	void MagicData::addUsedModuleTransform(int a, int b, int c, int d, int e, int f)
+	void TechData::addUsedModuleTransform(int a, int b, int c, int d, int e, int f)
 	{
 		recent_module.a = a;
 		recent_module.b = b;
@@ -94,7 +94,7 @@ namespace magic {
 		recent_module.f = f;
 	}
 
-	void MagicData::addUsedModuleBox(int x1, int y1, int x2, int y2)
+	void TechData::addUsedModuleBox(int x1, int y1, int x2, int y2)
 	{
 		recent_module.x1 = x1;
 		recent_module.y1 = y1;
@@ -102,13 +102,13 @@ namespace magic {
 		recent_module.y2 = y2;
 	}
 
-	void MagicData::addUsedModuleNames(std::string *module, std::string *name)
+	void TechData::addUsedModuleNames(std::string *module, std::string *name)
 	{
 		recent_module.module_name = QString::fromStdString(*module);
 		recent_module.instance_name = QString::fromStdString(*name);
 	}
 
-	void MagicData::addUsedModule()
+	void TechData::addUsedModule()
 	{
 		module_info info;
 		info.a = recent_module.a;
@@ -130,7 +130,7 @@ namespace magic {
 		parsedModules.append(info);
 	}
 
-	mods_t MagicData::getModules()
+	mods_t TechData::getModules()
 	{
 		return parsedModules;
 	}

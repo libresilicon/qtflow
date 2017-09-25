@@ -3,9 +3,6 @@
 
 #include "project.h"
 
-#include <QFileDialog>
-#include <QInputDialog>
-
 Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
 	QDialog(parent),
 	ui(new Ui::Templates),
@@ -21,6 +18,7 @@ Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
 	QString tech;
 
 	ui->setupUi(this);
+	ui->libraryInfoBox->setVisible(false);
 
 	connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(close()));
 
@@ -70,6 +68,26 @@ Templates::~Templates()
 {
 	if(ui) delete ui;
 	if(project) delete project;
+}
+
+void Templates::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *b)
+{
+	QStringList filter;
+	QVariant d;
+	QString s;
+	filter << "cell_mixed";
+	filter << "cell_digital";
+	filter << "cell_analog";
+
+	if(current != 0) {
+		d = current->data(Qt::UserRole);
+		s = d.toString();
+		if(filter.contains(s)) {
+			ui->libraryInfoBox->setVisible(true);
+		} else {
+			ui->libraryInfoBox->setVisible(false);
+		}
+	}
 }
 
 void Templates::on_buttonBox_accepted()

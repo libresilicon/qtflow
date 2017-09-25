@@ -22,6 +22,7 @@
 #include "moduleselector.h"
 #include "testbenchtoolbox.h"
 #include "synthesistoolbox.h"
+#include "layoutvisibles.h"
 
 #include "editortabmanager.h"
 
@@ -83,6 +84,8 @@ private slots:
 	void on_menuSynthesis_triggered();
 	void on_menuPlacement_triggered();
 	void on_menuRouting_triggered();
+	void on_actionPythonShell_triggered();
+	void on_actionWaveViewer_triggered();
 
 	void on_menuIOPads_triggered();
 	void on_menuSettings_triggered();
@@ -127,6 +130,7 @@ private:
 	TestBenchToolBox *toolBoxWidgetTestBench;
 	SynthesisToolBox *toolBoxWidgetSynthesis;
 	MainToolBox *mainToolBox;
+	LayoutVisibles *layoutVisibles;
 
 	EditorTabManager *editArea;
 

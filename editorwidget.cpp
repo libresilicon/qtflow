@@ -22,6 +22,11 @@ EditorWidget::EditorWidget(QWidget *parent) :
 	this->setLayout(layout);
 }
 
+QToolBar *EditorWidget::getToolBar()
+{
+	return toolbar;
+}
+
 void EditorWidget::setEditWidget(QWidget *editArea)
 {
 	layout->addWidget(editArea);

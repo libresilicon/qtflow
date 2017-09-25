@@ -1,9 +1,4 @@
 #include "magiclayouteditor.h"
-#include <QAbstractScrollArea>
-#include <QFileInfo>
-#include <QResource>
-#include <QDebug>
-#include <QTemporaryDir>
 
 ModuleAreaInfo::ModuleAreaInfo():
 	isSelected(false)
@@ -19,10 +14,11 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	editScene(new QGraphicsScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
+	
 	//sceneRect = QRectF(0,0,this->width(),this->height());
 	//editScene->setSceneRect(sceneRect);
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	//setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	//setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setScene(editScene);
 }
 
@@ -55,13 +51,15 @@ void MagicLayoutEditor::drawRectangles()
 	rects_t layer;
 	layer_rects_t layers = magicdata->getRectangles();
 	foreach(QString layerN, layers.keys()) {
-		color = colorMat(layerN);
-		layer = layers[layerN];
-		QPen pen = QPen(color);
-		QBrush brush = QBrush(color);
-		foreach (const QRect& e, layer)
-		{
-			editScene->addRect(e, pen, brush);
+		if(visibles) if(visibles->layerIsEnabled(layerN)) {
+			color = project->colorMat(layerN);
+			layer = layers[layerN];
+			QPen pen = QPen(color);
+			QBrush brush = QBrush(color);
+			foreach (rect_t e, layer)
+			{
+				editScene->addRect(QRect(e.x1,e.y1,e.x2-e.x1,e.y2-e.y1), pen, brush);
+			}
 		}
 	}
 }
@@ -89,7 +87,22 @@ void MagicLayoutEditor::drawModuleInfo()
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
-					color = colorMat(layer->getName());
+					if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
+						color = project->colorMat(layer->getName());
+						pen = QPen(color);
+						brush = QBrush(color);
+						layer->setOffsetX(e.c);
+						layer->setOffsetY(e.f);
+						foreach(QRect rect, layer->getRects()) {
+							editScene->addRect(rect, pen, brush);
+						}
+					}
+				}
+			}
+
+			foreach (layer, macro->getObstruction()->getLayers()) {
+				if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
+					color = project->colorMat(layer->getName());
 					pen = QPen(color);
 					brush = QBrush(color);
 					layer->setOffsetX(e.c);
@@ -99,18 +112,6 @@ void MagicLayoutEditor::drawModuleInfo()
 					}
 				}
 			}
-
-			foreach (layer, macro->getObstruction()->getLayers()) {
-				color = colorMat(layer->getName());
-				pen = QPen(color);
-				brush = QBrush(color);
-				layer->setOffsetX(e.c);
-				layer->setOffsetY(e.f);
-				foreach(QRect rect, layer->getRects()) {
-					editScene->addRect(rect, pen, brush);
-				}
-			}
-
 		}
 
 		// write layout details:
@@ -152,6 +153,7 @@ void MagicLayoutEditor::loadFile(QString file)
 
 void MagicLayoutEditor::redraw()
 {
+	editScene->clear();
 	drawRectangles();
 	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
@@ -166,6 +168,12 @@ void MagicLayoutEditor::setProject(Project *p)
 	project = p;
 }
 
+void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
+{
+	visibles = v;
+	if(visibles) connect(visibles,SIGNAL(refreshLayout()),this,SLOT(redraw()));
+}
+
 QString MagicLayoutEditor::getFilePath()
 {
 	return filePath;
@@ -174,34 +182,4 @@ QString MagicLayoutEditor::getFilePath()
 bool MagicLayoutEditor::changes()
 {
 	return false;
-}
-
-QColor MagicLayoutEditor::colorMat(QString material)
-{
-	// TODO:
-	// make this configuration based!
-	// don't hardcode this!
-	QColor mat = QColor("black");
-
-	if (material == "metal1")
-		mat = QColor("lightblue");
-	if (material == "metal2")
-		mat = QColor("blue");
-	if (material == "metal3")
-		mat = QColor("teal");
-	if (material == "metal4")
-		mat = QColor("purple");
-
-	if (material == "m1contact")
-		mat = QColor("yellow");
-	if (material == "m2contact")
-		mat = QColor("green");
-	if (material == "m3contact")
-		mat = QColor("teal");
-	if (material == "m4contact")
-		mat = QColor("teal");
-
-	mat.setAlphaF( 0.5 );
-
-	return mat;
 }

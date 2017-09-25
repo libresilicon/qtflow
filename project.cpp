@@ -252,3 +252,88 @@ void Project::routing()
 void Project::buildAll()
 {
 }
+
+QColor Project::colorMat(QString material)
+{
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+	QColor mat = QColor("black");
+
+	if (material == "metal1")
+		mat = QColor("lightblue");
+	if (material == "metal2")
+		mat = QColor("blue");
+	if (material == "metal3")
+		mat = QColor("teal");
+	if (material == "metal4")
+		mat = QColor("purple");
+	if (material == "m1contact")
+		mat = QColor("yellow");
+	if (material == "m2contact")
+		mat = QColor("green");
+	if (material == "m3contact")
+		mat = QColor("teal");
+	if (material == "m4contact")
+		mat = QColor("teal");
+
+	return mat;
+}
+
+qreal Project::posMat(QString material)
+{
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+	qreal ret = 0;
+
+	if (material == "metal1")
+		ret = 0.0;
+	if (material == "metal2")
+		ret = 0.1;
+	if (material == "metal3")
+		ret = 0.2;
+	if (material == "metal4")
+		ret = 0.3;
+	if (material == "m1contact")
+		ret = 0.4;
+	if (material == "m2contact")
+		ret = 0.5;
+	if (material == "m3contact")
+		ret = 0.6;
+	if (material == "m4contact")
+		ret = 0.7;
+
+	return ret;
+}
+
+qreal Project::thicknessMat(QString material)
+{
+	// TODO:
+	// make this configuration based!
+	// don't hardcode this!
+	qreal ret = 0.05;
+
+	return ret;
+}
+
+
+QStringList Project::getLayers()
+{
+	QStringList ret;
+	ret << "metal1";
+	ret << "metal2";
+	ret << "metal3";
+	ret << "metal4";
+	ret << "m1contact";
+	ret << "m2contact";
+	ret << "m3contact";
+	ret << "m4contact";
+	return ret;
+}
+
+QStringList Project::getVisibles()
+{
+	QStringList ret;
+	return ret;
+}

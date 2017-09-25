@@ -1,6 +1,7 @@
 #ifndef EDITORWIDGET_H
 #define EDITORWIDGET_H
 
+#include <QAction>
 #include <QWidget>
 #include <QToolBar>
 #include <QFileInfo>
@@ -32,6 +33,8 @@ public:
 	bool getStatusChanged();
 	void setEditWidget(QWidget *editArea);
 	void setStatusChanged(bool);
+	
+	QToolBar *getToolBar();
 	
 	virtual void closeFile();
 

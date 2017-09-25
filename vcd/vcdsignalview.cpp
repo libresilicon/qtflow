@@ -515,9 +515,16 @@ bool VcdSignalView::drawSubSignals(QString signal_name)
 				bus_idx++;
 			}
 			for(;bus_idx<width;bus_idx++) {
+				sigPen.setColor(Qt::green);
 				if (lastValue[bus_idx]==vcd::LogicValue::UNKOWN) {
-					sigPen.setColor(Qt::green);
 					signalScene->addLine(lastTime, (idx+1)*height-space*2, time, (idx+1)*height-space*2, sigPen);
+				} else {
+					if(lastValue[bus_idx]==vcd::LogicValue::ONE) {
+						signalScene->addLine(lastTime, idx*height+space*2, time, idx*height+space*2 , sigPen);
+					} else if (lastValue[bus_idx]==vcd::LogicValue::ZERO) {
+						signalScene->addLine(lastTime, (idx+1)*height-space*2, time, (idx+1)*height-space*2, sigPen);
+
+					}
 				}
 				idx++;
 			}

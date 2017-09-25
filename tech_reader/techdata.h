@@ -29,12 +29,12 @@ typedef struct {
 
 typedef QVector<module_info> mods_t;
 
-namespace magic {
-	class MagicScanner;
-	class MagicData
+namespace tech {
+	class TechScanner;
+	class TechData
 	{
 	public:
-		MagicData(QString file);
+		TechData(QString file);
 
 		layer_rects_t getRectangles();
 		layer_rects_t getBoxes();
@@ -50,15 +50,15 @@ namespace magic {
 		void addUsedModule();
 		void setLayer(std::string *s);
 		void setTechnology(std::string *s);
-		class MagicScanner *getLexer();
+		class TechScanner *getLexer();
 
 	private:
 		layer_rects_t parsedRectangles;
 		layer_rects_t parsedBoxes;
 		mods_t parsedModules;
 
-		class MagicScanner* lexer;
-		class MagicParser* parser;
+		class TechScanner* lexer;
+		class TechParser* parser;
 		QString recentTitle;
 		QString technology;
 		bool trace_parsing;

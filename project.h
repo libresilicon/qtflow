@@ -6,7 +6,6 @@
 #include <QProcess>
 #include <QFileDevice>
 #include <QCommandLineParser>
-#include <QtScript>
 #include <QString>
 #include <QTextStream>
 #include <QDir>
@@ -14,6 +13,7 @@
 #include <QSettings>
 #include <QCommandLineParser>
 #include <QDomDocument>
+#include <QDateTime>
 
 #include <PythonQt.h>
 
@@ -52,6 +52,10 @@ public:
 	void setProjectType(QString proc);
 	void createFiles();
 
+	QColor colorMat(QString material);
+	qreal posMat(QString material);
+	qreal thicknessMat(QString material);
+
 	QString getSourceDir();
 	QString getTopLevel();
 	QString getRootDir();
@@ -64,6 +68,9 @@ public:
 	QString getLayoutDir();
 	QString getVCDFile();
 	QString getVCDPath();
+
+	QStringList getLayers();
+	QStringList getVisibles();
 
 private:
 	QSettings *settings;
