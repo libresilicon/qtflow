@@ -1,6 +1,7 @@
 #ifndef EDITORWIDGET_H
 #define EDITORWIDGET_H
 
+#include <QAction>
 #include <QWidget>
 #include <QToolBar>
 #include <QFileInfo>
