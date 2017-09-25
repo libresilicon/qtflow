@@ -24,9 +24,9 @@ void LayoutVisibles::setProject(Project *p)
 void LayoutVisibles::refreshLists()
 {
 	QListWidgetItem* item;
-	QPixmap pm(100,100);
 	if(project) {
 		foreach(QString layern, project->getLayers()) {
+			QPixmap pm(100,100);
 			item = new QListWidgetItem(ui->layerList);
 			item->setText(layern);
 			pm.fill(project->colorMat(layern));
@@ -35,6 +35,7 @@ void LayoutVisibles::refreshLists()
 			item->setCheckState(Qt::Checked);
 		}
 		foreach(QString layern, project->getVisibles()) {
+			QPixmap pm(100,100);
 			item = new QListWidgetItem(ui->renderList);
 			item->setText(layern);
 			pm.fill(project->colorMat(layern));
@@ -62,23 +63,24 @@ void LayoutVisibles::changeColor()
 
 bool LayoutVisibles::layerIsEnabled(QString s)
 {
-	bool ret = true;
 	QListWidgetItem *m;
 	for(int i = 0; i < ui->layerList->count(); ++i){
 		m = ui->layerList->item(i);
 		if(m) if(m->text()==s)
-			ret = m->checkState();
+			return (m->checkState()==Qt::Checked);
 	}
-	return ret;
+	qDebug() << s;
+	return false;
 }
 
-bool LayoutVisibles::visibleIsEnabled(QString)
+bool LayoutVisibles::visibleIsEnabled(QString s)
 {
-	bool ret = true;
 	QListWidgetItem *m;
 	for(int i = 0; i < ui->renderList->count(); ++i){
-		m = ui->layerList->item(i);
-		qDebug() << m->text();
+		m = ui->renderList->item(i);
+		if(m) if(m->text()==s)
+			return (m->checkState()==Qt::Checked);
 	}
-	return ret;
+	qDebug() << s;
+	return false;
 }

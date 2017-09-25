@@ -112,7 +112,6 @@ void MagicLayoutEditor::drawModuleInfo()
 					}
 				}
 			}
-
 		}
 
 		// write layout details:
@@ -154,6 +153,7 @@ void MagicLayoutEditor::loadFile(QString file)
 
 void MagicLayoutEditor::redraw()
 {
+	editScene->clear();
 	drawRectangles();
 	drawModuleInfo();
 	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);

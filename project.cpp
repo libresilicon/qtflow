@@ -277,8 +277,6 @@ QColor Project::colorMat(QString material)
 	if (material == "m4contact")
 		mat = QColor("teal");
 
-	mat.setAlphaF( 0.5 );
-
 	return mat;
 }
 
@@ -327,6 +325,10 @@ QStringList Project::getLayers()
 	ret << "metal2";
 	ret << "metal3";
 	ret << "metal4";
+	ret << "m1contact";
+	ret << "m2contact";
+	ret << "m3contact";
+	ret << "m4contact";
 	return ret;
 }
 

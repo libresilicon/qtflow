@@ -16,7 +16,7 @@ public:
 	void setProject(Project *p);
 
 	bool layerIsEnabled(QString s);
-	bool visibleIsEnabled(QString);
+	bool visibleIsEnabled(QString s);
 
 signals:
 	void refreshLayout();
