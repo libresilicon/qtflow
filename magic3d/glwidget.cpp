@@ -108,29 +108,23 @@ void GLWidget::addModules()
 	mods_t mods = magicdata->getModules();
 	foreach (module_info e, mods)
 	{
-		QRect box( e.c, e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1) );
-
 		// fill in library content:
 		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
 			macro = lefdata->getMacro(e.module_name);
-			macro->scaleMacro(box.width(),box.height());
+			macro->scaleMacro(e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
 
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
-					layer->setOffsetX(e.c);
-					layer->setOffsetY(e.f);
-					foreach(QRect rect, layer->getRects()) {
-						addBox(layer->getName(), rect.x(), rect.y(), rect.x()+rect.width(), rect.y()+rect.height());
+					foreach(lef::rect_t rect, layer->getRects()) {
+						addBox(layer->getName(), rect.x+e.c, rect.y+e.f, rect.x+rect.w+e.c, rect.y+rect.h+e.f);
 					}
 				}
 			}
 
 			foreach (layer, macro->getObstruction()->getLayers()) {
-				layer->setOffsetX(e.c);
-				layer->setOffsetY(e.f);
-				foreach(QRect rect, layer->getRects()) {
-					addBox(layer->getName(), rect.x(), rect.y(), rect.x()+rect.width(), rect.y()+rect.height());
+				foreach(lef::rect_t rect, layer->getRects()) {
+					addBox(layer->getName(), rect.x+e.c, rect.y+e.f, rect.x+rect.w+e.c, rect.y+rect.h+e.f);
 				}
 			}
 

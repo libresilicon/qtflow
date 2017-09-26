@@ -35,6 +35,8 @@ public:
 	QRect area;
 };
 
+typedef QVector<QGraphicsRectItem*> layer_t;
+
 class MagicLayoutEditor : public QGraphicsView, public IEditor
 {
 	Q_OBJECT
@@ -57,10 +59,11 @@ public slots:
 	void scrollContentsBy(int dx, int dy);
 
 protected:
-	void drawRectangles();
-	void drawModuleInfo();
 
 private:
+	void addWires();
+	void addModules();
+
 	QString filePath;
 	QGraphicsScene *editScene;
 	magic::MagicData *magicdata;
@@ -70,6 +73,10 @@ private:
 	QRectF sceneRect;
 	Project *project;
 	LayoutVisibles *visibles;
+
+	QMap<QString,layer_t> layers;
+	QVector<QGraphicsRectItem*> bounding_boxes;
+	QVector<QGraphicsTextItem*> instance_labels;
 };
 
 #endif // MAGICLAYOUTEDITOR_H
