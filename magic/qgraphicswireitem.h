@@ -1,18 +1,28 @@
 #ifndef QGRAPHICSWIREITEM_H
 #define QGRAPHICSWIREITEM_H
 
-#include <QObject>
-#include <QWidget>
+#include <QGraphicsRectItem>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QAction>
+#include <QMenu>
 
-class QGraphicsWireItem : public QWidget
+class QGraphicsWireItem : public QGraphicsRectItem
 {
-	Q_OBJECT
 public:
-	explicit QGraphicsWireItem(QWidget *parent = nullptr);
+	explicit QGraphicsWireItem(QGraphicsItem *parent = Q_NULLPTR);
+	explicit QGraphicsWireItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
+
+protected:
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 signals:
 
 public slots:
+
+private:
+	bool m_dragged;
 };
 
 #endif // QGRAPHICSWIREITEM_H

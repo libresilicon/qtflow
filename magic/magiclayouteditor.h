@@ -6,6 +6,7 @@
 #include "lef/lefdata.h"
 #include "project.h"
 #include "layoutvisibles.h"
+#include "qgraphicswireitem.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -28,6 +29,7 @@ namespace lef {
 }
 
 typedef QVector<QGraphicsRectItem*> layer_t;
+typedef QVector<QGraphicsWireItem*> wire_layer_t;
 
 class MagicLayoutEditor : public QGraphicsView, public IEditor
 {
@@ -65,6 +67,7 @@ private:
 	LayoutVisibles *visibles;
 
 	QMap<QString,layer_t> layers;
+	QMap<QString,wire_layer_t> wires;
 	QVector<QGraphicsRectItem*> bounding_boxes;
 	QVector<QGraphicsTextItem*> instance_labels;
 };

@@ -31,17 +31,17 @@ void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
 
 void MagicLayoutEditor::addWires()
 {
-	QGraphicsRectItem *r;
+	QGraphicsWireItem *r;
 	rects_t layer;
 	layer_rects_t rects = magicdata->getRectangles();
 	foreach(QString layerN, rects.keys()) {
 		layer = rects[layerN];
 		foreach (rect_t e, layer) {
-			r = new QGraphicsRectItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
+			r = new QGraphicsWireItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
 			r->setBrush(QBrush(project->colorMat(layerN)));
 			r->setVisible(true);
 			editScene->addItem(r);
-			layers[layerN].append(r);
+			wires[layerN].append(r);
 		}
 	}
 }
@@ -143,12 +143,23 @@ void MagicLayoutEditor::loadFile(QString file)
 void MagicLayoutEditor::redraw()
 {
 	QGraphicsRectItem *m;
+	QGraphicsWireItem *w;
 	QGraphicsTextItem *t;
-	bool visible = true;
+	bool visible;
+
+	visible = true;
 	foreach(QString layerN, layers.keys()) {
 		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
 		foreach(m, layers[layerN]) {
 			m->setVisible(visible);
+		}
+	}
+
+	visible = true;
+	foreach(QString layerN, wires.keys()) {
+		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
+		foreach(w, wires[layerN]) {
+			w->setVisible(visible);
 		}
 	}
 
