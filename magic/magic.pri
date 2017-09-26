@@ -8,11 +8,13 @@ SOURCES += \
 	$$PWD/magicdata.cpp \
 	$$PWD/magiclayouteditor.cpp \
 	$$PWD/magiclayouteditorwidget.cpp \
-	$$PWD/magicscanner.cpp
+	$$PWD/magicscanner.cpp \
+    $$PWD/qgraphicswireitem.cpp
  
 HEADERS += \
 	$$PWD/magicdata.h \
 	$$PWD/magiclayouteditor.h \
 	$$PWD/magiclayouteditorwidget.h \
-	$$PWD/magicscanner.h
+	$$PWD/magicscanner.h \
+    $$PWD/qgraphicswireitem.h
 
