@@ -26,12 +26,8 @@ void QGraphicsWireItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 }
 
 void QGraphicsWireItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event){
-	QMenu *menu = new QMenu;
-	QAction *removeAction = menu->addAction("Remove");
-	QAction *markAction = menu->addAction("Mark");
-	menu->exec(event->screenPos());
-	//QAction *selectedAction = menu->exec(event->screenPos());
-	//if ( selectedAction != 0 ) { // see: http://doc.trolltech.com/4.3/qmenu.html#exec-2
-	//	this->right_clicked();
-	//}
+	QMenu menu;
+	QAction *removeAction = menu.addAction("Remove");
+	QAction *markAction = menu.addAction("Mark");
+	QAction *selectedAction = menu.exec(event->screenPos());
 }

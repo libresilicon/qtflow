@@ -335,7 +335,6 @@ QStringList Project::getLayers()
 QStringList Project::getVisibles()
 {
 	QStringList ret;
-	ret << "bounding_box";
-	ret << "instance_label";
+	ret << "macro_texts";
 	return ret;
 }

@@ -54,13 +54,21 @@ void MagicLayoutEditor::addModules()
 	lef::LEFLayer *layer;
 
 	QGraphicsRectItem *r;
+	QGraphicsMacroItem *mi;
 	QColor color;
 	mods_t mods;
 
 	mods = magicdata->getModules();
 	foreach (module_info e, mods) {
+		// adding boxes for macros
+		mi = new QGraphicsMacroItem(e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
+		mi->setVisible(true);
+
 		// fill in library content:
 		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
+			mi->setMacroName(e.instance_name);
+			editScene->addItem(mi);
+
 			macro = lefdata->getMacro(e.module_name);
 			macro->scaleMacro(e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
 
@@ -70,11 +78,11 @@ void MagicLayoutEditor::addModules()
 					if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
 						color = project->colorMat(layer->getName());
 						foreach(lef::rect_t rect, layer->getRects()) {
-							r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h);
+							r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
 							r->setBrush(QBrush(color));
-							r->setVisible(true);
-							editScene->addItem(r);
-							layers[layer->getName()].append(r);
+							//r->setVisible(true);
+							//editScene->addItem(r);
+							macro_wires[layer->getName()].append(r);
 						}
 					}
 				}
@@ -84,33 +92,23 @@ void MagicLayoutEditor::addModules()
 				if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
 					color = project->colorMat(layer->getName());
 					foreach(lef::rect_t rect, layer->getRects()) {
-						r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h);
+						r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
 						r->setBrush(QBrush(color));
-						r->setVisible(true);
-						editScene->addItem(r);
-						layers[layer->getName()].append(r);
+						//r->setVisible(true);
+						//editScene->addItem(r);
+						macro_wires[layer->getName()].append(r);
 					}
 				}
 			}
 
 		}
 
-		/*moduleAreas[e.instance_name].area = box;
-		if(moduleAreas[e.instance_name].isSelected) {
-			pen.setColor(Qt::red);
-		}*/
-
-		r = new QGraphicsRectItem(e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
-		r->setVisible(true);
-		editScene->addItem(r);
-		bounding_boxes.append(r);
-
 		// write layout details:
-		QGraphicsTextItem *instance_name = new QGraphicsTextItem(e.instance_name);
+		QGraphicsTextItem *instance_name = new QGraphicsTextItem(e.instance_name, mi);
 		instance_name->setPos(e.c,e.f);
 		instance_name->setVisible(true);
-		editScene->addItem(instance_name);
-		instance_labels.append(instance_name);
+		macro_texts.append(instance_name);
+		macros.append(mi);
 	}
 }
 
@@ -148,9 +146,9 @@ void MagicLayoutEditor::redraw()
 	bool visible;
 
 	visible = true;
-	foreach(QString layerN, layers.keys()) {
+	foreach(QString layerN, macro_wires.keys()) {
 		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
-		foreach(m, layers[layerN]) {
+		foreach(m, macro_wires[layerN]) {
 			m->setVisible(visible);
 		}
 	}
@@ -163,13 +161,8 @@ void MagicLayoutEditor::redraw()
 		}
 	}
 
-	visible = (visibles)?(visibles->visibleIsEnabled("bounding_box")):true;
-	foreach(m, bounding_boxes) {
-		m->setVisible(visible);
-	}
-
-	visible = (visibles)?(visibles->visibleIsEnabled("instance_label")):true;
-	foreach(t, instance_labels) {
+	visible = (visibles)?(visibles->visibleIsEnabled("macro_texts")):true;
+	foreach(t, macro_texts) {
 		t->setVisible(visible);
 	}
 
@@ -179,10 +172,10 @@ void MagicLayoutEditor::redraw()
 void MagicLayoutEditor::saveFile()
 {
 	QRectF r;
-	layer_t l;
+	wire_layer_t l;
 	QGraphicsRectItem *m;
-	foreach(QString n, layers.keys()) {
-		l = layers[n];
+	foreach(QString n, wires.keys()) {
+		l = wires[n];
 		foreach(m,l) {
 			r = m->boundingRect();
 		}
