@@ -27,14 +27,6 @@ namespace lef {
 	class LEFData;
 }
 
-class ModuleAreaInfo
-{
-public:
-	ModuleAreaInfo();
-	bool isSelected;
-	QRect area;
-};
-
 typedef QVector<QGraphicsRectItem*> layer_t;
 
 class MagicLayoutEditor : public QGraphicsView, public IEditor
@@ -54,7 +46,6 @@ public:
 
 public slots:
 	void redraw();
-	void mousePressEvent(QMouseEvent * e);
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
 
@@ -69,7 +60,6 @@ private:
 	magic::MagicData *magicdata;
 	lef::LEFData *lefdata;
 
-	QMap<QString,ModuleAreaInfo> moduleAreas;
 	QRectF sceneRect;
 	Project *project;
 	LayoutVisibles *visibles;

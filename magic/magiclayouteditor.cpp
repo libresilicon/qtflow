@@ -1,10 +1,5 @@
 #include "magiclayouteditor.h"
 
-ModuleAreaInfo::ModuleAreaInfo():
-	isSelected(false)
-{
-}
-
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
@@ -20,17 +15,6 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	//setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	//setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setScene(editScene);
-}
-
-void MagicLayoutEditor::mousePressEvent(QMouseEvent * e)
-{
-	QPointF pt = mapToScene(e->pos());
-	foreach(QString key, moduleAreas.keys()) {
-		if(moduleAreas[key].area.contains(pt.x(),pt.y())) {
-			moduleAreas[key].isSelected = true;
-		}
-	}
-	redraw();
 }
 
 void MagicLayoutEditor::resizeEvent(QResizeEvent *event)
@@ -183,6 +167,15 @@ void MagicLayoutEditor::redraw()
 
 void MagicLayoutEditor::saveFile()
 {
+	QRectF r;
+	layer_t l;
+	QGraphicsRectItem *m;
+	foreach(QString n, layers.keys()) {
+		l = layers[n];
+		foreach(m,l) {
+			r = m->boundingRect();
+		}
+	}
 }
 
 void MagicLayoutEditor::setProject(Project *p)
