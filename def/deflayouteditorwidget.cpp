@@ -5,7 +5,7 @@ DEFLayoutEditorWidget::DEFLayoutEditorWidget(QWidget *parent) :
 	editArea(new DEFLayoutEditor(this))
 {
 	setType(DEFLayoutEditorWidgetType);
-	setEditWidget(editArea);
+	setCentralWidget(editArea);
 }
 
 void DEFLayoutEditorWidget::loadFile(QString path)

@@ -231,6 +231,15 @@ namespace lef {
 	{
 	}
 
+	void LEFData::saveFile(QString filename)
+	{
+		std::ofstream output;
+		std::string stdfilename = filename.toStdString();
+
+		output.open(stdfilename, std::ios::out);
+		output.close();
+	}
+
 	void LEFData::loadFile(QString filename)
 	{
 		std::ifstream input;
@@ -247,6 +256,7 @@ namespace lef {
 		parser = new LEFParser(this);
 		parser->set_debug_level(trace_parsing);
 		parser->parse();
+
 		input.close();
 	}
 

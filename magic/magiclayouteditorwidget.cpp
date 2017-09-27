@@ -6,16 +6,18 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	editArea(new MagicLayoutEditor(this)),
 	view3D(new Magic3D(this))
 {
-	QAction *view3DButton;
-	QPixmap pixmap3D(":/three_d.svg");
+	QAction *button;
+	QPixmap pixmap(":/three_d.svg");
+	QToolBar *toolbar = new QToolBar(this);
 
 	setType(MagicLayoutEditorWidgetType);
 
-	view3DButton = new QAction(pixmap3D,"3D view", getToolBar());
-	getToolBar()->addAction(view3DButton);
-	connect(view3DButton, SIGNAL(triggered(bool)), this, SLOT(show3D()));
+	button = new QAction(pixmap, "3D view", this->menuBar());
+	toolbar->addAction(button);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 
-	setEditWidget(editArea);
+	addToolBar(toolbar);
+	setCentralWidget(editArea);
 }
 
 void MagicLayoutEditorWidget::loadFile(QString path)

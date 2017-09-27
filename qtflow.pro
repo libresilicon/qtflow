@@ -133,7 +133,6 @@ FORMS    += \
 	projectsettings.ui \
 	console.ui \
 	schematicstoolbox.ui \
-	layouttoolbox.ui \
 	layoutvisibles.ui
 
 RESOURCES += scripts/scripts.qrc

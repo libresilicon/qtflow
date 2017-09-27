@@ -4,7 +4,7 @@ SchematicsEditorWidget::SchematicsEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
 	editArea(new SchematicsEditor(this))
 {
-	setEditWidget(editArea);
+	setCentralWidget(editArea);
 }
 
 void SchematicsEditorWidget::loadFile(QString path)
