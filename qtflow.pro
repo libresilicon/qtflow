@@ -75,7 +75,8 @@ SOURCES += \
 	pysettings.cpp \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
-	layoutvisibles.cpp
+	layoutvisibles.cpp \
+    layouttoolbox.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -110,7 +111,8 @@ HEADERS  += \
 	pysettings.h \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
-	layoutvisibles.h
+	layoutvisibles.h \
+    layouttoolbox.h
 
 FORMS    += \
 	mainwindow.ui \
