@@ -44,7 +44,6 @@ $$BISONSOURCES
 
 SOURCES += \
 	main.cpp\
-	maintoolbox.cpp\
 	mainwindow.cpp \
 	grid.cpp \
 	templates.cpp \
@@ -79,7 +78,6 @@ SOURCES += \
 
 HEADERS  += \
 	mainwindow.h \
-	maintoolbox.h \
 	grid.h \
 	templates.h \
 	project.h \

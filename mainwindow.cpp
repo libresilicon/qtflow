@@ -64,14 +64,6 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));
 	connect(editArea,SIGNAL(currentChanged(int)),this,SLOT(onCurrentChanged(int)));
 
-	mainToolBox = new MainToolBox(this);
-	mainToolBox->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	addDockWidget(Qt::TopDockWidgetArea, mainToolBox);
-
-	layoutVisibles = new LayoutVisibles(this);
-	layoutVisibles->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
-
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
 
@@ -140,12 +132,10 @@ void MainWindow::hideAllDockerWidgets()
 	projectsWidget->setVisible(false);
 	modulesWidget->setVisible(false);
 	timingWidget->setVisible(false);
-	mainToolBox->setVisible(false);
 	iopadsWidget->setVisible(false);
 	toolBoxWidgetTestBench->setVisible(false);
 	toolBoxWidgetSynthesis->setVisible(false);
 	pythonConsoleWidget->setVisible(false);
-	layoutVisibles->setVisible(false);
 }
 
 void MainWindow::openProject(QString path)
@@ -158,9 +148,7 @@ void MainWindow::openProject(QString path)
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);
 		projectSettingsDialog->setProject(project);
-		layoutVisibles->setProject(project);
 		editArea->setProject(project);
-		editArea->setVisibles(layoutVisibles);
 		enableProject();
 	}
 }
@@ -227,9 +215,6 @@ void MainWindow::on_setLayoutMode_triggered()
 	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
-	// show layout tools
-	layoutVisibles->setVisible(true);
-
 }
 
 void MainWindow::on_newProject_triggered()

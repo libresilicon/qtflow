@@ -18,7 +18,6 @@ public:
 	MagicLayoutEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
 	void setProject(Project *p);
-	void setVisibles(LayoutVisibles *v);
 	QString getFilePath();
 
 public slots:
@@ -29,8 +28,8 @@ public slots:
 private:
 	MagicLayoutEditor *editArea;
 	Project *project;
-	LayoutVisibles *visibles;
 	Magic3D *view3D;
+	LayoutVisibles *layoutVisibles;
 };
 
 #endif // MAGICLAYOUTEDITORWIDGET_H
