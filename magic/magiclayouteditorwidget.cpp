@@ -18,12 +18,17 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 
 	addToolBar(toolbar);
 	setCentralWidget(editArea);
+
+	layoutVisibles = new LayoutVisibles(this);
+	layoutVisibles->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
+	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
+	editArea->setVisibles(layoutVisibles);
 }
 
 void MagicLayoutEditorWidget::loadFile(QString path)
 {
 	editArea->setProject(project);
-	editArea->setVisibles(visibles);
+	editArea->setVisibles(layoutVisibles);
 
 	editArea->loadFile(path);
 
@@ -39,12 +44,7 @@ void MagicLayoutEditorWidget::show3D()
 void MagicLayoutEditorWidget::setProject(Project *p)
 {
 	project = p;
-}
-
-void MagicLayoutEditorWidget::setVisibles(LayoutVisibles *v)
-{
-	visibles = v;
-	editArea->setVisibles(visibles);
+	layoutVisibles->setProject(project);
 }
 
 QString MagicLayoutEditorWidget::getFilePath()

@@ -22,7 +22,6 @@
 #include "moduleselector.h"
 #include "testbenchtoolbox.h"
 #include "synthesistoolbox.h"
-#include "layoutvisibles.h"
 
 #include "editortabmanager.h"
 
@@ -35,7 +34,6 @@
 #include "new.h"
 #include "iopads.h"
 #include "wave.h"
-#include "maintoolbox.h"
 #include "pysettings.h"
 
 #include "pythonconsoledockwidget.h"
@@ -129,8 +127,6 @@ private:
 
 	TestBenchToolBox *toolBoxWidgetTestBench;
 	SynthesisToolBox *toolBoxWidgetSynthesis;
-	MainToolBox *mainToolBox;
-	LayoutVisibles *layoutVisibles;
 
 	EditorTabManager *editArea;
 
