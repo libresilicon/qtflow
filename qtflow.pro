@@ -9,6 +9,7 @@ QT += gui
 QT += xml
 QT += widgets
 QT += opengl
+QT += KTextEditor
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

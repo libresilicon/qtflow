@@ -6,6 +6,10 @@
 #include "editor.h"
 #include "verilog.h"
 
+#include <KTextEditor/Editor>
+#include <KTextEditor/Document>
+#include <KTextEditor/View>
+
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QToolBar>
@@ -24,7 +28,11 @@ public slots:
 	void saveFile();
 
 private:
-	Editor *editArea;
+    KTextEditor::Editor *editArea;
+    KTextEditor::Document *doc;
+    KTextEditor::View *view;
+
+    QFileInfo fileInfo;
 };
 
 #endif // EDITORWIDGET_H
