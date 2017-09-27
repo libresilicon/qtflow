@@ -23,7 +23,6 @@
 #include "testbenchtoolbox.h"
 #include "synthesistoolbox.h"
 #include "layoutvisibles.h"
-#include "layouttoolbox.h"
 
 #include "editortabmanager.h"
 
@@ -132,7 +131,6 @@ private:
 	SynthesisToolBox *toolBoxWidgetSynthesis;
 	MainToolBox *mainToolBox;
 	LayoutVisibles *layoutVisibles;
-	LayoutToolBox *layoutToolBox;
 
 	EditorTabManager *editArea;
 
