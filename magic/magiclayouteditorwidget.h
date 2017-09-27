@@ -2,6 +2,7 @@
 #define MAGICLAYOUTEDITORWIDGET_H
 
 #include <QDockWidget>
+#include <QMainWindow>
 
 #include "magiclayouteditor.h"
 #include "editorwidget.h"

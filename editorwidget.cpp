@@ -1,35 +1,24 @@
 #include "editorwidget.h"
 
 EditorWidget::EditorWidget(QWidget *parent) :
-	QWidget(parent),
-	toolbar(new QToolBar(this)),
-	layout(new QGridLayout(this)),
+	QMainWindow(parent),
 	statusChanged(false),
 	widgetType(BareEditorWidgetType)
 {
-	QPixmap pixmapDocumentSave(":/document-save.svg");
-	QAction *saveButton;
+	QToolBar *toolbar = new QToolBar(this);
 
-	saveButton = new QAction(pixmapDocumentSave,"S&ave", toolbar);
-	connect(saveButton,SIGNAL(triggered(bool)),this,SLOT(saveFile()));
+	QPixmap pixmap(":/document-save.svg");
+	QAction *button;
+
+	button = new QAction(pixmap,"S&ave", toolbar);
+	connect(button,SIGNAL(triggered(bool)),this,SLOT(saveFile()));
 
 	QShortcut *saveShortcut = new QShortcut(QKeySequence("Ctrl+S"), this);
 	connect(saveShortcut, SIGNAL(activated()),this,SLOT(saveFile()));
 
-	toolbar->addAction(saveButton);
-	layout->setMenuBar(toolbar);
+	toolbar->addAction(button);
 
-	this->setLayout(layout);
-}
-
-QToolBar *EditorWidget::getToolBar()
-{
-	return toolbar;
-}
-
-void EditorWidget::setEditWidget(QWidget *editArea)
-{
-	layout->addWidget(editArea);
+	addToolBar(toolbar);
 }
 
 void EditorWidget::setStatusChanged(bool t)

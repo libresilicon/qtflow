@@ -7,6 +7,7 @@
 #include <QFileInfo>
 #include <QShortcut>
 #include <QVBoxLayout>
+#include <QMainWindow>
 
 #include "ieditor.h"
 
@@ -18,7 +19,7 @@ enum WidgetType {
 	VerilogCodeEditorWidgetType
 };
 
-class EditorWidget : public QWidget
+class EditorWidget : public QMainWindow
 {
 	Q_OBJECT
 
@@ -31,10 +32,7 @@ public:
 	void setType(WidgetType);
 
 	bool getStatusChanged();
-	void setEditWidget(QWidget *editArea);
 	void setStatusChanged(bool);
-	
-	QToolBar *getToolBar();
 	
 	virtual void closeFile();
 
@@ -47,13 +45,8 @@ public slots:
 	virtual void saveFile();
 
 private:
-	QGridLayout *layout;
-	QToolBar *toolbar;
-	
 	bool statusChanged;
-
 	QString filePath;
-
 	WidgetType widgetType;
 };
 
