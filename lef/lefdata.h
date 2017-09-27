@@ -24,18 +24,14 @@ namespace lef {
 	public:
 		LEFLayer(QString);
 		void addRectangle(double, double, double, double);
-		void setOffsetX(double);
-		void setOffsetY(double);
 		void scaleLayer(double w, double h);
-		QVector<QRect> getRects();
+		QVector<rect_t> getRects();
 		
 		QString getName();
 	private:
 		QString name;
 		QVector<rect_t> rects;
-		QVector<QRect> rectsExport;
-		double offsetX;
-		double offsetY;
+		QVector<rect_t> rectsExport;
 		double scaleX;
 		double scaleY;
 		

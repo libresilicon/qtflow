@@ -38,26 +38,12 @@ namespace lef {
 		return name;
 	}
 
-	void LEFLayer::setOffsetX(double o)
-	{
-		offsetX = o;
-		generateExportLayers();
-	}
-
-	void LEFLayer::setOffsetY(double o)
-	{
-		offsetY = o;
-		generateExportLayers();
-	}
-
-	QVector<QRect> LEFLayer::getRects()
+	QVector<rect_t> LEFLayer::getRects()
 	{
 		return rectsExport;
 	}
 	
 	LEFLayer::LEFLayer(QString n) :
-		offsetX(0),
-		offsetY(0),
 		scaleX(1),
 		scaleY(1),
 		name(n)
@@ -78,7 +64,12 @@ namespace lef {
 	{
 		rectsExport.clear();
 		foreach(rect_t obj, rects) {
-			rectsExport.append(QRect(obj.x*scaleX+offsetX, obj.y*scaleY+offsetY, obj.w*scaleX, obj.h*scaleY));
+			rect_t nobj;
+			nobj.x = obj.x*scaleX;
+			nobj.y = obj.y*scaleY;
+			nobj.w = obj.w*scaleX;
+			nobj.h = obj.h*scaleY;
+			rectsExport.append(nobj);
 		}
 	}
 

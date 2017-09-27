@@ -1,10 +1,5 @@
 #include "magiclayouteditor.h"
 
-ModuleAreaInfo::ModuleAreaInfo():
-	isSelected(false)
-{
-}
-
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
@@ -22,17 +17,6 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	setScene(editScene);
 }
 
-void MagicLayoutEditor::mousePressEvent(QMouseEvent * e)
-{
-	QPointF pt = mapToScene(e->pos());
-	foreach(QString key, moduleAreas.keys()) {
-		if(moduleAreas[key].area.contains(pt.x(),pt.y())) {
-			moduleAreas[key].isSelected = true;
-		}
-	}
-	redraw();
-}
-
 void MagicLayoutEditor::resizeEvent(QResizeEvent *event)
 {
 	redraw();
@@ -45,56 +29,60 @@ void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
 	redraw();
 }
 
-void MagicLayoutEditor::drawRectangles()
+void MagicLayoutEditor::addWires()
 {
-	QColor color;
+	QGraphicsWireItem *r;
 	rects_t layer;
-	layer_rects_t layers = magicdata->getRectangles();
-	foreach(QString layerN, layers.keys()) {
-		if(visibles) if(visibles->layerIsEnabled(layerN)) {
-			color = project->colorMat(layerN);
-			layer = layers[layerN];
-			QPen pen = QPen(color);
-			QBrush brush = QBrush(color);
-			foreach (rect_t e, layer)
-			{
-				editScene->addRect(QRect(e.x1,e.y1,e.x2-e.x1,e.y2-e.y1), pen, brush);
-			}
+	layer_rects_t rects = magicdata->getRectangles();
+	foreach(QString layerN, rects.keys()) {
+		layer = rects[layerN];
+		foreach (rect_t e, layer) {
+			r = new QGraphicsWireItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
+			r->setBrush(QBrush(project->colorMat(layerN)));
+			r->setVisible(true);
+			editScene->addItem(r);
+			wires[layerN].append(r);
 		}
 	}
 }
 
-void MagicLayoutEditor::drawModuleInfo()
+void MagicLayoutEditor::addModules()
 {
 	lef::LEFMacro *macro;
 	lef::LEFPin *pin;
 	lef::LEFPort *port;
 	lef::LEFLayer *layer;
 
+	QGraphicsRectItem *r;
+	QGraphicsMacroItem *mi;
 	QColor color;
-	QBrush brush;
-	QPen pen;
-	mods_t mods = magicdata->getModules();
-	foreach (module_info e, mods)
-	{
-		QRect box( e.c, e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1) );
+	mods_t mods;
+
+	mods = magicdata->getModules();
+	foreach (module_info e, mods) {
+		// adding boxes for macros
+		mi = new QGraphicsMacroItem(e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
+		mi->setVisible(true);
 
 		// fill in library content:
 		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
+			mi->setMacroName(e.instance_name);
+			editScene->addItem(mi);
+
 			macro = lefdata->getMacro(e.module_name);
-			macro->scaleMacro(box.width(),box.height());
+			macro->scaleMacro(e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
 
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
 					if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
 						color = project->colorMat(layer->getName());
-						pen = QPen(color);
-						brush = QBrush(color);
-						layer->setOffsetX(e.c);
-						layer->setOffsetY(e.f);
-						foreach(QRect rect, layer->getRects()) {
-							editScene->addRect(rect, pen, brush);
+						foreach(lef::rect_t rect, layer->getRects()) {
+							r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
+							r->setBrush(QBrush(color));
+							//r->setVisible(true);
+							//editScene->addItem(r);
+							macro_wires[layer->getName()].append(r);
 						}
 					}
 				}
@@ -103,29 +91,24 @@ void MagicLayoutEditor::drawModuleInfo()
 			foreach (layer, macro->getObstruction()->getLayers()) {
 				if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
 					color = project->colorMat(layer->getName());
-					pen = QPen(color);
-					brush = QBrush(color);
-					layer->setOffsetX(e.c);
-					layer->setOffsetY(e.f);
-					foreach(QRect rect, layer->getRects()) {
-						editScene->addRect(rect, pen, brush);
+					foreach(lef::rect_t rect, layer->getRects()) {
+						r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
+						r->setBrush(QBrush(color));
+						//r->setVisible(true);
+						//editScene->addItem(r);
+						macro_wires[layer->getName()].append(r);
 					}
 				}
 			}
+
 		}
 
 		// write layout details:
-		pen = QPen(Qt::black);
-		QGraphicsTextItem *instance_name = new QGraphicsTextItem(e.instance_name);
+		QGraphicsTextItem *instance_name = new QGraphicsTextItem(e.instance_name, mi);
 		instance_name->setPos(e.c,e.f);
-
-		moduleAreas[e.instance_name].area = box;
-		if(moduleAreas[e.instance_name].isSelected) {
-			pen.setColor(Qt::red);
-		}
-		editScene->addRect(box, pen);
-		editScene->addItem(instance_name);
-		//editScene->addItem(e.module_name);
+		instance_name->setVisible(true);
+		macro_texts.append(instance_name);
+		macros.append(mi);
 	}
 }
 
@@ -148,19 +131,55 @@ void MagicLayoutEditor::loadFile(QString file)
 			}
 		}
 	}
-	redraw();
+
+	addWires();
+	addModules();
+
+	editScene->update();
 }
 
 void MagicLayoutEditor::redraw()
 {
-	editScene->clear();
-	drawRectangles();
-	drawModuleInfo();
-	//fitInView(editScene->sceneRect(), Qt::KeepAspectRatio);
+	QGraphicsRectItem *m;
+	QGraphicsWireItem *w;
+	QGraphicsTextItem *t;
+	bool visible;
+
+	visible = true;
+	foreach(QString layerN, macro_wires.keys()) {
+		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
+		foreach(m, macro_wires[layerN]) {
+			m->setVisible(visible);
+		}
+	}
+
+	visible = true;
+	foreach(QString layerN, wires.keys()) {
+		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
+		foreach(w, wires[layerN]) {
+			w->setVisible(visible);
+		}
+	}
+
+	visible = (visibles)?(visibles->visibleIsEnabled("macro_texts")):true;
+	foreach(t, macro_texts) {
+		t->setVisible(visible);
+	}
+
+	editScene->update();
 }
 
 void MagicLayoutEditor::saveFile()
 {
+	QRectF r;
+	wire_layer_t l;
+	QGraphicsRectItem *m;
+	foreach(QString n, wires.keys()) {
+		l = wires[n];
+		foreach(m,l) {
+			r = m->boundingRect();
+		}
+	}
 }
 
 void MagicLayoutEditor::setProject(Project *p)
@@ -171,7 +190,7 @@ void MagicLayoutEditor::setProject(Project *p)
 void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 {
 	visibles = v;
-	if(visibles) connect(visibles,SIGNAL(refreshLayout()),this,SLOT(redraw()));
+	if(visibles) connect(visibles, SIGNAL(refreshLayout()), this, SLOT(redraw()));
 }
 
 QString MagicLayoutEditor::getFilePath()

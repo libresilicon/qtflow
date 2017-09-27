@@ -8,6 +8,7 @@ LayoutVisibles::LayoutVisibles(QWidget *parent):
 	ui->setupUi(this);
 	ui->layerList->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(ui->layerList,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
+	connect(ui->renderList,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
 }
 
 void LayoutVisibles::handleClick(const QModelIndex &index)
@@ -69,7 +70,7 @@ bool LayoutVisibles::layerIsEnabled(QString s)
 		if(m) if(m->text()==s)
 			return (m->checkState()==Qt::Checked);
 	}
-	qDebug() << s;
+	qDebug() << "Undefined: " << s;
 	return false;
 }
 

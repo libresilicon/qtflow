@@ -335,5 +335,6 @@ QStringList Project::getLayers()
 QStringList Project::getVisibles()
 {
 	QStringList ret;
+	ret << "macro_texts";
 	return ret;
 }

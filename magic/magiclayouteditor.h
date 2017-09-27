@@ -7,6 +7,9 @@
 #include "project.h"
 #include "layoutvisibles.h"
 
+#include "qgraphicswireitem.h"
+#include "qgraphicsmacroitem.h"
+
 #include <QWidget>
 #include <QGraphicsScene>
 #include <QGraphicsView>
@@ -27,13 +30,9 @@ namespace lef {
 	class LEFData;
 }
 
-class ModuleAreaInfo
-{
-public:
-	ModuleAreaInfo();
-	bool isSelected;
-	QRect area;
-};
+typedef QVector<QGraphicsRectItem*> layer_macro_wires_t;
+
+typedef QVector<QGraphicsWireItem*> wire_layer_t;
 
 class MagicLayoutEditor : public QGraphicsView, public IEditor
 {
@@ -52,24 +51,28 @@ public:
 
 public slots:
 	void redraw();
-	void mousePressEvent(QMouseEvent * e);
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
 
 protected:
-	void drawRectangles();
-	void drawModuleInfo();
 
 private:
+	void addWires();
+	void addModules();
+
 	QString filePath;
 	QGraphicsScene *editScene;
 	magic::MagicData *magicdata;
 	lef::LEFData *lefdata;
 
-	QMap<QString,ModuleAreaInfo> moduleAreas;
 	QRectF sceneRect;
 	Project *project;
 	LayoutVisibles *visibles;
+
+	QVector<QGraphicsMacroItem*> macros;
+	QVector<QGraphicsTextItem*> macro_texts;
+	QMap<QString,layer_macro_wires_t> macro_wires;
+	QMap<QString,wire_layer_t> wires;
 };
 
 #endif // MAGICLAYOUTEDITOR_H
