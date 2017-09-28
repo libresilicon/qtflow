@@ -33,13 +33,13 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	QToolBar *toolbar;
 
 	toolbar = new QToolBar(this);
-	QComboBox *layers = new QComboBox(toolbar);
+	activeLayer = new QComboBox(toolbar);
 	foreach(QString n, project->getLayers()) {
 		QPixmap pm(100,100);
 		pm.fill(project->colorMat(n));
-		layers->addItem(QIcon(pm),n);
+		activeLayer->addItem(QIcon(pm),n);
 	}
-	toolbar->addWidget(layers);
+	toolbar->addWidget(activeLayer);
 	addToolBar(toolbar);
 
 	toolbar = new QToolBar(this);
@@ -74,6 +74,7 @@ void MagicLayoutEditorWidget::loadFile(QString path)
 {
 	editArea->setProject(project);
 	editArea->setVisibles(layoutVisibles);
+	editArea->setActiveLayerSelection(activeLayer);
 
 	editArea->loadFile(path);
 

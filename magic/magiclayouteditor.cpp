@@ -9,7 +9,8 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	visibles(NULL),
 	filePath(QString()),
 	editScene(new QGraphicsScene(this)),
-	recentOperation(DRAWING_OPERATION_NONE)
+	recentOperation(DRAWING_OPERATION_NONE),
+	recentRectangle(NULL)
 {
 	editScene->setBackgroundBrush(Qt::white);
 	
@@ -210,4 +211,46 @@ QString MagicLayoutEditor::getFilePath()
 bool MagicLayoutEditor::changes()
 {
 	return false;
+}
+
+void MagicLayoutEditor::mousePressEvent(QMouseEvent *event)
+{
+	lastOrig = mapToScene(event->pos());
+	switch(recentOperation) {
+		case DRAWING_OPERATION_RECTANGLE:
+			recentRectangle = new QGraphicsRectItem(lastOrig.x(),lastOrig.y(),1,1);
+			recentRectangle->setVisible(true);
+			if(activeLayerSelection) recentRectangle->setBrush(QBrush(project->colorMat(activeLayerSelection->currentText())));;
+			editScene->addItem(recentRectangle);
+			break;
+	}
+	editScene->update();
+}
+
+void MagicLayoutEditor::mouseMoveEvent(QMouseEvent *event)
+{
+	qreal dx, dy;
+	QPointF pt;
+
+	pt = mapToScene(event->pos());
+	switch(recentOperation) {
+		case DRAWING_OPERATION_RECTANGLE:
+			if(recentRectangle) {
+				dx=pt.x()-lastOrig.x();
+				dy=pt.y()-lastOrig.y();
+				recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
+			}
+			break;
+	}
+	editScene->update();
+}
+
+void MagicLayoutEditor::mouseReleaseEvent(QMouseEvent *event)
+{
+	QPointF pt;
+	pt = mapToScene(event->pos());
+	if(recentRectangle) {
+		recentRectangle = NULL;
+	}
+	editScene->update();
 }

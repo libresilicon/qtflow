@@ -36,6 +36,7 @@ private:
 	Project *project;
 	Magic3D *view3D;
 	LayoutVisibles *layoutVisibles;
+	QComboBox *activeLayer;
 };
 
 #endif // MAGICLAYOUTEDITORWIDGET_H

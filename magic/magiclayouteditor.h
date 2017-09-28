@@ -60,12 +60,15 @@ public:
 
 	void setDrawingOperation(drawing_operations o);
 
+protected:
+	void mousePressEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
+
 public slots:
 	void redraw();
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
-
-protected:
 
 private:
 	void addWires();
@@ -80,6 +83,9 @@ private:
 	Project *project;
 	LayoutVisibles *visibles;
 	QComboBox *activeLayerSelection;
+
+	QGraphicsRectItem *recentRectangle;
+	QPointF lastOrig;
 
 	QVector<QGraphicsMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
