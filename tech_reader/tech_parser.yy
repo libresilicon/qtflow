@@ -56,6 +56,7 @@
 
 %token CONNECT
 %token CIFOUTPUT
+%token CIFINPUT
 %token SCALEFACTOR
 %token LAYER
 %token BLOAT_OR
@@ -69,6 +70,7 @@
 %token AND
 %token OR
 %token SQUARES
+%token IGNORE
 
 %token <v_int>		INTEGER
 %token <v_str>		STRING
@@ -93,6 +95,7 @@ tech_section:
 	| COMPOSE compose_list END
 	| CONNECT connect_list END
 	| CIFOUTPUT cifoutput_list END
+	| CIFINPUT cifinput_list END
 ;
 
 tech_header_section:
@@ -187,6 +190,36 @@ cifoutput_entry:
 	| OR STRING
 	| AND STRING
 	| SQUARES INTEGER INTEGER INTEGER
+;
+
+cifinput_list:
+	  cifinput_entry
+	| cifinput_entry cifinput_list
+;
+
+cifinput_entry:
+	  STYLE Multiline
+	| SCALEFACTOR INTEGER
+	| SCALEFACTOR INTEGER INTEGER
+	| LAYER INTEGER STRING
+	| LAYER STRING INTEGER
+	| LAYER STRING STRING
+	| LAYER STRING
+	| BLOAT_OR STRING ASTERISK INTEGER
+	| BLOAT_OR STRING ASTERISK INTEGER STRING INTEGER
+	| SHRINK INTEGER
+	| GROW INTEGER
+	| LABELS STRING
+	| CALMA INTEGER INTEGER
+	| CALMA STRING INTEGER ASTERISK
+	| CALMA INTEGER INTEGER ASTERISK
+	| TEMPLAYER STRING
+	| TEMPLAYER STRING STRING
+	| AND_NOT STRING
+	| OR STRING
+	| AND STRING
+	| SQUARES INTEGER INTEGER INTEGER
+	| IGNORE STRING
 ;
 
 %%

@@ -57,6 +57,8 @@ AND_NOT			"and-not"
 OR				"or"
 SQUARES			"squares"
 AND				"and"
+CIFINPUT		"cifinput"
+IGNORE			"ignore"
 
 %x multiline
 
@@ -109,6 +111,8 @@ AND				"and"
 {OR}+				{ return tech::TechParser::token::OR; }
 {SQUARES}+			{ return tech::TechParser::token::SQUARES; }
 {AND}+				{ return tech::TechParser::token::AND; }
+{CIFINPUT}+			{ return tech::TechParser::token::CIFINPUT; }
+{IGNORE}+			{ return tech::TechParser::token::IGNORE; }
 
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";
