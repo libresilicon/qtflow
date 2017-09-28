@@ -25,7 +25,13 @@ public slots:
 	void saveFile();
 	void show3D();
 
+	void drawingOperationAddRectangle();
+
 private:
+	void addDrawingOperations();
+	void disableAllDrawingOperationsExcept(drawing_operations o);
+	QMap<drawing_operations,QAction*> drawingOperations;
+
 	MagicLayoutEditor *editArea;
 	Project *project;
 	Magic3D *view3D;

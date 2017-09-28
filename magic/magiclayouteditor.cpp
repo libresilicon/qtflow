@@ -5,8 +5,11 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	magicdata(NULL),
 	lefdata(NULL),
 	project(NULL),
+	activeLayerSelection(NULL),
+	visibles(NULL),
 	filePath(QString()),
-	editScene(new QGraphicsScene(this))
+	editScene(new QGraphicsScene(this)),
+	recentOperation(DRAWING_OPERATION_NONE)
 {
 	editScene->setBackgroundBrush(Qt::white);
 	
@@ -80,8 +83,6 @@ void MagicLayoutEditor::addModules()
 						foreach(lef::rect_t rect, layer->getRects()) {
 							r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
 							r->setBrush(QBrush(color));
-							//r->setVisible(true);
-							//editScene->addItem(r);
 							macro_wires[layer->getName()].append(r);
 						}
 					}
@@ -94,8 +95,6 @@ void MagicLayoutEditor::addModules()
 					foreach(lef::rect_t rect, layer->getRects()) {
 						r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
 						r->setBrush(QBrush(color));
-						//r->setVisible(true);
-						//editScene->addItem(r);
 						macro_wires[layer->getName()].append(r);
 					}
 				}
@@ -182,6 +181,11 @@ void MagicLayoutEditor::saveFile()
 	}
 }
 
+void MagicLayoutEditor::setDrawingOperation(drawing_operations o)
+{
+	recentOperation = o;
+}
+
 void MagicLayoutEditor::setProject(Project *p)
 {
 	project = p;
@@ -191,6 +195,11 @@ void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 {
 	visibles = v;
 	if(visibles) connect(visibles, SIGNAL(refreshLayout()), this, SLOT(redraw()));
+}
+
+void MagicLayoutEditor::setActiveLayerSelection(QComboBox *s)
+{
+	activeLayerSelection = s;
 }
 
 QString MagicLayoutEditor::getFilePath()

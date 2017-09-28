@@ -7,22 +7,67 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	view3D(new Magic3D(this))
 {
 	QAction *button;
-	QPixmap pixmap(":/three_d.svg");
 	QToolBar *toolbar = new QToolBar(this);
 
 	setType(MagicLayoutEditorWidgetType);
 
-	button = new QAction(pixmap, "3D view", this->menuBar());
+	button = new QAction(QPixmap(":/three_d.svg"), "3D view", toolbar);
 	toolbar->addAction(button);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 
 	addToolBar(toolbar);
+
+	addDrawingOperations();
+
 	setCentralWidget(editArea);
 
 	layoutVisibles = new LayoutVisibles(this);
 	layoutVisibles->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
 	editArea->setVisibles(layoutVisibles);
+}
+
+void MagicLayoutEditorWidget::addDrawingOperations()
+{
+	QAction *button;
+	QToolBar *toolbar;
+
+	toolbar = new QToolBar(this);
+	QComboBox *layers = new QComboBox(toolbar);
+	foreach(QString n, project->getLayers()) {
+		QPixmap pm(100,100);
+		pm.fill(project->colorMat(n));
+		layers->addItem(QIcon(pm),n);
+	}
+	toolbar->addWidget(layers);
+	addToolBar(toolbar);
+
+	toolbar = new QToolBar(this);
+
+	button = new QAction(QPixmap(":/add_rectangle.svg"), "Add rectangle", toolbar);
+	button->setCheckable(true);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperationAddRectangle()));
+	drawingOperations[DRAWING_OPERATION_RECTANGLE] = button;
+	toolbar->addAction(button);
+
+	addToolBar(toolbar);
+}
+
+void MagicLayoutEditorWidget::disableAllDrawingOperationsExcept(drawing_operations o)
+{
+	foreach(drawing_operations k, drawingOperations.keys()) {
+		if(k!=o) drawingOperations[k]->setChecked(false);
+	}
+}
+
+void MagicLayoutEditorWidget::drawingOperationAddRectangle()
+{
+	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
+	disableAllDrawingOperationsExcept(DRAWING_OPERATION_RECTANGLE);
+	if(drawingOperations.contains(DRAWING_OPERATION_RECTANGLE)) {
+		if(drawingOperations[DRAWING_OPERATION_RECTANGLE]->isChecked())
+			editArea->setDrawingOperation(DRAWING_OPERATION_RECTANGLE);
+	}
 }
 
 void MagicLayoutEditorWidget::loadFile(QString path)

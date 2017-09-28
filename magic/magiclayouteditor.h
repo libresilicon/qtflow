@@ -21,6 +21,14 @@
 #include <QDebug>
 #include <QTemporaryDir>
 #include <QAction>
+#include <QComboBox>
+
+enum drawing_operations {
+	DRAWING_OPERATION_NONE,
+	DRAWING_OPERATION_RECTANGLE,
+	DRAWING_OPERATION_POLYGON,
+	DRAWING_OPERATION_DRAG
+};
 
 namespace magic {
 	class MagicData;
@@ -44,10 +52,13 @@ public:
 	void loadFile(QString);
 	void setProject(Project *p);
 	void setVisibles(LayoutVisibles *v);
+	void setActiveLayerSelection(QComboBox *s);
 	void saveFile();
 	QString getFilePath();
 
 	bool changes();
+
+	void setDrawingOperation(drawing_operations o);
 
 public slots:
 	void redraw();
@@ -68,11 +79,14 @@ private:
 	QRectF sceneRect;
 	Project *project;
 	LayoutVisibles *visibles;
+	QComboBox *activeLayerSelection;
 
 	QVector<QGraphicsMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
 	QMap<QString,layer_macro_wires_t> macro_wires;
 	QMap<QString,wire_layer_t> wires;
+
+	drawing_operations recentOperation;
 };
 
 #endif // MAGICLAYOUTEDITOR_H
