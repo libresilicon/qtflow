@@ -71,6 +71,8 @@
 %token OR
 %token SQUARES
 %token IGNORE
+%token MZROUTER
+%token NOTACTIVE
 
 %token <v_int>		INTEGER
 %token <v_str>		STRING
@@ -96,6 +98,7 @@ tech_section:
 	| CONNECT connect_list END
 	| CIFOUTPUT cifoutput_list END
 	| CIFINPUT cifinput_list END
+	| MZROUTER mzrouter_list END
 ;
 
 tech_header_section:
@@ -220,6 +223,18 @@ cifinput_entry:
 	| AND STRING
 	| SQUARES INTEGER INTEGER INTEGER
 	| IGNORE STRING
+;
+
+mzrouter_list:
+	  mzrouter_entry
+	| mzrouter_entry mzrouter_list
+;
+
+mzrouter_entry:
+	  STYLE Multiline
+	| LAYER STRING INTEGER INTEGER INTEGER INTEGER
+	| CONTACT STRING STRING STRING INTEGER
+	| NOTACTIVE STRING STRING
 ;
 
 %%

@@ -59,6 +59,8 @@ SQUARES			"squares"
 AND				"and"
 CIFINPUT		"cifinput"
 IGNORE			"ignore"
+MZROUTER		"mzrouter"
+NOTACTIVE		"notactive"
 
 %x multiline
 
@@ -113,6 +115,8 @@ IGNORE			"ignore"
 {AND}+				{ return tech::TechParser::token::AND; }
 {CIFINPUT}+			{ return tech::TechParser::token::CIFINPUT; }
 {IGNORE}+			{ return tech::TechParser::token::IGNORE; }
+{MZROUTER}+			{ return tech::TechParser::token::MZROUTER; }
+{NOTACTIVE}+		{ return tech::TechParser::token::NOTACTIVE; }
 
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";
