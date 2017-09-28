@@ -52,6 +52,11 @@ GROW			"grow"
 SHRINK			"shrink"
 LABELS			"labels"
 CALMA			"calma"
+TEMPLAYER		"templayer"
+AND_NOT			"and-not"
+OR				"or"
+SQUARES			"squares"
+AND				"and"
 
 %x multiline
 
@@ -99,6 +104,11 @@ CALMA			"calma"
 {SHRINK}+			{ return tech::TechParser::token::SHRINK; }
 {LABELS}+			{ return tech::TechParser::token::LABELS; }
 {CALMA}+			{ return tech::TechParser::token::CALMA; }
+{TEMPLAYER}+		{ return tech::TechParser::token::TEMPLAYER; }
+{AND_NOT}+			{ return tech::TechParser::token::AND_NOT; }
+{OR}+				{ return tech::TechParser::token::OR; }
+{SQUARES}+			{ return tech::TechParser::token::SQUARES; }
+{AND}+				{ return tech::TechParser::token::AND; }
 
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";
