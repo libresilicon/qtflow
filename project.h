@@ -15,8 +15,11 @@
 #include <QDomDocument>
 #include <QDateTime>
 #include <QColor>
+#include <QTemporaryDir>
 
 #include <PythonQt.h>
+
+#include "tech_reader/techdata.h"
 
 class IProject: public QObject
 {
@@ -79,8 +82,8 @@ private:
 	QSettings *project_settings;
 	QString rootdir;
 	PythonQtObjectPtr *mainContext;
-	QFileDevice::Permissions executable;
 	QDomDocument *settingsFileProcess;
+	tech::TechData *techdata;
 };
 
 #endif // PROJECT_H

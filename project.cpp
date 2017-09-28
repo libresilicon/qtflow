@@ -1,5 +1,4 @@
 #include "project.h"
-//#include "pyprojectsettings.h"
 
 IProject::IProject() : QObject()
 {
@@ -11,14 +10,8 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	mainContext(main),
 	settingsFileProcess(NULL)
 {
-	executable
-		= QFileDevice::ReadOwner
-		| QFileDevice::WriteOwner
-		| QFileDevice::ExeOwner
-		| QFileDevice::ReadGroup
-		| QFileDevice::WriteGroup
-		| QFileDevice::ExeGroup
-		| QFileDevice::ReadOther;
+	QTemporaryDir temporaryDir;
+	QString filedest;
 
 	if(QFile(path).exists()) {
 		project_settings = new QSettings(path, QSettings::NativeFormat);
@@ -50,6 +43,11 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	}
 
 	qDebug() << "Opening here: " << getTechnologyFile();
+	filedest = temporaryDir.path()+"/tech";
+	QFile::copy(getTechnologyFile(), filedest);
+	if(QFile(filedest).exists()) {
+		techdata = new tech::TechData(filedest);
+	}
 }
 
 Project::~Project()

@@ -1,5 +1,5 @@
-#ifndef MAGICSCANNER_H
-#define MAGICSCANNER_H
+#ifndef TECHSCANNER_H
+#define TECHSCANNER_H
 
 #ifndef __FLEX_LEXER_H
 #define yyFlexLexer techFlexLexer
@@ -16,4 +16,4 @@ namespace tech {
 	};
 }
 
-#endif // MAGICSCANNER_H
+#endif // TECHSCANNER_H

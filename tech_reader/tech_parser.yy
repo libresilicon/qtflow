@@ -41,9 +41,35 @@
 %token VERSION
 %token DESRIPTION
 
-%token <v_int> INTEGER
-%token <v_str> STRING
-%token <v_double> DOUBLE
+%token PLANES
+%token TYPES
+%token CONTACT
+%token STACKABLE
+
+%token STYLES
+%token STYLETYPE
+%token STYLE
+
+%token COMPOSE
+%token PAINT
+%token ERASE
+
+%token CONNECT
+%token CIFOUTPUT
+%token SCALEFACTOR
+%token LAYER
+%token BLOAT_OR
+%token ASTERISK
+%token SHRINK
+%token GROW
+%token LABELS
+%token CALMA
+
+%token <v_int>		INTEGER
+%token <v_str>		STRING
+%token <v_double>	DOUBLE
+
+%token <std::string> Multiline "multiline-string"
 
 %start tech_file
 %%
@@ -55,6 +81,13 @@ tech_file:
 tech_section:
 	  TECH tech_header END
 	| VERSION tech_version END
+	| PLANES plane_list END
+	| TYPES type_list END
+	| CONTACT contact_list END
+	| STYLES style_list END
+	| COMPOSE compose_list END
+	| CONNECT connect_list END
+	| CIFOUTPUT cifoutput_list END
 ;
 
 tech_header_section:
@@ -68,13 +101,80 @@ tech_header:
 ;
 
 tech_version_section:
-	  VERSION STRING
-	| DESRIPTION STRING
+	  Multiline
+	| DESRIPTION Multiline
 ;
 
 tech_version:
 	  tech_version_section
 	| tech_version tech_version_section
+;
+
+plane_list:
+	  plane_entry
+	| plane_entry plane_list
+;
+
+plane_entry: STRING | CONTACT;
+
+type_list:
+	  type_entry
+	| type_entry type_list
+;
+
+type_entry: STRING STRING | CONTACT STRING;
+
+contact_list:
+	  contact_entry
+	| contact_entry contact_list
+;
+
+contact_entry: STRING STRING STRING | STACKABLE STRING STRING STRING;
+
+style_list:
+	  style_entry
+	| style_entry style_list
+;
+
+style_entry:
+	  STYLETYPE STRING
+	| STRING INTEGER
+;
+
+compose_list:
+	  compose_entry
+	| compose_entry compose_list
+;
+
+compose_entry:
+	  COMPOSE STRING STRING STRING
+	| PAINT STRING STRING STRING
+	| ERASE STRING STRING STRING
+;
+
+connect_list:
+	  connect_entry
+	| connect_entry connect_list
+;
+
+connect_entry: STRING STRING;
+
+cifoutput_list:
+	  cifoutput_entry
+	| cifoutput_entry cifoutput_list
+;
+
+cifoutput_entry:
+	  STYLE Multiline
+	| SCALEFACTOR INTEGER INTEGER
+	| LAYER STRING STRING
+	| LAYER STRING
+	| BLOAT_OR STRING ASTERISK INTEGER
+	| BLOAT_OR STRING ASTERISK INTEGER STRING INTEGER
+	| SHRINK INTEGER
+	| GROW INTEGER
+	| LABELS STRING
+	| CALMA INTEGER INTEGER
 ;
 
 %%

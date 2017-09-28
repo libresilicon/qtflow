@@ -21,27 +21,90 @@
 %option nounput
 %option yylineno
 
-TECH		"tech"
-END			"end"
-FORMAT		"format"
+COMMENT			"#"
+ASTERISK		"*"
 
-MAGSCALE	"magscale"
-TIMESTAMP	"timestamp"
-RECT		"rect"
-USE			"use"
-RLABEL		"rlabel"
-FLABEL		"flabel"
-BEGINTITLE	"<<"
-ENDTITLE	">>"
-BOX			"box"
-PORT		"port"
-TRANSFORM	"transform"
+TECH			"tech"
+END				"end"
+FORMAT			"format"
+
+VERSION			"version"
+DESRIPTION		"description"
+
+PLANES			"planes"
+TYPES			"types"
+CONTACT			"contact"
+
+STACKABLE		"stackable"
+STYLES			"styles"
+STYLETYPE		"styletype"
+
+COMPOSE			"compose"
+PAINT			"paint"
+ERASE			"erase"
+CONNECT			"connect"
+CIFOUTPUT		"cifoutput"
+STYLE			"style"
+SCALEFACTOR		"scalefactor"
+LAYER			"layer"
+BLOAT_OR		"bloat-or"
+GROW			"grow"
+SHRINK			"shrink"
+LABELS			"labels"
+CALMA			"calma"
+
+%x multiline
 
 %%
+
+{COMMENT}.*			{}
 
 {TECH}+				{ return tech::TechParser::token::TECH; }
 {FORMAT}+			{ return tech::TechParser::token::FORMAT; }
 {END}+				{ return tech::TechParser::token::END; }
+
+{VERSION}+ {
+	BEGIN(multiline);
+	return tech::TechParser::token::VERSION;
+}
+
+{DESRIPTION}+ {
+	BEGIN(multiline);
+	return tech::TechParser::token::DESRIPTION;
+}
+
+{PLANES}+			{ return tech::TechParser::token::PLANES; }
+{TYPES}+			{ return tech::TechParser::token::TYPES; }
+{CONTACT}+			{ return tech::TechParser::token::CONTACT; }
+
+{STACKABLE}+		{ return tech::TechParser::token::STACKABLE; }
+
+{STYLES}+			{ return tech::TechParser::token::STYLES; }
+{STYLETYPE}+		{ return tech::TechParser::token::STYLETYPE; }
+
+{COMPOSE}+			{ return tech::TechParser::token::COMPOSE; }
+{PAINT}+			{ return tech::TechParser::token::PAINT; }
+{ERASE}+			{ return tech::TechParser::token::ERASE; }
+{CONNECT}+			{ return tech::TechParser::token::CONNECT; }
+{CIFOUTPUT}+		{ return tech::TechParser::token::CIFOUTPUT; }
+{STYLE}+ {
+	BEGIN(multiline);
+	return tech::TechParser::token::STYLE;
+}
+{SCALEFACTOR}+		{ return tech::TechParser::token::SCALEFACTOR; }
+{LAYER}+			{ return tech::TechParser::token::LAYER; }
+{BLOAT_OR}+			{ return tech::TechParser::token::BLOAT_OR; }
+{ASTERISK}+			{ return tech::TechParser::token::ASTERISK; }
+{GROW}+				{ return tech::TechParser::token::GROW; }
+{SHRINK}+			{ return tech::TechParser::token::SHRINK; }
+{LABELS}+			{ return tech::TechParser::token::LABELS; }
+{CALMA}+			{ return tech::TechParser::token::CALMA; }
+
+<multiline>.* {
+	std::cout << "Multiline: " << YYText() << "\n";
+	BEGIN(INITIAL);
+	return tech::TechParser::token::Multiline;
+}
 
 -[0-9]+|[0-9]+ {
 	techlval->v_int = atoi(yytext);
