@@ -21,6 +21,9 @@
 %option nounput
 %option yylineno
 
+TILDE			"~"
+STRING			[A-Za-z]|[~A-Za-z0-9_,.-<>\[\]\/\(\)]
+QUOTES			"\""
 COMMENT			"#"
 ASTERISK		"*"
 
@@ -61,10 +64,22 @@ CIFINPUT		"cifinput"
 IGNORE			"ignore"
 MZROUTER		"mzrouter"
 NOTACTIVE		"notactive"
+DRC				"drc"
+WIDTH			"width"
+EDGE4WAY		"edge4way"
+SPACING			"spacing"
+AREA			"area"
+EXACT_OVERLAP	"exact_overlap"
+STEPSIZE		"stepsize"
 
 %x multiline
 
 %%
+
+{QUOTES}+ {
+	BEGIN(multiline);
+	return tech::TechParser::token::QUOTES;
+}
 
 {COMMENT}.*			{}
 
@@ -117,6 +132,13 @@ NOTACTIVE		"notactive"
 {IGNORE}+			{ return tech::TechParser::token::IGNORE; }
 {MZROUTER}+			{ return tech::TechParser::token::MZROUTER; }
 {NOTACTIVE}+		{ return tech::TechParser::token::NOTACTIVE; }
+{DRC}+				{ return tech::TechParser::token::DRC; }
+{WIDTH}+			{ return tech::TechParser::token::WIDTH; }
+{EDGE4WAY}+			{ return tech::TechParser::token::EDGE4WAY; }
+{SPACING}+			{ return tech::TechParser::token::SPACING; }
+{AREA}+				{ return tech::TechParser::token::AREA; }
+{EXACT_OVERLAP}+	{ return tech::TechParser::token::EXACT_OVERLAP; }
+{STEPSIZE}+			{ return tech::TechParser::token::STEPSIZE; }
 
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";
@@ -134,12 +156,12 @@ NOTACTIVE		"notactive"
 	return tech::TechParser::token::DOUBLE;
 }
 
-[A-Za-z][A-Za-z0-9_,.-<>]* {
+{STRING}* {
 	techlval->v_str = new std::string(yytext, yyleng);
 	return tech::TechParser::token::STRING;
 }
 
-[ \n\t\r]+ {
+[ \n\t\r\\]+ {
 	/* yylloc->step(); */
 }
 

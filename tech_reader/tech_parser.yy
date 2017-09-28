@@ -34,6 +34,9 @@
 	double v_double;
 }
 
+%token QUOTES
+%token ASTERISK
+
 %token TECH
 %token FORMAT
 %token END
@@ -60,7 +63,7 @@
 %token SCALEFACTOR
 %token LAYER
 %token BLOAT_OR
-%token ASTERISK
+
 %token SHRINK
 %token GROW
 %token LABELS
@@ -73,6 +76,14 @@
 %token IGNORE
 %token MZROUTER
 %token NOTACTIVE
+
+%token DRC
+%token WIDTH
+%token EDGE4WAY
+%token SPACING
+%token AREA
+%token EXACT_OVERLAP
+%token STEPSIZE
 
 %token <v_int>		INTEGER
 %token <v_str>		STRING
@@ -99,6 +110,7 @@ tech_section:
 	| CIFOUTPUT cifoutput_list END
 	| CIFINPUT cifinput_list END
 	| MZROUTER mzrouter_list END
+	| DRC drc_list END
 ;
 
 tech_header_section:
@@ -235,6 +247,22 @@ mzrouter_entry:
 	| LAYER STRING INTEGER INTEGER INTEGER INTEGER
 	| CONTACT STRING STRING STRING INTEGER
 	| NOTACTIVE STRING STRING
+;
+
+drc_list:
+	  drc_entry
+	| drc_entry drc_list
+;
+
+drc_entry:
+	  WIDTH STRING INTEGER QUOTES Multiline
+	| WIDTH STRING STRING QUOTES Multiline
+	| EDGE4WAY STRING STRING INTEGER STRING STRING INTEGER QUOTES Multiline
+	| EDGE4WAY STRING STRING INTEGER STRING INTEGER INTEGER QUOTES Multiline
+	| SPACING STRING STRING INTEGER STRING QUOTES Multiline
+	| AREA STRING INTEGER INTEGER QUOTES Multiline
+	| EXACT_OVERLAP STRING
+	| STEPSIZE INTEGER
 ;
 
 %%
