@@ -14,6 +14,7 @@
 #include <QCommandLineParser>
 #include <QDomDocument>
 #include <QDateTime>
+#include <QColor>
 
 #include <PythonQt.h>
 
@@ -63,6 +64,7 @@ public:
 	QString getTechnology();
 	QString getProcess();
 	QStringList getProcessFiles();
+	QString getTechnologyFile();
 	QString getProjectType();
 	QString getSynthesisDir();
 	QString getLayoutDir();

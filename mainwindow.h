@@ -26,6 +26,7 @@
 #include "editortabmanager.h"
 
 #include "projectsettings.h"
+#include "pyprojectsettings.h"
 
 #include "templates.h"
 #include "welcome.h"

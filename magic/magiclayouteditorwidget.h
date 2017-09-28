@@ -26,6 +26,7 @@ public slots:
 	void show3D();
 
 	void drawingOperationAddRectangle();
+	void drawingOperationSelectRectangles();
 
 private:
 	void addDrawingOperations();

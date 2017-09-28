@@ -9,6 +9,7 @@
 
 #include "qgraphicswireitem.h"
 #include "qgraphicsmacroitem.h"
+#include "qgraphicslayoutrectitem.h"
 
 #include <QWidget>
 #include <QGraphicsScene>
@@ -25,6 +26,7 @@
 
 enum drawing_operations {
 	DRAWING_OPERATION_NONE,
+	DRAWING_OPERATION_SELECT,
 	DRAWING_OPERATION_RECTANGLE,
 	DRAWING_OPERATION_POLYGON,
 	DRAWING_OPERATION_DRAG
@@ -84,7 +86,7 @@ private:
 	LayoutVisibles *visibles;
 	QComboBox *activeLayerSelection;
 
-	QGraphicsRectItem *recentRectangle;
+	QGraphicsLayoutRectItem *recentRectangle;
 	QPointF lastOrig;
 
 	QVector<QGraphicsMacroItem*> macros;

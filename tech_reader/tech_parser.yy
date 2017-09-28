@@ -34,20 +34,12 @@
 	double v_double;
 }
 
-%token PORT
-%token BOX
-%token TRANSFORM
-%token MAGIC
 %token TECH
-%token MAGSCALE
-%token TIMESTAMP
-%token BEGINTITLE
-%token ENDTITLE
-%token USE
+%token FORMAT
+%token END
 
-%token RECT
-%token RLABEL
-%token FLABEL
+%token VERSION
+%token DESRIPTION
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -55,87 +47,35 @@
 
 %start tech_file
 %%
-tech_file: MAGIC technology magscale timestamp sections;
-technology: TECH STRING
-	{
-		techdata->setTechnology($2);
-	}
-	;
-magscale: MAGSCALE INTEGER INTEGER;
-timestamp: TIMESTAMP INTEGER;
-sections:
-	  sections section
-	| section
-	;
+tech_file:
+	  tech_section
+	| tech_file tech_section
+;
 
-section:
-	  BEGINTITLE sectiontitle ENDTITLE items;
-	| BEGINTITLE sectiontitle ENDTITLE;
+tech_section:
+	  TECH tech_header END
+	| VERSION tech_version END
+;
 
-sectiontitle: STRING
-	{
-		techdata->setLayer($1);
-	}
-	;
+tech_header_section:
+	  FORMAT INTEGER
+	| STRING
+;
 
-items: items item | item ;
+tech_header:
+	  tech_header_section
+	| tech_header tech_header_section
+;
 
-item:
-	  rect
-	| rlabel
-	| flabel
-	| port
-	| use
-	;
+tech_version_section:
+	  VERSION STRING
+	| DESRIPTION STRING
+;
 
-use: use_start timestamp transform use_box
-	{
-		techdata->addUsedModule();
-	}
-	;
-
-use_start: USE STRING STRING
-	{
-		techdata->addUsedModuleNames($2,$3);
-	}
-	;
-
-transform:
-	TRANSFORM INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER
-	{
-		techdata->addUsedModuleTransform($2,$3,$4,$5,$6,$7);
-	}
-	;
-
-use_box:
-	BOX INTEGER INTEGER INTEGER INTEGER
-	{
-		techdata->addUsedModuleBox($2, $3, $4, $5);
-	}
-	;
-
-rect:
-	RECT INTEGER INTEGER INTEGER INTEGER
-	{
-		techdata->addRectangle($2, $3, $4, $5);
-	}
-    ;
-
-rlabel:
-	RLABEL STRING
-	INTEGER INTEGER INTEGER INTEGER INTEGER
-	STRING
-	;
-
-flabel:
-	FLABEL STRING
-	INTEGER INTEGER INTEGER INTEGER INTEGER
-	STRING
-	INTEGER INTEGER INTEGER INTEGER
-	STRING
-	;
-
-port: PORT INTEGER STRING;
+tech_version:
+	  tech_version_section
+	| tech_version tech_version_section
+;
 
 %%
 

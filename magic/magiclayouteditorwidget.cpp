@@ -50,6 +50,12 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	drawingOperations[DRAWING_OPERATION_RECTANGLE] = button;
 	toolbar->addAction(button);
 
+	button = new QAction(QPixmap(":/add_rectangle.svg"), "Select rectangles", toolbar);
+	button->setCheckable(true);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperationSelectRectangles()));
+	drawingOperations[DRAWING_OPERATION_SELECT] = button;
+	toolbar->addAction(button);
+
 	addToolBar(toolbar);
 }
 
@@ -67,6 +73,16 @@ void MagicLayoutEditorWidget::drawingOperationAddRectangle()
 	if(drawingOperations.contains(DRAWING_OPERATION_RECTANGLE)) {
 		if(drawingOperations[DRAWING_OPERATION_RECTANGLE]->isChecked())
 			editArea->setDrawingOperation(DRAWING_OPERATION_RECTANGLE);
+	}
+}
+
+void MagicLayoutEditorWidget::drawingOperationSelectRectangles()
+{
+	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
+	disableAllDrawingOperationsExcept(DRAWING_OPERATION_SELECT);
+	if(drawingOperations.contains(DRAWING_OPERATION_SELECT)) {
+		if(drawingOperations[DRAWING_OPERATION_SELECT]->isChecked())
+			editArea->setDrawingOperation(DRAWING_OPERATION_SELECT);
 	}
 }
 

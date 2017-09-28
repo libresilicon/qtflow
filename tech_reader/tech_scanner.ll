@@ -21,8 +21,10 @@
 %option nounput
 %option yylineno
 
-MAGIC		"tech"
 TECH		"tech"
+END			"end"
+FORMAT		"format"
+
 MAGSCALE	"magscale"
 TIMESTAMP	"timestamp"
 RECT		"rect"
@@ -37,19 +39,9 @@ TRANSFORM	"transform"
 
 %%
 
-{TRANSFORM}+		{ return tech::TechParser::token::TRANSFORM; }
-{PORT}+				{ return tech::TechParser::token::PORT; }
-{BOX}+				{ return tech::TechParser::token::BOX; }
-{USE}+				{ return tech::TechParser::token::USE; }
-{MAGIC}+			{ return tech::TechParser::token::MAGIC; }
 {TECH}+				{ return tech::TechParser::token::TECH; }
-{MAGSCALE}+			{ return tech::TechParser::token::MAGSCALE; }
-{TIMESTAMP}+		{ return tech::TechParser::token::TIMESTAMP; }
-{RECT}+				{ return tech::TechParser::token::RECT; }
-{RLABEL}+			{ return tech::TechParser::token::RLABEL; }
-{FLABEL}+			{ return tech::TechParser::token::FLABEL; }
-{BEGINTITLE}+		{ return tech::TechParser::token::BEGINTITLE; }
-{ENDTITLE}+			{ return tech::TechParser::token::ENDTITLE; }
+{FORMAT}+			{ return tech::TechParser::token::FORMAT; }
+{END}+				{ return tech::TechParser::token::END; }
 
 -[0-9]+|[0-9]+ {
 	techlval->v_int = atoi(yytext);

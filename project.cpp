@@ -1,5 +1,5 @@
 #include "project.h"
-#include "pyprojectsettings.h"
+//#include "pyprojectsettings.h"
 
 IProject::IProject() : QObject()
 {
@@ -33,7 +33,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	} else {
 		create(path);
 	}
-	mainContext->addObject("project_settings", new PyProjectSettings(this));
 
 	settings->beginGroup("history");
 	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
@@ -49,6 +48,8 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 		settingsFileProcess->setContent(&file);
 		file.close();
 	}
+
+	qDebug() << "Opening here: " << getTechnologyFile();
 }
 
 Project::~Project()
@@ -137,6 +138,43 @@ QStringList Project::getProcessFiles()
 										ret.append(e4.text());
 									}
 								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+
+QString Project::getTechnologyFile()
+{
+	QString ret;
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="tech") {
+								ret=e3.text();
 							}
 						}
 					}

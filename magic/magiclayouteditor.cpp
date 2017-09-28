@@ -218,7 +218,7 @@ void MagicLayoutEditor::mousePressEvent(QMouseEvent *event)
 	lastOrig = mapToScene(event->pos());
 	switch(recentOperation) {
 		case DRAWING_OPERATION_RECTANGLE:
-			recentRectangle = new QGraphicsRectItem(lastOrig.x(),lastOrig.y(),1,1);
+			recentRectangle = new QGraphicsLayoutRectItem(lastOrig.x(),lastOrig.y(),1,1);
 			recentRectangle->setVisible(true);
 			if(activeLayerSelection) recentRectangle->setBrush(QBrush(project->colorMat(activeLayerSelection->currentText())));;
 			editScene->addItem(recentRectangle);

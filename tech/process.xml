@@ -18,6 +18,7 @@
 			<lef>
 				<file>:/osu018/osu018_stdcells.lef</file>
 			</lef>
+			<tech>:/osu018/SCN6M_SUBM.10.tech</tech>
 		</process>
 
 		<process xml:id="osu035">
@@ -25,6 +26,7 @@
 			<lef>
 				<file>:/osu035/osu035_stdcells.lef</file>
 			</lef>
+			<tech>:/osu035/SCN4M_SUBM.20.tech</tech>
 		</process>
 
 		<process xml:id="osu050">
@@ -32,6 +34,7 @@
 			<lef>
 				<file>:/osu050/osu050_stdcells.lef</file>
 			</lef>
+			<tech>osu050/SCN3ME_SUBM.30.tech</tech>
 		</process>
 
 	</technology>

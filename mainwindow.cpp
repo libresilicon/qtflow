@@ -149,6 +149,7 @@ void MainWindow::openProject(QString path)
 		projectsWidget->setProject(project);
 		projectSettingsDialog->setProject(project);
 		editArea->setProject(project);
+		mainContext->addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
 }
