@@ -36,6 +36,7 @@ DESRIPTION		"description"
 
 PLANES			"planes"
 TYPES			"types"
+CONTACTS		"contacts"
 CONTACT			"contact"
 
 STACKABLE		"stackable"
@@ -68,9 +69,28 @@ DRC				"drc"
 WIDTH			"width"
 EDGE4WAY		"edge4way"
 SPACING			"spacing"
+GRIDSPACING		"gridspacing"
 AREA			"area"
 EXACT_OVERLAP	"exact_overlap"
+OVERLAP			"overlap"
 STEPSIZE		"stepsize"
+LEF				"lef"
+ROUTING			"routing"
+EXTRACT			"extract"
+CSCALE			"cscale"
+LAMBDA			"lambda"
+STEP			"step"
+SIDEHALO		"sidehalo"
+PLANEORDER		"planeorder"
+RESIST			"resist"
+AREACAP			"areacap"
+PERIMC			"perimc"
+SIDEOVERLAP		"sideoverlap"
+SIDEWALL		"sidewall"
+DEVICE			"device"
+FETRESIS		"fetresis"
+WIRING			"wiring"
+ROUTER			"router"
 
 %x multiline
 
@@ -99,6 +119,7 @@ STEPSIZE		"stepsize"
 
 {PLANES}+			{ return tech::TechParser::token::PLANES; }
 {TYPES}+			{ return tech::TechParser::token::TYPES; }
+{CONTACTS}+			{ return tech::TechParser::token::CONTACTS; }
 {CONTACT}+			{ return tech::TechParser::token::CONTACT; }
 
 {STACKABLE}+		{ return tech::TechParser::token::STACKABLE; }
@@ -136,9 +157,28 @@ STEPSIZE		"stepsize"
 {WIDTH}+			{ return tech::TechParser::token::WIDTH; }
 {EDGE4WAY}+			{ return tech::TechParser::token::EDGE4WAY; }
 {SPACING}+			{ return tech::TechParser::token::SPACING; }
+{GRIDSPACING}+		{ return tech::TechParser::token::GRIDSPACING; }
 {AREA}+				{ return tech::TechParser::token::AREA; }
 {EXACT_OVERLAP}+	{ return tech::TechParser::token::EXACT_OVERLAP; }
+{OVERLAP}+			{ return tech::TechParser::token::OVERLAP; }
 {STEPSIZE}+			{ return tech::TechParser::token::STEPSIZE; }
+{LEF}+				{ return tech::TechParser::token::LEF; }
+{ROUTING}+			{ return tech::TechParser::token::ROUTING; }
+{EXTRACT}+			{ return tech::TechParser::token::EXTRACT; }
+{CSCALE}+			{ return tech::TechParser::token::CSCALE; }
+{LAMBDA}+			{ return tech::TechParser::token::LAMBDA; }
+{STEP}+				{ return tech::TechParser::token::STEP; }
+{SIDEHALO}+			{ return tech::TechParser::token::SIDEHALO; }
+{PLANEORDER}+		{ return tech::TechParser::token::PLANEORDER; }
+{RESIST}+			{ return tech::TechParser::token::RESIST; }
+{AREACAP}+			{ return tech::TechParser::token::AREACAP; }
+{PERIMC}+			{ return tech::TechParser::token::PERIMC; }
+{SIDEOVERLAP}+		{ return tech::TechParser::token::SIDEOVERLAP; }
+{SIDEWALL}+			{ return tech::TechParser::token::SIDEWALL; }
+{DEVICE}+			{ return tech::TechParser::token::DEVICE; }
+{FETRESIS}+			{ return tech::TechParser::token::FETRESIS; }
+{WIRING}+			{ return tech::TechParser::token::WIRING; }
+{ROUTER}+			{ return tech::TechParser::token::ROUTER; }
 
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";

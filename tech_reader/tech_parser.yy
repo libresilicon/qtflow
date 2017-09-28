@@ -46,6 +46,7 @@
 
 %token PLANES
 %token TYPES
+%token CONTACTS
 %token CONTACT
 %token STACKABLE
 
@@ -81,9 +82,29 @@
 %token WIDTH
 %token EDGE4WAY
 %token SPACING
+%token GRIDSPACING
 %token AREA
 %token EXACT_OVERLAP
+%token OVERLAP
 %token STEPSIZE
+%token LEF
+%token ROUTING
+%token EXTRACT
+%token CSCALE
+%token LAMBDA
+%token STEP
+%token SIDEHALO
+%token PLANEORDER
+%token RESIST
+%token AREACAP
+%token PERIMC
+%token SIDEOVERLAP
+%token SIDEWALL
+%token DEVICE
+%token FETRESIS
+
+%token WIRING
+%token ROUTER
 
 %token <v_int>		INTEGER
 %token <v_str>		STRING
@@ -111,6 +132,10 @@ tech_section:
 	| CIFINPUT cifinput_list END
 	| MZROUTER mzrouter_list END
 	| DRC drc_list END
+	| LEF lef_list END
+	| EXTRACT extract_list END
+	| WIRING wiring_list END
+	| ROUTER router_list END
 ;
 
 tech_header_section:
@@ -264,6 +289,63 @@ drc_entry:
 	| EXACT_OVERLAP STRING
 	| STEPSIZE INTEGER
 ;
+
+lef_list:
+	  lef_entry
+	| lef_entry lef_list
+;
+
+lef_entry:
+	  IGNORE STRING
+	| ROUTING STRING STRING STRING STRING
+	| CONTACT STRING STRING STRING STRING
+;
+
+extract_list:
+	  extract_entry
+	| extract_entry extract_list
+;
+
+extract_entry:
+	  STYLE Multiline
+	| CSCALE INTEGER
+	| LAMBDA INTEGER
+	| STEP INTEGER
+	| SIDEHALO INTEGER
+	| PLANEORDER STRING INTEGER
+	| PLANEORDER CONTACT INTEGER
+	| RESIST STRING INTEGER
+	| CONTACT STRING INTEGER INTEGER
+	| AREACAP STRING DOUBLE
+	| OVERLAP STRING STRING DOUBLE
+	| OVERLAP STRING STRING DOUBLE STRING
+	| SIDEOVERLAP STRING STRING STRING DOUBLE
+	| SIDEOVERLAP STRING STRING STRING DOUBLE STRING
+	| PERIMC STRING STRING DOUBLE
+	| SIDEWALL STRING STRING STRING STRING DOUBLE
+	| DEVICE STRING STRING STRING STRING
+	| DEVICE STRING STRING STRING ASTERISK STRING
+	| DEVICE STRING STRING STRING STRING STRING STRING INTEGER INTEGER
+	| FETRESIS STRING STRING INTEGER
+;
+
+wiring_list:
+	  wiring_entry
+	| wiring_entry wiring_list
+;
+
+wiring_entry: CONTACT STRING INTEGER STRING INTEGER STRING INTEGER;
+
+router_list:
+	  router_entry
+	| router_entry router_list
+;
+
+router_entry:
+	  GRIDSPACING INTEGER
+	| CONTACTS STRING INTEGER
+	| STRING STRING INTEGER STRING INTEGER STRING INTEGER;
+	| STRING STRING INTEGER STRING INTEGER;
 
 %%
 
