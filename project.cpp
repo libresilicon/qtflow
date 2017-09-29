@@ -8,13 +8,11 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	IProject(),
 	settings(s),
 	mainContext(main),
-	settingsFileProcess(NULL)
+	settingsFileProcess(NULL),
+	techdata(NULL)
 {
 	QTemporaryDir temporaryDir;
 	QString filedest;
-	tech::TechData *techdata;
-	QString tmpstr;
-	QStringList tmpstrarr;
 
 	if(QFile(path).exists()) {
 		project_settings = new QSettings(path, QSettings::NativeFormat);
@@ -45,18 +43,11 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 		file.close();
 	}
 
-	planeList.clear();
 	filedest = temporaryDir.path()+"/tech";
 	QFile::copy(getTechnologyFile(), filedest);
 	if(QFile(filedest).exists()) {
 		qDebug() << "Opening here: " << getTechnologyFile();
 		techdata = new tech::TechData(filedest);
-		foreach(std::string s, techdata->getPlanes()) {
-			tmpstr = QString::fromStdString(s);
-			tmpstrarr = tmpstr.split(',');
-			planeList.append(tmpstrarr.at(0));
-		}
-		delete techdata;
 	}
 }
 
@@ -366,6 +357,17 @@ qreal Project::thicknessMat(QString material)
 
 QStringList Project::getPlanes()
 {
+	QStringList planeList;
+	if(!techdata) return planeList;
+
+	QString tmpstr;
+	QStringList tmpstrarr;
+	foreach(std::string s, techdata->getPlanes()) {
+		tmpstr = QString::fromStdString(s);
+		tmpstrarr = tmpstr.split(',');
+		planeList.append(tmpstrarr.at(0));
+	}
+
 	return planeList;
 }
 

@@ -84,7 +84,8 @@ private:
 	QString rootdir;
 	PythonQtObjectPtr *mainContext;
 	QDomDocument *settingsFileProcess;
-	QStringList planeList;
+	tech::TechData *techdata;
+
 };
 
 #endif // PROJECT_H
