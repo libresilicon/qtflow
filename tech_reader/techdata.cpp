@@ -6,7 +6,7 @@ namespace tech {
 	TechData::TechData(QString filename) :
 		lexer(NULL),
 		parser(NULL),
-		trace_scanning(false),
+		trace_scanning(true),
 		trace_parsing(false)
 	{
 		std::ifstream input;

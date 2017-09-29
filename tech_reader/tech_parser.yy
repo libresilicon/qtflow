@@ -34,7 +34,6 @@
 	double v_double;
 }
 
-%token QUOTES
 %token ASTERISK
 
 %token TECH
@@ -119,10 +118,16 @@
 %token <std::string> Multiline "multiline-string"
 
 %start tech_file
+
 %%
+
 tech_file:
+	tech_sections
+;
+
+tech_sections:
 	  tech_section
-	| tech_file tech_section
+	| tech_sections tech_section
 ;
 
 tech_section:
@@ -169,27 +174,30 @@ tech_version:
 plane_list:
 	  STRING
 	| CONTACT
-	| STRING plane_list
-	| CONTACT plane_list
+	| plane_list STRING
+	| plane_list CONTACT
 ;
 
 type_list:
 	  type_entry
-	| type_entry type_list
+	| type_list type_entry
 ;
 
 type_entry: STRING STRING | CONTACT STRING;
 
 contact_list:
 	  contact_entry
-	| contact_entry contact_list
+	| contact_list contact_entry
 ;
 
-contact_entry: STRING STRING STRING | STACKABLE STRING STRING STRING;
+contact_entry:
+	  STRING STRING STRING
+	| STACKABLE STRING STRING STRING
+;
 
 style_list:
 	  style_entry
-	| style_entry style_list
+	| style_list style_entry
 ;
 
 style_entry:
@@ -199,7 +207,7 @@ style_entry:
 
 compose_list:
 	  compose_entry
-	| compose_entry compose_list
+	| compose_list compose_entry
 ;
 
 compose_entry:
@@ -209,15 +217,13 @@ compose_entry:
 ;
 
 connect_list:
-	  connect_entry
-	| connect_entry connect_list
+	  STRING STRING
+	| connect_list STRING STRING
 ;
-
-connect_entry: STRING STRING;
 
 cifoutput_list:
 	  cifoutput_entry
-	| cifoutput_entry cifoutput_list
+	| cifoutput_list cifoutput_entry
 ;
 
 cifoutput_entry:
@@ -242,7 +248,7 @@ cifoutput_entry:
 
 cifinput_list:
 	  cifinput_entry
-	| cifinput_entry cifinput_list
+	| cifinput_list cifinput_entry
 ;
 
 cifinput_entry:
@@ -272,7 +278,7 @@ cifinput_entry:
 
 mzrouter_list:
 	  mzrouter_entry
-	| mzrouter_entry mzrouter_list
+	| mzrouter_list mzrouter_entry
 ;
 
 mzrouter_entry:
@@ -284,23 +290,24 @@ mzrouter_entry:
 
 drc_list:
 	  drc_entry
-	| drc_entry drc_list
+	| drc_list drc_entry
 ;
 
 drc_entry:
-	  WIDTH STRING INTEGER QUOTES Multiline
-	| WIDTH STRING STRING QUOTES Multiline
-	| EDGE4WAY STRING STRING INTEGER STRING STRING INTEGER QUOTES Multiline
-	| EDGE4WAY STRING STRING INTEGER STRING INTEGER INTEGER QUOTES Multiline
-	| SPACING STRING STRING INTEGER STRING QUOTES Multiline
-	| AREA STRING INTEGER INTEGER QUOTES Multiline
+	  Multiline
+	| WIDTH STRING INTEGER Multiline
+	| WIDTH STRING STRING Multiline
+	| EDGE4WAY STRING STRING INTEGER STRING STRING INTEGER Multiline
+	| EDGE4WAY STRING STRING INTEGER STRING INTEGER INTEGER Multiline
+	| SPACING STRING STRING INTEGER STRING Multiline
+	| AREA STRING INTEGER INTEGER Multiline
 	| EXACT_OVERLAP STRING
 	| STEPSIZE INTEGER
 ;
 
 lef_list:
 	  lef_entry
-	| lef_entry lef_list
+	| lef_list lef_entry
 ;
 
 lef_entry:
@@ -311,7 +318,7 @@ lef_entry:
 
 extract_list:
 	  extract_entry
-	| extract_entry extract_list
+	| extract_list extract_entry
 ;
 
 extract_entry:
@@ -339,25 +346,28 @@ extract_entry:
 
 wiring_list:
 	  wiring_entry
-	| wiring_entry wiring_list
+	| wiring_list wiring_entry
 ;
 
-wiring_entry: CONTACT STRING INTEGER STRING INTEGER STRING INTEGER;
+wiring_entry:
+	CONTACT STRING INTEGER STRING INTEGER STRING INTEGER
+;
 
 router_list:
 	  router_entry
-	| router_entry router_list
+	| router_list router_entry
 ;
 
 router_entry:
 	  GRIDSPACING INTEGER
 	| CONTACTS STRING INTEGER
 	| STRING STRING INTEGER STRING INTEGER STRING INTEGER;
-	| STRING STRING INTEGER STRING INTEGER;
+	| STRING STRING INTEGER STRING INTEGER
+;
 
 plowing_list:
 	  plowing_entry
-	| plowing_entry plowing_list
+	| plowing_list plowing_entry
 ;
 
 plowing_entry:
@@ -368,18 +378,18 @@ plowing_entry:
 
 plot_list:
 	  plot_entry
-	| plot_entry plot_list
+	| plot_list plot_entry
 ;
 
 plot_entry:
 	  STYLE Multiline
-	| STRING STRING color_values;
+	| plot_name
+	| plot_name Multiline
+;
 
-color_values:
-	  INTEGER
-	| STRING
-	| color_values INTEGER;
-	| color_values STRING;
+plot_name:
+	  STRING STRING
+;
 
 %%
 

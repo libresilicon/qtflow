@@ -13,7 +13,6 @@
 %option prefix="tech"
 %option c++
 %option batch
-%option stack
 %option debug
 %option verbose
 %option pointer
@@ -23,7 +22,6 @@
 
 TILDE			"~"
 STRING			[A-Za-z]|[~A-Za-z0-9_,.-<>\[\]\/\(\)$]
-QUOTES			"\""
 COMMENT			"#"
 ASTERISK		"*"
 
@@ -101,23 +99,18 @@ PLOT			"plot"
 
 %%
 
-{QUOTES}+ {
-	BEGIN(multiline);
-	return tech::TechParser::token::QUOTES;
-}
-
 {COMMENT}.*			{}
 
 {TECH}+				{ return tech::TechParser::token::TECH; }
 {FORMAT}+			{ return tech::TechParser::token::FORMAT; }
 {END}+				{ return tech::TechParser::token::END; }
 
-{VERSION}+ {
+{VERSION}+			{
 	BEGIN(multiline);
 	return tech::TechParser::token::VERSION;
 }
 
-{DESRIPTION}+ {
+{DESRIPTION}+		{
 	BEGIN(multiline);
 	return tech::TechParser::token::DESRIPTION;
 }
@@ -129,6 +122,10 @@ PLOT			"plot"
 
 {STACKABLE}+		{ return tech::TechParser::token::STACKABLE; }
 
+{STYLE}+			{
+	BEGIN(multiline);
+	return tech::TechParser::token::STYLE;
+}
 {STYLES}+			{ return tech::TechParser::token::STYLES; }
 {STYLETYPE}+		{ return tech::TechParser::token::STYLETYPE; }
 
@@ -137,10 +134,6 @@ PLOT			"plot"
 {ERASE}+			{ return tech::TechParser::token::ERASE; }
 {CONNECT}+			{ return tech::TechParser::token::CONNECT; }
 {CIFOUTPUT}+		{ return tech::TechParser::token::CIFOUTPUT; }
-{STYLE}+ {
-	BEGIN(multiline);
-	return tech::TechParser::token::STYLE;
-}
 {SCALEFACTOR}+		{ return tech::TechParser::token::SCALEFACTOR; }
 {LAYER}+			{ return tech::TechParser::token::LAYER; }
 {BLOAT_OR}+			{ return tech::TechParser::token::BLOAT_OR; }
@@ -190,6 +183,11 @@ PLOT			"plot"
 {DRAG}+				{ return tech::TechParser::token::DRAG; }
 {PLOT}+				{ return tech::TechParser::token::PLOT; }
 
+[\\]+ {
+	BEGIN(multiline);
+	return tech::TechParser::token::Multiline;
+}
+
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";
 	BEGIN(INITIAL);
@@ -211,8 +209,9 @@ PLOT			"plot"
 	return tech::TechParser::token::STRING;
 }
 
-[ \n\t\r\\]+ {
+[ \n\t\r]+ {
 	/* yylloc->step(); */
 }
+
 
 %%
