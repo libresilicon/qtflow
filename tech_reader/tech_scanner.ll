@@ -88,6 +88,7 @@ SIDEOVERLAP			"sideoverlap"
 SIDEWALL			"sidewall"
 DEVICE				"device"
 FETRESIS			"fetresis"
+FET					"fet"
 WIRING				"wiring"
 ROUTER				"router"
 PLOWING				"plowing"
@@ -202,6 +203,7 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 {SIDEWALL}+				{ return tech::TechParser::token::SIDEWALL; }
 {DEVICE}+				{ return tech::TechParser::token::DEVICE; }
 {FETRESIS}+				{ return tech::TechParser::token::FETRESIS; }
+{FET}+					{ return tech::TechParser::token::FET; }
 {WIRING}+				{ return tech::TechParser::token::WIRING; }
 {ROUTER}+				{ return tech::TechParser::token::ROUTER; }
 {PLOWING}+				{ return tech::TechParser::token::PLOWING; }
