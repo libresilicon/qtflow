@@ -106,6 +106,12 @@
 %token WIRING
 %token ROUTER
 
+%token PLOWING
+%token FIXED
+%token COVERED
+%token DRAG
+%token PLOT
+
 %token <v_int>		INTEGER
 %token <v_str>		STRING
 %token <v_double>	DOUBLE
@@ -136,6 +142,8 @@ tech_section:
 	| EXTRACT extract_list END
 	| WIRING wiring_list END
 	| ROUTER router_list END
+	| PLOWING plowing_list END
+	| PLOT plot_list END
 ;
 
 tech_header_section:
@@ -159,11 +167,11 @@ tech_version:
 ;
 
 plane_list:
-	  plane_entry
-	| plane_entry plane_list
+	  STRING
+	| CONTACT
+	| STRING plane_list
+	| CONTACT plane_list
 ;
-
-plane_entry: STRING | CONTACT;
 
 type_list:
 	  type_entry
@@ -346,6 +354,32 @@ router_entry:
 	| CONTACTS STRING INTEGER
 	| STRING STRING INTEGER STRING INTEGER STRING INTEGER;
 	| STRING STRING INTEGER STRING INTEGER;
+
+plowing_list:
+	  plowing_entry
+	| plowing_entry plowing_list
+;
+
+plowing_entry:
+	  FIXED STRING
+	| COVERED STRING
+	| DRAG STRING
+;
+
+plot_list:
+	  plot_entry
+	| plot_entry plot_list
+;
+
+plot_entry:
+	  STYLE Multiline
+	| STRING STRING color_values;
+
+color_values:
+	  INTEGER
+	| STRING
+	| color_values INTEGER;
+	| color_values STRING;
 
 %%
 

@@ -91,6 +91,11 @@ DEVICE			"device"
 FETRESIS		"fetresis"
 WIRING			"wiring"
 ROUTER			"router"
+PLOWING			"plowing"
+FIXED			"fixed"
+COVERED			"covered"
+DRAG			"drag"
+PLOT			"plot"
 
 %x multiline
 
@@ -179,6 +184,11 @@ ROUTER			"router"
 {FETRESIS}+			{ return tech::TechParser::token::FETRESIS; }
 {WIRING}+			{ return tech::TechParser::token::WIRING; }
 {ROUTER}+			{ return tech::TechParser::token::ROUTER; }
+{PLOWING}+			{ return tech::TechParser::token::PLOWING; }
+{FIXED}+			{ return tech::TechParser::token::FIXED; }
+{COVERED}+			{ return tech::TechParser::token::COVERED; }
+{DRAG}+				{ return tech::TechParser::token::DRAG; }
+{PLOT}+				{ return tech::TechParser::token::PLOT; }
 
 <multiline>.* {
 	std::cout << "Multiline: " << YYText() << "\n";
