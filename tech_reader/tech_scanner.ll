@@ -22,7 +22,7 @@
 %option yylineno
 
 TILDE			"~"
-STRING			[A-Za-z]|[~A-Za-z0-9_,.-<>\[\]\/\(\)]
+STRING			[A-Za-z]|[~A-Za-z0-9_,.-<>\[\]\/\(\)$]
 QUOTES			"\""
 COMMENT			"#"
 ASTERISK		"*"
