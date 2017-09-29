@@ -46,7 +46,6 @@
 %token PLANES
 %token TYPES
 %token CONTACTS
-%token CONTACT
 %token STACKABLE
 
 %token STYLES
@@ -137,6 +136,8 @@
 %token DEFAULTOVERLAP
 %token DEFAULTSIDEOVERLAP
 
+%token CONTACT
+%token COMMENT
 
 %token <v_int>		INTEGER
 %token <v_str>		STRING
@@ -225,12 +226,8 @@ plane_list:
 ;
 
 plane_name:
-CONTACT
-{
-	techdata->addPlane("contact");
-}
-|
-STRING
+CONTACT | COMMENT
+| STRING
 {
 	techdata->addPlane(*$1);
 }

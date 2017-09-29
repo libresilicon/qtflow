@@ -22,7 +22,7 @@
 
 TILDE				"~"
 STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=]
-COMMENT				"#"
+HASH				"#"
 QUOTE				"\""
 
 TECH				"tech"
@@ -117,12 +117,13 @@ DEFAULTPERIMETER	"defaultperimeter"
 DEFAULTSIDEWALL		"defaultsidewall"
 DEFAULTOVERLAP		"defaultoverlap"
 DEFAULTSIDEOVERLAP	"defaultsideoverlap"
+COMMENT				"comment"
 
 %x multiline
 
 %%
 
-{COMMENT}.*				{}
+{HASH}.*				{}
 
 {TECH}+					{ return tech::TechParser::token::TECH; }
 {FORMAT}+				{ return tech::TechParser::token::FORMAT; }
@@ -231,10 +232,8 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 {DEFAULTPERIMETER}+		{ return tech::TechParser::token::DEFAULTPERIMETER; }
 {DEFAULTSIDEWALL}+		{ return tech::TechParser::token::DEFAULTSIDEWALL; }
 {DEFAULTOVERLAP}+		{ return tech::TechParser::token::DEFAULTOVERLAP; }
-{DEFAULTSIDEOVERLAP}+		{ return tech::TechParser::token::DEFAULTSIDEOVERLAP; }
-
-
-
+{DEFAULTSIDEOVERLAP}+	{ return tech::TechParser::token::DEFAULTSIDEOVERLAP; }
+{COMMENT}+				{ return tech::TechParser::token::COMMENT; }
 
 [\\]+					{
 	BEGIN(multiline);
