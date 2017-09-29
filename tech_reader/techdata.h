@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include <QString>
+#include <QStringList>
 #include <QVector>
 #include <QRect>
 #include <QTextStream>
@@ -23,8 +24,11 @@ namespace tech {
 		class TechScanner *getLexer();
 
 		void addPlane(std::string);
+		void addType(std::string s1, std::string s2);
 
-		std::list<std::string> getPlanes();
+		QVector<QString> getType(QString s);
+
+		QStringList getPlanes();
 
 	private:
 		class TechScanner* lexer;
@@ -33,7 +37,9 @@ namespace tech {
 		bool trace_scanning;
 		QString streamname;
 
-		std::list<std::string> planeList;
+		QStringList planeList;
+		QMap<QString,QVector<QString>> typeList;
+
 	};
 }
 

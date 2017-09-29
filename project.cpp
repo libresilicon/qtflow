@@ -360,11 +360,9 @@ QStringList Project::getPlanes()
 	QStringList planeList;
 	if(!techdata) return planeList;
 
-	QString tmpstr;
 	QStringList tmpstrarr;
-	foreach(std::string s, techdata->getPlanes()) {
-		tmpstr = QString::fromStdString(s);
-		tmpstrarr = tmpstr.split(',');
+	foreach(QString s, techdata->getPlanes()) {
+		tmpstrarr = s.split(',');
 		planeList.append(tmpstrarr.at(0));
 	}
 

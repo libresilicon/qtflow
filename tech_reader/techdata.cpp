@@ -31,13 +31,26 @@ namespace tech {
 		return lexer;
 	}
 
-	std::list<std::string> TechData::getPlanes()
+	QStringList TechData::getPlanes()
 	{
 		return planeList;
 	}
 
 	void TechData::addPlane(std::string s)
 	{
-		planeList.push_back(s);
+		planeList.append(QString::fromStdString(s));
 	}
+
+	void TechData::addType(std::string s1, std::string s2)
+	{
+		QString typeName = QString::fromStdString(s1);
+		QString value = QString::fromStdString(s2);
+		typeList[typeName].append(value);
+	}
+
+	QVector<QString> TechData::getType(QString s)
+	{
+		return typeList[s];
+	}
+
 }
