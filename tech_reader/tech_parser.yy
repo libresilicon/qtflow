@@ -220,10 +220,20 @@ tech_version:
 ;
 
 plane_list:
-	  STRING
-	| CONTACT
-	| plane_list STRING
-	| plane_list CONTACT
+	  plane_name
+	| plane_list plane_name
+;
+
+plane_name:
+CONTACT
+{
+	techdata->addPlane("contact");
+}
+|
+STRING
+{
+	techdata->addPlane(*$1);
+}
 ;
 
 type_list:

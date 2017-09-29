@@ -18,15 +18,15 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="layers">
+      <widget class="QWidget" name="planes">
        <attribute name="title">
-        <string>Layer</string>
+        <string>Planes</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QListWidget" name="layerList"/>
+         <widget class="QListWidget" name="planesList"/>
         </item>
        </layout>
       </widget>

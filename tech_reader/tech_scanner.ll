@@ -247,7 +247,6 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 			end = YYText() + i;
 			if(*end) {
 				if(*end=='\\') {
-					std::cout << "Last char " << *end << "\n";
 					BEGIN(multiline);
 				} else {
 					BEGIN(INITIAL);
@@ -255,7 +254,6 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 				break;
 			}
 		}
-	std::cout << "Multiline: " << YYText() << "\n";
 	return tech::TechParser::token::Multiline;
 }
 

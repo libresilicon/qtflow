@@ -66,7 +66,6 @@ public:
 	QString getTestBench();
 	QString getTechnology();
 	QString getProcess();
-	QStringList getProcessFiles();
 	QString getTechnologyFile();
 	QString getProjectType();
 	QString getSynthesisDir();
@@ -74,7 +73,9 @@ public:
 	QString getVCDFile();
 	QString getVCDPath();
 
-	QStringList getLayers();
+	QStringList getProcessFiles();
+
+	QStringList getPlanes();
 	QStringList getVisibles();
 
 private:
@@ -83,7 +84,7 @@ private:
 	QString rootdir;
 	PythonQtObjectPtr *mainContext;
 	QDomDocument *settingsFileProcess;
-	tech::TechData *techdata;
+	QStringList planeList;
 };
 
 #endif // PROJECT_H

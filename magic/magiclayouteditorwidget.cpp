@@ -17,8 +17,6 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 
 	addToolBar(toolbar);
 
-	addDrawingOperations();
-
 	setCentralWidget(editArea);
 
 	layoutVisibles = new LayoutVisibles(this);
@@ -29,12 +27,14 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 
 void MagicLayoutEditorWidget::addDrawingOperations()
 {
+	if(!project) return;
+
 	QAction *button;
 	QToolBar *toolbar;
 
 	toolbar = new QToolBar(this);
 	activeLayer = new QComboBox(toolbar);
-	foreach(QString n, project->getLayers()) {
+	foreach(QString n, project->getPlanes()) {
 		QPixmap pm(100,100);
 		pm.fill(project->colorMat(n));
 		activeLayer->addItem(QIcon(pm),n);
@@ -107,6 +107,7 @@ void MagicLayoutEditorWidget::setProject(Project *p)
 {
 	project = p;
 	layoutVisibles->setProject(project);
+	addDrawingOperations();
 }
 
 QString MagicLayoutEditorWidget::getFilePath()

@@ -9,6 +9,8 @@ namespace tech {
 		trace_scanning(false),
 		trace_parsing(false)
 	{
+		planeList.clear();
+
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
 
@@ -27,5 +29,15 @@ namespace tech {
 	TechScanner *TechData::getLexer()
 	{
 		return lexer;
+	}
+
+	std::list<std::string> TechData::getPlanes()
+	{
+		return planeList;
+	}
+
+	void TechData::addPlane(std::string s)
+	{
+		planeList.push_back(s);
 	}
 }

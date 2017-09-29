@@ -22,12 +22,18 @@ namespace tech {
 		// building the info
 		class TechScanner *getLexer();
 
+		void addPlane(std::string);
+
+		std::list<std::string> getPlanes();
+
 	private:
 		class TechScanner* lexer;
 		class TechParser* parser;
 		bool trace_parsing;
 		bool trace_scanning;
 		QString streamname;
+
+		std::list<std::string> planeList;
 	};
 }
 
