@@ -241,7 +241,9 @@ style_list:
 
 style_members:
 	  STRING
+	| STRING INTEGER
 	| style_members STRING
+	| style_members STRING INTEGER
 ;
 
 style_name:
@@ -270,7 +272,7 @@ cifoutput_list:
 ;
 
 cifoutput_entry:
-	  STYLE multiline_comment
+	  STYLE Multiline
 	| SCALEFACTOR INTEGER INTEGER
 	| SCALEFACTOR INTEGER STRING
 	| OPTIONS STRING
@@ -295,15 +297,14 @@ cifoutput_entry:
 ;
 
 cifinput_list:
-	  %empty
-	| cifinput_entry
+	  cifinput_entry
 	| cifinput_list cifinput_entry
 ;
 
 cifinput_entry:
-	  STYLE multiline_comment
-	| SCALEFACTOR INTEGER
+	  STYLE Multiline
 	| SCALEFACTOR INTEGER INTEGER
+	| SCALEFACTOR INTEGER
 	| LAYER INTEGER STRING
 	| LAYER STRING INTEGER
 	| LAYER STRING STRING
@@ -326,13 +327,12 @@ cifinput_entry:
 ;
 
 mzrouter_list:
-	  %empty
-	| mzrouter_entry
+	  mzrouter_entry
 	| mzrouter_list mzrouter_entry
 ;
 
 mzrouter_entry:
-	  STYLE multiline_comment
+	  STYLE Multiline
 	| LAYER STRING INTEGER INTEGER INTEGER INTEGER
 	| CONTACT STRING STRING STRING INTEGER
 	| NOTACTIVE STRING STRING
@@ -345,7 +345,7 @@ drc_list:
 
 drc_entry:
 	  multiline_comment
-	| STYLE multiline_comment
+	| STYLE Multiline
 	| SCALEFACTOR INTEGER
 	| WIDTH STRING INTEGER multiline_comment
 	| WIDTH STRING STRING multiline_comment
@@ -384,7 +384,7 @@ extract_list:
 ;
 
 extract_entry:
-	  STYLE multiline_comment
+	  STYLE Multiline
 	| CSCALE INTEGER
 	| LAMBDA INTEGER
 	| LAMBDA DOUBLE
@@ -394,6 +394,7 @@ extract_entry:
 	| PLANEORDER STRING INTEGER
 	| PLANEORDER CONTACT INTEGER
 	| RESIST STRING INTEGER
+	| CONTACT STRING INTEGER INTEGER
 	| CONTACT STRING INTEGER
 	| AREACAP STRING DOUBLE
 	| OVERLAP STRING STRING DOUBLE
@@ -417,7 +418,9 @@ extract_entry:
 
 device_params:
 	  STRING
+	| INTEGER
 	| device_params STRING
+	| device_params INTEGER
 ;
 
 wiring_list:
@@ -430,8 +433,7 @@ wiring_entry:
 ;
 
 router_list:
-	  %empty
-	| router_entry
+	  router_entry
 	| router_list router_entry
 ;
 
@@ -443,8 +445,7 @@ router_entry:
 ;
 
 plowing_list:
-	  %empty
-	| plowing_entry
+	  plowing_entry
 	| plowing_list plowing_entry
 ;
 
@@ -455,13 +456,12 @@ plowing_entry:
 ;
 
 plot_list:
-	  %empty
-	| plot_entry
+	  plot_entry
 	| plot_list plot_entry
 ;
 
 plot_entry:
-	  STYLE multiline_comment
+	  STYLE Multiline
 	| plot_name
 	| plot_name plot_multilines
 ;
@@ -472,7 +472,7 @@ plot_multilines:
 ;
 
 plot_name:
-	  STRING multiline_comment
+	  STRING Multiline
 	| STRING STRING
 	| STRING INTEGER
 ;
