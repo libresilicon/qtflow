@@ -189,8 +189,20 @@ PLOT			"plot"
 }
 
 <multiline>.* {
+		const char* end;
+		for(int i = YYLeng();i>0;i--) {
+			end = YYText() + i;
+			if(*end) {
+				if(*end=='\\') {
+					std::cout << "Last char " << *end << "\n";
+					BEGIN(multiline);
+				} else {
+					BEGIN(INITIAL);
+				}
+				break;
+			}
+		}
 	std::cout << "Multiline: " << YYText() << "\n";
-	BEGIN(INITIAL);
 	return tech::TechParser::token::Multiline;
 }
 

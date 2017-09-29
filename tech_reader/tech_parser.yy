@@ -384,12 +384,20 @@ plot_list:
 plot_entry:
 	  STYLE Multiline
 	| plot_name
-	| plot_name Multiline
+	| plot_name plot_multilines
+;
+
+plot_multilines:
+	  Multiline
+	| plot_multilines Multiline
 ;
 
 plot_name:
-	  STRING STRING
+	  STRING Multiline
+	| STRING STRING
+	| STRING INTEGER
 ;
+
 
 %%
 
