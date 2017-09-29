@@ -16,9 +16,9 @@
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="planes">
        <attribute name="title">
@@ -27,6 +27,16 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QListWidget" name="planesList"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="types">
+       <attribute name="title">
+        <string>Types</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QListWidget" name="listWidget"/>
         </item>
        </layout>
       </widget>
