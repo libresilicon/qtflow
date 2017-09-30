@@ -132,8 +132,8 @@ void MagicLayoutEditor::loadFile(QString file)
 		}
 	}
 
-	addWires();
 	addModules();
+	addWires();
 
 	editScene->update();
 }
