@@ -6,10 +6,8 @@ LayoutVisibles::LayoutVisibles(QWidget *parent):
 	project(NULL)
 {
 	ui->setupUi(this);
-	ui->planesList->setContextMenuPolicy(Qt::CustomContextMenu);
-	ui->renderList->setContextMenuPolicy(Qt::CustomContextMenu);
-	connect(ui->planesList,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
-	connect(ui->renderList,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
+	ui->typesTree->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(ui->typesTree,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
 }
 
 void LayoutVisibles::handleClick(const QModelIndex &index)
@@ -25,25 +23,30 @@ void LayoutVisibles::setProject(Project *p)
 
 void LayoutVisibles::refreshLists()
 {
-	QListWidgetItem* item;
+	QTreeWidgetItem* treeitem;
+	QTreeWidgetItem* treeChileItem;
 	if(project) {
 		foreach(QString layern, project->getPlanes()) {
 			QPixmap pm(100,100);
-			item = new QListWidgetItem(ui->planesList);
-			item->setText(layern);
+			treeitem = new QTreeWidgetItem(ui->typesTree);
 			pm.fill(project->colorMat(layern));
-			item->setIcon(QIcon(pm));
-			item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-			item->setCheckState(Qt::Checked);
-		}
-		foreach(QString layern, project->getVisibles()) {
-			QPixmap pm(100,100);
-			item = new QListWidgetItem(ui->renderList);
-			item->setText(layern);
-			pm.fill(project->colorMat(layern));
-			item->setIcon(QIcon(pm));
-			item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
-			item->setCheckState(Qt::Checked);
+			treeitem->setFlags(treeitem->flags() | Qt::ItemIsUserCheckable);
+			treeitem->setCheckState(0,Qt::Checked);
+			treeitem->setIcon(1,QIcon(pm));
+			treeitem->setText(2,layern);
+			typeEntries.append(treeitem);
+			foreach(QString typeName, project->getTypeNames()) {
+				foreach(QString vname, project->getType(typeName)) {
+					QPixmap pm(100,100);
+					treeChileItem = new QTreeWidgetItem(treeitem);
+					pm.fill(project->colorMat(vname));
+					treeChileItem->setFlags(treeChileItem->flags() | Qt::ItemIsUserCheckable);
+					treeChileItem->setCheckState(0,Qt::Checked);
+					treeChileItem->setIcon(1,QIcon(pm));
+					treeChileItem->setText(2,vname);
+					typeEntries.append(treeChileItem);
+				}
+			}
 		}
 	}
 }
@@ -53,7 +56,7 @@ void LayoutVisibles::on_layerList_customContextMenuRequested(const QPoint &pos)
 	QPoint globalPos;
 	QMenu menu;
 
-	globalPos = ui->planesList->mapToGlobal(pos);
+	globalPos = ui->typesTree->mapToGlobal(pos);
 	menu.addAction("Change color");
 	menu.exec(globalPos);
 }
@@ -63,26 +66,14 @@ void LayoutVisibles::changeColor()
 
 }
 
-bool LayoutVisibles::layerIsEnabled(QString s)
+bool LayoutVisibles::typeIsEnabled(QString s)
 {
-	QListWidgetItem *m;
-	for(int i = 0; i < ui->planesList->count(); ++i){
-		m = ui->planesList->item(i);
-		if(m) if(m->text()==s)
-			return (m->checkState()==Qt::Checked);
+	QTreeWidgetItem *m;
+	foreach(m, typeEntries){
+		if(m->data(2,0).toString()==s) {
+			return (m->checkState(0)==Qt::CheckState::Checked);
+		}
 	}
 	qDebug() << "Undefined: " << s;
-	return false;
-}
-
-bool LayoutVisibles::visibleIsEnabled(QString s)
-{
-	QListWidgetItem *m;
-	for(int i = 0; i < ui->renderList->count(); ++i){
-		m = ui->renderList->item(i);
-		if(m) if(m->text()==s)
-			return (m->checkState()==Qt::Checked);
-	}
-	qDebug() << s;
-	return false;
+	return true;
 }

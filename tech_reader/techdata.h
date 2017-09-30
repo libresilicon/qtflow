@@ -26,9 +26,11 @@ namespace tech {
 		void addPlane(std::string);
 		void addType(std::string s1, std::string s2);
 
-		QVector<QString> getType(QString s);
+		QStringList getType(QString s);
 
 		QStringList getPlanes();
+
+		QStringList getTypeNames();
 
 	private:
 		class TechScanner* lexer;
@@ -38,7 +40,7 @@ namespace tech {
 		QString streamname;
 
 		QStringList planeList;
-		QMap<QString,QVector<QString>> typeList;
+		QMap<QString,QStringList> typeList;
 
 	};
 }

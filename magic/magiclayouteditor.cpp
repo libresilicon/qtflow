@@ -79,7 +79,7 @@ void MagicLayoutEditor::addModules()
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
-					if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
+					if(visibles) if(visibles->typeIsEnabled(layer->getName())) {
 						color = project->colorMat(layer->getName());
 						foreach(lef::rect_t rect, layer->getRects()) {
 							r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
@@ -91,7 +91,7 @@ void MagicLayoutEditor::addModules()
 			}
 
 			foreach (layer, macro->getObstruction()->getLayers()) {
-				if(visibles) if(visibles->layerIsEnabled(layer->getName())) {
+				if(visibles) if(visibles->typeIsEnabled(layer->getName())) {
 					color = project->colorMat(layer->getName());
 					foreach(lef::rect_t rect, layer->getRects()) {
 						r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
@@ -147,7 +147,7 @@ void MagicLayoutEditor::redraw()
 
 	visible = true;
 	foreach(QString layerN, macro_wires.keys()) {
-		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
+		visible = (visibles)?(visibles->typeIsEnabled(layerN)):true;
 		foreach(m, macro_wires[layerN]) {
 			m->setVisible(visible);
 		}
@@ -155,13 +155,13 @@ void MagicLayoutEditor::redraw()
 
 	visible = true;
 	foreach(QString layerN, wires.keys()) {
-		visible = (visibles)?(visibles->layerIsEnabled(layerN)):true;
+		visible = (visibles)?(visibles->typeIsEnabled(layerN)):true;
 		foreach(w, wires[layerN]) {
 			w->setVisible(visible);
 		}
 	}
 
-	visible = (visibles)?(visibles->visibleIsEnabled("macro_texts")):true;
+	visible = (visibles)?(visibles->typeIsEnabled("comment")):true;
 	foreach(t, macro_texts) {
 		t->setVisible(visible);
 	}

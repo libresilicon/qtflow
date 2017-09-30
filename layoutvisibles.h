@@ -15,8 +15,7 @@ public:
 	explicit LayoutVisibles(QWidget *parent = nullptr);
 	void setProject(Project *p);
 
-	bool layerIsEnabled(QString s);
-	bool visibleIsEnabled(QString s);
+	bool typeIsEnabled(QString s);
 
 signals:
 	void refreshLayout();
@@ -30,6 +29,8 @@ private:
 	void refreshLists();
 	Ui::LayoutVisibles *ui;
 	Project *project;
+
+	QVector<QTreeWidgetItem*> typeEntries;
 };
 
 #endif // LAYOUTVISIBLES_H

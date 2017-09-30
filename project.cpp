@@ -369,9 +369,14 @@ QStringList Project::getPlanes()
 	return planeList;
 }
 
-QStringList Project::getVisibles()
+QStringList Project::getTypeNames()
 {
-	QStringList ret;
-	ret << "macro_texts";
-	return ret;
+	if(!techdata) return QStringList();
+	return techdata->getTypeNames();
+}
+
+QStringList Project::getType(QString s)
+{
+	if(!techdata) return QStringList();
+	return techdata->getType(s);
 }

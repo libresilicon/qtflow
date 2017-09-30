@@ -76,7 +76,8 @@ public:
 	QStringList getProcessFiles();
 
 	QStringList getPlanes();
-	QStringList getVisibles();
+	QStringList getTypeNames();
+	QStringList getType(QString s);
 
 private:
 	QSettings *settings;

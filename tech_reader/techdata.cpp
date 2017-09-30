@@ -36,6 +36,11 @@ namespace tech {
 		return planeList;
 	}
 
+	QStringList TechData::getTypeNames()
+	{
+		return typeList.keys();
+	}
+
 	void TechData::addPlane(std::string s)
 	{
 		planeList.append(QString::fromStdString(s));
@@ -48,7 +53,7 @@ namespace tech {
 		typeList[typeName].append(value);
 	}
 
-	QVector<QString> TechData::getType(QString s)
+	QStringList TechData::getType(QString s)
 	{
 		return typeList[s];
 	}

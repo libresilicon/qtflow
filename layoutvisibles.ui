@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>349</width>
-    <height>395</height>
+    <width>435</width>
+    <height>397</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,40 +16,22 @@
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="tabs">
-      <property name="currentIndex">
-       <number>1</number>
-      </property>
-      <widget class="QWidget" name="planes">
-       <attribute name="title">
-        <string>Planes</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QListWidget" name="planesList"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="types">
-       <attribute name="title">
-        <string>Types</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QListWidget" name="listWidget"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="render">
-       <attribute name="title">
-        <string>Render</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QListWidget" name="renderList"/>
-        </item>
-       </layout>
-      </widget>
+     <widget class="QTreeWidget" name="typesTree">
+      <column>
+       <property name="text">
+        <string>Enabled</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Color</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </column>
      </widget>
     </item>
    </layout>
