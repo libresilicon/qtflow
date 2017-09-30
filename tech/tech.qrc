@@ -1,5 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+<file>./mos.cmap</file>
+<file>./mos.dstyle</file>
 <file>./osu018/osu018.magicrc</file>
 <file>./osu018/osu018.par</file>
 <file>./osu018/osu018.prm</file>

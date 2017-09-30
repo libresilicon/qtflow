@@ -2,10 +2,8 @@
 win32:QMAKE_CXXFLAGS += /bigobj
 
 SOURCES += \
-	$$PWD/colormap.cpp \
-    $$PWD/colormap.cpp
+	$$PWD/colormap.cpp
  
 HEADERS += \
-	$$PWD/colormap.h \
-    $$PWD/colormap.h
+	$$PWD/colormap.h
 

@@ -9,7 +9,8 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	settings(s),
 	mainContext(main),
 	settingsFileProcess(NULL),
-	techdata(NULL)
+	techdata(NULL),
+	colorMap(new ColorMap())
 {
 	QTemporaryDir temporaryDir;
 	QString filedest;
@@ -46,13 +47,32 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/tech";
 	QFile::copy(getTechnologyFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << getTechnologyFile();
+		qDebug() << "Opening here: " << filedest;
 		techdata = new tech::TechData(filedest);
 	}
+
+	// setting up color table:
+	filedest = temporaryDir.path()+"/color";
+	QFile::copy(getColorMapFile(), filedest);
+	if(QFile(filedest).exists()) {
+		qDebug() << "Opening here: " << filedest;
+		colorMap->loadColors(filedest);
+	}
+
+	// setting up color object match table:
+	filedest = temporaryDir.path()+"/style";
+	QFile::copy(getDesignStyleFile(), filedest);
+	if(QFile(filedest).exists()) {
+		qDebug() << "Opening here: " << filedest;
+		colorMap->loadDesign(filedest);
+	}
+
 }
 
 Project::~Project()
 {
+	delete colorMap;
+	delete techdata;
 	delete project_settings;
 }
 
@@ -185,6 +205,78 @@ QString Project::getTechnologyFile()
 	return ret;
 }
 
+QString Project::getDesignStyleFile()
+{
+	QString ret = ":/mos.dstyle";
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="design") {
+								ret=e3.text();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+QString Project::getColorMapFile()
+{
+	QString ret = ":/mos.cmap";
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="colors") {
+								ret=e3.text();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
 QString Project::getProjectType()
 {
 	return project_settings->value("projectType").toString();
@@ -292,29 +384,7 @@ void Project::buildAll()
 
 QColor Project::colorMat(QString material)
 {
-	// TODO:
-	// make this configuration based!
-	// don't hardcode this!
-	QColor mat = QColor("black");
-
-	if (material == "metal1")
-		mat = QColor("lightblue");
-	if (material == "metal2")
-		mat = QColor("blue");
-	if (material == "metal3")
-		mat = QColor("teal");
-	if (material == "metal4")
-		mat = QColor("purple");
-	if (material == "m1contact")
-		mat = QColor("yellow");
-	if (material == "m2contact")
-		mat = QColor("green");
-	if (material == "m3contact")
-		mat = QColor("teal");
-	if (material == "m4contact")
-		mat = QColor("teal");
-
-	return mat;
+	return colorMap->fromName(material);
 }
 
 qreal Project::posMat(QString material)

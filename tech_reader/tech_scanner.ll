@@ -117,7 +117,6 @@ DEFAULTPERIMETER	"defaultperimeter"
 DEFAULTSIDEWALL		"defaultsidewall"
 DEFAULTOVERLAP		"defaultoverlap"
 DEFAULTSIDEOVERLAP	"defaultsideoverlap"
-COMMENT				"comment"
 
 %x multiline
 
@@ -233,7 +232,6 @@ COMMENT				"comment"
 {DEFAULTSIDEWALL}+		{ return tech::TechParser::token::DEFAULTSIDEWALL; }
 {DEFAULTOVERLAP}+		{ return tech::TechParser::token::DEFAULTOVERLAP; }
 {DEFAULTSIDEOVERLAP}+	{ return tech::TechParser::token::DEFAULTSIDEOVERLAP; }
-{COMMENT}+				{ return tech::TechParser::token::COMMENT; }
 
 [\\]+					{
 	BEGIN(multiline);

@@ -226,7 +226,7 @@ plane_list:
 ;
 
 plane_name:
-CONTACT | COMMENT
+CONTACT
 | STRING
 {
 	techdata->addPlane(*$1);

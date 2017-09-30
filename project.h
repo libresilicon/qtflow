@@ -19,6 +19,7 @@
 
 #include <PythonQt.h>
 
+#include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
 
 class IProject: public QObject
@@ -67,6 +68,8 @@ public:
 	QString getTechnology();
 	QString getProcess();
 	QString getTechnologyFile();
+	QString getColorMapFile();
+	QString getDesignStyleFile();
 	QString getProjectType();
 	QString getSynthesisDir();
 	QString getLayoutDir();
@@ -86,6 +89,7 @@ private:
 	PythonQtObjectPtr *mainContext;
 	QDomDocument *settingsFileProcess;
 	tech::TechData *techdata;
+	ColorMap *colorMap;
 
 };
 
