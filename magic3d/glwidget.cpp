@@ -14,7 +14,6 @@ GLWidget::GLWidget(QWidget *parent):
 	m_angle2(0)
 {
 	setFocusPolicy(Qt::StrongFocus);
-	grabKeyboard();
 }
 
 void GLWidget::loadFile(QString file)

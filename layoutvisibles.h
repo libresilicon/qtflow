@@ -24,11 +24,13 @@ public slots:
 	void changeColor();
 	void on_layerList_customContextMenuRequested(const QPoint &pos);
 	void handleClick(const QModelIndex &index);
+	void handleSearch(QString);
 
 private:
 	void refreshLists();
 	Ui::LayoutVisibles *ui;
 	Project *project;
+	QString typeFilter;
 
 	QVector<QTreeWidgetItem*> typeEntries;
 };

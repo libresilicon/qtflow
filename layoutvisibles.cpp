@@ -7,12 +7,21 @@ LayoutVisibles::LayoutVisibles(QWidget *parent):
 {
 	ui->setupUi(this);
 	ui->typesTree->setContextMenuPolicy(Qt::CustomContextMenu);
+	ui->searchText->setEnabled(true);
+
 	connect(ui->typesTree,SIGNAL(clicked(QModelIndex)),this,SLOT(handleClick(QModelIndex)));
+	connect(ui->searchText,SIGNAL(textChanged(QString)),this,SLOT(handleSearch(QString)));
 }
 
 void LayoutVisibles::handleClick(const QModelIndex &index)
 {
 	emit(refreshLayout());
+}
+
+void LayoutVisibles::handleSearch(QString s)
+{
+	typeFilter = s;
+	refreshLists();
 }
 
 void LayoutVisibles::setProject(Project *p)
@@ -26,6 +35,8 @@ void LayoutVisibles::refreshLists()
 	QTreeWidgetItem* treeitem;
 	QTreeWidgetItem* treeChileItem;
 	if(project) {
+		ui->typesTree->clear();
+		typeEntries.clear();
 		foreach(QString layern, project->getPlanes()) {
 			QPixmap pm(100,100);
 			treeitem = new QTreeWidgetItem(ui->typesTree);
@@ -37,6 +48,9 @@ void LayoutVisibles::refreshLists()
 			typeEntries.append(treeitem);
 			foreach(QString typeName, project->getTypeNames()) {
 				foreach(QString vname, project->getType(typeName)) {
+					if(typeFilter!="")
+						if(!vname.contains(typeFilter)) continue;
+
 					QPixmap pm(100,100);
 					treeChileItem = new QTreeWidgetItem(treeitem);
 					pm.fill(project->colorMat(vname));
