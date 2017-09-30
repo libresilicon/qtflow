@@ -447,6 +447,17 @@ QStringList Project::getTypeNames()
 
 QStringList Project::getType(QString s)
 {
-	if(!techdata) return QStringList();
-	return techdata->getType(s);
+	QStringList typeList;
+	if(!techdata) return typeList;
+
+	QStringList tmpstrarr;
+	QString name;
+	foreach(QString t, techdata->getType(s)) {
+		tmpstrarr = t.split(',');
+		name = tmpstrarr.at(0);
+		if(!typeList.contains(name))
+			typeList.append(name);
+	}
+
+	return typeList;
 }
