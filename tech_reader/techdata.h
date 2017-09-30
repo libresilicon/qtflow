@@ -7,6 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
+#include <QMap>
 #include <QRect>
 #include <QTextStream>
 #include <QString>
@@ -32,6 +33,12 @@ namespace tech {
 
 		QStringList getTypeNames();
 
+		QStringList getStyleNames();
+		QMap<QString,QVector<int>> getStyle(QString s);
+		void setRecentStyle(std::string s);
+		void addToRecentStyleMember(int i);
+		void setRecentStyleMember(std::string s);
+
 	private:
 		class TechScanner* lexer;
 		class TechParser* parser;
@@ -41,6 +48,10 @@ namespace tech {
 
 		QStringList planeList;
 		QMap<QString,QStringList> typeList;
+		QMap<QString,QMap<QString,QVector<int>>> styleList;
+
+		QString recentStyle;
+		QString recentStyleMember;
 
 	};
 }

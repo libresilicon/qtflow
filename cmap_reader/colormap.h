@@ -6,6 +6,9 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QMap>
+#include <QImage>
+#include <QPixmap>
+#include <QByteArray>
 
 class CMColor
 {
@@ -23,7 +26,7 @@ class StippleSpec
 public:
 	StippleSpec();
 	int index;
-	unsigned int values[8];
+	QByteArray values;
 };
 
 class LayoutStyleSpec
@@ -45,14 +48,15 @@ class ColorMap
 public:
 	ColorMap();
 	QColor colorFromName(QString s);
+	QColor colorFromCode(int i);
 	bool isStipple(QString s);
+	int getStippleID(QString s);
+	QPixmap getStipplePixMap(QString s);
 
 	void loadColors(QString s);
 	void loadDesign(QString s);
 
 private:
-	QColor colorFromCode(int i);
-
 	QVector<CMColor> colorMap;
 	QVector<LayoutStyleSpec> layoutStyleMap;
 	QVector<LayoutStyleSpec> paleStyleMap;

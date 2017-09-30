@@ -41,6 +41,11 @@ namespace tech {
 		return typeList.keys();
 	}
 
+	QStringList TechData::getStyleNames()
+	{
+		return styleList.keys();
+	}
+
 	void TechData::addPlane(std::string s)
 	{
 		planeList.append(QString::fromStdString(s));
@@ -58,4 +63,23 @@ namespace tech {
 		return typeList[s];
 	}
 
+	QMap<QString,QVector<int>> TechData::getStyle(QString s)
+	{
+		return styleList[s];
+	}
+
+	void TechData::setRecentStyle(std::string s)
+	{
+		recentStyle = QString::fromStdString(s);
+	}
+
+	void TechData::addToRecentStyleMember(int i)
+	{
+		styleList[recentStyle][recentStyleMember].append(i);
+	}
+
+	void TechData::setRecentStyleMember(std::string s)
+	{
+		recentStyleMember = QString::fromStdString(s);
+	}
 }

@@ -384,14 +384,36 @@ void Project::buildAll()
 
 QColor Project::colorMat(QString material)
 {
+	QMap<QString,QVector<int>> l;
+	foreach(QString s, techdata->getStyleNames()) {
+		l = techdata->getStyle(s);
+		foreach(QString o, l.keys()) {
+			if(o==material) {
+				if(l[o].count()>0) {
+					qDebug() << o;
+					qDebug() << l[o].at(0);
+					return colorMap->colorFromCode(l[o].at(0));
+				}
+			}
+		}
+	}
 	return colorMap->colorFromName(material);
 }
 
 QIcon Project::materialIcon(QString material)
 {
-	QPixmap pm(100,100);
-	pm.fill(colorMap->colorFromName(material));
-	return QIcon(pm);
+	QPixmap pm;
+	QIcon ico;
+
+	//if(colorMap->isStipple(material)) {
+	//	pm = colorMap->getStipplePixMap(material);
+	//} else {
+		pm = QPixmap(100,100);
+		pm.fill(colorMat(material));
+	//}
+	ico = QIcon(pm);
+
+	return ico;
 }
 
 qreal Project::posMat(QString material)

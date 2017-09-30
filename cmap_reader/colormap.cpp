@@ -61,7 +61,7 @@ void ColorMap::loadDesign(QString s)
 	QStringList list;
 	QString hexvalue;
 	bool ok;
-	int stippleValue;
+	uchar stippleValue;
 
 	QFile input(s);	
 	if (input.open(QIODevice::ReadOnly))
@@ -130,9 +130,8 @@ void ColorMap::loadDesign(QString s)
 									stipple.index = list[0].toInt();
 									for(int i=1; i<9; i++) {
 										hexvalue = "0x"+list[i];
-										stippleValue = hexvalue.toInt(&ok,16);
+										stipple.values[i-1] = (char)hexvalue.toUInt(&ok,16);
 										if(!ok) break;
-										stipple.values[i-1] = stippleValue;
 									}
 									if(!ok) break;
 									stippleMap.append(stipple);
@@ -154,36 +153,80 @@ QColor ColorMap::colorFromCode(int i)
 			return QColor(color.r,color.g,color.b);
 		}
 	}
-	return QColor(Qt::black);
+	qDebug() << "Color " << i << " not defined";
+	return QColor(Qt::green);
 }
 
 
 QColor ColorMap::colorFromName(QString s)
 {
-	foreach(LayoutStyleSpec spec, layoutStyleMap) {
+	LayoutStyleSpec spec;
+
+	foreach(spec, layoutStyleMap) {
 		if((spec.long_name==s)||(spec.short_name==s)) {
 			return colorFromCode(spec.color);
 		}
 	}
-	foreach(LayoutStyleSpec spec, paleStyleMap) {
+
+	foreach(spec, paleStyleMap) {
 		if((spec.long_name==s)||(spec.short_name==s)) {
 			return colorFromCode(spec.color);
 		}
 	}
-	foreach(LayoutStyleSpec spec, displayStyleMap) {
+
+	foreach(spec, displayStyleMap) {
 		if((spec.long_name==s)||(spec.short_name==s)) {
 			return colorFromCode(spec.color);
 		}
 	}
-	return QColor(Qt::black);
+
+	return QColor(Qt::red);
 }
 
 bool ColorMap::isStipple(QString s)
 {
 	foreach(LayoutStyleSpec spec, layoutStyleMap) {
 		if((spec.long_name==s)||(spec.short_name==s)) {
-			return (spec.fill=="stipple");
+			if(spec.fill.contains("stipple"))
+				return true;
 		}
 	}
 	return false;
+}
+
+int ColorMap::getStippleID(QString s)
+{
+	int ret = 0;
+	foreach(LayoutStyleSpec spec, layoutStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			ret = spec.stipple_number;
+		}
+	}
+	return ret;
+}
+
+QPixmap ColorMap::getStipplePixMap(QString s)
+{
+	QImage img;
+	QPixmap pm;
+	uchar pixData[8];
+
+
+	foreach(StippleSpec stipple, stippleMap) {
+		if(stipple.index==getStippleID(s)) {
+			for(int i=0; i<8; i++) {
+				pixData[i]=stipple.values[i];
+			}
+			break;
+		}
+	}
+
+	img = QImage(pixData, 1, 1, 8, QImage::Format_RGB32);
+	pm = QPixmap::fromImage(img.scaled(100, 100));
+	//if(pm.loadFromData(pixData,Qt::AutoColor))
+	//	qDebug() << "Loaded successfully";
+
+	//pm.scaled(200,200);
+
+	return pm;
 }

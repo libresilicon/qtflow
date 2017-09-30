@@ -48,16 +48,13 @@ void LayoutVisibles::refreshLists()
 
 		foreach(QString layern, project->getPlanes()) {
 			treeitem = new QTreeWidgetItem(ui->typesTree);
-			treeitem->setFlags(treeitem->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
-			treeitem->setCheckState(0,typeIsEnabled(layern)?Qt::Checked:Qt::Unchecked);
-			treeitem->setIcon(1,project->materialIcon(layern));
+			treeitem->setBackground(0, QColor(Qt::gray));
+			treeitem->setBackground(1, QColor(Qt::gray));
+			treeitem->setBackground(2, QColor(Qt::gray));
+
 			treeitem->setText(2,layern);
-			typeEntries.append(treeitem);
 
 			foreach(QString vname, project->getType(layern)) {
-				if(vname==layern)
-					continue;
-
 				treeChileItem = new QTreeWidgetItem(treeitem);
 				treeChileItem->setFlags(treeChileItem->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
 				treeChileItem->setCheckState(0,typeIsEnabled(vname)?Qt::Checked:Qt::Unchecked);
@@ -89,10 +86,8 @@ bool LayoutVisibles::typeIsEnabled(QString s)
 	QTreeWidgetItem *m;
 	foreach(m, typeEntries){
 		if(m->data(2,0).toString()==s) {
-			qDebug() << m->checkState(0);
 			return (m->checkState(0)==Qt::CheckState::Checked);
 		}
 	}
-	qDebug() << "Undefined: " << s;
 	return true;
 }

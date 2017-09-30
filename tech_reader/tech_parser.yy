@@ -164,6 +164,7 @@ tech_section:
 	| PLANES plane_list END
 	| TYPES type_list END
 	| CONTACT contact_list stackable_list END
+	| CONTACT contact_list END
 	| ALIASES alias_list END
 	| STYLES style_list END
 	| COMPOSE compose_list END
@@ -226,11 +227,12 @@ plane_list:
 ;
 
 plane_name:
-CONTACT
-| STRING
-{
-	techdata->addPlane(*$1);
-}
+	CONTACT
+	|
+	STRING
+	{
+		techdata->addPlane(*$1);
+	}
 ;
 
 type_list:
@@ -239,15 +241,15 @@ type_list:
 ;
 
 type_entry:
-STRING STRING
-{
-	techdata->addType(*$1,*$2);
-}
-|
-CONTACT STRING
-{
-	techdata->addType("contact",*$2);
-}
+	STRING STRING
+	{
+		techdata->addType(*$1,*$2);
+	}
+	|
+	CONTACT STRING
+	{
+		techdata->addType("contact",*$2);
+	}
 ;
 
 contact_list:
@@ -279,18 +281,39 @@ style_list:
 
 style_members:
 	  STRING
+	  {
+			techdata->setRecentStyleMember(*$1);
+	  }
 	| STRING style_member_integers
+	  {
+			techdata->setRecentStyleMember(*$1);
+	  }
 	| style_members STRING
+	  {
+			techdata->setRecentStyleMember(*$2);
+	  }
 	| style_members STRING style_member_integers
+	  {
+			techdata->setRecentStyleMember(*$2);
+	  }
 ;
 
 style_member_integers:
 	  INTEGER
+	  {
+			techdata->addToRecentStyleMember($1);
+	  }
 	| style_member_integers INTEGER
+	  {
+			techdata->addToRecentStyleMember($2);
+	  }
 ;
 
 style_name:
 	STYLETYPE STRING
+	{
+		techdata->setRecentStyle(*$2);
+	}
 ;
 
 compose_list:
