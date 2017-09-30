@@ -20,8 +20,15 @@ void LayoutVisibles::handleClick(const QModelIndex &index)
 
 void LayoutVisibles::handleSearch(QString s)
 {
-	typeFilter = s;
-	refreshLists();
+	QString name;
+	QTreeWidgetItem *m;
+	foreach(m, typeEntries){
+		name=m->data(2,0).toString();
+		if(name.contains(s))
+			m->setHidden(false);
+		else
+			m->setHidden(true);
+	}
 }
 
 void LayoutVisibles::setProject(Project *p)
@@ -34,32 +41,29 @@ void LayoutVisibles::refreshLists()
 {
 	QTreeWidgetItem* treeitem;
 	QTreeWidgetItem* treeChileItem;
+
 	if(project) {
 		ui->typesTree->clear();
 		typeEntries.clear();
+
 		foreach(QString layern, project->getPlanes()) {
-			QPixmap pm(100,100);
 			treeitem = new QTreeWidgetItem(ui->typesTree);
-			pm.fill(project->colorMat(layern));
-			treeitem->setFlags(treeitem->flags() | Qt::ItemIsUserCheckable);
-			treeitem->setCheckState(0,Qt::Checked);
-			treeitem->setIcon(1,QIcon(pm));
+			treeitem->setFlags(treeitem->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+			treeitem->setCheckState(0,typeIsEnabled(layern)?Qt::Checked:Qt::Unchecked);
+			treeitem->setIcon(1,project->materialIcon(layern));
 			treeitem->setText(2,layern);
 			typeEntries.append(treeitem);
-			foreach(QString typeName, project->getTypeNames()) {
-				foreach(QString vname, project->getType(typeName)) {
-					if(typeFilter!="")
-						if(!vname.contains(typeFilter)) continue;
 
-					QPixmap pm(100,100);
-					treeChileItem = new QTreeWidgetItem(treeitem);
-					pm.fill(project->colorMat(vname));
-					treeChileItem->setFlags(treeChileItem->flags() | Qt::ItemIsUserCheckable);
-					treeChileItem->setCheckState(0,Qt::Checked);
-					treeChileItem->setIcon(1,QIcon(pm));
-					treeChileItem->setText(2,vname);
-					typeEntries.append(treeChileItem);
-				}
+			foreach(QString vname, project->getType(layern)) {
+				if(vname==layern)
+					continue;
+
+				treeChileItem = new QTreeWidgetItem(treeitem);
+				treeChileItem->setFlags(treeChileItem->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
+				treeChileItem->setCheckState(0,typeIsEnabled(vname)?Qt::Checked:Qt::Unchecked);
+				treeChileItem->setIcon(1,project->materialIcon(vname));
+				treeChileItem->setText(2,vname);
+				typeEntries.append(treeChileItem);
 			}
 		}
 	}
@@ -85,6 +89,7 @@ bool LayoutVisibles::typeIsEnabled(QString s)
 	QTreeWidgetItem *m;
 	foreach(m, typeEntries){
 		if(m->data(2,0).toString()==s) {
+			qDebug() << m->checkState(0);
 			return (m->checkState(0)==Qt::CheckState::Checked);
 		}
 	}

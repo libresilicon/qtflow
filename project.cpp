@@ -171,7 +171,7 @@ QStringList Project::getProcessFiles()
 
 QString Project::getTechnologyFile()
 {
-	QString ret;
+	QString ret = ":/scmos.tech";
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -384,7 +384,14 @@ void Project::buildAll()
 
 QColor Project::colorMat(QString material)
 {
-	return colorMap->fromName(material);
+	return colorMap->colorFromName(material);
+}
+
+QIcon Project::materialIcon(QString material)
+{
+	QPixmap pm(100,100);
+	pm.fill(colorMap->colorFromName(material));
+	return QIcon(pm);
 }
 
 qreal Project::posMat(QString material)

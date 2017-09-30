@@ -16,6 +16,8 @@
 #include <QDateTime>
 #include <QColor>
 #include <QTemporaryDir>
+#include <QIcon>
+#include <QPixmap>
 
 #include <PythonQt.h>
 
@@ -58,6 +60,7 @@ public:
 	void createFiles();
 
 	QColor colorMat(QString material);
+	QIcon materialIcon(QString material);
 	qreal posMat(QString material);
 	qreal thicknessMat(QString material);
 

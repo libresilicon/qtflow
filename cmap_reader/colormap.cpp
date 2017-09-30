@@ -6,9 +6,11 @@ CMColor::CMColor()
 LayoutStyleSpec::LayoutStyleSpec()
 {}
 
+StippleSpec::StippleSpec()
+{}
+
 ColorMap::ColorMap()
-{
-}
+{}
 
 void ColorMap::loadColors(QString s)
 {
@@ -28,7 +30,9 @@ void ColorMap::loadColors(QString s)
 					if(list.count()>3) {
 						color = CMColor();
 						color.index = list[3].toInt();
-						color.color = QColor(list[0].toInt(),list[1].toInt(),list[2].toInt());
+						color.r = list[0].toInt();
+						color.g =list[1].toInt();
+						color.b = list[2].toInt();
 						if(list.count()>4) {
 							color.name = list[4];
 						}
@@ -51,10 +55,15 @@ enum load_design_mode {
 void ColorMap::loadDesign(QString s)
 {
 	LayoutStyleSpec style;
+	StippleSpec stipple;
 	load_design_mode recentMode;
 	QString line;
 	QStringList list;
-	QFile input(s);
+	QString hexvalue;
+	bool ok;
+	int stippleValue;
+
+	QFile input(s);	
 	if (input.open(QIODevice::ReadOnly))
 	{
 		QTextStream in(&input);
@@ -71,6 +80,33 @@ void ColorMap::loadDesign(QString s)
 					else {
 						switch(recentMode) {
 							case display_styles:
+								if(list.count()>7) {
+									style = LayoutStyleSpec();
+									style.num = list[0].toInt();
+									style.mask = list[1].toInt();
+									style.color = list[2].toInt();
+									style.outline = list[3].toInt();
+									style.fill = list[4];
+									style.stipple_number = list[5].toInt();
+									style.short_name = list[6];
+									style.long_name = list[7];
+									displayStyleMap.append(style);
+								}
+								break;
+
+							case pale_styles:
+								if(list.count()>7) {
+									style = LayoutStyleSpec();
+									style.num = list[0].toInt();
+									style.mask = list[1].toInt();
+									style.color = list[2].toInt();
+									style.outline = list[3].toInt();
+									style.fill = list[4];
+									style.stipple_number = list[5].toInt();
+									style.short_name = list[6];
+									style.long_name = list[7];
+									paleStyleMap.append(style);
+								}
 								break;
 
 							case layout_styles:
@@ -88,10 +124,19 @@ void ColorMap::loadDesign(QString s)
 								}
 								break;
 
-							case pale_styles:
-								break;
-
 							case stipples:
+								if(list.count()>8) {
+									stipple = StippleSpec();
+									stipple.index = list[0].toInt();
+									for(int i=1; i<9; i++) {
+										hexvalue = "0x"+list[i];
+										stippleValue = hexvalue.toInt(&ok,16);
+										if(!ok) break;
+										stipple.values[i-1] = stippleValue;
+									}
+									if(!ok) break;
+									stippleMap.append(stipple);
+								}
 								break;
 						}
 					}
@@ -102,21 +147,43 @@ void ColorMap::loadDesign(QString s)
 	}
 }
 
-QColor ColorMap::fromCode(int i)
+QColor ColorMap::colorFromCode(int i)
 {
 	foreach(CMColor color, colorMap) {
-		if(color.index==i) return color.color;
+		if(color.index==i) {
+			return QColor(color.r,color.g,color.b);
+		}
 	}
 	return QColor(Qt::black);
 }
 
 
-QColor ColorMap::fromName(QString s)
+QColor ColorMap::colorFromName(QString s)
 {
 	foreach(LayoutStyleSpec spec, layoutStyleMap) {
 		if((spec.long_name==s)||(spec.short_name==s)) {
-			return fromCode(spec.color);
+			return colorFromCode(spec.color);
+		}
+	}
+	foreach(LayoutStyleSpec spec, paleStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			return colorFromCode(spec.color);
+		}
+	}
+	foreach(LayoutStyleSpec spec, displayStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			return colorFromCode(spec.color);
 		}
 	}
 	return QColor(Qt::black);
+}
+
+bool ColorMap::isStipple(QString s)
+{
+	foreach(LayoutStyleSpec spec, layoutStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			return (spec.fill=="stipple");
+		}
+	}
+	return false;
 }

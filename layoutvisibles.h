@@ -30,7 +30,6 @@ private:
 	void refreshLists();
 	Ui::LayoutVisibles *ui;
 	Project *project;
-	QString typeFilter;
 
 	QVector<QTreeWidgetItem*> typeEntries;
 };

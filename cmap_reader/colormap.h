@@ -11,9 +11,19 @@ class CMColor
 {
 public:
 	CMColor();
-	QColor color;
+	int r;
+	int g;
+	int b;
 	QString name;
 	int index;
+};
+
+class StippleSpec
+{
+public:
+	StippleSpec();
+	int index;
+	unsigned int values[8];
 };
 
 class LayoutStyleSpec
@@ -34,15 +44,20 @@ class ColorMap
 {
 public:
 	ColorMap();
-	QColor fromName(QString s);
+	QColor colorFromName(QString s);
+	bool isStipple(QString s);
+
 	void loadColors(QString s);
 	void loadDesign(QString s);
 
 private:
-	QColor fromCode(int i);
+	QColor colorFromCode(int i);
 
 	QVector<CMColor> colorMap;
 	QVector<LayoutStyleSpec> layoutStyleMap;
+	QVector<LayoutStyleSpec> paleStyleMap;
+	QVector<LayoutStyleSpec> displayStyleMap;
+	QVector<StippleSpec> stippleMap;
 };
 
 #endif // COLORMAP_H
