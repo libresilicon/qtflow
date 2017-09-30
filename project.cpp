@@ -385,7 +385,7 @@ void Project::buildAll()
 QColor Project::colorMat(QString material)
 {
 	QMap<QString,QVector<int>> l;
-	foreach(QString s, techdata->getStyleNames()) {
+	if(techdata) foreach(QString s, techdata->getStyleNames()) {
 		l = techdata->getStyle(s);
 		foreach(QString o, l.keys()) {
 			if(o==material) {
