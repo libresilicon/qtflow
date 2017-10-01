@@ -6,6 +6,15 @@
 #include <QDialog>
 #include <QSettings>
 
+#include <QDebug>
+#include <QListWidget>
+#include <QStackedWidget>
+#include <QTextStream>
+#include <QFileDialog>
+
+#include <KTextEditor/ConfigPage>
+#include <KTextEditor/Editor>
+
 namespace Ui {
 	class Settings;
 }
@@ -26,13 +35,25 @@ private slots:
 	void selectQRouter_triggered();
 	void selectIcarus_triggered();
 
-	void buttonBox_save();
-	void buttonBox_close();
+	void applyEnvironment();
+
+    void on_listWidget_currentRowChanged(int currentRow);
+
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
 
 private:
-	Ui::Settings *ui;
-	QSettings *settings;
+    Ui::Settings *ui;
+    QSettings *settings;
 
+    KTextEditor::Editor *textEditor;
+
+    QWidget *page1;
+    KTextEditor::ConfigPage *page2;
+    KTextEditor::ConfigPage *page3;
+    KTextEditor::ConfigPage *page4;
+    KTextEditor::ConfigPage *page5;
 };
 
 #endif // Settings_H

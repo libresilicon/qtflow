@@ -52,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>29</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -91,14 +91,6 @@
      <string>E&amp;dit</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>&amp;Tools</string>
-    </property>
-    <addaction name="menuIOPads"/>
-    <addaction name="separator"/>
-    <addaction name="menuSettings"/>
-   </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
      <string>&amp;Project</string>
@@ -124,10 +116,11 @@
     <addaction name="actionDRC"/>
     <addaction name="actionPythonShell"/>
     <addaction name="actionWaveViewer"/>
+    <addaction name="separator"/>
+    <addaction name="menuSettings"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
-   <addaction name="menuTools"/>
    <addaction name="menuProject"/>
    <addaction name="menuTools_2"/>
    <addaction name="menuDesign_Rules"/>
