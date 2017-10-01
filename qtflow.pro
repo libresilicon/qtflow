@@ -50,7 +50,6 @@ SOURCES += \
 	templates.cpp \
 	project.cpp \
 	editor.cpp \
-	verilog.cpp \
 	savechanges.cpp \
 	welcome.cpp \
 	iopads.cpp \
@@ -83,7 +82,6 @@ HEADERS  += \
 	templates.h \
 	project.h \
 	editor.h \
-	verilog.h \
 	savechanges.h \
 	welcome.h \
 	iopads.h \
