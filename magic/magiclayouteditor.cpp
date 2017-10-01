@@ -13,6 +13,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	recentRectangle(NULL)
 {
 	editScene->setBackgroundBrush(Qt::white);
+	editScene->setSceneRect(0,0,this->width(),this->height());
 	setScene(editScene);
 }
 
@@ -109,11 +110,18 @@ void MagicLayoutEditor::addModules()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
+	int x, y, w, h;
 	QString filedest;
 	QTemporaryDir temporaryDir;
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
+
+	x = magicdata->getLowerX();
+	y = magicdata->getLowerY();
+	w = magicdata->getUpperX()-x;
+	h = magicdata->getUpperY()-y;
+	editScene->setSceneRect(x,y,w,h);
 
 	if(project->getTechnology()==magicdata->getTechnology()) {
 		if(lefdata) delete lefdata;

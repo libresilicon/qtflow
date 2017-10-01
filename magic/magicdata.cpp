@@ -2,12 +2,18 @@
 #include "magicscanner.h"
 #include "magicdata.h"
 
+#include <climits>
+
 namespace magic {
 	MagicData::MagicData(QString filename) :
 		lexer(NULL),
 		parser(NULL),
 		trace_scanning(false),
-		trace_parsing(false)
+		trace_parsing(false),
+		m_BBLowerX(0),
+		m_BBLowerY(0),
+		m_BBUpperX(0),
+		m_BBUpperY(0)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -22,6 +28,26 @@ namespace magic {
 		parser->set_debug_level(trace_parsing);
 		parser->parse();
 		input.close();
+	}
+
+	int MagicData::getLowerX()
+	{
+		return m_BBLowerX;
+	}
+
+	int MagicData::getLowerY()
+	{
+		return m_BBLowerY;
+	}
+
+	int MagicData::getUpperX()
+	{
+		return m_BBUpperX;
+	}
+
+	int MagicData::getUpperY()
+	{
+		return m_BBUpperY;
 	}
 
 	void MagicData::setLayer(std::string *s)
@@ -54,6 +80,21 @@ namespace magic {
 		return parsedRectangles;
 	}
 
+	void MagicData::setBoundaryRectangle(int x1, int y1, int x2, int y2)
+	{
+		if(m_BBLowerX>x1) m_BBLowerX = x1;
+		if(m_BBLowerX>x2) m_BBLowerX = x2;
+
+		if(m_BBLowerY>y1) m_BBLowerY = y1;
+		if(m_BBLowerY>y2) m_BBLowerY = y2;
+
+		if(m_BBUpperX>x1) m_BBUpperX = x1;
+		if(m_BBUpperX>x2) m_BBUpperX = x2;
+
+		if(m_BBUpperY>y1) m_BBUpperY = y1;
+		if(m_BBUpperY>y2) m_BBUpperY = y2;
+	}
+
 	void MagicData::addRectangle(int x1, int y1, int x2, int y2)
 	{
 		rects_t list;
@@ -67,6 +108,8 @@ namespace magic {
 			parsedRectangles[recentTitle]=list;
 		}
 		parsedRectangles[recentTitle].append(objR);
+
+		setBoundaryRectangle(x1, y1, x2, y2);
 	}
 
 	void MagicData::addBox(int x1, int y1, int x2, int y2)
@@ -82,6 +125,8 @@ namespace magic {
 			parsedBoxes[recentTitle]=list;
 		}
 		parsedBoxes[recentTitle].append(objR);
+
+		setBoundaryRectangle(x1, y1, x2, y2);
 	}
 
 	void MagicData::addUsedModuleTransform(int a, int b, int c, int d, int e, int f)
