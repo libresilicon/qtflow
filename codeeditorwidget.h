@@ -3,8 +3,6 @@
 
 #include "editorwidget.h"
 
-#include "verilog.h"
-
 #include <KTextEditor/Editor>
 #include <KTextEditor/Document>
 #include <KTextEditor/View>

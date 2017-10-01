@@ -49,7 +49,6 @@ SOURCES += \
 	grid.cpp \
 	templates.cpp \
 	project.cpp \
-	verilog.cpp \
 	savechanges.cpp \
 	welcome.cpp \
 	iopads.cpp \
@@ -81,7 +80,6 @@ HEADERS  += \
 	grid.h \
 	templates.h \
 	project.h \
-	verilog.h \
 	savechanges.h \
 	welcome.h \
 	iopads.h \
