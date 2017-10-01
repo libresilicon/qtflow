@@ -15,7 +15,8 @@ LayoutVisibles::LayoutVisibles(QWidget *parent):
 
 void LayoutVisibles::handleClick(const QModelIndex &index)
 {
-	emit(refreshLayout());
+	QString name = index.data().toString();
+	emit(refreshLayout(name));
 }
 
 void LayoutVisibles::handleSearch(QString s)
@@ -56,10 +57,10 @@ void LayoutVisibles::refreshLists()
 
 			foreach(QString vname, project->getType(layern)) {
 				treeChileItem = new QTreeWidgetItem(treeitem);
-				treeChileItem->setFlags(treeChileItem->flags() | Qt::ItemIsUserCheckable | Qt::ItemIsSelectable);
 				treeChileItem->setCheckState(0,typeIsEnabled(vname)?Qt::Checked:Qt::Unchecked);
 				treeChileItem->setIcon(1,project->materialIcon(vname));
 				treeChileItem->setText(2,vname);
+				treeChileItem->setFlags(treeChileItem->flags()|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
 				typeEntries.append(treeChileItem);
 			}
 		}

@@ -68,11 +68,13 @@ protected:
 	void mouseReleaseEvent(QMouseEvent *event);
 
 public slots:
-	void redraw();
+	void visibles_action(QString s);
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
 
 private:
+	void setRecentVisible(QString s);
+	void redraw();
 	void addWires();
 	void addModules();
 

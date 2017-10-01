@@ -18,7 +18,7 @@ public:
 	bool typeIsEnabled(QString s);
 
 signals:
-	void refreshLayout();
+	void refreshLayout(QString);
 
 public slots:
 	void changeColor();
