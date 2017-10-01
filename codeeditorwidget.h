@@ -27,7 +27,7 @@ public slots:
 	void saveFile();
 
 private:
-    KTextEditor::Editor *editArea;
+    KTextEditor::Editor *edit;
     KTextEditor::Document *doc;
     KTextEditor::View *view;
 

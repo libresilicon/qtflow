@@ -7,13 +7,14 @@
 
 CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
-    editArea(KTextEditor::Editor::instance()),
-    doc(NULL),
-    view(NULL),
+    edit(KTextEditor::Editor::instance()),
+    doc(edit->createDocument(this)),
+    view(doc->createView(this)),
     fileInfo(QFileInfo())
 {
-	setType(VerilogCodeEditorWidgetType);
-	connect(editArea,SIGNAL(blockCountChanged(int)),this,SLOT(onContentChanged()));
+    setCentralWidget(view);
+    setType(VerilogCodeEditorWidgetType);
+    connect(edit,SIGNAL(blockCountChanged(int)),this,SLOT(onContentChanged()));
 }
 
 void CodeEditorWidget::saveFile()
@@ -29,13 +30,14 @@ void CodeEditorWidget::saveFile()
 
 void CodeEditorWidget::loadFile(QString path)
 {
-    doc = editArea->createDocument(this);
-    view = doc->createView(this);
-    setCentralWidget(view);
-
     fileInfo = QFileInfo(path);
-    doc->openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
-	setStatusChanged(false);
+
+    QString filePath = fileInfo.absoluteFilePath();
+    if (filePath == QString())
+        return;
+
+    doc->openUrl(QUrl::fromLocalFile(filePath));
+    setStatusChanged(false);
 }
 
 QString CodeEditorWidget::getFilePath()
