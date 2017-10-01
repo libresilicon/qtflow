@@ -41,6 +41,12 @@ namespace magic {
 		mods_t getModules();
 		QString getTechnology();
 
+		// get bbox values
+		int getLowerX();
+		int getLowerY();
+		int getUpperX();
+		int getUpperY();
+
 		// building the info
 		void addRectangle(int,int,int,int);
 		void addBox(int,int,int,int);
@@ -53,6 +59,8 @@ namespace magic {
 		class MagicScanner *getLexer();
 
 	private:
+		void setBoundaryRectangle(int, int, int, int);
+
 		layer_rects_t parsedRectangles;
 		layer_rects_t parsedBoxes;
 		mods_t parsedModules;
@@ -65,6 +73,12 @@ namespace magic {
 		bool trace_scanning;
 		QString streamname;
 		module_info recent_module;
+
+		// bounding rectangle
+		int m_BBLowerX;
+		int m_BBLowerY;
+		int m_BBUpperX;
+		int m_BBUpperY;
 	};
 }
 
