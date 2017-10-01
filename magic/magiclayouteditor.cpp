@@ -187,10 +187,31 @@ void MagicLayoutEditor::setProject(Project *p)
 	project = p;
 }
 
+void MagicLayoutEditor::visibles_action(QString s)
+{
+	redraw();
+	setRecentVisible(s);
+}
+
+void MagicLayoutEditor::setRecentVisible(QString s)
+{
+	int index;
+	if(!activeLayerSelection) return;
+
+	qDebug() << s;
+
+	index = activeLayerSelection->findText(s);
+	if ( index != -1 ) { // -1 for not found
+		activeLayerSelection->setCurrentIndex(index);
+	}
+}
+
 void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 {
 	visibles = v;
-	if(visibles) connect(visibles, SIGNAL(refreshLayout()), this, SLOT(redraw()));
+	if(visibles) {
+		connect(visibles, SIGNAL(refreshLayout(QString)), this, SLOT(visibles_action(QString)));
+	}
 }
 
 void MagicLayoutEditor::setActiveLayerSelection(QComboBox *s)
