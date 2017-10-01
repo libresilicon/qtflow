@@ -30,6 +30,7 @@ public slots:
 
 private:
 	void addDrawingOperations();
+	void addDrawingLayerSelection();
 	void disableAllDrawingOperationsExcept(drawing_operations o);
 	QMap<drawing_operations,QAction*> drawingOperations;
 

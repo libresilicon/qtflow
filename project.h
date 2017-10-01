@@ -60,6 +60,8 @@ public:
 	void createFiles();
 
 	QColor colorMat(QString material);
+	QColor colorMaterialTypeMapping(QString material);
+	bool hasMaterialTypeMapping(QString material);
 	QIcon materialIcon(QString material);
 	qreal posMat(QString material);
 	qreal thicknessMat(QString material);
@@ -71,6 +73,7 @@ public:
 	QString getTechnology();
 	QString getProcess();
 	QString getTechnologyFile();
+	QString getTechnologyDisplayFile();
 	QString getColorMapFile();
 	QString getDesignStyleFile();
 	QString getProjectType();
@@ -84,6 +87,7 @@ public:
 	QStringList getPlanes();
 	QStringList getTypeNames();
 	QStringList getType(QString s);
+	QStringList getAlternativeNames(QString s);
 
 private:
 	QSettings *settings;
@@ -91,7 +95,7 @@ private:
 	QString rootdir;
 	PythonQtObjectPtr *mainContext;
 	QDomDocument *settingsFileProcess;
-	tech::TechData *techdata;
+	tech::TechData *techDisplayData;
 	ColorMap *colorMap;
 
 };

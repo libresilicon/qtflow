@@ -25,22 +25,31 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	editArea->setVisibles(layoutVisibles);
 }
 
+void MagicLayoutEditorWidget::addDrawingLayerSelection()
+{
+	if(!project) return;
+
+	QToolBar *toolbar;
+
+	toolbar = new QToolBar(this);
+	activeLayer = new QComboBox(toolbar);
+
+	foreach(QString layern, project->getPlanes()) {
+		foreach(QString vname, project->getType(layern)) {
+			activeLayer->addItem(project->materialIcon(vname),vname);
+		}
+	}
+
+	toolbar->addWidget(activeLayer);
+	addToolBar(toolbar);
+}
+
 void MagicLayoutEditorWidget::addDrawingOperations()
 {
 	if(!project) return;
 
 	QAction *button;
 	QToolBar *toolbar;
-
-	toolbar = new QToolBar(this);
-	activeLayer = new QComboBox(toolbar);
-	foreach(QString n, project->getPlanes()) {
-		QPixmap pm(100,100);
-		pm.fill(project->colorMat(n));
-		activeLayer->addItem(QIcon(pm),n);
-	}
-	toolbar->addWidget(activeLayer);
-	addToolBar(toolbar);
 
 	toolbar = new QToolBar(this);
 
@@ -108,6 +117,7 @@ void MagicLayoutEditorWidget::setProject(Project *p)
 	project = p;
 	layoutVisibles->setProject(project);
 	addDrawingOperations();
+	addDrawingLayerSelection();
 }
 
 QString MagicLayoutEditorWidget::getFilePath()

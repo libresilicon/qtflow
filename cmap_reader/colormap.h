@@ -48,6 +48,7 @@ class ColorMap
 public:
 	ColorMap();
 	QColor colorFromName(QString s);
+	bool colorNameExists(QString s);
 	QColor colorFromCode(int i);
 	bool isStipple(QString s);
 	int getStippleID(QString s);

@@ -9,7 +9,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	settings(s),
 	mainContext(main),
 	settingsFileProcess(NULL),
-	techdata(NULL),
+	techDisplayData(NULL),
 	colorMap(new ColorMap())
 {
 	QTemporaryDir temporaryDir;
@@ -45,10 +45,10 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	}
 
 	filedest = temporaryDir.path()+"/tech";
-	QFile::copy(getTechnologyFile(), filedest);
+	QFile::copy(getTechnologyDisplayFile(), filedest);
 	if(QFile(filedest).exists()) {
 		qDebug() << "Opening here: " << filedest;
-		techdata = new tech::TechData(filedest);
+		techDisplayData = new tech::TechData(filedest);
 	}
 
 	// setting up color table:
@@ -72,7 +72,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 Project::~Project()
 {
 	delete colorMap;
-	delete techdata;
+	delete techDisplayData;
 	delete project_settings;
 }
 
@@ -168,6 +168,41 @@ QStringList Project::getProcessFiles()
 	return ret;
 }
 
+QString Project::getTechnologyDisplayFile()
+{
+	QString ret = ":/scmos.tech";
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="techdisplay") {
+								ret=e3.text();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
 
 QString Project::getTechnologyFile()
 {
@@ -382,22 +417,54 @@ void Project::buildAll()
 {
 }
 
-QColor Project::colorMat(QString material)
+bool Project::hasMaterialTypeMapping(QString material)
 {
 	QMap<QString,QVector<int>> l;
-	if(techdata) foreach(QString s, techdata->getStyleNames()) {
-		l = techdata->getStyle(s);
+	foreach(QString s, techDisplayData->getStyleNames()) {
+		l = techDisplayData->getStyle(s);
+		foreach(QString o, l.keys()) {
+			if(o==material) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+QColor Project::colorMaterialTypeMapping(QString material)
+{
+	QMap<QString,QVector<int>> l;
+	foreach(QString s, techDisplayData->getStyleNames()) {
+		l = techDisplayData->getStyle(s);
 		foreach(QString o, l.keys()) {
 			if(o==material) {
 				if(l[o].count()>0) {
-					qDebug() << o;
-					qDebug() << l[o].at(0);
 					return colorMap->colorFromCode(l[o].at(0));
 				}
 			}
 		}
 	}
-	return colorMap->colorFromName(material);
+	return QColor(Qt::green);
+}
+
+QColor Project::colorMat(QString material)
+{
+	QMap<QString,QVector<int>> l;
+	if(techDisplayData) {
+		if(colorMap->colorNameExists(material)) {
+			return colorMap->colorFromName(material);
+		} else {
+			foreach(QString altname, getAlternativeNames(material)) {
+				if(colorMap->colorNameExists(altname)) {
+					return colorMap->colorFromName(altname);
+				} else if(hasMaterialTypeMapping(altname)) {
+					return colorMaterialTypeMapping(altname);
+				}
+			}
+		}
+	}
+	qDebug() << material << "doesn't exist";
+	return QColor(Qt::green);
 }
 
 QIcon Project::materialIcon(QString material)
@@ -457,10 +524,10 @@ qreal Project::thicknessMat(QString material)
 QStringList Project::getPlanes()
 {
 	QStringList planeList;
-	if(!techdata) return planeList;
+	if(!techDisplayData) return planeList;
 
 	QStringList tmpstrarr;
-	foreach(QString s, techdata->getPlanes()) {
+	foreach(QString s, techDisplayData->getPlanes()) {
 		tmpstrarr = s.split(',');
 		planeList.append(tmpstrarr.at(0));
 	}
@@ -470,18 +537,18 @@ QStringList Project::getPlanes()
 
 QStringList Project::getTypeNames()
 {
-	if(!techdata) return QStringList();
-	return techdata->getTypeNames();
+	if(!techDisplayData) return QStringList();
+	return techDisplayData->getTypeNames();
 }
 
 QStringList Project::getType(QString s)
 {
 	QStringList typeList;
-	if(!techdata) return typeList;
+	if(!techDisplayData) return typeList;
 
 	QStringList tmpstrarr;
 	QString name;
-	foreach(QString t, techdata->getType(s)) {
+	foreach(QString t, techDisplayData->getType(s)) {
 		tmpstrarr = t.split(',');
 		name = tmpstrarr.at(0);
 		if(!typeList.contains(name))
@@ -489,4 +556,26 @@ QStringList Project::getType(QString s)
 	}
 
 	return typeList;
+}
+
+QStringList Project::getAlternativeNames(QString s)
+{
+	if(!techDisplayData) return QStringList();
+
+	QStringList tmpstrarr;
+
+	QStringList type;
+	foreach(QString tn, techDisplayData->getTypeNames()) {
+		type = techDisplayData->getType(tn);
+		foreach(QString t, type) {
+			tmpstrarr = t.split(',');
+			foreach(QString name, tmpstrarr) {
+				if(name==s) {
+					return tmpstrarr;
+				}
+			}
+		}
+	}
+
+	return QStringList();
 }

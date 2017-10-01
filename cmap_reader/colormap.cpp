@@ -157,24 +157,36 @@ QColor ColorMap::colorFromCode(int i)
 	return QColor(Qt::green);
 }
 
+bool ColorMap::colorNameExists(QString s)
+{
+	LayoutStyleSpec spec;
+
+	foreach(spec, layoutStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			return true;
+		}
+	}
+
+	foreach(spec, paleStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			return true;
+		}
+	}
+
+	foreach(spec, displayStyleMap) {
+		if((spec.long_name==s)||(spec.short_name==s)) {
+			return true;
+		}
+	}
+
+	return false;
+}
 
 QColor ColorMap::colorFromName(QString s)
 {
 	LayoutStyleSpec spec;
 
 	foreach(spec, layoutStyleMap) {
-		if((spec.long_name==s)||(spec.short_name==s)) {
-			return colorFromCode(spec.color);
-		}
-	}
-
-	foreach(spec, paleStyleMap) {
-		if((spec.long_name==s)||(spec.short_name==s)) {
-			return colorFromCode(spec.color);
-		}
-	}
-
-	foreach(spec, displayStyleMap) {
 		if((spec.long_name==s)||(spec.short_name==s)) {
 			return colorFromCode(spec.color);
 		}
@@ -211,7 +223,6 @@ QPixmap ColorMap::getStipplePixMap(QString s)
 	QPixmap pm;
 	uchar pixData[8];
 
-
 	foreach(StippleSpec stipple, stippleMap) {
 		if(stipple.index==getStippleID(s)) {
 			for(int i=0; i<8; i++) {
@@ -221,12 +232,13 @@ QPixmap ColorMap::getStipplePixMap(QString s)
 		}
 	}
 
-	img = QImage(pixData, 1, 1, 8, QImage::Format_RGB32);
-	pm = QPixmap::fromImage(img.scaled(100, 100));
+	//img = QImage(pixData, 2, 2, 8, QImage::Format_RGB32);
+	img = QImage(pixData, 1, 1, 8, QImage::Format_RGB888);
+	pm = QPixmap::fromImage(img.scaled(10, 10));
 	//if(pm.loadFromData(pixData,Qt::AutoColor))
 	//	qDebug() << "Loaded successfully";
 
-	//pm.scaled(200,200);
+	pm.scaled(100,100);
 
 	return pm;
 }

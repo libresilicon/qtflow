@@ -13,11 +13,6 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	recentRectangle(NULL)
 {
 	editScene->setBackgroundBrush(Qt::white);
-	
-	//sceneRect = QRectF(0,0,this->width(),this->height());
-	//editScene->setSceneRect(sceneRect);
-	//setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	//setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setScene(editScene);
 }
 
