@@ -68,10 +68,15 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	QAction *recent_action;
 
 	settings->beginGroup("history");
-	QStringList recentProjectsList = settings->value("recentProjects").toStringList();
+    QStringList reverseProjectsList = settings->value("recentProjects").toStringList();
 	settings->endGroup();
 
-	foreach(QString recentProject, recentProjectsList) {
+    QStringList recentProjectsList;
+    QStringList::const_reverse_iterator rev;
+    for (rev = reverseProjectsList.rbegin(); rev != reverseProjectsList.rend(); ++rev)
+        recentProjectsList << *rev;
+
+    foreach(QString recentProject, recentProjectsList) {
 		recent_action=recent->addAction(recentProject);
 		recent_action->setData(recentProject);
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
