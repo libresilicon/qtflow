@@ -13,7 +13,6 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 
 	button = new QAction(QPixmap(":/three_d.svg"), "3D view", toolbar);
 	toolbar->addAction(button);
-	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 
 	addToolBar(toolbar);
 
@@ -23,6 +22,15 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	layoutVisibles->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
 	editArea->setVisibles(layoutVisibles);
+
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
+	connect(editArea, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+}
+
+void MagicLayoutEditorWidget::onContentChanged()
+{
+	setStatusChanged(true);
+	emit(contentChanged());
 }
 
 void MagicLayoutEditorWidget::addDrawingLayerSelection()
@@ -123,10 +131,6 @@ void MagicLayoutEditorWidget::setProject(Project *p)
 QString MagicLayoutEditorWidget::getFilePath()
 {
 	return editArea->getFilePath();
-}
-
-void MagicLayoutEditorWidget::onContentChanged()
-{
 }
 
 void MagicLayoutEditorWidget::saveFile()

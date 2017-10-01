@@ -67,6 +67,10 @@ protected:
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 
+signals:
+	void contentChanged();
+	void contentSaved();
+
 public slots:
 	void visibles_action(QString s);
 	void resizeEvent(QResizeEvent *event);
