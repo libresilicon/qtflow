@@ -135,4 +135,7 @@ QString MagicLayoutEditorWidget::getFilePath()
 
 void MagicLayoutEditorWidget::saveFile()
 {
+	editArea->saveFile();
+	setStatusChanged(false);
+	emit(contentSaved());
 }

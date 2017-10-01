@@ -68,7 +68,6 @@ void EditorTabManager::onContentSaved()
 
 void EditorTabManager::onContentChanged()
 {
-	qDebug() << __FUNCTION__;
 	EditorWidget *ed;
 	for(int idx=0; idx < count(); idx++) {
 		ed = (EditorWidget*)widget(idx);
