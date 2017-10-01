@@ -444,7 +444,7 @@ QColor Project::colorMaterialTypeMapping(QString material)
 			}
 		}
 	}
-	return QColor(Qt::green);
+	return QColor(Qt::white);
 }
 
 QColor Project::colorMat(QString material)
@@ -463,8 +463,7 @@ QColor Project::colorMat(QString material)
 			}
 		}
 	}
-	qDebug() << material << "doesn't exist";
-	return QColor(Qt::green);
+	return QColor(Qt::white);
 }
 
 QIcon Project::materialIcon(QString material)

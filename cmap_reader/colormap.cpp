@@ -153,8 +153,7 @@ QColor ColorMap::colorFromCode(int i)
 			return QColor(color.r,color.g,color.b);
 		}
 	}
-	qDebug() << "Color " << i << " not defined";
-	return QColor(Qt::green);
+	return QColor(Qt::white);
 }
 
 bool ColorMap::colorNameExists(QString s)
@@ -191,8 +190,7 @@ QColor ColorMap::colorFromName(QString s)
 			return colorFromCode(spec.color);
 		}
 	}
-
-	return QColor(Qt::red);
+	return QColor(Qt::white);
 }
 
 bool ColorMap::isStipple(QString s)
