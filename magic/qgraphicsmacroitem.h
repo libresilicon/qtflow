@@ -13,6 +13,7 @@ public:
 	explicit QGraphicsMacroItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
 
 	void setMacroName(QString);
+	QString getMacroName();
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

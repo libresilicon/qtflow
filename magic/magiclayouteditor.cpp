@@ -30,17 +30,17 @@ void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
 
 void MagicLayoutEditor::addWires()
 {
-	QGraphicsWireItem *r;
+	QGraphicsLayoutRectItem *r;
 	rects_t layer;
 	layer_rects_t rects = magicdata->getRectangles();
 	foreach(QString layerN, rects.keys()) {
 		layer = rects[layerN];
 		foreach (rect_t e, layer) {
-			r = new QGraphicsWireItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
+			r = new QGraphicsLayoutRectItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
 			r->setBrush(QBrush(project->colorMat(layerN)));
 			r->setVisible(true);
 			editScene->addItem(r);
-			wires[layerN].append(r);
+			layer_rects[layerN].append(r);
 		}
 	}
 }
@@ -136,7 +136,7 @@ void MagicLayoutEditor::loadFile(QString file)
 void MagicLayoutEditor::redraw()
 {
 	QGraphicsRectItem *m;
-	QGraphicsWireItem *w;
+	QGraphicsLayoutRectItem *w;
 	QGraphicsTextItem *t;
 	bool visible;
 
@@ -149,9 +149,9 @@ void MagicLayoutEditor::redraw()
 	}
 
 	visible = true;
-	foreach(QString layerN, wires.keys()) {
+	foreach(QString layerN, layer_rects.keys()) {
 		visible = (visibles)?(visibles->typeIsEnabled(layerN)):true;
-		foreach(w, wires[layerN]) {
+		foreach(w, layer_rects[layerN]) {
 			w->setVisible(visible);
 		}
 	}
@@ -164,16 +164,58 @@ void MagicLayoutEditor::redraw()
 	editScene->update();
 }
 
+void MagicLayoutEditor::saveFileWriteHeader(QTextStream &outputStream)
+{
+	outputStream << "magic" << endl;
+	outputStream << "tech " << project->getTechnology() << endl;
+	outputStream << "magscale 1 2" << endl;
+	outputStream << "timestamp " << QDateTime::currentMSecsSinceEpoch() << endl;
+}
+
+void MagicLayoutEditor::saveFileWriteRects(QTextStream &outputStream)
+{
+	rects_layer_t l;
+	QRectF r;
+	QGraphicsRectItem *m;
+	foreach(QString n, layer_rects.keys()) {
+		outputStream << "<< " << n << " >>" << endl;
+		l = layer_rects[n];
+		foreach(m,l) {
+			r = m->rect();
+			outputStream
+					<< "rect "
+					<< r.x()
+					<< " "
+					<< r.y()
+					<< " "
+					<< r.x() + r.width()
+					<< " "
+					<< r.y() + r.height()
+					<< endl;
+		}
+	}
+}
+
+void MagicLayoutEditor::saveFileWriteMacros(QTextStream &outputStream)
+{
+	foreach(QGraphicsMacroItem *m, macros) {
+		//r = m->rect();
+		m->getMacroName();
+	}
+}
+
 void MagicLayoutEditor::saveFile()
 {
-	QRectF r;
-	wire_layer_t l;
-	QGraphicsRectItem *m;
-	foreach(QString n, wires.keys()) {
-		l = wires[n];
-		foreach(m,l) {
-			r = m->boundingRect();
-		}
+	qDebug() << "Saving " << filePath;
+
+	QFile magicFile(filePath);
+	if(magicFile.open(QIODevice::WriteOnly)) {
+		QTextStream outputStream(&magicFile);
+		saveFileWriteHeader(outputStream);
+		saveFileWriteRects(outputStream);
+		//saveFileWriteMacros(&outputStream);
+		outputStream << "<< end >>" << endl;
+		magicFile.close();
 	}
 }
 
@@ -232,12 +274,16 @@ bool MagicLayoutEditor::changes()
 void MagicLayoutEditor::mousePressEvent(QMouseEvent *event)
 {
 	lastOrig = mapToScene(event->pos());
+	QString material = "metal1";
 	switch(recentOperation) {
 		case DRAWING_OPERATION_RECTANGLE:
+			if(activeLayerSelection) material = activeLayerSelection->currentText();
 			recentRectangle = new QGraphicsLayoutRectItem(lastOrig.x(),lastOrig.y(),1,1);
 			recentRectangle->setVisible(true);
-			if(activeLayerSelection) recentRectangle->setBrush(QBrush(project->colorMat(activeLayerSelection->currentText())));;
+			recentRectangle->setBrush(QBrush(project->colorMat(material)));
 			editScene->addItem(recentRectangle);
+			layer_rects[material].append(recentRectangle);
+			emit(contentChanged());
 			break;
 	}
 	editScene->update();

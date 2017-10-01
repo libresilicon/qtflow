@@ -42,7 +42,7 @@ namespace lef {
 
 typedef QVector<QGraphicsRectItem*> layer_macro_wires_t;
 
-typedef QVector<QGraphicsWireItem*> wire_layer_t;
+typedef QVector<QGraphicsLayoutRectItem*> rects_layer_t;
 
 class MagicLayoutEditor : public QGraphicsView, public IEditor
 {
@@ -67,12 +67,22 @@ protected:
 	void mouseMoveEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 
+signals:
+	void contentChanged();
+	void contentSaved();
+
 public slots:
 	void visibles_action(QString s);
 	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
 
 private:
+	/* magic output functions */
+	void saveFileWriteHeader(QTextStream &outputStream);
+	void saveFileWriteRects(QTextStream &outputStream);
+	void saveFileWriteMacros(QTextStream &outputStream);
+	/* end of magic output functions */
+
 	void setRecentVisible(QString s);
 	void redraw();
 	void addWires();
@@ -94,7 +104,7 @@ private:
 	QVector<QGraphicsMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
 	QMap<QString,layer_macro_wires_t> macro_wires;
-	QMap<QString,wire_layer_t> wires;
+	QMap<QString,rects_layer_t> layer_rects;
 
 	drawing_operations recentOperation;
 };

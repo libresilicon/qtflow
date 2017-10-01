@@ -30,6 +30,11 @@ void QGraphicsMacroItem::setMacroName(QString n)
 	macroName = n;
 }
 
+QString QGraphicsMacroItem::getMacroName()
+{
+	return macroName;
+}
+
 void QGraphicsMacroItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event){
 	QMenu menu;
 	QAction *removeAction = menu.addAction("Remove");
