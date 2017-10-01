@@ -4,7 +4,6 @@
 #include "editorwidget.h"
 
 #include "editor.h"
-#include "verilog.h"
 
 #include <KTextEditor/Editor>
 #include <KTextEditor/Document>
