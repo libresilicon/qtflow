@@ -49,9 +49,9 @@ void EditorTabManager::openFile(QString filepath)
 			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 		}
-    } else return;
+	} else return;
 
-    setCurrentIndex(currentIndex() + 1);
+	setCurrentIndex(currentIndex() + 1);
 }
 
 void EditorTabManager::onContentSaved()
