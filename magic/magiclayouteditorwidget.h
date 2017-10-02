@@ -27,6 +27,7 @@ public slots:
 
 	void drawingOperationAddRectangle();
 	void drawingOperationSelectRectangles();
+	void drawingOperationDragRectangles();
 
 private:
 	void addDrawingOperations();
