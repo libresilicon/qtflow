@@ -70,23 +70,14 @@ void Settings::on_listWidget_currentRowChanged(int currentRow)
 
 void Settings::on_buttonBox_accepted()
 {
-    switch (ui->listWidget->currentIndex().row())
-    {
-        case 0:
-          applyEnvironment(); break;
-        case 1:
-          page2->apply(); break;
-        case 2:
-          page3->apply(); break;
-        case 3:
-          page4->apply(); break;
-        case 4:
-          page5->apply(); break;
-        default: break;
-    }
+	applyEnvironment();
+	page2->apply();
+	page3->apply();
+	page4->apply();
+	page5->apply();
 
-    emit(syncSettings());
-    emit(on_buttonBox_rejected());
+	emit(syncSettings());
+	emit(on_buttonBox_rejected());
 }
 
 void Settings::on_buttonBox_rejected()
