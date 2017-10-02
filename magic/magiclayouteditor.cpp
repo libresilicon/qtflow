@@ -14,7 +14,12 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 {
 	editScene->setBackgroundBrush(Qt::white);
 	editScene->setSceneRect(0,0,this->width(),this->height());
+
 	setScene(editScene);
+	setRenderHint(QPainter::Antialiasing);
+	setCacheMode(QGraphicsView::CacheBackground);
+	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+	//setAcceptDrops(true);
 }
 
 void MagicLayoutEditor::resizeEvent(QResizeEvent *event)
@@ -40,6 +45,7 @@ void MagicLayoutEditor::addWires()
 			r = new QGraphicsLayoutRectItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
 			r->setBrush(QBrush(project->colorMat(layerN)));
 			r->setVisible(true);
+			//r->setFlag(QGraphicsItem::ItemIsMovable, true);
 			editScene->addItem(r);
 			layer_rects[layerN].append(r);
 		}
@@ -67,6 +73,7 @@ void MagicLayoutEditor::addModules()
 		// fill in library content:
 		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
 			mi->setMacroName(e.instance_name);
+			//mi->setFlag(QGraphicsItem::ItemIsMovable, true);
 			editScene->addItem(mi);
 
 			macro = lefdata->getMacro(e.module_name);
@@ -121,6 +128,10 @@ void MagicLayoutEditor::loadFile(QString file)
 	y = magicdata->getLowerY();
 	w = magicdata->getUpperX()-x;
 	h = magicdata->getUpperY()-y;
+
+	if(w<this->width()) w = this->width();
+	if(h<this->height()) h = this->height();
+
 	editScene->setSceneRect(x,y,w,h);
 
 	if(project->getTechnology()==magicdata->getTechnology()) {
@@ -289,12 +300,20 @@ void MagicLayoutEditor::mousePressEvent(QMouseEvent *event)
 			recentRectangle = new QGraphicsLayoutRectItem(lastOrig.x(),lastOrig.y(),1,1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setBrush(QBrush(project->colorMat(material)));
+			//recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
 			editScene->addItem(recentRectangle);
 			layer_rects[material].append(recentRectangle);
+			editScene->update();
 			emit(contentChanged());
 			break;
+		case DRAWING_OPERATION_DRAG:
+				QGraphicsView::mousePressEvent(event);
+			break;
+		default:
+			qDebug() << "MagicLayoutEditor::" << __FUNCTION__;
+			break;
+
 	}
-	editScene->update();
 }
 
 void MagicLayoutEditor::mouseMoveEvent(QMouseEvent *event)
@@ -309,18 +328,35 @@ void MagicLayoutEditor::mouseMoveEvent(QMouseEvent *event)
 				dx=pt.x()-lastOrig.x();
 				dy=pt.y()-lastOrig.y();
 				recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
+				editScene->update();
 			}
 			break;
+		case DRAWING_OPERATION_DRAG:
+			QGraphicsView::mouseMoveEvent(event);
+			break;
+		default:
+			qDebug() << "MagicLayoutEditor::" << __FUNCTION__;
+			break;
 	}
-	editScene->update();
 }
 
 void MagicLayoutEditor::mouseReleaseEvent(QMouseEvent *event)
 {
 	QPointF pt;
+
 	pt = mapToScene(event->pos());
-	if(recentRectangle) {
-		recentRectangle = NULL;
+	switch(recentOperation) {
+		case DRAWING_OPERATION_RECTANGLE:
+			if(recentRectangle) {
+				recentRectangle = NULL;
+				editScene->update();
+			}
+			break;
+		case DRAWING_OPERATION_DRAG:
+			QGraphicsView::mouseReleaseEvent(event);
+			break;
+		default:
+			qDebug() << "MagicLayoutEditor::" << __FUNCTION__;
+			break;
 	}
-	editScene->update();
 }

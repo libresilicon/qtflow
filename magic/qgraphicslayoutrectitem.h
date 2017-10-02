@@ -18,13 +18,12 @@ protected:
 
 signals:
 
-public slots:
-	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-	void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-
 private:
-	bool m_dragged;
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+public slots:
 };
 
 #endif // QGRAPHICSLAYOUTRECTITEM_H

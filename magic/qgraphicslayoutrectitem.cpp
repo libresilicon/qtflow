@@ -1,35 +1,34 @@
 #include "qgraphicslayoutrectitem.h"
 
 QGraphicsLayoutRectItem::QGraphicsLayoutRectItem(QGraphicsItem* parent) :
-	QGraphicsRectItem(parent),
-	m_dragged(false)
+	QGraphicsRectItem(parent)
 {
 	setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
+	setAcceptDrops(true);
 }
 
 QGraphicsLayoutRectItem::QGraphicsLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent) :
-	   QGraphicsRectItem(x,y,w,h,parent),
-	   m_dragged(false)
+	   QGraphicsRectItem(x,y,w,h,parent)
 {
 
 }
 
 void QGraphicsLayoutRectItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-	qDebug() << "move";
-	m_dragged = true;
-	QGraphicsRectItem::mouseMoveEvent(event);
-	scene()->update();
+	qDebug() << "QGraphicsLayoutRectItem::" << __FUNCTION__;
+	this->setPos(mapToScene(event->pos()));
 }
 
 void QGraphicsLayoutRectItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-
+	qDebug() << "QGraphicsLayoutRectItem::" << __FUNCTION__;
+	this->setCursor(QCursor(Qt::ArrowCursor));
+	Q_UNUSED(event);
 }
 
-void QGraphicsLayoutRectItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event){
-	QMenu menu;
-	QAction *removeAction = menu.addAction("Remove");
-	QAction *markAction = menu.addAction("Mark");
-	QAction *selectedAction = menu.exec(event->screenPos());
+void QGraphicsLayoutRectItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+	qDebug() << "QGraphicsLayoutRectItem::" << __FUNCTION__;
+	this->setCursor(QCursor(Qt::ClosedHandCursor));
+	Q_UNUSED(event);
 }

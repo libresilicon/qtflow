@@ -12,7 +12,12 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	setType(MagicLayoutEditorWidgetType);
 
 	button = new QAction(QPixmap(":/three_d.svg"), "3D view", toolbar);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 	toolbar->addAction(button);
+
+	/*button = new QAction(QPixmap(":/three_d.svg"), "3D view", toolbar);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
+	toolbar->addAction(button);*/
 
 	addToolBar(toolbar);
 
@@ -23,7 +28,6 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	addDockWidget(Qt::RightDockWidgetArea, layoutVisibles);
 	editArea->setVisibles(layoutVisibles);
 
-	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 	connect(editArea, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 }
 
@@ -73,6 +77,12 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	drawingOperations[DRAWING_OPERATION_SELECT] = button;
 	toolbar->addAction(button);
 
+	button = new QAction(QPixmap(":/drag.svg"), "Drag rectangles", toolbar);
+	button->setCheckable(true);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperationDragRectangles()));
+	drawingOperations[DRAWING_OPERATION_DRAG] = button;
+	toolbar->addAction(button);
+
 	addToolBar(toolbar);
 }
 
@@ -100,6 +110,16 @@ void MagicLayoutEditorWidget::drawingOperationSelectRectangles()
 	if(drawingOperations.contains(DRAWING_OPERATION_SELECT)) {
 		if(drawingOperations[DRAWING_OPERATION_SELECT]->isChecked())
 			editArea->setDrawingOperation(DRAWING_OPERATION_SELECT);
+	}
+}
+
+void MagicLayoutEditorWidget::drawingOperationDragRectangles()
+{
+	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
+	disableAllDrawingOperationsExcept(DRAWING_OPERATION_DRAG);
+	if(drawingOperations.contains(DRAWING_OPERATION_DRAG)) {
+		if(drawingOperations[DRAWING_OPERATION_DRAG]->isChecked())
+			editArea->setDrawingOperation(DRAWING_OPERATION_DRAG);
 	}
 }
 
