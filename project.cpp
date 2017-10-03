@@ -126,7 +126,7 @@ QString Project::getProcess()
 	return project_settings->value("process").toString();
 }
 
-QStringList Project::getProcessFiles()
+QStringList Project::getLibraryFiles()
 {
 	QStringList ret;
 	

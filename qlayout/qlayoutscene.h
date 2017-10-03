@@ -11,6 +11,8 @@
 
 #include "project.h"
 
+#include "lef/lefdata.h"
+
 enum drawing_operations {
 	DRAWING_OPERATION_NONE,
 	DRAWING_OPERATION_SELECT,
@@ -30,11 +32,19 @@ public:
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 
 	void setProject(Project *p);
+	void setLEF(lef::LEFData *d);
 
 	void setDrawingOperation(drawing_operations o);
 	void setActiveLayer(QString layer);
+	void setVisibleLayers(QStringList l);
+	void redraw();
 
 	void addWire(QString layer, int x, int y, int w, int h);
+	void addRectangle(QString layer, int x, int y, int w, int h);
+	void addMacro(QString module_name, QString instance, int x, int y, int w, int h);
+
+	QStringList getLayers();
+	QVector<QLayoutRectItem*> getRectangles(QString n);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -47,12 +57,14 @@ signals:
 
 private:
 	Project *project;
+	lef::LEFData *lefdata;
 
 	QString activeLayer;
 	QLayoutRectItem *recentRectangle;
 	drawing_operations recentOperation;
 	QPointF lastOrig;
 	QPointF lastRectOrig;
+	QStringList visibleLayers;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;

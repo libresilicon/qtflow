@@ -82,7 +82,7 @@ public:
 	QString getVCDFile();
 	QString getVCDPath();
 
-	QStringList getProcessFiles();
+	QStringList getLibraryFiles();
 
 	QStringList getPlanes();
 	QStringList getTypeNames();

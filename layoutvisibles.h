@@ -17,6 +17,8 @@ public:
 
 	bool typeIsEnabled(QString s);
 
+	QStringList getEnabledTypes();
+
 signals:
 	void refreshLayout(QString);
 

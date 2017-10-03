@@ -29,7 +29,7 @@ void GLWidget::loadFile(QString file)
 	if(project->getTechnology()==magicdata->getTechnology()) {
 		if(lefdata) delete lefdata;
 		lefdata = new lef::LEFData();
-		foreach(QString filename, project->getProcessFiles()) {
+		foreach(QString filename, project->getLibraryFiles()) {
 			filedest = temporaryDir.path()+"/cells.lef";
 			QFile::copy(filename, filedest);
 			if(QFile(filedest).exists()) {

@@ -25,7 +25,8 @@ void QLayoutWireItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 }
 
-void QLayoutWireItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event){
+void QLayoutWireItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
 	QMenu menu;
 	QAction *removeAction = menu.addAction("Remove");
 	QAction *markAction = menu.addAction("Mark");
