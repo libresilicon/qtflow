@@ -144,6 +144,7 @@ void MagicLayoutEditorWidget::setProject(Project *p)
 {
 	project = p;
 	layoutVisibles->setProject(project);
+	editArea->setProject(project);
 	addDrawingOperations();
 	addDrawingLayerSelection();
 }

@@ -92,3 +92,14 @@ bool LayoutVisibles::typeIsEnabled(QString s)
 	}
 	return true;
 }
+
+QStringList LayoutVisibles::getEnabledTypes()
+{
+	QTreeWidgetItem *m;
+	QStringList ret;
+	foreach(m, typeEntries){
+		if(m->checkState(0)==Qt::CheckState::Checked)
+				ret << m->data(2,0).toString();
+	}
+	return ret;
+}

@@ -41,6 +41,13 @@ namespace def {
 		void addUsedModulePlacement(double x, double y);
 		void addUsedModule();
 
+		// get bbox values
+		int getLowerX();
+		int getLowerY();
+		int getUpperX();
+		int getUpperY();
+		void setBoundaryRectangle(int x1, int y1, int x2, int y2);
+
 	private:
 		mods_t parsedModules;
 		DEFModuleInfo recent_module;
@@ -54,6 +61,12 @@ namespace def {
 		bool distanceMicrons;
 		int distanceMicronsValue;
 		int amountComponents;
+
+		// bounding rectangle
+		int m_BBLowerX;
+		int m_BBLowerY;
+		int m_BBUpperX;
+		int m_BBUpperY;
 	};
 }
 

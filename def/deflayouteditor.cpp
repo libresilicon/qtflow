@@ -1,15 +1,12 @@
 #include "deflayouteditor.h"
-#include <QAbstractScrollArea>
-
-#include "defdata.h"
-#include "../lef/lefdata.h"
 
 DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	defdata(NULL),
 	lefdata(NULL),
+	project(NULL),
 	filePath(QString()),
-	editScene(new QGraphicsScene(this))
+	editScene(new QLayoutScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
 	setScene(editScene);
@@ -26,12 +23,39 @@ void DEFLayoutEditor::mousePressEvent(QMouseEvent * e)
 void DEFLayoutEditor::loadFile(QString file)
 {
 	filePath = file;
+
+	int x, y, w, h;
+	QString filedest;
+	QTemporaryDir temporaryDir;
+	filePath = file;
 	if(defdata) delete defdata;
 	defdata = new def::DEFData(file);
-	if(defdata) delete defdata;
-	lefdata = new lef::LEFData("/usr/share/qflow/tech/osu035/osu035_stdcells.lef");
-	//drawRectangles();
-	//drawModuleInfo();
+
+	x = defdata->getLowerX();
+	y = defdata->getLowerY();
+	w = defdata->getUpperX()-x;
+	h = defdata->getUpperY()-y;
+
+	if(w<this->width()) w = this->width();
+	if(h<this->height()) h = this->height();
+
+	if(lefdata) delete lefdata;
+	lefdata = new lef::LEFData();
+	if(project) foreach(QString filename, project->getLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.lef";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+			lefdata->loadFile(filedest);
+		}
+	}
+	editScene->setLEF(lefdata);
+
+	//addMacroInstances();
+	//addRectangles();
+
+	editScene->setSceneRect(x,y,w,h);
+
+	editScene->update();
 }
 
 void DEFLayoutEditor::saveFile()
@@ -48,32 +72,8 @@ bool DEFLayoutEditor::changes()
 	return false;
 }
 
-QColor DEFLayoutEditor::colorMat(QString material)
+void DEFLayoutEditor::setProject(Project *p)
 {
-	// TODO:
-	// make this configuration based!
-	// don't hardcode this!
-	QColor mat = QColor("black");
-
-	if (material == "metal1")
-		mat = QColor("lightblue");
-	if (material == "metal2")
-		mat = QColor("blue");
-	if (material == "metal3")
-		mat = QColor("teal");
-	if (material == "metal4")
-		mat = QColor("purple");
-
-	if (material == "m1contact")
-		mat = QColor("yellow");
-	if (material == "m2contact")
-		mat = QColor("green");
-	if (material == "m3contact")
-		mat = QColor("teal");
-	if (material == "m4contact")
-		mat = QColor("teal");
-
-	mat.setAlphaF( 0.5 );
-
-	return mat;
+	project = p;
+	editScene->setProject(p);
 }

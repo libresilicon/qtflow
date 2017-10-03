@@ -1,16 +1,16 @@
-#ifndef QGRAPHICSWIREITEM_H
-#define QGRAPHICSWIREITEM_H
+#ifndef QLAYOUTWIREITEM_H
+#define QLAYOUTWIREITEM_H
 
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QAction>
 #include <QMenu>
 
-class QGraphicsWireItem : public QGraphicsRectItem
+class QLayoutWireItem : public QGraphicsRectItem
 {
 public:
-	explicit QGraphicsWireItem(QGraphicsItem *parent = Q_NULLPTR);
-	explicit QGraphicsWireItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
+	explicit QLayoutWireItem(QGraphicsItem *parent = Q_NULLPTR);
+	explicit QLayoutWireItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -25,4 +25,4 @@ private:
 	bool m_dragged;
 };
 
-#endif // QGRAPHICSWIREITEM_H
+#endif // QLAYOUTWIREITEM_H

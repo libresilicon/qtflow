@@ -1,16 +1,16 @@
-#ifndef QGRAPHICSMACROITEM_H
-#define QGRAPHICSMACROITEM_H
+#ifndef QLAYOUTMACROITEM_H
+#define QLAYOUTMACROITEM_H
 
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QAction>
 #include <QMenu>
 
-class QGraphicsMacroItem : public QGraphicsRectItem
+class QLayoutMacroItem : public QGraphicsRectItem
 {
 public:
-	explicit QGraphicsMacroItem(QGraphicsItem *parent = Q_NULLPTR);
-	explicit QGraphicsMacroItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
+	explicit QLayoutMacroItem(QGraphicsItem *parent = Q_NULLPTR);
+	explicit QLayoutMacroItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
 
 	void setMacroName(QString);
 	QString getMacroName();
@@ -29,4 +29,4 @@ private:
 	QString macroName;
 };
 
-#endif // QGRAPHICSMACROITEM_H
+#endif // QLAYOUTMACROITEM_H

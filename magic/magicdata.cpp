@@ -88,11 +88,11 @@ namespace magic {
 		if(m_BBLowerY>y1) m_BBLowerY = y1;
 		if(m_BBLowerY>y2) m_BBLowerY = y2;
 
-		if(m_BBUpperX>x1) m_BBUpperX = x1;
-		if(m_BBUpperX>x2) m_BBUpperX = x2;
+		if(m_BBUpperX<x1) m_BBUpperX = x1;
+		if(m_BBUpperX<x2) m_BBUpperX = x2;
 
-		if(m_BBUpperY>y1) m_BBUpperY = y1;
-		if(m_BBUpperY>y2) m_BBUpperY = y2;
+		if(m_BBUpperY<y1) m_BBUpperY = y1;
+		if(m_BBUpperY<y2) m_BBUpperY = y2;
 	}
 
 	void MagicData::addRectangle(int x1, int y1, int x2, int y2)

@@ -8,9 +8,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	activeLayerSelection(NULL),
 	visibles(NULL),
 	filePath(QString()),
-	editScene(new QGraphicsScene(this)),
-	recentOperation(DRAWING_OPERATION_NONE),
-	recentRectangle(NULL)
+	editScene(new QLayoutScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
 	editScene->setSceneRect(0,0,this->width(),this->height());
@@ -24,94 +22,35 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 
 void MagicLayoutEditor::resizeEvent(QResizeEvent *event)
 {
-	redraw();
+	editScene->update();
 }
 
 void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
 {
 	//sceneRect = QRectF(sceneRect.x()+dx,sceneRect.y()+dy,this->width(),this->height());
 	//editScene->setSceneRect(sceneRect);
-	redraw();
+	editScene->update();
 }
 
-void MagicLayoutEditor::addWires()
+void MagicLayoutEditor::addRectangles()
 {
-	QGraphicsLayoutRectItem *r;
 	rects_t layer;
 	layer_rects_t rects = magicdata->getRectangles();
 	foreach(QString layerN, rects.keys()) {
 		layer = rects[layerN];
 		foreach (rect_t e, layer) {
-			r = new QGraphicsLayoutRectItem(e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
-			r->setBrush(QBrush(project->colorMat(layerN)));
-			r->setVisible(true);
-			//r->setFlag(QGraphicsItem::ItemIsMovable, true);
-			editScene->addItem(r);
-			layer_rects[layerN].append(r);
+			editScene->addRectangle(layerN, e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
 		}
 	}
 }
 
-void MagicLayoutEditor::addModules()
+void MagicLayoutEditor::addMacroInstances()
 {
-	lef::LEFMacro *macro;
-	lef::LEFPin *pin;
-	lef::LEFPort *port;
-	lef::LEFLayer *layer;
-
-	QGraphicsRectItem *r;
-	QGraphicsMacroItem *mi;
-	QColor color;
 	mods_t mods;
-
 	mods = magicdata->getModules();
 	foreach (module_info e, mods) {
 		// adding boxes for macros
-		mi = new QGraphicsMacroItem(e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
-		mi->setVisible(true);
-
-		// fill in library content:
-		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
-			mi->setMacroName(e.instance_name);
-			//mi->setFlag(QGraphicsItem::ItemIsMovable, true);
-			editScene->addItem(mi);
-
-			macro = lefdata->getMacro(e.module_name);
-			macro->scaleMacro(e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
-
-			foreach(pin, macro->getPins()) {
-				port = pin->getPort();
-				foreach(layer, port->getLayers()) {
-					if(visibles) if(visibles->typeIsEnabled(layer->getName())) {
-						color = project->colorMat(layer->getName());
-						foreach(lef::rect_t rect, layer->getRects()) {
-							r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
-							r->setBrush(QBrush(color));
-							macro_wires[layer->getName()].append(r);
-						}
-					}
-				}
-			}
-
-			foreach (layer, macro->getObstruction()->getLayers()) {
-				if(visibles) if(visibles->typeIsEnabled(layer->getName())) {
-					color = project->colorMat(layer->getName());
-					foreach(lef::rect_t rect, layer->getRects()) {
-						r = new QGraphicsRectItem(rect.x+e.c, rect.y+e.f, rect.w, rect.h, mi);
-						r->setBrush(QBrush(color));
-						macro_wires[layer->getName()].append(r);
-					}
-				}
-			}
-
-		}
-
-		// write layout details:
-		QGraphicsTextItem *instance_name = new QGraphicsTextItem(e.instance_name, mi);
-		instance_name->setPos(e.c,e.f);
-		instance_name->setVisible(true);
-		macro_texts.append(instance_name);
-		macros.append(mi);
+		editScene->addMacro(e.module_name, e.instance_name, e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
 	}
 }
 
@@ -132,53 +71,23 @@ void MagicLayoutEditor::loadFile(QString file)
 	if(w<this->width()) w = this->width();
 	if(h<this->height()) h = this->height();
 
-	editScene->setSceneRect(x,y,w,h);
-
 	if(project->getTechnology()==magicdata->getTechnology()) {
 		if(lefdata) delete lefdata;
 		lefdata = new lef::LEFData();
-		foreach(QString filename, project->getProcessFiles()) {
+		foreach(QString filename, project->getLibraryFiles()) {
 			filedest = temporaryDir.path()+"/cells.lef";
 			QFile::copy(filename, filedest);
 			if(QFile(filedest).exists()) {
 				lefdata->loadFile(filedest);
 			}
 		}
+		editScene->setLEF(lefdata);
 	}
 
-	addModules();
-	addWires();
+	addMacroInstances();
+	addRectangles();
 
-	editScene->update();
-}
-
-void MagicLayoutEditor::redraw()
-{
-	QGraphicsRectItem *m;
-	QGraphicsLayoutRectItem *w;
-	QGraphicsTextItem *t;
-	bool visible;
-
-	visible = true;
-	foreach(QString layerN, macro_wires.keys()) {
-		visible = (visibles)?(visibles->typeIsEnabled(layerN)):true;
-		foreach(m, macro_wires[layerN]) {
-			m->setVisible(visible);
-		}
-	}
-
-	visible = true;
-	foreach(QString layerN, layer_rects.keys()) {
-		visible = (visibles)?(visibles->typeIsEnabled(layerN)):true;
-		foreach(w, layer_rects[layerN]) {
-			w->setVisible(visible);
-		}
-	}
-
-	visible = (visibles)?(visibles->typeIsEnabled("comment")):true;
-	foreach(t, macro_texts) {
-		t->setVisible(visible);
-	}
+	editScene->setSceneRect(x,y,w,h);
 
 	editScene->update();
 }
@@ -193,23 +102,18 @@ void MagicLayoutEditor::saveFileWriteHeader(QTextStream &outputStream)
 
 void MagicLayoutEditor::saveFileWriteRects(QTextStream &outputStream)
 {
-	rects_layer_t l;
-	QRectF r;
-	QGraphicsRectItem *m;
-	foreach(QString n, layer_rects.keys()) {
+	foreach(QString n, editScene->getLayers()) {
 		outputStream << "<< " << n << " >>" << endl;
-		l = layer_rects[n];
-		foreach(m,l) {
-			r = m->rect();
+		foreach(QLayoutRectItem *m, editScene->getRectangles(n)) {
 			outputStream
 					<< "rect "
-					<< r.x()
+					<< m->rectX()
 					<< " "
-					<< r.y()
+					<< m->rectY()
 					<< " "
-					<< r.x() + r.width()
+					<< m->rectX() + m->rectWidth()
 					<< " "
-					<< r.y() + r.height()
+					<< m->rectY() + m->rectHeight()
 					<< endl;
 		}
 	}
@@ -217,10 +121,10 @@ void MagicLayoutEditor::saveFileWriteRects(QTextStream &outputStream)
 
 void MagicLayoutEditor::saveFileWriteMacros(QTextStream &outputStream)
 {
-	foreach(QGraphicsMacroItem *m, macros) {
+	//foreach(QGraphicsMacroItem *m, macros) {
 		//r = m->rect();
-		m->getMacroName();
-	}
+	//	m->getMacroName();
+	//}
 }
 
 void MagicLayoutEditor::saveFile()
@@ -232,26 +136,23 @@ void MagicLayoutEditor::saveFile()
 		QTextStream outputStream(&magicFile);
 		saveFileWriteHeader(outputStream);
 		saveFileWriteRects(outputStream);
-		//saveFileWriteMacros(&outputStream);
+		saveFileWriteMacros(outputStream);
 		outputStream << "<< end >>" << endl;
 		magicFile.close();
 	}
 }
 
-void MagicLayoutEditor::setDrawingOperation(drawing_operations o)
-{
-	recentOperation = o;
-}
-
 void MagicLayoutEditor::setProject(Project *p)
 {
 	project = p;
+	editScene->setProject(p);
 }
 
 void MagicLayoutEditor::visibles_action(QString s)
 {
-	redraw();
+	QStringList l;
 	setRecentVisible(s);
+	editScene->setVisibleLayers(visibles->getEnabledTypes());
 }
 
 void MagicLayoutEditor::setRecentVisible(QString s)
@@ -259,12 +160,12 @@ void MagicLayoutEditor::setRecentVisible(QString s)
 	int index;
 	if(!activeLayerSelection) return;
 
-	qDebug() << s;
-
 	index = activeLayerSelection->findText(s);
 	if ( index != -1 ) { // -1 for not found
 		activeLayerSelection->setCurrentIndex(index);
 	}
+
+	editScene->setActiveLayer(s);
 }
 
 void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
@@ -275,9 +176,18 @@ void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 	}
 }
 
+void  MagicLayoutEditor::setActiveLayer(QString s)
+{
+	editScene->setActiveLayer(s);
+}
+
 void MagicLayoutEditor::setActiveLayerSelection(QComboBox *s)
 {
 	activeLayerSelection = s;
+	if(activeLayerSelection) {
+		editScene->setActiveLayer(activeLayerSelection->currentText());
+		connect(activeLayerSelection,SIGNAL(currentTextChanged(QString)),this,SLOT(setActiveLayer(QString)));
+	}
 }
 
 QString MagicLayoutEditor::getFilePath()
@@ -290,73 +200,8 @@ bool MagicLayoutEditor::changes()
 	return false;
 }
 
-void MagicLayoutEditor::mousePressEvent(QMouseEvent *event)
+void MagicLayoutEditor::setDrawingOperation(drawing_operations o)
 {
-	lastOrig = mapToScene(event->pos());
-	QString material = "metal1";
-	switch(recentOperation) {
-		case DRAWING_OPERATION_RECTANGLE:
-			if(activeLayerSelection) material = activeLayerSelection->currentText();
-			recentRectangle = new QGraphicsLayoutRectItem(lastOrig.x(),lastOrig.y(),1,1);
-			recentRectangle->setVisible(true);
-			recentRectangle->setBrush(QBrush(project->colorMat(material)));
-			//recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
-			editScene->addItem(recentRectangle);
-			layer_rects[material].append(recentRectangle);
-			editScene->update();
-			emit(contentChanged());
-			break;
-		case DRAWING_OPERATION_DRAG:
-				QGraphicsView::mousePressEvent(event);
-			break;
-		default:
-			qDebug() << "MagicLayoutEditor::" << __FUNCTION__;
-			break;
-
-	}
+	editScene->setDrawingOperation(o);
 }
 
-void MagicLayoutEditor::mouseMoveEvent(QMouseEvent *event)
-{
-	qreal dx, dy;
-	QPointF pt;
-
-	pt = mapToScene(event->pos());
-	switch(recentOperation) {
-		case DRAWING_OPERATION_RECTANGLE:
-			if(recentRectangle) {
-				dx=pt.x()-lastOrig.x();
-				dy=pt.y()-lastOrig.y();
-				recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
-				editScene->update();
-			}
-			break;
-		case DRAWING_OPERATION_DRAG:
-			QGraphicsView::mouseMoveEvent(event);
-			break;
-		default:
-			qDebug() << "MagicLayoutEditor::" << __FUNCTION__;
-			break;
-	}
-}
-
-void MagicLayoutEditor::mouseReleaseEvent(QMouseEvent *event)
-{
-	QPointF pt;
-
-	pt = mapToScene(event->pos());
-	switch(recentOperation) {
-		case DRAWING_OPERATION_RECTANGLE:
-			if(recentRectangle) {
-				recentRectangle = NULL;
-				editScene->update();
-			}
-			break;
-		case DRAWING_OPERATION_DRAG:
-			QGraphicsView::mouseReleaseEvent(event);
-			break;
-		default:
-			qDebug() << "MagicLayoutEditor::" << __FUNCTION__;
-			break;
-	}
-}
