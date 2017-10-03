@@ -44,6 +44,8 @@ namespace def {
 	{
 		recent_module.x = x;
 		recent_module.y = y;
+
+		setBoundaryRectangle(x, y, x, y);
 	}
 
 	void DEFData::addUsedModule()
@@ -65,5 +67,40 @@ namespace def {
 	{
 		distanceMicrons = true;
 		distanceMicronsValue = t;
+	}
+
+	int DEFData::getLowerX()
+	{
+		return m_BBLowerX;
+	}
+
+	int DEFData::getLowerY()
+	{
+		return m_BBLowerY;
+	}
+
+	int DEFData::getUpperX()
+	{
+		return m_BBUpperX;
+	}
+
+	int DEFData::getUpperY()
+	{
+		return m_BBUpperY;
+	}
+
+	void DEFData::setBoundaryRectangle(int x1, int y1, int x2, int y2)
+	{
+		if(m_BBLowerX>x1) m_BBLowerX = x1;
+		if(m_BBLowerX>x2) m_BBLowerX = x2;
+
+		if(m_BBLowerY>y1) m_BBLowerY = y1;
+		if(m_BBLowerY>y2) m_BBLowerY = y2;
+
+		if(m_BBUpperX<x1) m_BBUpperX = x1;
+		if(m_BBUpperX<x2) m_BBUpperX = x2;
+
+		if(m_BBUpperY<y1) m_BBUpperY = y1;
+		if(m_BBUpperY<y2) m_BBUpperY = y2;
 	}
 }
