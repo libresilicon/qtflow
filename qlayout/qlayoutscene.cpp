@@ -37,15 +37,17 @@ void QLayoutScene::setLEF(lef::LEFData *d)
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	switch(recentOperation) {
+
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
 			lastOrig = event->scenePos();
-			recentRectangle = new QLayoutRectItem(lastOrig.x(),lastOrig.y(),1,1);
+			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
-			if(project) recentRectangle->setBrush(QBrush(project->colorMat(activeLayer)));
+			if(project) recentRectangle->setColor(project->colorMat(activeLayer));
 			addItem(recentRectangle);
 			break;
+
 		case DRAWING_OPERATION_DRAG:
 			if(!recentRectangle) {
 				if(activeLayer=="") return; // no layer selected
@@ -59,6 +61,21 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 				}
 			}
 			break;
+
+		case DRAWING_OPERATION_CUT_OUT:
+			if(!recentRectangle) {
+				if(activeLayer=="") return; // no layer selected
+				lastOrig = event->scenePos();
+				foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+					if(!m->isLocked()) if(m->contains(lastOrig)) {
+						recentRectangle = m;
+						lastRectOrig = recentRectangle->pos();
+						recentRectangle->setCutOutStart(lastOrig.x(),lastOrig.y());
+					}
+				}
+			}
+			break;
+
 		default:
 			qDebug() << "QLayoutScene::" << __FUNCTION__;
 			break;
@@ -69,10 +86,10 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 	qreal dx, dy;
 	QPointF pt;
-	QRectF r;
 
 	pt = event->scenePos();
 	switch(recentOperation) {
+
 		case DRAWING_OPERATION_RECTANGLE:
 			if(recentRectangle) {
 				dx=pt.x()-lastOrig.x();
@@ -81,15 +98,25 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 				update();
 			}
 			break;
+
 		case DRAWING_OPERATION_DRAG:
 			if(recentRectangle) {
-				r = recentRectangle->rect();
 				dx=pt.x()-lastOrig.x();
 				dy=pt.y()-lastOrig.y();
 				recentRectangle->setPos(lastRectOrig.x()+dx,lastRectOrig.y()+dy);
 				update();
 			}
 			break;
+
+		case DRAWING_OPERATION_CUT_OUT:
+			if(recentRectangle) {
+				dx=pt.x()-lastOrig.x();
+				dy=pt.y()-lastOrig.y();
+				recentRectangle->updateRecentCutOut(dx,dy);
+				update();
+			}
+			break;
+
 		default:
 			qDebug() << "QLayoutScene::" << __FUNCTION__;
 			break;
@@ -99,11 +126,13 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	switch(recentOperation) {
+
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
 			layer_rects[activeLayer].append(recentRectangle);
 			recentRectangle = NULL;
 			break;
+
 		case DRAWING_OPERATION_DRAG:
 			if(recentRectangle) {
 				recentRectangle->setCursor(QCursor(Qt::ArrowCursor));
@@ -111,6 +140,14 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 				update();
 			}
 			break;
+
+		case DRAWING_OPERATION_CUT_OUT:
+			if(recentRectangle) {
+				recentRectangle = NULL;
+				update();
+			}
+			break;
+
 		default:
 			qDebug() << "QLayoutScene::" << __FUNCTION__;
 			break;
@@ -173,7 +210,7 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 {
 	QLayoutRectItem *r = new QLayoutRectItem(x, y, w, h);
 	r->setVisible(true);
-	if(project) r->setBrush(QBrush(project->colorMat(layer)));
+	if(project) r->setColor(project->colorMat(layer));
 	addItem(r);
 	update();
 
