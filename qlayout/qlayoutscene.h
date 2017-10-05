@@ -5,6 +5,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QRubberBand>
+#include <QGraphicsProxyWidget>
+#include <QShortcut>
 
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
@@ -52,20 +55,30 @@ protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+	void keyPressEvent(QKeyEvent *event);
+
+	void drawBackground(QPainter *painter, const QRectF &rect);
+	void resizeEvent(QResizeEvent *event);
+
 signals:
 	void contentChanged();
 	void contentSaved();
 
 private:
+	QPointF snapGrid(QPointF pt);
+	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
+
 	Project *project;
 	lef::LEFData *lefdata;
 
 	QString activeLayer;
 	QLayoutRectItem *recentRectangle;
+	QGraphicsRectItem *recentSelectRectangle;
 	drawing_operations recentOperation;
 	QPointF lastOrig;
-	QPointF lastRectOrig;
 	QStringList visibleLayers;
+	bool m_dragging;
+	int m_gridSize;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;

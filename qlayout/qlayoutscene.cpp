@@ -5,24 +5,120 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	lefdata(NULL),
-	recentRectangle(NULL)
-{}
+	recentRectangle(NULL),
+	recentSelectRectangle(new QGraphicsRectItem()),
+	m_dragging(false),
+	m_gridSize(40)
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+}
 
 QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	lefdata(NULL),
-	recentRectangle(NULL)
-{}
+	recentRectangle(NULL),
+	recentSelectRectangle(new QGraphicsRectItem()),
+	m_dragging(false),
+	m_gridSize(40)
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+}
 
 QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	lefdata(NULL),
-	recentRectangle(NULL)
-{}
+	recentRectangle(NULL),
+	recentSelectRectangle(new QGraphicsRectItem()),
+	m_dragging(false),
+	m_gridSize(40)
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+}
+
+
+int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
+{
+	int ret = 0;
+	QLayoutRectItem *m;
+	foreach(m,l) {
+		if(m->isSelected())
+			ret++;
+	}
+	return ret;
+}
+
+void QLayoutScene::keyPressEvent(QKeyEvent *event)
+{
+	if(event->key()==Qt::Key_Delete) {
+		if(activeLayer=="") return; // no layer selected
+		QLayoutRectItem *m;
+		QVector<QLayoutRectItem*> l = layer_rects[activeLayer];
+		while(countSelectedRectItems(l)) {
+			for(int i=0; i<l.count(); i++) {
+				m = l.at(i);
+				if(m->isSelected()) {
+					removeItem(m);
+					l.remove(i);
+					break;
+				}
+			}
+		}
+		layer_rects[activeLayer] = l;
+	}
+}
+
+QPointF QLayoutScene::snapGrid(QPointF pt) {
+	qreal x, y;
+	x = round(pt.x()/m_gridSize)*m_gridSize;
+	y = round(pt.y()/m_gridSize)*m_gridSize;
+	return QPointF(x,y);
+}
+
+void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
+{
+	QVector<QLineF> lines;
+	qreal left, top;
+
+	left = int(rect.left())-(int(rect.left()) % m_gridSize);
+	top = int(rect.top())-(int(rect.top()) % m_gridSize);
+	for (qreal x = left; x < rect.right(); x += m_gridSize){
+		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
+		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
+			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
+		}
+	}
+
+	//painter->setPen(QPen(Qt::red));
+	painter->setPen(QPen(QColor(200, 200, 255, 125)));
+	painter->drawLines(lines.data(), lines.size());
+}
+
+void QLayoutScene::resizeEvent(QResizeEvent *event)
+{
+	qreal x,y,w,h;
+	x = sceneRect().x();
+	y = sceneRect().y();
+	w = width();
+	h = height();
+	setSceneRect(x,y,w,h);
+	update();
+}
 
 void QLayoutScene::setProject(Project *p)
 {
@@ -36,11 +132,12 @@ void QLayoutScene::setLEF(lef::LEFData *d)
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+	lastOrig = snapGrid(event->scenePos());
+
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
-			lastOrig = event->scenePos();
 			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -49,27 +146,41 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		case DRAWING_OPERATION_DRAG:
-			if(!recentRectangle) {
-				if(activeLayer=="") return; // no layer selected
-				lastOrig = event->scenePos();
-				foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-					if(!m->isLocked()) if(m->contains(lastOrig)) {
-						recentRectangle = m;
-						recentRectangle->setCursor(QCursor(Qt::ClosedHandCursor));
-						lastRectOrig = recentRectangle->pos();
+			if(activeLayer=="") return; // no layer selected
+			if(m_dragging) return;
+			m_dragging = true;
+			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+				if(!m->isLocked()) {
+					if(m->contains(lastOrig)||m->isSelected()) {
+						if(!m->isSelected()) {
+							foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+								m->unSelectItem();
+							}
+						}
+						m->selectItem();
+						m->startMoving();
+						m->setCursor(QCursor(Qt::ClosedHandCursor));
 					}
 				}
 			}
 			break;
 
+		case DRAWING_OPERATION_SELECT:
+			if(activeLayer=="") return; // no layer selected
+			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+				m->unSelectItem();
+			}
+
+			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), 1, 1));
+			recentSelectRectangle->show();
+			break;
+
 		case DRAWING_OPERATION_CUT_OUT:
 			if(!recentRectangle) {
 				if(activeLayer=="") return; // no layer selected
-				lastOrig = event->scenePos();
 				foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
 					if(!m->isLocked()) if(m->contains(lastOrig)) {
 						recentRectangle = m;
-						lastRectOrig = recentRectangle->pos();
 						recentRectangle->setCutOutStart(lastOrig.x(),lastOrig.y());
 					}
 				}
@@ -86,8 +197,10 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 	qreal dx, dy;
 	QPointF pt;
+	QRectF srect;
 
-	pt = event->scenePos();
+	pt = snapGrid(event->scenePos());
+
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
@@ -95,17 +208,36 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 				dx=pt.x()-lastOrig.x();
 				dy=pt.y()-lastOrig.y();
 				recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
-				update();
 			}
+			update();
 			break;
 
 		case DRAWING_OPERATION_DRAG:
-			if(recentRectangle) {
-				dx=pt.x()-lastOrig.x();
-				dy=pt.y()-lastOrig.y();
-				recentRectangle->setPos(lastRectOrig.x()+dx,lastRectOrig.y()+dy);
-				update();
+			if(activeLayer=="") return; // no layer selected
+			if(!m_dragging) return;
+			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+				if(m->isSelected()) {
+					dx=pt.x()-lastOrig.x();
+					dy=pt.y()-lastOrig.y();
+					m->updateMovingOffset(dx,dy);
+				}
 			}
+			update();
+			break;
+
+		case DRAWING_OPERATION_SELECT:
+			dx=pt.x()-lastOrig.x();
+			dy=pt.y()-lastOrig.y();
+			srect = QRectF(lastOrig.x(), lastOrig.y(), dx, dy);
+			recentSelectRectangle->setRect(srect);
+
+			if(activeLayer=="") return; // no layer selected
+			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+				if(srect.contains(m->offsetRect())) {
+					m->selectItem();
+				}
+			}
+			update();
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
@@ -125,27 +257,37 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+	QPointF pt;
+
+	pt = snapGrid(event->scenePos());
+
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
 			layer_rects[activeLayer].append(recentRectangle);
 			recentRectangle = NULL;
+			update();
 			break;
 
 		case DRAWING_OPERATION_DRAG:
-			if(recentRectangle) {
-				recentRectangle->setCursor(QCursor(Qt::ArrowCursor));
-				recentRectangle = NULL;
-				update();
+			if(activeLayer=="") return; // no layer selected
+			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+				m->setCursor(QCursor(Qt::ArrowCursor));
+				m_dragging = false;
 			}
+			update();
+			break;
+
+		case DRAWING_OPERATION_SELECT:
+			if(activeLayer=="") return; // no layer selected
+			recentSelectRectangle->hide();
+			update();
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
-			if(recentRectangle) {
-				recentRectangle = NULL;
-				update();
-			}
+			recentRectangle = NULL;
+			update();
 			break;
 
 		default:

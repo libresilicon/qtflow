@@ -72,7 +72,7 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	drawingOperations[DRAWING_OPERATION_RECTANGLE] = button;
 	toolbar->addAction(button);
 
-	button = new QAction(QPixmap(":/add_rectangle.svg"), "Select rectangles", toolbar);
+	button = new QAction(QPixmap(":/select-items.svg"), "Select rectangles", toolbar);
 	button->setCheckable(true);
 	button->setData(DRAWING_OPERATION_SELECT);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));

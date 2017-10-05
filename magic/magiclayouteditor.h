@@ -52,7 +52,6 @@ signals:
 
 public slots:
 	void visibles_action(QString s);
-	void resizeEvent(QResizeEvent *event);
 	void scrollContentsBy(int dx, int dy);
 
 	void setActiveLayer(QString);

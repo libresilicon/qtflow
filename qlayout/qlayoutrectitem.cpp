@@ -4,16 +4,18 @@ QLayoutRectItem::QLayoutRectItem(QGraphicsItem* parent) :
 	QGraphicsItem(parent),
 	m_locked(false),
 	m_color(Qt::black),
+	m_selected(false),
 	m_recentCutOutRectangle(NULL)
 {
 }
 
 QLayoutRectItem::QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent) :
-	  QGraphicsItem(parent),
-	   m_locked(false),
-	   m_color(Qt::black),
-	   m_externalRect(QRectF(x,y,w,h)),
-	   m_recentCutOutRectangle(NULL)
+	QGraphicsItem(parent),
+	m_locked(false),
+	m_color(Qt::black),
+	m_externalRect(QRectF(x,y,w,h)),
+	m_selected(false),
+	m_recentCutOutRectangle(NULL)
 {
 }
 
@@ -24,6 +26,16 @@ bool QLayoutRectItem::contains(const QPointF &point) const
 	offsetOrig.setY(point.y()-y());
 
 	return m_externalRect.contains(offsetOrig);
+}
+
+void QLayoutRectItem::startMoving()
+{
+	m_lastOrig = pos();
+}
+
+void QLayoutRectItem::updateMovingOffset(qreal dx, qreal dy)
+{
+	setPos(m_lastOrig.x()+dx,m_lastOrig.y()+dy);
 }
 
 void QLayoutRectItem::setColor(QColor c)
@@ -41,17 +53,49 @@ qreal QLayoutRectItem::height() const
 	return m_externalRect.height();
 }
 
+QRectF QLayoutRectItem::offsetRect()
+{
+	QRectF ret;
+	ret = m_externalRect;
+	ret.setX(m_externalRect.x()+pos().x());
+	ret.setY(m_externalRect.y()+pos().y());
+	return ret;
+}
+
 bool QLayoutRectItem::isLocked()
 {
 	return m_locked;
 }
 
+bool QLayoutRectItem::isSelected()
+{
+	return m_selected;
+}
+
+void QLayoutRectItem::selectItem()
+{
+	m_selected = true;
+}
+
+void QLayoutRectItem::unSelectItem()
+{
+	m_selected = false;
+}
+
 void QLayoutRectItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
 	QMenu menu;
-	QAction *removeAction = menu.addAction("Remove");
-	QAction *markAction = menu.addAction("Mark");
-	QAction *selectedAction = menu.exec(event->screenPos());
+	QAction *action;
+	action = menu.addAction("Remove");
+	connect(action,SIGNAL(triggered(bool)),this,SLOT(removeFromScene()));
+	action = menu.addAction("Mark");
+	menu.exec(event->screenPos());
+}
+
+void QLayoutRectItem::removeFromScene()
+{
+	if (scene() != NULL)
+		scene()->removeItem(this);
 }
 
 void QLayoutRectItem::setCutOutStart(qreal x, qreal y)
@@ -115,6 +159,8 @@ QVector<QRectF> QLayoutRectItem::cutOutRectangleFromGroup(QVector<QRectF> group,
 	QPointF br;
 	QPointF bl;
 
+	QPointF stl, sbr;
+
 	foreach(QRectF rect, group) {
 		tr = rect.topRight();
 		tl = rect.topLeft();
@@ -123,18 +169,94 @@ QVector<QRectF> QLayoutRectItem::cutOutRectangleFromGroup(QVector<QRectF> group,
 
 		// points from top left to bottom right:
 
-		// fill corners
-		ret.append(QRectF(tl,ctl)); // left upper corner
-		ret.append(QRectF(cbr,br)); // right lower corner
-		ret.append(QRectF(QPointF(ctr.x(),tr.y()),QPointF(tr.x(),ctr.y()))); // right upper corner
-		ret.append(QRectF(QPointF(bl.x(),cbl.y()),QPointF(cbl.x(),bl.y()))); // left lower corner
+		if(rect.contains(ctr)&&rect.contains(ctl)&&rect.contains(cbr)&&rect.contains(cbr)) {
+			// fill corners
+			ret.append(QRectF(tl,ctl)); // left upper corner
+			ret.append(QRectF(cbr,br)); // right lower corner
+			ret.append(QRectF(QPointF(ctr.x(),tr.y()),QPointF(tr.x(),ctr.y()))); // right upper corner
+			ret.append(QRectF(QPointF(bl.x(),cbl.y()),QPointF(cbl.x(),bl.y()))); // left lower corner
 
-		// fill stripes:
-		ret.append(QRectF(QPointF(ctl.x(),tl.y()),ctr)); // upper stripe
-		ret.append(QRectF(cbl,QPointF(cbr.x(),br.y()))); // lower stripe
-		ret.append(QRectF(QPointF(tl.x(),ctl.y()),cbl)); // left stripe
-		ret.append(QRectF(ctr,QPointF(br.x(),cbr.y()))); // right stripe
+			// fill stripes:
+			ret.append(QRectF(QPointF(ctl.x(),tl.y()),ctr)); // upper stripe
+			ret.append(QRectF(cbl,QPointF(cbr.x(),br.y()))); // lower stripe
+			ret.append(QRectF(QPointF(tl.x(),ctl.y()),cbl)); // left stripe
+			ret.append(QRectF(ctr,QPointF(br.x(),cbr.y()))); // right stripe
 
+		} else if(rect.contains(ctr)&&rect.contains(ctl)) {
+
+			stl = tl;
+			sbr = QPointF(ctl.x(),bl.y());
+
+			ret.append(QRectF(stl,sbr)); // left stripe
+
+			stl = QPointF(ctr.x(),tr.y());
+			sbr = br;
+
+			ret.append(QRectF(stl,sbr)); // right stripe
+
+			stl = QPointF(ctl.x(),tl.y());
+			sbr = ctr;
+
+			ret.append(QRectF(stl,sbr)); // middle stripe
+
+		} else if(rect.contains(cbr)&&rect.contains(cbl)) {
+
+			stl = tl;
+			sbr = QPointF(cbl.x(),bl.y());
+
+			ret.append(QRectF(stl,sbr)); // left stripe
+
+			stl = QPointF(cbr.x(),tr.y());
+			sbr = br;
+
+			ret.append(QRectF(stl,sbr)); // right stripe
+
+			stl = cbl;
+			sbr = QPointF(cbr.x(),br.y());
+
+			ret.append(QRectF(stl,sbr)); // middle stripe
+
+		} else if(rect.contains(ctl)&&rect.contains(cbl)) {
+
+			stl = tl;
+			sbr = QPointF(tr.x(),ctl.y());
+
+			ret.append(QRectF(stl,sbr)); // upper stripe
+
+			stl = QPointF(tl.x(),ctl.y());
+			sbr = cbl;
+
+			ret.append(QRectF(stl,sbr)); // middle stripe
+
+			stl = QPointF(tl.x(),cbl.y());
+			sbr = br;
+
+			ret.append(QRectF(stl,sbr)); // bottom stripe
+
+		} else if(rect.contains(ctr)&&rect.contains(cbr)) {
+
+			stl = tl;
+			sbr = QPointF(tr.x(),ctr.y());
+
+			ret.append(QRectF(stl,sbr)); // upper stripe
+
+			stl = ctr;
+			sbr = QPointF(tr.x(),ctr.y());
+
+			ret.append(QRectF(stl,sbr)); // middle stripe
+
+			stl = QPointF(tl.x(),cbr.y());
+			sbr = br;
+
+			ret.append(QRectF(stl,sbr)); // bottom stripe
+
+		} else if(rect.contains(cbl)) {
+		} else if(rect.contains(ctl)) {
+		} else if(rect.contains(cbr)) {
+		} else if(rect.contains(ctr)) {
+		} else {
+			ret.append(rect);
+		}
 	}
 
 	return ret;
@@ -164,8 +286,14 @@ QVector<QRectF> QLayoutRectItem::getStripes()
 
 void QLayoutRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	painter->setPen(QPen(m_color));
-	painter->setBrush(QBrush(m_color));
+	if(m_selected) {
+		//painter->setPen(QPen(m_color));
+		painter->setBrush(QBrush(m_color));
+	} else {
+		painter->setPen(QPen(m_color));
+		painter->setBrush(QBrush(m_color));
+	}
+
 	painter->drawPath(shape());
 }
 
