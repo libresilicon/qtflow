@@ -5,24 +5,45 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	lefdata(NULL),
-	recentRectangle(NULL)
-{}
+	recentRectangle(NULL),
+	recentSelectRectangle(new QGraphicsRectItem())
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+}
 
 QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	lefdata(NULL),
-	recentRectangle(NULL)
-{}
+	recentRectangle(NULL),
+	recentSelectRectangle(new QGraphicsRectItem())
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+}
 
 QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	lefdata(NULL),
-	recentRectangle(NULL)
-{}
+	recentRectangle(NULL),
+	recentSelectRectangle(new QGraphicsRectItem())
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+}
 
 void QLayoutScene::setProject(Project *p)
 {
@@ -60,6 +81,13 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 					}
 				}
 			}
+			break;
+
+		case DRAWING_OPERATION_SELECT:
+			if(activeLayer=="") return; // no layer selected
+			lastOrig = event->scenePos();
+			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), 1, 1));
+			recentSelectRectangle->show();
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
@@ -108,6 +136,19 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			}
 			break;
 
+		case DRAWING_OPERATION_SELECT:
+			dx=pt.x()-lastOrig.x();
+			dy=pt.y()-lastOrig.y();
+			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), dx, dy));
+
+			if(activeLayer=="") return; // no layer selected
+			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
+				if(recentSelectRectangle->rect().contains(m->boundingRect())) {
+					m->selectItem();
+				}
+			}
+			break;
+
 		case DRAWING_OPERATION_CUT_OUT:
 			if(recentRectangle) {
 				dx=pt.x()-lastOrig.x();
@@ -140,6 +181,11 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 				update();
 			}
 			break;
+
+	case DRAWING_OPERATION_SELECT:
+		if(activeLayer=="") return; // no layer selected
+		recentSelectRectangle->hide();
+		break;
 
 		case DRAWING_OPERATION_CUT_OUT:
 			if(recentRectangle) {

@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QRubberBand>
+#include <QGraphicsProxyWidget>
 
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
@@ -62,6 +64,7 @@ private:
 
 	QString activeLayer;
 	QLayoutRectItem *recentRectangle;
+	QGraphicsRectItem *recentSelectRectangle;
 	drawing_operations recentOperation;
 	QPointF lastOrig;
 	QPointF lastRectOrig;
