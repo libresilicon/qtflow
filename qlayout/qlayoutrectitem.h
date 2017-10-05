@@ -25,9 +25,12 @@ public:
 	void setCutOutStart(qreal x, qreal y);
 	void updateRecentCutOut(qreal w, qreal h);
 	void setColor(QColor c);
+	void startMoving();
+	void updateMovingOffset(qreal dx, qreal dy);
 
 	qreal width() const;
 	qreal height() const;
+	QRectF offsetRect();
 
 	QVector<QRectF> getStripes();
 
@@ -49,6 +52,7 @@ private:
 	QVector<QRectF*> m_cutoutRectangles;
 	QRectF *m_recentCutOutRectangle;
 
+	QPointF m_lastOrig;
 	QPointF m_orig;
 	bool m_locked;
 	QColor m_color;

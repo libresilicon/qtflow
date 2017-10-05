@@ -4,6 +4,7 @@ QLayoutRectItem::QLayoutRectItem(QGraphicsItem* parent) :
 	QGraphicsItem(parent),
 	m_locked(false),
 	m_color(Qt::black),
+	m_selected(false),
 	m_recentCutOutRectangle(NULL)
 {
 }
@@ -13,6 +14,7 @@ QLayoutRectItem::QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsIt
 	m_locked(false),
 	m_color(Qt::black),
 	m_externalRect(QRectF(x,y,w,h)),
+	m_selected(false),
 	m_recentCutOutRectangle(NULL)
 {
 }
@@ -24,6 +26,16 @@ bool QLayoutRectItem::contains(const QPointF &point) const
 	offsetOrig.setY(point.y()-y());
 
 	return m_externalRect.contains(offsetOrig);
+}
+
+void QLayoutRectItem::startMoving()
+{
+	m_lastOrig = pos();
+}
+
+void QLayoutRectItem::updateMovingOffset(qreal dx, qreal dy)
+{
+	setPos(m_lastOrig.x()+dx,m_lastOrig.y()+dy);
 }
 
 void QLayoutRectItem::setColor(QColor c)
@@ -39,6 +51,15 @@ qreal QLayoutRectItem::width() const
 qreal QLayoutRectItem::height() const
 {
 	return m_externalRect.height();
+}
+
+QRectF QLayoutRectItem::offsetRect()
+{
+	QRectF ret;
+	ret = m_externalRect;
+	ret.setX(m_externalRect.x()+pos().x());
+	ret.setY(m_externalRect.y()+pos().y());
+	return ret;
 }
 
 bool QLayoutRectItem::isLocked()
@@ -265,8 +286,14 @@ QVector<QRectF> QLayoutRectItem::getStripes()
 
 void QLayoutRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	painter->setPen(QPen(m_color));
-	painter->setBrush(QBrush(m_color));
+	if(m_selected) {
+		//painter->setPen(QPen(m_color));
+		painter->setBrush(QBrush(m_color));
+	} else {
+		painter->setPen(QPen(m_color));
+		painter->setBrush(QBrush(m_color));
+	}
+
 	painter->drawPath(shape());
 }
 

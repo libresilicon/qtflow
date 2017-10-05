@@ -67,8 +67,8 @@ private:
 	QGraphicsRectItem *recentSelectRectangle;
 	drawing_operations recentOperation;
 	QPointF lastOrig;
-	QPointF lastRectOrig;
 	QStringList visibleLayers;
+	bool m_dragging;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
