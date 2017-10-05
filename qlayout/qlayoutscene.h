@@ -7,6 +7,7 @@
 #include <QGraphicsItem>
 #include <QRubberBand>
 #include <QGraphicsProxyWidget>
+#include <QShortcut>
 
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
@@ -54,6 +55,8 @@ protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+	void keyPressEvent(QKeyEvent *event);
+
 	void drawBackground(QPainter *painter, const QRectF &rect);
 	void resizeEvent(QResizeEvent *event);
 
@@ -63,6 +66,7 @@ signals:
 
 private:
 	QPointF snapGrid(QPointF pt);
+	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
 	Project *project;
 	lef::LEFData *lefdata;

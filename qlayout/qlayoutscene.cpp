@@ -51,6 +51,38 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	addItem(recentSelectRectangle);
 }
 
+
+int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
+{
+	int ret = 0;
+	QLayoutRectItem *m;
+	foreach(m,l) {
+		if(m->isSelected())
+			ret++;
+	}
+	return ret;
+}
+
+void QLayoutScene::keyPressEvent(QKeyEvent *event)
+{
+	if(event->key()==Qt::Key_Delete) {
+		if(activeLayer=="") return; // no layer selected
+		QLayoutRectItem *m;
+		QVector<QLayoutRectItem*> l = layer_rects[activeLayer];
+		while(countSelectedRectItems(l)) {
+			for(int i=0; i<l.count(); i++) {
+				m = l.at(i);
+				if(m->isSelected()) {
+					removeItem(m);
+					l.remove(i);
+					break;
+				}
+			}
+		}
+		layer_rects[activeLayer] = l;
+	}
+}
+
 QPointF QLayoutScene::snapGrid(QPointF pt) {
 	qreal x, y;
 	x = round(pt.x()/m_gridSize)*m_gridSize;
