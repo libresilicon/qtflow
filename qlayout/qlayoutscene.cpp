@@ -7,7 +7,8 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	lefdata(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false)
+	m_dragging(false),
+	m_gridSize(40)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -23,7 +24,8 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	lefdata(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false)
+	m_dragging(false),
+	m_gridSize(40)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -39,7 +41,8 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	lefdata(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false)
+	m_dragging(false),
+	m_gridSize(40)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -48,34 +51,30 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	addItem(recentSelectRectangle);
 }
 
-inline qreal round(qreal val, int step) {
-   int tmp = int(val) + step /2;
-   tmp -= tmp % step;
-   return qreal(tmp);
+QPointF QLayoutScene::snapGrid(QPointF pt) {
+	qreal x, y;
+	x = round(pt.x()/m_gridSize)*m_gridSize;
+	y = round(pt.y()/m_gridSize)*m_gridSize;
+	return QPointF(x,y);
 }
 
 void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
-   int step = 40;
-   painter->setPen(QPen(QColor(200, 200, 255, 125)));
-   // draw horizontal grid
-   qreal start = round(rect.top(), step);
-   if (start > rect.top()) {
-	  start -= step;
-   }
-   for (qreal y = start - step; y < rect.bottom(); ) {
-	  y += step;
-	  painter->drawLine(rect.left(), y, rect.right(), y);
-   }
-   // now draw vertical grid
-   start = round(rect.left(), step);
-   if (start > rect.left()) {
-	  start -= step;
-   }
-   for (qreal x = start - step; x < rect.right(); ) {
-	  x += step;
-	  painter->drawLine(x, rect.top(), x, rect.bottom());
-   }
+	QVector<QLineF> lines;
+	qreal left, top;
+
+	left = int(rect.left())-(int(rect.left()) % m_gridSize);
+	top = int(rect.top())-(int(rect.top()) % m_gridSize);
+	for (qreal x = left; x < rect.right(); x += m_gridSize){
+		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
+		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
+			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
+		}
+	}
+
+	//painter->setPen(QPen(Qt::red));
+	painter->setPen(QPen(QColor(200, 200, 255, 125)));
+	painter->drawLines(lines.data(), lines.size());
 }
 
 void QLayoutScene::resizeEvent(QResizeEvent *event)
@@ -101,11 +100,12 @@ void QLayoutScene::setLEF(lef::LEFData *d)
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+	lastOrig = snapGrid(event->scenePos());
+
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
-			lastOrig = event->scenePos();
 			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -117,7 +117,6 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			if(activeLayer=="") return; // no layer selected
 			if(m_dragging) return;
 			m_dragging = true;
-			lastOrig = event->scenePos();
 			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
 				if(!m->isLocked()) {
 					if(m->contains(lastOrig)||m->isSelected()) {
@@ -140,7 +139,6 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 				m->unSelectItem();
 			}
 
-			lastOrig = event->scenePos();
 			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), 1, 1));
 			recentSelectRectangle->show();
 			break;
@@ -148,7 +146,6 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		case DRAWING_OPERATION_CUT_OUT:
 			if(!recentRectangle) {
 				if(activeLayer=="") return; // no layer selected
-				lastOrig = event->scenePos();
 				foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
 					if(!m->isLocked()) if(m->contains(lastOrig)) {
 						recentRectangle = m;
@@ -170,7 +167,8 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	QPointF pt;
 	QRectF srect;
 
-	pt = event->scenePos();
+	pt = snapGrid(event->scenePos());
+
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
@@ -178,8 +176,8 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 				dx=pt.x()-lastOrig.x();
 				dy=pt.y()-lastOrig.y();
 				recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
-				update();
 			}
+			update();
 			break;
 
 		case DRAWING_OPERATION_DRAG:
@@ -190,9 +188,9 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 					dx=pt.x()-lastOrig.x();
 					dy=pt.y()-lastOrig.y();
 					m->updateMovingOffset(dx,dy);
-					update();
 				}
 			}
+			update();
 			break;
 
 		case DRAWING_OPERATION_SELECT:
@@ -227,12 +225,17 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+	QPointF pt;
+
+	pt = snapGrid(event->scenePos());
+
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
 			layer_rects[activeLayer].append(recentRectangle);
 			recentRectangle = NULL;
+			update();
 			break;
 
 		case DRAWING_OPERATION_DRAG:
@@ -240,8 +243,8 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
 				m->setCursor(QCursor(Qt::ArrowCursor));
 				m_dragging = false;
-				update();
 			}
+			update();
 			break;
 
 		case DRAWING_OPERATION_SELECT:
@@ -251,10 +254,8 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
-			if(recentRectangle) {
-				recentRectangle = NULL;
-				update();
-			}
+			recentRectangle = NULL;
+			update();
 			break;
 
 		default:

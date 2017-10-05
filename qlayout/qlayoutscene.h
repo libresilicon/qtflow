@@ -62,6 +62,8 @@ signals:
 	void contentSaved();
 
 private:
+	QPointF snapGrid(QPointF pt);
+
 	Project *project;
 	lef::LEFData *lefdata;
 
@@ -72,6 +74,7 @@ private:
 	QPointF lastOrig;
 	QStringList visibleLayers;
 	bool m_dragging;
+	int m_gridSize;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
