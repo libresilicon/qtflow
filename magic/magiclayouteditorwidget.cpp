@@ -67,59 +67,49 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 
 	button = new QAction(QPixmap(":/add_rectangle.svg"), "Add rectangle", toolbar);
 	button->setCheckable(true);
-	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperationAddRectangle()));
+	button->setData(DRAWING_OPERATION_RECTANGLE);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
 	drawingOperations[DRAWING_OPERATION_RECTANGLE] = button;
 	toolbar->addAction(button);
 
 	button = new QAction(QPixmap(":/add_rectangle.svg"), "Select rectangles", toolbar);
 	button->setCheckable(true);
-	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperationSelectRectangles()));
+	button->setData(DRAWING_OPERATION_SELECT);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
 	drawingOperations[DRAWING_OPERATION_SELECT] = button;
 	toolbar->addAction(button);
 
 	button = new QAction(QPixmap(":/drag.svg"), "Drag rectangles", toolbar);
 	button->setCheckable(true);
-	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperationDragRectangles()));
+	button->setData(DRAWING_OPERATION_DRAG);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
 	drawingOperations[DRAWING_OPERATION_DRAG] = button;
+	toolbar->addAction(button);
+
+	button = new QAction(QPixmap(":/add_zone_cutout.svg"), "Add cutout zone", toolbar);
+	button->setCheckable(true);
+	button->setData(DRAWING_OPERATION_CUT_OUT);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
+	drawingOperations[DRAWING_OPERATION_CUT_OUT] = button;
 	toolbar->addAction(button);
 
 	addToolBar(toolbar);
 }
 
-void MagicLayoutEditorWidget::disableAllDrawingOperationsExcept(drawing_operations o)
+void MagicLayoutEditorWidget::drawingOperation()
 {
+	QObject* obj = sender();
+	QAction *action = qobject_cast<QAction *>(obj);
+	drawing_operations o = (drawing_operations)action->data().toInt();
+	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
+
 	foreach(drawing_operations k, drawingOperations.keys()) {
 		if(k!=o) drawingOperations[k]->setChecked(false);
 	}
-}
 
-void MagicLayoutEditorWidget::drawingOperationAddRectangle()
-{
-	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
-	disableAllDrawingOperationsExcept(DRAWING_OPERATION_RECTANGLE);
-	if(drawingOperations.contains(DRAWING_OPERATION_RECTANGLE)) {
-		if(drawingOperations[DRAWING_OPERATION_RECTANGLE]->isChecked())
-			editArea->setDrawingOperation(DRAWING_OPERATION_RECTANGLE);
-	}
-}
-
-void MagicLayoutEditorWidget::drawingOperationSelectRectangles()
-{
-	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
-	disableAllDrawingOperationsExcept(DRAWING_OPERATION_SELECT);
-	if(drawingOperations.contains(DRAWING_OPERATION_SELECT)) {
-		if(drawingOperations[DRAWING_OPERATION_SELECT]->isChecked())
-			editArea->setDrawingOperation(DRAWING_OPERATION_SELECT);
-	}
-}
-
-void MagicLayoutEditorWidget::drawingOperationDragRectangles()
-{
-	editArea->setDrawingOperation(DRAWING_OPERATION_NONE);
-	disableAllDrawingOperationsExcept(DRAWING_OPERATION_DRAG);
-	if(drawingOperations.contains(DRAWING_OPERATION_DRAG)) {
-		if(drawingOperations[DRAWING_OPERATION_DRAG]->isChecked())
-			editArea->setDrawingOperation(DRAWING_OPERATION_DRAG);
+	if(drawingOperations.contains(o)) {
+		if(drawingOperations[o]->isChecked())
+			editArea->setDrawingOperation(o);
 	}
 }
 

@@ -105,16 +105,18 @@ void MagicLayoutEditor::saveFileWriteRects(QTextStream &outputStream)
 	foreach(QString n, editScene->getLayers()) {
 		outputStream << "<< " << n << " >>" << endl;
 		foreach(QLayoutRectItem *m, editScene->getRectangles(n)) {
-			outputStream
-					<< "rect "
-					<< m->rectX()
-					<< " "
-					<< m->rectY()
-					<< " "
-					<< m->rectX() + m->rectWidth()
-					<< " "
-					<< m->rectY() + m->rectHeight()
-					<< endl;
+			foreach(QRectF r, m->getStripes()) {
+				outputStream
+						<< "rect "
+						<< r.x()
+						<< " "
+						<< r.y()
+						<< " "
+						<< r.x() + r.width()
+						<< " "
+						<< r.y() + r.height()
+						<< endl;
+			}
 		}
 	}
 }
