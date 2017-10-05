@@ -54,6 +54,9 @@ protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
+	void drawBackground(QPainter *painter, const QRectF &rect);
+	void resizeEvent(QResizeEvent *event);
+
 signals:
 	void contentChanged();
 	void contentSaved();

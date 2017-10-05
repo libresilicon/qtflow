@@ -20,11 +20,6 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	//setAcceptDrops(true);
 }
 
-void MagicLayoutEditor::resizeEvent(QResizeEvent *event)
-{
-	editScene->update();
-}
-
 void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
 {
 	//sceneRect = QRectF(sceneRect.x()+dx,sceneRect.y()+dy,this->width(),this->height());
