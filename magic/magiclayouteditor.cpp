@@ -82,6 +82,7 @@ void MagicLayoutEditor::loadFile(QString file)
 	addMacroInstances();
 	addRectangles();
 
+	editScene->setGridSize(10);
 	editScene->setSceneRect(x,y,w,h);
 
 	editScene->update();

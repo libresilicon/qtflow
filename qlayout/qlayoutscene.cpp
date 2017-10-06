@@ -344,6 +344,11 @@ void QLayoutScene::redraw()
 	update();
 }
 
+void QLayoutScene::setGridSize(int s) {
+	m_gridSize = s;
+	update();
+}
+
 void QLayoutScene::addWire(QString layer, int x, int y, int w, int h)
 {
 }

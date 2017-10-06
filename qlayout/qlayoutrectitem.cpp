@@ -287,11 +287,13 @@ QVector<QRectF> QLayoutRectItem::getStripes()
 void QLayoutRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
 	if(m_selected) {
-		//painter->setPen(QPen(m_color));
+		painter->setPen(QPen(Qt::black));
 		painter->setBrush(QBrush(m_color));
+		painter->setOpacity(0.5);
 	} else {
 		painter->setPen(QPen(m_color));
 		painter->setBrush(QBrush(m_color));
+		painter->setOpacity(0.5);
 	}
 
 	painter->drawPath(shape());

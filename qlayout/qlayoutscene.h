@@ -43,6 +43,7 @@ public:
 	void setVisibleLayers(QStringList l);
 	void redraw();
 
+	void setGridSize(int);
 	void addWire(QString layer, int x, int y, int w, int h);
 	void addRectangle(QString layer, int x, int y, int w, int h);
 	void addMacro(QString module_name, QString instance, int x, int y, int w, int h);
