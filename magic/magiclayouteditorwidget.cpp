@@ -115,7 +115,6 @@ void MagicLayoutEditorWidget::drawingOperation()
 
 void MagicLayoutEditorWidget::loadFile(QString path)
 {
-	editArea->setProject(project);
 	editArea->setVisibles(layoutVisibles);
 	editArea->setActiveLayerSelection(activeLayer);
 

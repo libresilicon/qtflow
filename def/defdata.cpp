@@ -34,10 +34,10 @@ namespace def {
 	}
 
 
-	void DEFData::addUsedModuleNames(std::string *module, std::string *name)
+	void DEFData::addUsedModuleNames(std::string *instance_name, std::string *macro_name)
 	{
-		recent_module.module_name = QString::fromStdString(*module);
-		recent_module.instance_name = QString::fromStdString(*name);
+		recent_module.macro_name = QString::fromStdString(*macro_name);
+		recent_module.instance_name = QString::fromStdString(*instance_name);
 	}
 
 	void DEFData::addUsedModulePlacement(double x, double y)

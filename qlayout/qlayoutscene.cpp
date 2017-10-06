@@ -364,7 +364,7 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 	layer_rects[layer].append(r);
 }
 
-void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y)
 {
 	lef::LEFPort *port;
 	lef::LEFLayer *layer;
@@ -376,10 +376,24 @@ void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y)
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
 
+	double w = 100;
+	double h = 100;
+
+	qDebug() << macro_name;
+	qDebug() << instance_name;
+	qDebug() << x;
+	qDebug() << y;
+
 	// fill in library content:
-	if(lefdata) if(lefdata->isDefinedMacro(module_name)) {
-		macro = lefdata->getMacro(module_name);
-		macro->scaleMacro(macro->getWidth(),macro->getHeight());
+	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
+		macro = lefdata->getMacro(macro_name);
+		w = macro->getWidth();
+		h = macro->getHeight();
+
+		qDebug() << w;
+		qDebug() << h;
+
+		//macro->scaleMacro(w,h);
 
 		mi = new QLayoutMacroItem(x,y,macro->getWidth(),macro->getHeight());
 		mi->setVisible(true);
@@ -410,12 +424,18 @@ void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y)
 
 		addItem(mi);
 		macros.append(mi);
+	} else {
+		qDebug() << macro_name << " doesn't exist";
+		mi = new QLayoutMacroItem(x,y,w,h);
+		mi->setVisible(true);
+		addItem(mi);
+		macros.append(mi);
 	}
 
 	update();
 }
 
-void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y, int w, int h)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y, int w, int h)
 {
 	lef::LEFPort *port;
 	lef::LEFLayer *layer;
@@ -427,12 +447,19 @@ void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y,
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
 
+	qDebug() << macro_name;
+	qDebug() << instance_name;
+	qDebug() << x;
+	qDebug() << y;
+	qDebug() << w;
+	qDebug() << h;
+
 	mi = new QLayoutMacroItem(x,y,w,h);
 	mi->setVisible(true);
 
 	// fill in library content:
-	if(lefdata) if(lefdata->isDefinedMacro(module_name)) {
-		macro = lefdata->getMacro(module_name);
+	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
+		macro = lefdata->getMacro(macro_name);
 		macro->scaleMacro(w, h);
 
 		foreach(pin, macro->getPins()) {

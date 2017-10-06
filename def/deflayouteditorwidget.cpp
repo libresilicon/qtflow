@@ -25,3 +25,12 @@ void DEFLayoutEditorWidget::onContentChanged()
 void DEFLayoutEditorWidget::saveFile()
 {
 }
+
+void DEFLayoutEditorWidget::setProject(Project *p)
+{
+	project = p;
+	//layoutVisibles->setProject(project);
+	editArea->setProject(project);
+	//addDrawingOperations();
+	//addDrawingLayerSelection();
+}

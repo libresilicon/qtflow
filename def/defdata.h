@@ -16,7 +16,7 @@ namespace def {
 	class DEFModuleInfo {
 	public:
 		DEFModuleInfo();
-		QString module_name;
+		QString macro_name;
 		QString instance_name;
 		double x, y;
 	};
@@ -37,7 +37,7 @@ namespace def {
 		// building the info
 		void setDistanceUnitMicrons(int t);
 		void setAmountComponents(int i);
-		void addUsedModuleNames(std::string *module, std::string *name);
+		void addUsedModuleNames(std::string *instance_name, std::string *macro_name);
 		void addUsedModulePlacement(double x, double y);
 		void addUsedModule();
 

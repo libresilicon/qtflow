@@ -41,7 +41,7 @@ void DEFLayoutEditor::loadFile(QString file)
 
 	if(lefdata) delete lefdata;
 	lefdata = new lef::LEFData();
-	if(project) foreach(QString filename, project->getLibraryFiles()) {
+	foreach(QString filename, project->getLibraryFiles()) {
 		filedest = temporaryDir.path()+"/cells.lef";
 		QFile::copy(filename, filedest);
 		if(QFile(filedest).exists()) {
@@ -76,7 +76,7 @@ void DEFLayoutEditor::addMacroInstances()
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
-		editScene->addMacro(e.module_name, e.instance_name, e.x, e.y);
+		editScene->addMacro(e.macro_name, e.instance_name, e.x, e.y);
 	}
 }
 
