@@ -16,7 +16,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	setScene(editScene);
 	setRenderHint(QPainter::Antialiasing);
 	//setCacheMode(QGraphicsView::CacheBackground);
-	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 	//setAcceptDrops(true);
 }
 
@@ -170,6 +170,18 @@ void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 void  MagicLayoutEditor::setActiveLayer(QString s)
 {
 	editScene->setActiveLayer(s);
+}
+
+void MagicLayoutEditor::zoomIn()
+{
+	editScene->setScaleFactor(editScene->getScaleFactor()+1);
+	editScene->update();
+}
+
+void MagicLayoutEditor::zoomOut()
+{
+	editScene->setScaleFactor(editScene->getScaleFactor()-1);
+	editScene->update();
 }
 
 void MagicLayoutEditor::setActiveLayerSelection(QComboBox *s)

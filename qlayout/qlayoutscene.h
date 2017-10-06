@@ -43,6 +43,8 @@ public:
 	void setVisibleLayers(QStringList l);
 	void redraw();
 
+	int getScaleFactor();
+	void setScaleFactor(int);
 	void setGridSize(int);
 	void setSceneRect(qreal x, qreal y, qreal w, qreal h);
 	void addWire(QString layer, int x, int y, int w, int h);

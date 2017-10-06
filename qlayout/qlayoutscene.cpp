@@ -9,7 +9,7 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
 	m_gridSize(40),
-	m_scaleFactor(2)
+	m_scaleFactor(1)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -27,7 +27,7 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
 	m_gridSize(2),
-	m_scaleFactor(2)
+	m_scaleFactor(1)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -45,7 +45,7 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
 	m_gridSize(40),
-	m_scaleFactor(2)
+	m_scaleFactor(1)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -348,6 +348,18 @@ void QLayoutScene::redraw()
 void QLayoutScene::setGridSize(int s) {
 	m_gridSize = s;
 	update();
+}
+
+int QLayoutScene::getScaleFactor()
+{
+	return m_scaleFactor;
+}
+
+void QLayoutScene::setScaleFactor(int s)
+{
+	if(s > 0) {
+		m_scaleFactor = s;
+	}
 }
 
 void QLayoutScene::setSceneRect(qreal x, qreal y, qreal w, qreal h)

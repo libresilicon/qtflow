@@ -55,6 +55,9 @@ public slots:
 
 	void setActiveLayer(QString);
 
+	void zoomIn();
+	void zoomOut();
+
 private:
 	void setRecentVisible(QString s);
 

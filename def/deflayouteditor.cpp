@@ -14,7 +14,7 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	setScene(editScene);
 	setRenderHint(QPainter::Antialiasing);
 	//setCacheMode(QGraphicsView::CacheBackground);
-	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 }
 
 void DEFLayoutEditor::loadFile(QString file)
