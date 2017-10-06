@@ -30,22 +30,22 @@ namespace magic {
 		input.close();
 	}
 
-	int MagicData::getLowerX()
+	qreal MagicData::getLowerX()
 	{
 		return m_BBLowerX;
 	}
 
-	int MagicData::getLowerY()
+	qreal MagicData::getLowerY()
 	{
 		return m_BBLowerY;
 	}
 
-	int MagicData::getUpperX()
+	qreal MagicData::getUpperX()
 	{
 		return m_BBUpperX;
 	}
 
-	int MagicData::getUpperY()
+	qreal MagicData::getUpperY()
 	{
 		return m_BBUpperY;
 	}

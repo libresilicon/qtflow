@@ -79,6 +79,8 @@ private:
 	Project *project;
 	LayoutVisibles *visibles;
 	QComboBox *activeLayerSelection;
+
+	qreal m_scale;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

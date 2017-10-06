@@ -8,16 +8,16 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	activeLayerSelection(NULL),
 	visibles(NULL),
 	filePath(QString()),
-	editScene(new QLayoutScene(this))
+	editScene(new QLayoutScene(this)),
+	m_scale(1.0)
 {
 	editScene->setBackgroundBrush(Qt::white);
-	editScene->setSceneRect(0,0,this->width(),this->height());
 
 	setScene(editScene);
-	setRenderHint(QPainter::Antialiasing);
+	//setRenderHint(QPainter::Antialiasing);
 	//setCacheMode(QGraphicsView::CacheBackground);
 	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-	//setAcceptDrops(true);
+	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 void MagicLayoutEditor::addRectangles()
@@ -72,11 +72,11 @@ void MagicLayoutEditor::loadFile(QString file)
 		editScene->setLEF(lefdata);
 	}
 
-	addMacroInstances();
-	addRectangles();
-
 	editScene->setGridSize(10);
 	editScene->setSceneRect(x,y,w,h);
+
+	addMacroInstances();
+	addRectangles();
 
 	editScene->update();
 }
@@ -174,13 +174,13 @@ void  MagicLayoutEditor::setActiveLayer(QString s)
 
 void MagicLayoutEditor::zoomIn()
 {
-	editScene->setScaleFactor(editScene->getScaleFactor()+1);
+	scale(1.1, 1.1);
 	editScene->update();
 }
 
 void MagicLayoutEditor::zoomOut()
 {
-	editScene->setScaleFactor(editScene->getScaleFactor()-1);
+	scale(0.9, 0.9);
 	editScene->update();
 }
 

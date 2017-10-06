@@ -42,10 +42,10 @@ namespace magic {
 		QString getTechnology();
 
 		// get bbox values
-		int getLowerX();
-		int getLowerY();
-		int getUpperX();
-		int getUpperY();
+		qreal getLowerX();
+		qreal getLowerY();
+		qreal getUpperX();
+		qreal getUpperY();
 
 		// building the info
 		void addRectangle(int,int,int,int);

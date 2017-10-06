@@ -9,12 +9,11 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	editScene(new QLayoutScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
-	editScene->setSceneRect(0,0,this->width(),this->height());
 
 	setScene(editScene);
-	setRenderHint(QPainter::Antialiasing);
+	//setRenderHint(QPainter::Antialiasing);
 	//setCacheMode(QGraphicsView::CacheBackground);
-	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 void DEFLayoutEditor::loadFile(QString file)
@@ -47,11 +46,12 @@ void DEFLayoutEditor::loadFile(QString file)
 	}
 	editScene->setLEF(lefdata);
 
+	editScene->setGridSize(10);
+	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
+
+	editScene->setScaleFactor(100);
 	addMacroInstances();
 	//addRectangles();
-
-	editScene->setGridSize(10);
-	editScene->setSceneRect(x/100,y/100,w/100,h/100);
 
 	editScene->update();
 }
@@ -98,4 +98,16 @@ void DEFLayoutEditor::setProject(Project *p)
 {
 	project = p;
 	editScene->setProject(p);
+}
+
+void DEFLayoutEditor::zoomIn()
+{
+	scale(1.1, 1.1);
+	editScene->update();
+}
+
+void DEFLayoutEditor::zoomOut()
+{
+	scale(0.9, 0.9);
+	editScene->update();
 }

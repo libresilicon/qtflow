@@ -93,26 +93,16 @@ QPointF QLayoutScene::snapGrid(QPointF pt) {
 	return QPointF(x,y);
 }
 
-void QLayoutScene::resizeEvent(QResizeEvent *event)
-{
-	qreal x,y,w,h;
-	x = sceneRect().x();
-	y = sceneRect().y();
-	w = width();
-	h = height();
-	setSceneRect(x*m_scaleFactor,y*m_scaleFactor,w*m_scaleFactor,h*m_scaleFactor);
-}
-
 void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
 	QVector<QLineF> lines;
 	qreal left, top;
 
-	left = int(rect.left())-(int(rect.left()) % (m_gridSize*m_scaleFactor));
-	top = int(rect.top())-(int(rect.top()) % (m_gridSize*m_scaleFactor));
-	for (qreal x = left; x < rect.right(); x += (m_gridSize*m_scaleFactor)){
+	left = int(rect.left())-(int(rect.left()) % m_gridSize);
+	top = int(rect.top())-(int(rect.top()) % m_gridSize);
+	for (qreal x = left; x < rect.right(); x += m_gridSize){
 		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
-		for (qreal y = top; y < rect.bottom(); y += (m_gridSize*m_scaleFactor)){
+		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
 			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
 		}
 	}
@@ -357,14 +347,12 @@ int QLayoutScene::getScaleFactor()
 
 void QLayoutScene::setScaleFactor(int s)
 {
+	QMatrix m;
 	if(s > 0) {
 		m_scaleFactor = s;
+		m.scale(s, s);
+		//setMatrix(m);
 	}
-}
-
-void QLayoutScene::setSceneRect(qreal x, qreal y, qreal w, qreal h)
-{
-	QGraphicsScene::setSceneRect(x*m_scaleFactor, y*m_scaleFactor, w*m_scaleFactor, h*m_scaleFactor);
 }
 
 void QLayoutScene::addWire(QString layer, int x, int y, int w, int h)

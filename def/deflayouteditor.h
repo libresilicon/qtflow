@@ -36,6 +36,10 @@ public:
 
 	bool changes();
 
+public slots:
+	void zoomIn();
+	void zoomOut();
+
 private:
 	void addMacroInstances();
 	void addRectangles();

@@ -46,7 +46,6 @@ public:
 	int getScaleFactor();
 	void setScaleFactor(int);
 	void setGridSize(int);
-	void setSceneRect(qreal x, qreal y, qreal w, qreal h);
 	void addWire(QString layer, int x, int y, int w, int h);
 	void addRectangle(QString layer, int x, int y, int w, int h);
 	void addMacro(QString module_name, QString instance_name, int x, int y, int w, int h);
@@ -62,7 +61,6 @@ protected:
 
 	void keyPressEvent(QKeyEvent *event);
 
-	void resizeEvent(QResizeEvent *event);
 	void drawBackground(QPainter *painter, const QRectF &rect);
 
 signals:
