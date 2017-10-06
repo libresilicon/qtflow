@@ -44,6 +44,7 @@ public:
 	void redraw();
 
 	void setGridSize(int);
+	void setSceneRect(qreal x, qreal y, qreal w, qreal h);
 	void addWire(QString layer, int x, int y, int w, int h);
 	void addRectangle(QString layer, int x, int y, int w, int h);
 	void addMacro(QString module_name, QString instance_name, int x, int y, int w, int h);
@@ -59,8 +60,8 @@ protected:
 
 	void keyPressEvent(QKeyEvent *event);
 
-	void drawBackground(QPainter *painter, const QRectF &rect);
 	void resizeEvent(QResizeEvent *event);
+	void drawBackground(QPainter *painter, const QRectF &rect);
 
 signals:
 	void contentChanged();
@@ -81,11 +82,13 @@ private:
 	QStringList visibleLayers;
 	bool m_dragging;
 	int m_gridSize;
+	int m_scaleFactor;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
 	QMap<QString,layer_macro_wires_t> macro_wires;
 	QMap<QString,rects_layer_t> layer_rects;
+	QVector<QGraphicsLineItem*> gridLines;
 };
 
 #endif // QLAYOUTSCENE_H

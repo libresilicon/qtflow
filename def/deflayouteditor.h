@@ -36,9 +36,6 @@ public:
 
 	bool changes();
 
-public slots:
-	void mousePressEvent(QMouseEvent * e);
-
 private:
 	void addMacroInstances();
 	void addRectangles();

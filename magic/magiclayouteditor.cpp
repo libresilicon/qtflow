@@ -15,7 +15,7 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 
 	setScene(editScene);
 	setRenderHint(QPainter::Antialiasing);
-	setCacheMode(QGraphicsView::CacheBackground);
+	//setCacheMode(QGraphicsView::CacheBackground);
 	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 	//setAcceptDrops(true);
 }

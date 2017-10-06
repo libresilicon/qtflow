@@ -8,7 +8,8 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_gridSize(40)
+	m_gridSize(40),
+	m_scaleFactor(2)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -25,7 +26,8 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_gridSize(40)
+	m_gridSize(2),
+	m_scaleFactor(2)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -42,7 +44,8 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_gridSize(40)
+	m_gridSize(40),
+	m_scaleFactor(2)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -90,25 +93,6 @@ QPointF QLayoutScene::snapGrid(QPointF pt) {
 	return QPointF(x,y);
 }
 
-void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
-{
-	QVector<QLineF> lines;
-	qreal left, top;
-
-	left = int(rect.left())-(int(rect.left()) % m_gridSize);
-	top = int(rect.top())-(int(rect.top()) % m_gridSize);
-	for (qreal x = left; x < rect.right(); x += m_gridSize){
-		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
-		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
-			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
-		}
-	}
-
-	//painter->setPen(QPen(Qt::red));
-	painter->setPen(QPen(QColor(200, 200, 255, 125)));
-	painter->drawLines(lines.data(), lines.size());
-}
-
 void QLayoutScene::resizeEvent(QResizeEvent *event)
 {
 	qreal x,y,w,h;
@@ -116,8 +100,25 @@ void QLayoutScene::resizeEvent(QResizeEvent *event)
 	y = sceneRect().y();
 	w = width();
 	h = height();
-	setSceneRect(x,y,w,h);
-	update();
+	setSceneRect(x*m_scaleFactor,y*m_scaleFactor,w*m_scaleFactor,h*m_scaleFactor);
+}
+
+void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
+{
+	QVector<QLineF> lines;
+	qreal left, top;
+
+	left = int(rect.left())-(int(rect.left()) % (m_gridSize*m_scaleFactor));
+	top = int(rect.top())-(int(rect.top()) % (m_gridSize*m_scaleFactor));
+	for (qreal x = left; x < rect.right(); x += (m_gridSize*m_scaleFactor)){
+		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
+		for (qreal y = top; y < rect.bottom(); y += (m_gridSize*m_scaleFactor)){
+			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
+		}
+	}
+
+	painter->setPen(QPen(QColor(200, 200, 255, 125)));
+	painter->drawLines(lines.data(), lines.size());
 }
 
 void QLayoutScene::setProject(Project *p)
@@ -349,13 +350,25 @@ void QLayoutScene::setGridSize(int s) {
 	update();
 }
 
+void QLayoutScene::setSceneRect(qreal x, qreal y, qreal w, qreal h)
+{
+	QGraphicsScene::setSceneRect(x*m_scaleFactor, y*m_scaleFactor, w*m_scaleFactor, h*m_scaleFactor);
+}
+
 void QLayoutScene::addWire(QString layer, int x, int y, int w, int h)
 {
 }
 
 void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 {
-	QLayoutRectItem *r = new QLayoutRectItem(x, y, w, h);
+	QLayoutRectItem *r;
+
+	x*=m_scaleFactor;
+	y*=m_scaleFactor;
+	w*=m_scaleFactor;
+	h*=m_scaleFactor;
+	r = new QLayoutRectItem(x, y, w, h);
+
 	r->setVisible(true);
 	if(project) r->setColor(project->colorMat(layer));
 	addItem(r);
@@ -376,26 +389,22 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
 
-	double w = 100;
-	double h = 100;
+	double w, h;
 
-	qDebug() << macro_name;
-	qDebug() << instance_name;
-	qDebug() << x;
-	qDebug() << y;
+	x*=m_scaleFactor;
+	y*=m_scaleFactor;
 
 	// fill in library content:
 	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
 		macro = lefdata->getMacro(macro_name);
 		w = macro->getWidth();
 		h = macro->getHeight();
+		w*=m_scaleFactor;
+		h*=m_scaleFactor;
 
-		qDebug() << w;
-		qDebug() << h;
+		macro->scaleMacro(w,h);
 
-		//macro->scaleMacro(w,h);
-
-		mi = new QLayoutMacroItem(x,y,macro->getWidth(),macro->getHeight());
+		mi = new QLayoutMacroItem(x,y,w,h);
 		mi->setVisible(true);
 
 		foreach(pin, macro->getPins()) {
@@ -424,12 +433,6 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 
 		addItem(mi);
 		macros.append(mi);
-	} else {
-		qDebug() << macro_name << " doesn't exist";
-		mi = new QLayoutMacroItem(x,y,w,h);
-		mi->setVisible(true);
-		addItem(mi);
-		macros.append(mi);
 	}
 
 	update();
@@ -447,12 +450,10 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
 
-	qDebug() << macro_name;
-	qDebug() << instance_name;
-	qDebug() << x;
-	qDebug() << y;
-	qDebug() << w;
-	qDebug() << h;
+	x*=m_scaleFactor;
+	y*=m_scaleFactor;
+	w*=m_scaleFactor;
+	h*=m_scaleFactor;
 
 	mi = new QLayoutMacroItem(x,y,w,h);
 	mi->setVisible(true);

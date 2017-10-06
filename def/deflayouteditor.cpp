@@ -9,15 +9,12 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	editScene(new QLayoutScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
-	setScene(editScene);
-}
+	editScene->setSceneRect(0,0,this->width(),this->height());
 
-void DEFLayoutEditor::mousePressEvent(QMouseEvent * e)
-{
-	double rad = 10;
-	QPointF pt = mapToScene(e->pos());
-	editScene->addEllipse(pt.x()-rad, pt.y()-rad, rad*2.0, rad*2.0, QPen(), QBrush(Qt::SolidPattern));
-	QTextStream(stdout) << "Drawing here " << "\t x:" << pt.x() << "\t y:" << pt.y()  << '\n';
+	setScene(editScene);
+	setRenderHint(QPainter::Antialiasing);
+	//setCacheMode(QGraphicsView::CacheBackground);
+	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
 }
 
 void DEFLayoutEditor::loadFile(QString file)
@@ -54,7 +51,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	//addRectangles();
 
 	editScene->setGridSize(10);
-	editScene->setSceneRect(x,y,w,h);
+	editScene->setSceneRect(x/100,y/100,w/100,h/100);
 
 	editScene->update();
 }
@@ -73,10 +70,13 @@ void DEFLayoutEditor::addRectangles()
 
 void DEFLayoutEditor::addMacroInstances()
 {
+	double x, y;
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
-		editScene->addMacro(e.macro_name, e.instance_name, e.x, e.y);
+		x = e.x / 100;
+		y = e.y / 100;
+		editScene->addMacro(e.macro_name, e.instance_name, x, y);
 	}
 }
 
