@@ -50,12 +50,34 @@ void DEFLayoutEditor::loadFile(QString file)
 	}
 	editScene->setLEF(lefdata);
 
-	//addMacroInstances();
+	addMacroInstances();
 	//addRectangles();
 
+	editScene->setGridSize(10);
 	editScene->setSceneRect(x,y,w,h);
 
 	editScene->update();
+}
+
+void DEFLayoutEditor::addRectangles()
+{
+	/*rects_t layer;
+	layer_rects_t rects = defdata->getRectangles();
+	foreach(QString layerN, rects.keys()) {
+		layer = rects[layerN];
+		foreach (rect_t e, layer) {
+			editScene->addRectangle(layerN, e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
+		}
+	}*/
+}
+
+void DEFLayoutEditor::addMacroInstances()
+{
+	QVector<def::DEFModuleInfo> mods = defdata->getModules();
+	foreach (def::DEFModuleInfo e, mods) {
+		// adding boxes for macros
+		editScene->addMacro(e.module_name, e.instance_name, e.x, e.y);
+	}
 }
 
 void DEFLayoutEditor::saveFile()

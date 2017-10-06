@@ -364,6 +364,57 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 	layer_rects[layer].append(r);
 }
 
+void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y)
+{
+	lef::LEFPort *port;
+	lef::LEFLayer *layer;
+	lef::LEFMacro *macro;
+	lef::LEFPin *pin;
+	QColor color;
+	QString layer_name;
+
+	QGraphicsRectItem *mw;
+	QLayoutMacroItem *mi;
+
+	// fill in library content:
+	if(lefdata) if(lefdata->isDefinedMacro(module_name)) {
+		macro = lefdata->getMacro(module_name);
+		macro->scaleMacro(macro->getWidth(),macro->getHeight());
+
+		mi = new QLayoutMacroItem(x,y,macro->getWidth(),macro->getHeight());
+		mi->setVisible(true);
+
+		foreach(pin, macro->getPins()) {
+			port = pin->getPort();
+			foreach(layer, port->getLayers()) {
+				layer_name = layer->getName();
+				color = project->colorMat(layer_name);
+				foreach(lef::rect_t rect, layer->getRects()) {
+					mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
+					mw->setBrush(QBrush(color));
+					mw->setVisible(true);
+					macro_wires[layer_name].append(mw);
+				}
+			}
+		}
+		foreach (layer, macro->getObstruction()->getLayers()) {
+			layer_name = layer->getName();
+			color = project->colorMat(layer_name);
+			foreach(lef::rect_t rect, layer->getRects()) {
+				mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
+				mw->setBrush(QBrush(color));
+				mw->setVisible(true);
+				macro_wires[layer_name].append(mw);
+			}
+		}
+
+		addItem(mi);
+		macros.append(mi);
+	}
+
+	update();
+}
+
 void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y, int w, int h)
 {
 	lef::LEFPort *port;

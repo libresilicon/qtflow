@@ -40,6 +40,9 @@ public slots:
 	void mousePressEvent(QMouseEvent * e);
 
 private:
+	void addMacroInstances();
+	void addRectangles();
+
 	QString filePath;
 	QLayoutScene *editScene;
 	def::DEFData *defdata;

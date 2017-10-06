@@ -47,6 +47,7 @@ public:
 	void addWire(QString layer, int x, int y, int w, int h);
 	void addRectangle(QString layer, int x, int y, int w, int h);
 	void addMacro(QString module_name, QString instance, int x, int y, int w, int h);
+	void addMacro(QString module_name, QString instance, int x, int y);
 
 	QStringList getLayers();
 	QVector<QLayoutRectItem*> getRectangles(QString n);

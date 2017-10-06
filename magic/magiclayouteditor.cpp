@@ -20,13 +20,6 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	//setAcceptDrops(true);
 }
 
-void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
-{
-	//sceneRect = QRectF(sceneRect.x()+dx,sceneRect.y()+dy,this->width(),this->height());
-	//editScene->setSceneRect(sceneRect);
-	editScene->update();
-}
-
 void MagicLayoutEditor::addRectangles()
 {
 	rects_t layer;

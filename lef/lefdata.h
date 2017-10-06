@@ -85,6 +85,8 @@ namespace lef {
 
 		void setSize(double w, double h);
 		void scaleMacro(int w, int h);
+		double getWidth();
+		double getHeight();
 
 		QVector<QString> getPinNames();
 		QVector<LEFPin*> getPins();
