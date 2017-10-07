@@ -293,6 +293,16 @@ namespace lef {
 		sizeH = h;
 	}
 
+	double LEFMacro::getWidth()
+	{
+		return sizeW;
+	}
+
+	double LEFMacro::getHeight()
+	{
+		return sizeH;
+	}
+
 	void LEFMacro::scaleMacro(int w, int h)
 	{
 		double scaleW = (1000*w/sizeW)/1000;

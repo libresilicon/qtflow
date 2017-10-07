@@ -52,9 +52,11 @@ signals:
 
 public slots:
 	void visibles_action(QString s);
-	void scrollContentsBy(int dx, int dy);
 
 	void setActiveLayer(QString);
+
+	void zoomIn();
+	void zoomOut();
 
 private:
 	void setRecentVisible(QString s);
@@ -77,6 +79,8 @@ private:
 	Project *project;
 	LayoutVisibles *visibles;
 	QComboBox *activeLayerSelection;
+
+	qreal m_scale;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

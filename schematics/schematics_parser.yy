@@ -22,6 +22,8 @@
 #include "schematics/schematicsdata.h"
 
 #define schematicslex (schematicsdata->getLexer())->schematicslex
+#define schematicslineno (int)(schematicsdata->getLexer())->lineno()
+
 %}
 
 %union {
@@ -45,6 +47,5 @@ component_content:
 %%
 
 void schematics::SchematicsParser::error(const std::string &s) {
-        //yyclearin;
-	//throw ParserException{settingsline, QString(s)};
+	std::cout << "Error message: " << s << " on line " << schematicslineno << std::endl;
 }

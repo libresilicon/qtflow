@@ -44,6 +44,7 @@ void EditorTabManager::openFile(QString filepath)
 			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 		} else if(info.suffix()=="def") {
 			DEFLayoutEditorWidget *editorWidget = new DEFLayoutEditorWidget(this);
+			editorWidget->setProject(project);
 			editorWidget->loadFile(filepath);
 			addTab(editorWidget,info.fileName());
 			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));

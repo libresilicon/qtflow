@@ -24,6 +24,7 @@ void schematics_error(const char *s);
 LIBS			"LIBS"
 COMPONENT		"\$Comp"
 END_COMPONENT	"\$EndComp"
+
 %%
 
 LIBS			{ return schematics::SchematicsParser::token::LIBS; }

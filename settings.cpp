@@ -16,6 +16,7 @@ Settings::Settings(QWidget *parent, QSettings *s) :
     textEditor(KTextEditor::Editor::instance())
 {
 	ui->setupUi(this);
+
 	connect(ui->yosysButton,SIGNAL(clicked(bool)),this,SLOT(selectYosys_triggered()));
 	connect(ui->graywolfButton,SIGNAL(clicked(bool)),this,SLOT(selectGraywolf_triggered()));
 	connect(ui->qrouterButton,SIGNAL(clicked(bool)),this,SLOT(selectQRouter_triggered()));
@@ -23,10 +24,18 @@ Settings::Settings(QWidget *parent, QSettings *s) :
 
     // pages
     page1 = ui->stackedWidget->currentWidget();
+
     page2 = textEditor->configPage(0, ui->page2);
+	ui->page2->layout()->addWidget(page2);
+
     page3 = textEditor->configPage(1, ui->page3);
+	ui->page3->layout()->addWidget(page3);
+
     page4 = textEditor->configPage(2, ui->page4);
+	ui->page4->layout()->addWidget(page4);
+
     page5 = textEditor->configPage(3, ui->page5);
+	ui->page5->layout()->addWidget(page5);
 
     // page1
     ui->pathYosys->setText(settings->value("yosys").toString());

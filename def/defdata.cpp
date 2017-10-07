@@ -11,7 +11,11 @@ namespace def {
 		parser(NULL),
 		trace_scanning(false),
 		trace_parsing(false),
-		distanceMicrons(false)
+		distanceMicrons(false),
+		m_BBLowerX(0),
+		m_BBLowerY(0),
+		m_BBUpperX(0),
+		m_BBUpperY(0)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -34,10 +38,10 @@ namespace def {
 	}
 
 
-	void DEFData::addUsedModuleNames(std::string *module, std::string *name)
+	void DEFData::addUsedModuleNames(std::string *instance_name, std::string *macro_name)
 	{
-		recent_module.module_name = QString::fromStdString(*module);
-		recent_module.instance_name = QString::fromStdString(*name);
+		recent_module.macro_name = QString::fromStdString(*macro_name);
+		recent_module.instance_name = QString::fromStdString(*instance_name);
 	}
 
 	void DEFData::addUsedModulePlacement(double x, double y)
@@ -45,7 +49,7 @@ namespace def {
 		recent_module.x = x;
 		recent_module.y = y;
 
-		setBoundaryRectangle(x, y, x, y);
+		setBoundaryRectangle(x, y);
 	}
 
 	void DEFData::addUsedModule()
@@ -89,18 +93,12 @@ namespace def {
 		return m_BBUpperY;
 	}
 
-	void DEFData::setBoundaryRectangle(int x1, int y1, int x2, int y2)
+	void DEFData::setBoundaryRectangle(int x, int y)
 	{
-		if(m_BBLowerX>x1) m_BBLowerX = x1;
-		if(m_BBLowerX>x2) m_BBLowerX = x2;
+		if(m_BBLowerX>x) m_BBLowerX = x;
+		if(m_BBLowerY>y) m_BBLowerY = y;
 
-		if(m_BBLowerY>y1) m_BBLowerY = y1;
-		if(m_BBLowerY>y2) m_BBLowerY = y2;
-
-		if(m_BBUpperX<x1) m_BBUpperX = x1;
-		if(m_BBUpperX<x2) m_BBUpperX = x2;
-
-		if(m_BBUpperY<y1) m_BBUpperY = y1;
-		if(m_BBUpperY<y2) m_BBUpperY = y2;
+		if(m_BBUpperX<x) m_BBUpperX = x;
+		if(m_BBUpperY<y) m_BBUpperY = y;
 	}
 }

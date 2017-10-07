@@ -8,7 +8,8 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_gridSize(40)
+	m_gridSize(40),
+	m_scaleFactor(1)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -25,7 +26,8 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_gridSize(40)
+	m_gridSize(2),
+	m_scaleFactor(1)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -42,7 +44,8 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_gridSize(40)
+	m_gridSize(40),
+	m_scaleFactor(1)
 {
 	recentSelectRectangle->setZValue(1000);
 	recentSelectRectangle->hide();
@@ -104,20 +107,8 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 		}
 	}
 
-	//painter->setPen(QPen(Qt::red));
 	painter->setPen(QPen(QColor(200, 200, 255, 125)));
 	painter->drawLines(lines.data(), lines.size());
-}
-
-void QLayoutScene::resizeEvent(QResizeEvent *event)
-{
-	qreal x,y,w,h;
-	x = sceneRect().x();
-	y = sceneRect().y();
-	w = width();
-	h = height();
-	setSceneRect(x,y,w,h);
-	update();
 }
 
 void QLayoutScene::setProject(Project *p)
@@ -344,13 +335,40 @@ void QLayoutScene::redraw()
 	update();
 }
 
+void QLayoutScene::setGridSize(int s) {
+	m_gridSize = s;
+	update();
+}
+
+int QLayoutScene::getScaleFactor()
+{
+	return m_scaleFactor;
+}
+
+void QLayoutScene::setScaleFactor(int s)
+{
+	QMatrix m;
+	if(s > 0) {
+		m_scaleFactor = s;
+		m.scale(s, s);
+		//setMatrix(m);
+	}
+}
+
 void QLayoutScene::addWire(QString layer, int x, int y, int w, int h)
 {
 }
 
 void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 {
-	QLayoutRectItem *r = new QLayoutRectItem(x, y, w, h);
+	QLayoutRectItem *r;
+
+	x*=m_scaleFactor;
+	y*=m_scaleFactor;
+	w*=m_scaleFactor;
+	h*=m_scaleFactor;
+	r = new QLayoutRectItem(x, y, w, h);
+
 	r->setVisible(true);
 	if(project) r->setColor(project->colorMat(layer));
 	addItem(r);
@@ -359,7 +377,7 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 	layer_rects[layer].append(r);
 }
 
-void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y, int w, int h)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y)
 {
 	lef::LEFPort *port;
 	lef::LEFLayer *layer;
@@ -371,12 +389,78 @@ void QLayoutScene::addMacro(QString module_name, QString instance, int x, int y,
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
 
+	double w, h;
+
+	x*=m_scaleFactor;
+	y*=m_scaleFactor;
+
+	// fill in library content:
+	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
+		macro = lefdata->getMacro(macro_name);
+		w = macro->getWidth();
+		h = macro->getHeight();
+		w*=m_scaleFactor;
+		h*=m_scaleFactor;
+
+		macro->scaleMacro(w,h);
+
+		mi = new QLayoutMacroItem(x,y,w,h);
+		mi->setVisible(true);
+
+		foreach(pin, macro->getPins()) {
+			port = pin->getPort();
+			foreach(layer, port->getLayers()) {
+				layer_name = layer->getName();
+				color = project->colorMat(layer_name);
+				foreach(lef::rect_t rect, layer->getRects()) {
+					mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
+					mw->setBrush(QBrush(color));
+					mw->setVisible(true);
+					macro_wires[layer_name].append(mw);
+				}
+			}
+		}
+		foreach (layer, macro->getObstruction()->getLayers()) {
+			layer_name = layer->getName();
+			color = project->colorMat(layer_name);
+			foreach(lef::rect_t rect, layer->getRects()) {
+				mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
+				mw->setBrush(QBrush(color));
+				mw->setVisible(true);
+				macro_wires[layer_name].append(mw);
+			}
+		}
+
+		addItem(mi);
+		macros.append(mi);
+	}
+
+	update();
+}
+
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y, int w, int h)
+{
+	lef::LEFPort *port;
+	lef::LEFLayer *layer;
+	lef::LEFMacro *macro;
+	lef::LEFPin *pin;
+	QColor color;
+	QString layer_name;
+
+	QGraphicsRectItem *mw;
+	QLayoutMacroItem *mi;
+
+	x*=m_scaleFactor;
+	y*=m_scaleFactor;
+	w*=m_scaleFactor;
+	h*=m_scaleFactor;
+
 	mi = new QLayoutMacroItem(x,y,w,h);
 	mi->setVisible(true);
 
 	// fill in library content:
-	if(lefdata) if(lefdata->isDefinedMacro(module_name)) {
-		macro = lefdata->getMacro(module_name);
+	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
+		macro = lefdata->getMacro(macro_name);
 		macro->scaleMacro(w, h);
 
 		foreach(pin, macro->getPins()) {

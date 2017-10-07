@@ -1,10 +1,16 @@
 #ifndef SCHEMATICSEDITOR_H
 #define SCHEMATICSEDITOR_H
 
-#include "ieditor.h"
 #include <QWidget>
 #include <QPainter>
 #include <QGraphicsView>
+#include <QLabel>
+
+#include "ieditor.h"
+
+#include "qschematics/qschematicsscene.h"
+
+#include "schematics/schematicsdata.h"
 
 class SchematicsEditor : public QGraphicsView, public IEditor
 {
@@ -23,7 +29,8 @@ protected:
 
 private:
 	QString filePath;
-	QGraphicsScene *editScene;
+	QSchematicsScene *editScene;
+	schematics::SchematicsData *schematicsdata;
 };
 
 #endif // SCHEMATICSEDITOR_H

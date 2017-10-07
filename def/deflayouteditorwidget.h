@@ -12,6 +12,7 @@ public:
 	DEFLayoutEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
 	QString getFilePath();
+	void setProject(Project *p);
 
 public slots:
 	void onContentChanged();
@@ -19,6 +20,7 @@ public slots:
 
 private:
 	DEFLayoutEditor *editArea;
+	Project *project;
 };
 
 #endif // DEFLAYOUTEDITORWIDGET_H

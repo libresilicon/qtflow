@@ -8,23 +8,16 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	activeLayerSelection(NULL),
 	visibles(NULL),
 	filePath(QString()),
-	editScene(new QLayoutScene(this))
+	editScene(new QLayoutScene(this)),
+	m_scale(1.0)
 {
 	editScene->setBackgroundBrush(Qt::white);
-	editScene->setSceneRect(0,0,this->width(),this->height());
 
 	setScene(editScene);
-	setRenderHint(QPainter::Antialiasing);
-	setCacheMode(QGraphicsView::CacheBackground);
-	setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-	//setAcceptDrops(true);
-}
-
-void MagicLayoutEditor::scrollContentsBy(int dx, int dy)
-{
-	//sceneRect = QRectF(sceneRect.x()+dx,sceneRect.y()+dy,this->width(),this->height());
-	//editScene->setSceneRect(sceneRect);
-	editScene->update();
+	//setRenderHint(QPainter::Antialiasing);
+	//setCacheMode(QGraphicsView::CacheBackground);
+	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 }
 
 void MagicLayoutEditor::addRectangles()
@@ -79,10 +72,11 @@ void MagicLayoutEditor::loadFile(QString file)
 		editScene->setLEF(lefdata);
 	}
 
+	editScene->setGridSize(10);
+	editScene->setSceneRect(x,y,w,h);
+
 	addMacroInstances();
 	addRectangles();
-
-	editScene->setSceneRect(x,y,w,h);
 
 	editScene->update();
 }
@@ -176,6 +170,18 @@ void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 void  MagicLayoutEditor::setActiveLayer(QString s)
 {
 	editScene->setActiveLayer(s);
+}
+
+void MagicLayoutEditor::zoomIn()
+{
+	scale(1.1, 1.1);
+	editScene->update();
+}
+
+void MagicLayoutEditor::zoomOut()
+{
+	scale(0.9, 0.9);
+	editScene->update();
 }
 
 void MagicLayoutEditor::setActiveLayerSelection(QComboBox *s)

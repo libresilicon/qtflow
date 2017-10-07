@@ -37,9 +37,13 @@ public:
 	bool changes();
 
 public slots:
-	void mousePressEvent(QMouseEvent * e);
+	void zoomIn();
+	void zoomOut();
 
 private:
+	void addMacroInstances();
+	void addRectangles();
+
 	QString filePath;
 	QLayoutScene *editScene;
 	def::DEFData *defdata;
