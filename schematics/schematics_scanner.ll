@@ -21,14 +21,33 @@ void schematics_error(const char *s);
 %option nounput
 %option prefix="schematics"
 
-LIBS			"LIBS"
-COMPONENT		"\$Comp"
-END_COMPONENT	"\$EndComp"
+COMPONENT			"$Comp"
+DESCR				"$Descr"
+
+END_COMPONENT		"$EndComp"
+END_DESCR			"$EndDescr"
 
 %%
 
-LIBS			{ return schematics::SchematicsParser::token::LIBS; }
-COMPONENT		{ return schematics::SchematicsParser::token::COMPONENT; }
-END_COMPONENT	{ return schematics::SchematicsParser::token::END_COMPONENT; }
+{DESCR}+			{ return schematics::SchematicsParser::token::DESCR; }
+{END_DESCR}+		{ return schematics::SchematicsParser::token::END_DESCR; }
+
+{COMPONENT}+		{ return schematics::SchematicsParser::token::COMPONENT; }
+{END_COMPONENT}+	{ return schematics::SchematicsParser::token::END_COMPONENT; }
+
+-[0-9]+|[0-9]+ {
+	schematicslval->v_int = atoi(yytext);
+	return schematics::SchematicsParser::token::INTEGER;
+}
+
+[0-9]+"."[0-9]* {
+	schematicslval->v_double = atof(yytext);
+	return schematics::SchematicsParser::token::DOUBLE;
+}
+
+[A-Za-z][A-Za-z0-9_,.-<>]* {
+	schematicslval->v_str = new std::string(yytext, yyleng);
+	return schematics::SchematicsParser::token::STRING;
+}
 
 %%
