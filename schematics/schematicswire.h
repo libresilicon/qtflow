@@ -11,8 +11,8 @@ public:
 	SchematicsWire(QString n, int a, int b, int c, int d);
 
 	QString getName();
-	QPointF getP1();
-	QPointF getP2();
+	QPointF getPos1();
+	QPointF getPos2();
 
 private:
 	QString name;

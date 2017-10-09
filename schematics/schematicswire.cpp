@@ -23,12 +23,12 @@ QString SchematicsWire::getName()
 	return name;
 }
 
-QPointF SchematicsWire::getP1()
+QPointF SchematicsWire::getPos1()
 {
 	return QPointF(x1,y1);
 }
 
-QPointF SchematicsWire::getP2()
+QPointF SchematicsWire::getPos2()
 {
 	return QPointF(x2,y2);
 }
