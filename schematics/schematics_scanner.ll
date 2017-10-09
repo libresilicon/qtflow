@@ -69,6 +69,11 @@ COMPONENT_F			"F"
 	return schematics::SchematicsParser::token::COMPONENT_F;
 }
 
+<component>{END_COMPONENT}+	{
+	BEGIN(INITIAL);
+	return schematics::SchematicsParser::token::END_COMPONENT;
+}
+
 <component>-[0-9]+|[0-9]+			{
 	schematicslval->v_int = atoi(yytext);
 	return schematics::SchematicsParser::token::INTEGER;
@@ -85,11 +90,6 @@ COMPONENT_F			"F"
 }
 
 <component>[ \n\t\r]+		{}
-
-<component>{END_COMPONENT}+	{
-	BEGIN(INITIAL);
-	return schematics::SchematicsParser::token::END_COMPONENT;
-}
 
 {TEXT}+				{ return schematics::SchematicsParser::token::TEXT; }
 {WIRE}+				{ return schematics::SchematicsParser::token::WIRE; }
