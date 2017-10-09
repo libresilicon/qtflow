@@ -12,6 +12,10 @@
 
 #include "schematics/schematicsdata.h"
 
+#include "lef/lefdata.h"
+
+#include "schematicspartselection.h"
+
 class SchematicsEditor : public QGraphicsView, public IEditor
 {
 	Q_OBJECT
@@ -25,18 +29,27 @@ public:
 
 	bool changes();
 
+	void setProject(Project *p);
+
 public slots:
 	void zoomIn();
 	void zoomOut();
+	void showPartSelection();
 
 protected:
 
 private:
 	void addWires();
+	void addParts();
 
 	QString filePath;
 	QSchematicsScene *editScene;
 	schematics::SchematicsData *schematicsdata;
+
+	Project *project;
+	lef::LEFData *lefdata;
+
+	SchematicsPartSelection *partSelection;
 };
 
 #endif // SCHEMATICSEDITOR_H

@@ -24,12 +24,14 @@ void EditorTabManager::openFile(QString filepath)
 
 	if(isCode(info.suffix())) {
 		CodeEditorWidget *editorWidget = new CodeEditorWidget(this);
+		editorWidget->setProject(project);
 		editorWidget->loadFile(filepath);
 		addTab(editorWidget,info.fileName());
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	} else if(isSchematic(info.suffix())) {
 		SchematicsEditorWidget *editorWidget = new SchematicsEditorWidget(this);
+		editorWidget->setProject(project);
 		editorWidget->loadFile(filepath);
 		addTab(editorWidget,info.fileName());
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));

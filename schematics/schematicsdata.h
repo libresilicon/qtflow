@@ -13,6 +13,7 @@
 #include <QGraphicsTextItem>
 
 #include "schematicswire.h"
+#include "schematicspart.h"
 
 namespace schematics {
 	class SchematicsScanner;
@@ -31,13 +32,16 @@ namespace schematics {
 		void addWire(std::string name, int x1, int y1, int x2, int y2);
 		QVector<SchematicsWire> getWires();
 
-		// get bbox values
-		qreal getLowerX();
-		qreal getLowerY();
-		qreal getUpperX();
-		qreal getUpperY();
+		// components:
+		void setRecentPartName(std::string name);
+		void setRecentPartType(std::string name);
+		void setRecentPartPosition(int x, int y);
+		void storeRecentComponent();
+		QVector<SchematicsPart> getParts();
 
 	private:
+		SchematicsPart recentComponent;
+
 		class SchematicsScanner* lexer;
 		class SchematicsParser* parser;
 
@@ -46,18 +50,12 @@ namespace schematics {
 		QString streamname;
 
 		QVector<SchematicsWire> wires;
+		QVector<SchematicsPart> parts;
 
 		int paperHeigth;
 		int paperWidth;
 		QString paperName;
 
-		void setBoundaryRectangle(int, int, int, int);
-
-		// bounding rectangle
-		int m_BBLowerX;
-		int m_BBLowerY;
-		int m_BBUpperX;
-		int m_BBUpperY;
 	};
 }
 

@@ -18,12 +18,15 @@ public:
 	void loadFile(QString);
 	QString getFilePath();
 
+	void setProject(Project *p);
+
 public slots:
 	void onContentChanged();
 	void saveFile();
 
 private:
 	SchematicsEditor *editArea;
+	Project *project;
 };
 
 #endif // EDITORWIDGET_H

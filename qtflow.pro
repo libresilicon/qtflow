@@ -128,7 +128,8 @@ FORMS    += \
 	projectsettings.ui \
 	console.ui \
 	schematicstoolbox.ui \
-	layoutvisibles.ui
+	layoutvisibles.ui \
+    partselection.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc

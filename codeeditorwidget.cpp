@@ -40,6 +40,11 @@ void CodeEditorWidget::loadFile(QString path)
     setStatusChanged(false);
 }
 
+void CodeEditorWidget::setProject(Project *p)
+{
+	project = p;
+}
+
 QString CodeEditorWidget::getFilePath()
 {
     return fileInfo.absoluteFilePath();
