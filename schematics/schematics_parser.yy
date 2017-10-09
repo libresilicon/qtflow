@@ -39,22 +39,35 @@
 %token DESCR
 %token END_DESCR
 
+%token TEXT
+%token WIRE
+%token CONNECTION
+
+%token END_SCHEMATIC
+
 %token <v_int> INTEGER
 %token <v_str> STRING
 %token <v_double> DOUBLE
+
+%token <std::string> Multiline "multiline-string"
 
 %start schematics_file
 
 %%
 
-schematics_file:
+schematics_file: schematics_entries END_SCHEMATIC;
+
+schematics_entries:
 	| schematics_entry
-	| schematics_file schematics_entry
+	| schematics_entries schematics_entry
 ;
 
 schematics_entry:
 	| description
 	| component
+	| text
+	| wire
+	| connection
 ;
 
 description:
@@ -68,6 +81,7 @@ description_list:
 
 description_content:
 	| STRING
+	| Multiline
 	| INTEGER
 ;
 
@@ -76,13 +90,23 @@ component:
 ;
 
 component_list:
-	  component_content
+	| component_content
 	| component_list component_content
 ;
 
 component_content:
-	  | STRING
-	  | INTEGER
+	| STRING
+	| Multiline
+	| INTEGER
+;
+
+text: TEXT STRING INTEGER INTEGER INTEGER INTEGER STRING STRING INTEGER STRING;
+wire: WIRE WIRE STRING INTEGER INTEGER INTEGER INTEGER;
+connection: CONNECTION STRING INTEGER INTEGER;
+
+string:
+	| STRING
+	| Multiline
 ;
 
 %%
