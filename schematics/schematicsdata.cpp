@@ -31,4 +31,9 @@ namespace schematics {
 	{
 		return lexer;
 	}
+
+	void SchematicsData::addWire(std::string name, int x1, int y1, int x2, int y2)
+	{
+
+	}
 }
