@@ -37,6 +37,7 @@ void SchematicsEditor::loadFile(QString file)
 			lefdata->loadFile(filedest);
 		}
 	}
+	partSelection->setLEF(lefdata);
 	editScene->setLEF(lefdata);
 	//editScene->setGridSize(10);
 
