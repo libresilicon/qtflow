@@ -84,7 +84,9 @@ COMPONENT_F			"F"
 	return schematics::SchematicsParser::token::STRING;
 }
 
-{END_COMPONENT}+	{
+<component>[ \n\t\r]+		{}
+
+<component>{END_COMPONENT}+	{
 	BEGIN(INITIAL);
 	return schematics::SchematicsParser::token::END_COMPONENT;
 }
