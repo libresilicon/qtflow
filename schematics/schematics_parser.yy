@@ -41,6 +41,13 @@
 %token END_COMPONENT
 
 %token DESCR
+%token DESCR_ENC
+%token DESCR_SHEET
+%token DESCR_TITLE
+%token DESCR_DATE
+%token DESCR_REVISION
+%token DESCR_COMP
+%token DESCR_COMMENT
 %token END_DESCR
 
 %token TEXT
@@ -82,8 +89,13 @@ description_list:
 ;
 
 description_content:
-	| STRING
-	| INTEGER
+	| DESCR_ENC STRING
+	| DESCR_SHEET INTEGER INTEGER
+	| DESCR_TITLE STRING
+	| DESCR_DATE STRING
+	| DESCR_REVISION STRING
+	| DESCR_COMP STRING
+	| DESCR_COMMENT STRING
 ;
 
 component:
