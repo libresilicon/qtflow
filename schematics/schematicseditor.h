@@ -25,6 +25,10 @@ public:
 
 	bool changes();
 
+public slots:
+	void zoomIn();
+	void zoomOut();
+
 protected:
 
 private:

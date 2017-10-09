@@ -18,7 +18,7 @@ public:
 	QSchematicsScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
 	QSchematicsScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 
-	void addWire(QString name, QPointF p1, QPointF p2);
+	void addWire(QString name, qreal x1, qreal y1, qreal x2, qreal y2);
 
 };
 

@@ -10,7 +10,9 @@ namespace schematics {
 		m_BBLowerX(0),
 		m_BBLowerY(0),
 		m_BBUpperX(0),
-		m_BBUpperY(0)
+		m_BBUpperY(0),
+		paperHeigth(0),
+		paperWidth(0)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -37,6 +39,13 @@ namespace schematics {
 		SchematicsWire wire = SchematicsWire(QString::fromStdString(name),x1,y1,x2,y2);
 		wires.append(wire);
 		setBoundaryRectangle(x1,y1,x2,y2);
+	}
+
+	void SchematicsData::setFormat(std::string format, int w, int h)
+	{
+		paperName = QString::fromStdString(format);
+		paperWidth = w;
+		paperHeigth = h;
 	}
 
 	QVector<SchematicsWire> SchematicsData::getWires()
@@ -79,5 +88,13 @@ namespace schematics {
 		return m_BBUpperY;
 	}
 
+	qreal SchematicsData::getPaperWidth()
+	{
+		return paperWidth;
+	}
 
+	qreal SchematicsData::getPaperHeigth()
+	{
+		return paperHeigth;
+	}
 }

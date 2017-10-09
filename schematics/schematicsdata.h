@@ -22,8 +22,13 @@ namespace schematics {
 		SchematicsData(QString file);
 		class SchematicsScanner *getLexer();
 
-		void addWire(std::string name, int x1, int y1, int x2, int y2);
+		// paper format:
+		void setFormat(std::string format, int w, int h);
+		qreal getPaperHeigth();
+		qreal getPaperWidth();
 
+		// wires:
+		void addWire(std::string name, int x1, int y1, int x2, int y2);
 		QVector<SchematicsWire> getWires();
 
 		// get bbox values
@@ -41,6 +46,10 @@ namespace schematics {
 		QString streamname;
 
 		QVector<SchematicsWire> wires;
+
+		int paperHeigth;
+		int paperWidth;
+		QString paperName;
 
 		void setBoundaryRectangle(int, int, int, int);
 

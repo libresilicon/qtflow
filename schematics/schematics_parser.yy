@@ -80,8 +80,10 @@ schematics_entry:
 ;
 
 description:
-	DESCR STRING INTEGER INTEGER description_list END_DESCR
-;
+DESCR STRING INTEGER INTEGER description_list END_DESCR
+{
+	schematicsdata->setFormat(*$2,$3,$4);
+};
 
 description_list:
 	  description_content

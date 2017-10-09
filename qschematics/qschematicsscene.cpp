@@ -15,13 +15,13 @@ QSchematicsScene::QSchematicsScene(qreal x, qreal y, qreal width, qreal height, 
 {
 }
 
-void QSchematicsScene::addWire(QString name, QPointF p1, QPointF p2)
+void QSchematicsScene::addWire(QString name, qreal x1, qreal y1, qreal x2, qreal y2)
 {
-	qDebug() << "Adding wire: " << name;
-	qDebug() << p1;
-	qDebug() << p2;
-
-	QGraphicsLineItem *w = new QGraphicsLineItem(p1.x(),p1.y(),p2.x(),p2.y());
+	QPen pen;
+	QGraphicsLineItem *w = new QGraphicsLineItem(x1,y1,x2,y2);
+	pen = w->pen();
+	pen.setWidth(5);
+	w->setPen(pen);
 	w->setVisible(true);
 	addItem(w);
 }
