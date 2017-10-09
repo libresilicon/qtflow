@@ -13,10 +13,12 @@ SOURCES += \
 	$$PWD/schematicsdata.cpp \
 	$$PWD/schematicseditor.cpp \
 	$$PWD/schematicseditorwidget.cpp \
-	$$PWD/schematicsscanner.cpp
+	$$PWD/schematicsscanner.cpp \
+    $$PWD/schematicswire.cpp
  
 HEADERS += \
 	$$PWD/schematicsdata.h \
 	$$PWD/schematicseditor.h \
 	$$PWD/schematicseditorwidget.h \
-	$$PWD/schematicsscanner.h
+	$$PWD/schematicsscanner.h \
+    $$PWD/schematicswire.h

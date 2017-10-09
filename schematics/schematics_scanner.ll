@@ -18,17 +18,100 @@ void schematics_error(const char *s);
 }
 
 %option yywrap
+%option yylineno
 %option nounput
 %option prefix="schematics"
 
-LIBS			"LIBS"
-COMPONENT		"\$Comp"
-END_COMPONENT	"\$EndComp"
+STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=#?~\"]
+
+COMPONENT			"$Comp"
+DESCR				"$Descr"
+
+END_COMPONENT		"$EndComp"
+END_DESCR			"$EndDescr"
+
+TEXT				"Text"
+WIRE				"Wire"
+CONNECTION			"Connection"
+
+END_SCHEMATIC		"$EndSCHEMATC"
+
+COMPONENT_L			"L"
+COMPONENT_U			"U"
+COMPONENT_P			"P"
+COMPONENT_F			"F"
+
+%x component
 
 %%
 
-LIBS			{ return schematics::SchematicsParser::token::LIBS; }
-COMPONENT		{ return schematics::SchematicsParser::token::COMPONENT; }
-END_COMPONENT	{ return schematics::SchematicsParser::token::END_COMPONENT; }
+{DESCR}+			{ return schematics::SchematicsParser::token::DESCR; }
+{END_DESCR}+		{ return schematics::SchematicsParser::token::END_DESCR; }
+
+{COMPONENT}+		{
+	BEGIN(component);
+	return schematics::SchematicsParser::token::COMPONENT;
+}
+
+<component>{COMPONENT_L}	{
+	return schematics::SchematicsParser::token::COMPONENT_L;
+}
+
+<component>{COMPONENT_U}	{
+	return schematics::SchematicsParser::token::COMPONENT_U;
+}
+
+<component>{COMPONENT_P}	{
+	return schematics::SchematicsParser::token::COMPONENT_P;
+}
+
+<component>{COMPONENT_F}	{
+	return schematics::SchematicsParser::token::COMPONENT_F;
+}
+
+<component>-[0-9]+|[0-9]+			{
+	schematicslval->v_int = atoi(yytext);
+	return schematics::SchematicsParser::token::INTEGER;
+}
+
+<component>[0-9]+"."[0-9]*			{
+	schematicslval->v_double = atof(yytext);
+	return schematics::SchematicsParser::token::DOUBLE;
+}
+
+<component>{STRING}*				{
+	schematicslval->v_str = new std::string(yytext, yyleng);
+	return schematics::SchematicsParser::token::STRING;
+}
+
+<component>[ \n\t\r]+		{}
+
+<component>{END_COMPONENT}+	{
+	BEGIN(INITIAL);
+	return schematics::SchematicsParser::token::END_COMPONENT;
+}
+
+{TEXT}+				{ return schematics::SchematicsParser::token::TEXT; }
+{WIRE}+				{ return schematics::SchematicsParser::token::WIRE; }
+{CONNECTION}+		{ return schematics::SchematicsParser::token::CONNECTION; }
+
+{END_SCHEMATIC}+	{ return schematics::SchematicsParser::token::END_SCHEMATIC; }
+
+-[0-9]+|[0-9]+			{
+	schematicslval->v_int = atoi(yytext);
+	return schematics::SchematicsParser::token::INTEGER;
+}
+
+[0-9]+"."[0-9]*			{
+	schematicslval->v_double = atof(yytext);
+	return schematics::SchematicsParser::token::DOUBLE;
+}
+
+{STRING}*				{
+	schematicslval->v_str = new std::string(yytext, yyleng);
+	return schematics::SchematicsParser::token::STRING;
+}
+
+[ \n\t\r]+				{}
 
 %%

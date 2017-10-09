@@ -28,6 +28,8 @@ public:
 protected:
 
 private:
+	void addWires();
+
 	QString filePath;
 	QSchematicsScene *editScene;
 	schematics::SchematicsData *schematicsdata;
