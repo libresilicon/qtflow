@@ -20,6 +20,10 @@ SchematicsEditorWidget::SchematicsEditorWidget(QWidget *parent) :
 	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showPartSelection()));
 	toolbar->addAction(button);
 
+	button = new QAction(QPixmap(":/libedit.svg"), "Edit library", toolbar);
+	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showPartSelection()));
+	toolbar->addAction(button);
+
 	addToolBar(toolbar);
 
 	setCentralWidget(editArea);

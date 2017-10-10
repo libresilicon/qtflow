@@ -11,7 +11,7 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 
 	setType(MagicLayoutEditorWidgetType);
 
-	button = new QAction(QPixmap(":/three_d.svg"), "3D view", toolbar);
+	button = new QAction(QPixmap(":/icon_3d.svg"), "3D view", toolbar);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 	toolbar->addAction(button);
 
