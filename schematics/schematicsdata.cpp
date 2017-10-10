@@ -7,10 +7,9 @@ namespace schematics {
 		parser(NULL),
 		trace_scanning(false),
 		trace_parsing(false),
-		m_BBLowerX(0),
-		m_BBLowerY(0),
-		m_BBUpperX(0),
-		m_BBUpperY(0)
+		paperHeigth(0),
+		paperWidth(0),
+		recentComponent(SchematicsPart())
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -36,7 +35,13 @@ namespace schematics {
 	{
 		SchematicsWire wire = SchematicsWire(QString::fromStdString(name),x1,y1,x2,y2);
 		wires.append(wire);
-		setBoundaryRectangle(x1,y1,x2,y2);
+	}
+
+	void SchematicsData::setFormat(std::string format, int w, int h)
+	{
+		paperName = QString::fromStdString(format);
+		paperWidth = w;
+		paperHeigth = h;
 	}
 
 	QVector<SchematicsWire> SchematicsData::getWires()
@@ -44,40 +49,39 @@ namespace schematics {
 		return wires;
 	}
 
-	void SchematicsData::setBoundaryRectangle(int x1, int y1, int x2, int y2)
+	QVector<SchematicsPart> SchematicsData::getParts()
 	{
-		if(m_BBLowerX>x1) m_BBLowerX = x1;
-		if(m_BBLowerX>x2) m_BBLowerX = x2;
-
-		if(m_BBLowerY>y1) m_BBLowerY = y1;
-		if(m_BBLowerY>y2) m_BBLowerY = y2;
-
-		if(m_BBUpperX<x1) m_BBUpperX = x1;
-		if(m_BBUpperX<x2) m_BBUpperX = x2;
-
-		if(m_BBUpperY<y1) m_BBUpperY = y1;
-		if(m_BBUpperY<y2) m_BBUpperY = y2;
+		return parts;
 	}
 
-	qreal SchematicsData::getLowerX()
+	void SchematicsData::setRecentPartName(std::string name)
 	{
-		return m_BBLowerX;
+		recentComponent.setName(QString::fromStdString(name));
 	}
 
-	qreal SchematicsData::getLowerY()
+	void SchematicsData::setRecentPartType(std::string name)
 	{
-		return m_BBLowerY;
+		recentComponent.setType(QString::fromStdString(name));
 	}
 
-	qreal SchematicsData::getUpperX()
+	void SchematicsData::setRecentPartPosition(int x, int y)
 	{
-		return m_BBUpperX;
+		recentComponent.setPosition(x,y);
 	}
 
-	qreal SchematicsData::getUpperY()
+	void SchematicsData::storeRecentComponent()
 	{
-		return m_BBUpperY;
+		parts.append(recentComponent);
+		recentComponent = SchematicsPart();
 	}
 
+	qreal SchematicsData::getPaperWidth()
+	{
+		return paperWidth;
+	}
 
+	qreal SchematicsData::getPaperHeigth()
+	{
+		return paperHeigth;
+	}
 }

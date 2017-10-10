@@ -268,6 +268,11 @@ namespace lef {
 		return false;
 	}
 
+	QVector<LEFMacro*> LEFData::getMacros()
+	{
+		return macros;
+	}
+
 	LEFMacro* LEFData::getMacro(QString n)
 	{
 		LEFMacro *ret = NULL;

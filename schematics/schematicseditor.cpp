@@ -4,41 +4,77 @@ SchematicsEditor::SchematicsEditor(QWidget *parent):
 	QGraphicsView(parent),
 	editScene(new QSchematicsScene(this)),
 	filePath(QString()),
-	schematicsdata(NULL)
+	schematicsdata(NULL),
+	project(NULL),
+	lefdata(NULL),
+	partSelection(new SchematicsPartSelection(this)),
+	libraryEditor(new SchematicsLibraryEditor(this))
 {
 	setScene(editScene);
 }
 
+void SchematicsEditor::setProject(Project *p)
+{
+	project = p;
+	editScene->setProject(project);
+}
+
 void SchematicsEditor::loadFile(QString file)
 {
-	int x, y, w, h;
-	//QString filedest;
-	//QTemporaryDir temporaryDir;
+	QString filedest;
+	QTemporaryDir temporaryDir;
+
 	filePath = file;
 	if(schematicsdata) delete schematicsdata;
 	schematicsdata = new schematics::SchematicsData(file);
 
-	x = schematicsdata->getLowerX();
-	y = schematicsdata->getLowerY();
-	w = schematicsdata->getUpperX()-x;
-	h = schematicsdata->getUpperY()-y;
 
-	if(w<this->width()) w = this->width();
-	if(h<this->height()) h = this->height();
-
+	if(lefdata) delete lefdata;
+	lefdata = new lef::LEFData();
+	foreach(QString filename, project->getLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.lef";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+			lefdata->loadFile(filedest);
+		}
+	}
+	partSelection->setLEF(lefdata);
+	editScene->setLEF(lefdata);
 	//editScene->setGridSize(10);
-	//editScene->setSceneRect(x,y,w,h);
 
 	addWires();
+	addParts();
+
+	// add frame:
+	editScene->addRect(0,0,schematicsdata->getPaperWidth(),schematicsdata->getPaperHeigth());
+	scale(0.1,0.1);
 
 	editScene->update();
 }
 
 void SchematicsEditor::addWires()
 {
+	QPointF p1, p2;
+	qreal x1, y1, x2, y2;
+
 	if(schematicsdata && editScene) {
 		foreach(SchematicsWire w, schematicsdata->getWires()) {
-			editScene->addWire(w.getName(),w.getPos1(),w.getPos2());
+			p1 = w.getPos1();
+			p2 = w.getPos2();
+			x1 = p1.x();
+			y1 = p1.y();
+			x2 = p2.x();
+			y2 = p2.y();
+			editScene->addWire(w.getName(), x1, y1, x2, y2);
+		}
+	}
+}
+
+void SchematicsEditor::addParts()
+{
+	if(schematicsdata && editScene) {
+		foreach(SchematicsPart p, schematicsdata->getParts()) {
+			editScene->addPart(p.getName(),p.getType(),p.x(),p.y());
 		}
 	}
 }
@@ -55,4 +91,26 @@ QString SchematicsEditor::getFilePath()
 bool SchematicsEditor::changes()
 {
 	return false;
+}
+
+void SchematicsEditor::zoomIn()
+{
+	scale(1.1, 1.1);
+	editScene->update();
+}
+
+void SchematicsEditor::zoomOut()
+{
+	scale(0.9, 0.9);
+	editScene->update();
+}
+
+void SchematicsEditor::showPartSelection()
+{
+	partSelection->show();
+}
+
+void SchematicsEditor::showLibraryEditor()
+{
+	libraryEditor->show();
 }

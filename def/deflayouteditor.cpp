@@ -53,6 +53,8 @@ void DEFLayoutEditor::loadFile(QString file)
 	addMacroInstances();
 	//addRectangles();
 
+	scale(0.1,0.1);
+
 	editScene->update();
 }
 

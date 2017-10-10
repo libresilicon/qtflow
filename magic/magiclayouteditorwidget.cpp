@@ -11,7 +11,7 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 
 	setType(MagicLayoutEditorWidgetType);
 
-	button = new QAction(QPixmap(":/three_d.svg"), "3D view", toolbar);
+	button = new QAction(QPixmap(":/icon_3d.svg"), "3D view", toolbar);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));
 	toolbar->addAction(button);
 
@@ -76,7 +76,7 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	drawingOperations[DRAWING_OPERATION_RECTANGLE] = button;
 	toolbar->addAction(button);
 
-	button = new QAction(QPixmap(":/select-items.svg"), "Select rectangles", toolbar);
+	button = new QAction(QPixmap(":/add_dashed_line.svg"), "Select items", toolbar);
 	button->setCheckable(true);
 	button->setData(DRAWING_OPERATION_SELECT);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));

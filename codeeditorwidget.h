@@ -3,6 +3,8 @@
 
 #include "editorwidget.h"
 
+#include "project.h"
+
 #include <KTextEditor/Editor>
 #include <KTextEditor/Document>
 #include <KTextEditor/View>
@@ -19,6 +21,7 @@ public:
 	explicit CodeEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
 	QString getFilePath();
+	void setProject(Project *p);
 
 public slots:
 	void onContentChanged();
@@ -30,6 +33,7 @@ private:
     KTextEditor::View *view;
 
     QFileInfo fileInfo;
+	Project *project;
 };
 
 #endif // EDITORWIDGET_H

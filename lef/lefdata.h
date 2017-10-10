@@ -116,6 +116,7 @@ namespace lef {
 
 		bool isDefinedMacro(QString name);
 		LEFMacro *getMacro(QString);
+		QVector<LEFMacro*> getMacros();
 
 		void setBaseUnitMicrons(int);
 

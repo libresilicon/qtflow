@@ -96,6 +96,9 @@
 			<tech>:/osu035/SCN4M_SUBM.20.tech</tech>
 			<techdisplay>:/osu035/SCN4M_SUBM.20.tech</techdisplay>
 			<!--<techdisplay>:/scmos.tech</techdisplay>-->
+			<schematic_symbols>
+				<file>:/osu035/osu035_stdcells.slib</file>
+			</schematic_symbols>
 		</process>
 
 		<process xml:id="osu050">
