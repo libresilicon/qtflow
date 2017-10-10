@@ -16,7 +16,8 @@ SOURCES += \
 	$$PWD/schematicsscanner.cpp \
     $$PWD/schematicswire.cpp \
     $$PWD/schematicspart.cpp \
-    $$PWD/schematicspartselection.cpp
+    $$PWD/schematicspartselection.cpp \
+    $$PWD/schematicslibraryeditor.cpp
  
 HEADERS += \
 	$$PWD/schematicsdata.h \
@@ -25,4 +26,5 @@ HEADERS += \
 	$$PWD/schematicsscanner.h \
     $$PWD/schematicswire.h \
     $$PWD/schematicspart.h \
-    $$PWD/schematicspartselection.h
+    $$PWD/schematicspartselection.h \
+    $$PWD/schematicslibraryeditor.h

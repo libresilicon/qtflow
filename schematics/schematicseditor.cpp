@@ -7,7 +7,8 @@ SchematicsEditor::SchematicsEditor(QWidget *parent):
 	schematicsdata(NULL),
 	project(NULL),
 	lefdata(NULL),
-	partSelection(new SchematicsPartSelection(this))
+	partSelection(new SchematicsPartSelection(this)),
+	libraryEditor(new SchematicsLibraryEditor(this))
 {
 	setScene(editScene);
 }
@@ -107,4 +108,9 @@ void SchematicsEditor::zoomOut()
 void SchematicsEditor::showPartSelection()
 {
 	partSelection->show();
+}
+
+void SchematicsEditor::showLibraryEditor()
+{
+	libraryEditor->show();
 }

@@ -15,6 +15,7 @@
 #include "lef/lefdata.h"
 
 #include "schematicspartselection.h"
+#include "schematicslibraryeditor.h"
 
 class SchematicsEditor : public QGraphicsView, public IEditor
 {
@@ -35,6 +36,7 @@ public slots:
 	void zoomIn();
 	void zoomOut();
 	void showPartSelection();
+	void showLibraryEditor();
 
 protected:
 
@@ -50,6 +52,7 @@ private:
 	lef::LEFData *lefdata;
 
 	SchematicsPartSelection *partSelection;
+	SchematicsLibraryEditor *libraryEditor;
 };
 
 #endif // SCHEMATICSEDITOR_H

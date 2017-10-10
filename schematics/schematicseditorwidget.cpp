@@ -21,7 +21,7 @@ SchematicsEditorWidget::SchematicsEditorWidget(QWidget *parent) :
 	toolbar->addAction(button);
 
 	button = new QAction(QPixmap(":/libedit.svg"), "Edit library", toolbar);
-	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showPartSelection()));
+	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showLibraryEditor()));
 	toolbar->addAction(button);
 
 	addToolBar(toolbar);
