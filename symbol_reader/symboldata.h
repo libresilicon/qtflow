@@ -21,23 +21,12 @@ namespace symbol {
 	public:
 		SymbolData(QString file);
 
-		// building the info
+		// building the info:
 		class SymbolScanner *getLexer();
 
-		void addPlane(std::string);
-		void addType(std::string s1, std::string s2);
-
-		QStringList getType(QString s);
-
-		QStringList getPlanes();
-
-		QStringList getTypeNames();
-
-		QStringList getStyleNames();
-		QMap<QString,QVector<int>> getStyle(QString s);
-		void setRecentStyle(std::string s);
-		void addToRecentStyleMember(int i);
-		void setRecentStyleMember(std::string s);
+		// setter:
+		void addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, std::string f, std::string font);
+		void addPin(std::string name, int x, int y);
 
 	private:
 		class SymbolScanner* lexer;
@@ -45,14 +34,6 @@ namespace symbol {
 		bool trace_parsing;
 		bool trace_scanning;
 		QString streamname;
-
-		QStringList planeList;
-		QMap<QString,QStringList> typeList;
-		QMap<QString,QMap<QString,QVector<int>>> styleList;
-
-		QString recentStyle;
-		QString recentStyleMember;
-
 	};
 }
 

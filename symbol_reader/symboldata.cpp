@@ -9,8 +9,6 @@ namespace symbol {
 		trace_scanning(false),
 		trace_parsing(false)
 	{
-		planeList.clear();
-
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
 
@@ -31,55 +29,13 @@ namespace symbol {
 		return lexer;
 	}
 
-	QStringList SymbolData::getPlanes()
+	void SymbolData::addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, std::string f, std::string font)
 	{
-		return planeList;
+
 	}
 
-	QStringList SymbolData::getTypeNames()
+	void SymbolData::addPin(std::string name, int x, int y)
 	{
-		return typeList.keys();
-	}
 
-	QStringList SymbolData::getStyleNames()
-	{
-		return styleList.keys();
-	}
-
-	void SymbolData::addPlane(std::string s)
-	{
-		planeList.append(QString::fromStdString(s));
-	}
-
-	void SymbolData::addType(std::string s1, std::string s2)
-	{
-		QString typeName = QString::fromStdString(s1);
-		QString value = QString::fromStdString(s2);
-		typeList[typeName].append(value);
-	}
-
-	QStringList SymbolData::getType(QString s)
-	{
-		return typeList[s];
-	}
-
-	QMap<QString,QVector<int>> SymbolData::getStyle(QString s)
-	{
-		return styleList[s];
-	}
-
-	void SymbolData::setRecentStyle(std::string s)
-	{
-		recentStyle = QString::fromStdString(s);
-	}
-
-	void SymbolData::addToRecentStyleMember(int i)
-	{
-		styleList[recentStyle][recentStyleMember].append(i);
-	}
-
-	void SymbolData::setRecentStyleMember(std::string s)
-	{
-		recentStyleMember = QString::fromStdString(s);
 	}
 }

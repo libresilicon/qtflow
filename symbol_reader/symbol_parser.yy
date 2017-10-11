@@ -59,10 +59,20 @@ symbol_sections:
 	| symbol_sections symbol_section
 ;
 
-symbol_section: DEF STRING STRING INTEGER INTEGER STRING STRING INTEGER STRING STRING pins ENDDEF;
+symbol_section:
+	  symbol_header pins ENDDEF
+;
+
+symbol_header:
+DEF STRING STRING INTEGER INTEGER STRING STRING STRING STRING
+{
+	symboldata->addPart(*$2,*$3,$4,$5,*$6,*$7,*$8,*$9);
+}
+;
 
 pins:
-	| DRAW pin_list ENDDRAW;
+	| DRAW pin_list ENDDRAW
+;
 
 pin_list:
 	  pin_entry
@@ -70,7 +80,10 @@ pin_list:
 ;
 
 pin_entry:
-	X STRING INTEGER INTEGER INTEGER INTEGER STRING INTEGER INTEGER INTEGER INTEGER STRING STRING
+X STRING INTEGER INTEGER INTEGER STRING INTEGER INTEGER INTEGER INTEGER STRING STRING
+{
+	symboldata->addPin(*$2,$3,$4);
+}
 ;
 
 %%

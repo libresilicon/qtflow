@@ -17,7 +17,7 @@ for line in file:
 		has_pins = False
 		l = line.split()
 		macro_name = l[1]
-		outl = "DEF "+macro_name+" U 0 30 Y Y 4 F N\n"
+		outl = "DEF "+macro_name+" U 0 30 Y Y F N\n"
 		outfile.write(outl)
 
 	if re.search("PIN" , line):
@@ -46,19 +46,19 @@ for line in file:
 				first_pin = False
 
 			if(pin_use=="POWER"):
-				outl = "X "+pin_name+" 14 -150 150 0 D 50 30 0 0 W P\n"
+				outl = "X "+pin_name+" -150 150 0 D 50 30 0 0 W P\n"
 				outfile.write(outl)
 			elif(pin_use=="GROUND"):
-				outl = "X "+pin_name+" 14 -150 150 0 D 50 30 0 0 W P\n"
+				outl = "X "+pin_name+" -150 150 0 D 50 30 0 0 W P\n"
 				outfile.write(outl)
 			elif(pin_direction=="INPUT"):
-				outl = "X "+pin_name+" 14 -150 150 0 D 50 30 0 0 W I\n"
+				outl = "X "+pin_name+" -150 150 0 D 50 30 0 0 W I\n"
 				outfile.write(outl)
 			elif(pin_direction=="OUTPUT"):
-				outl = "X "+pin_name+" 14 -150 150 0 D 50 30 0 0 W O\n"
+				outl = "X "+pin_name+" -150 150 0 D 50 30 0 0 W O\n"
 				outfile.write(outl)
 			elif(pin_direction=="INOUT"):
-				outl = "X "+pin_name+" 14 -150 150 0 D 50 30 0 0 W P\n"
+				outl = "X "+pin_name+" -150 150 0 D 50 30 0 0 W P\n"
 				outfile.write(outl)
 
 			pin_mode = False
