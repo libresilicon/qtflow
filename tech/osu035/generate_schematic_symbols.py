@@ -55,17 +55,17 @@ for line in file:
 				first_pin = False
 
 			if(pin_use=="POWER"):
-				outl += "X "+pin_name+" "+str(idx)+" 0 150 100 U 50 30 1 1 W\n"
+				outl += "X "+pin_name+" "+str(idx)+" 0 250 100 D 50 30 1 1 W\n"
 			elif(pin_use=="GROUND"):
-				outl += "X "+pin_name+" "+str(idx)+" 0 -150 100 D 50 30 1 1 P\n"
+				outl += "X "+pin_name+" "+str(idx)+" 0 -250 100 U 50 30 1 1 P\n"
 			elif(pin_direction=="INPUT"):
-				outl += "X "+pin_name+" "+str(idx)+" -250 "+str(input_pos)+" 100 L 50 30 1 1 I\n"
+				outl += "X "+pin_name+" "+str(idx)+" -350 "+str(input_pos)+" 100 R 50 30 1 1 I\n"
 				input_pos+=80
 			elif(pin_direction=="OUTPUT"):
-				outl += "X "+pin_name+" "+str(idx)+" 250 "+str(output_pos)+" 100 R 50 30 1 1 O\n"
+				outl += "X "+pin_name+" "+str(idx)+" 350 "+str(output_pos)+" 100 L 50 30 1 1 O\n"
 				output_pos+=80
 			elif(pin_direction=="INOUT"):
-				outl += "X "+pin_name+" "+str(idx)+" 250 "+str(output_pos)+" 100 R 50 30 1 1 I\n"
+				outl += "X "+pin_name+" "+str(idx)+" 350 "+str(output_pos)+" 100 L 50 30 1 1 I\n"
 				output_pos+=80
 
 			pin_mode = False
