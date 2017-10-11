@@ -20,59 +20,107 @@
 %option nounput
 %option yylineno
 
-STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=]
+STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=\"]
 HASH				"#"
 QUOTE				"\""
+
+BEGINLIB			"EESchema-LIBRARY"
 
 DEF					"DEF"
 ENDDEF				"ENDDEF"
 
 DEF_X				"X"
+DEF_F				"F"
+DEF_C				"C"
+DEF_S				"S"
+
 DEF_DRAW			"DRAW"
 DEF_ENDDRAW			"ENDDRAW"
 
-%x component
+%x pin
+%x field
 
 %%
 
+{HASH}.*							{}
+
+{BEGINLIB}.*						{
+	return symbol::SymbolParser::token::BEGINLIB;
+}
+
 {DEF}+								{
-	BEGIN(component);
 	return symbol::SymbolParser::token::DEF;
 }
 
-<component>{DEF_X}+					{
-	return symbol::SymbolParser::token::X;
-}
-
-<component>{DEF_DRAW}+				{
-	return symbol::SymbolParser::token::DRAW;
-}
-
-<component>{DEF_ENDDRAW}+			{
-	return symbol::SymbolParser::token::ENDDRAW;
-}
-
-<component>{ENDDEF}+				{
-	BEGIN(INITIAL);
+{ENDDEF}+							{
 	return symbol::SymbolParser::token::ENDDEF;
 }
 
-<component>-[0-9]+|[0-9]+			{
+{DEF_F}[0-9]+						{
+	BEGIN(field);
+	return symbol::SymbolParser::token::F;
+}
+
+{DEF_C}+							{
+	return symbol::SymbolParser::token::C;
+}
+
+{DEF_X}+							{
+	BEGIN(pin);
+	return symbol::SymbolParser::token::X;
+}
+
+{DEF_S}+							{
+	return symbol::SymbolParser::token::S;
+}
+
+{DEF_DRAW}+							{
+	return symbol::SymbolParser::token::DRAW;
+}
+
+{DEF_ENDDRAW}+						{
+	return symbol::SymbolParser::token::ENDDRAW;
+}
+
+<field>[ \t\r]+				{}
+<field>[\r\n]+				{
+	BEGIN(INITIAL);
+}
+
+<field>-[0-9]+|[0-9]+		{
 	symbollval->v_int = atoi(yytext);
 	return symbol::SymbolParser::token::INTEGER;
 }
 
-<component>[0-9]+"."[0-9]*			{
+<field>[0-9]+"."[0-9]*		{
 	symbollval->v_double = atof(yytext);
 	return symbol::SymbolParser::token::DOUBLE;
 }
 
-<component>{STRING}*				{
+<field>{STRING}*			{
 	symbollval->v_str = new std::string(yytext, yyleng);
 	return symbol::SymbolParser::token::STRING;
 }
 
-<component>[ \n\t\r]+				{}
+<pin>[ \t\r]+				{}
+<pin>[\r\n]+				{
+	BEGIN(INITIAL);
+}
+
+<pin>-[0-9]+|[0-9]+			{
+	symbollval->v_int = atoi(yytext);
+	return symbol::SymbolParser::token::INTEGER;
+}
+
+<pin>[0-9]+"."[0-9]*			{
+	symbollval->v_double = atof(yytext);
+	return symbol::SymbolParser::token::DOUBLE;
+}
+
+<pin>{STRING}*				{
+	symbollval->v_str = new std::string(yytext, yyleng);
+	return symbol::SymbolParser::token::STRING;
+}
 
 -[0-9]+|[0-9]+						{
 	symbollval->v_int = atoi(yytext);
@@ -90,6 +138,5 @@ DEF_ENDDRAW			"ENDDRAW"
 }
 
 [ \n\t\r]+							{}
-
 
 %%

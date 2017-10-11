@@ -35,8 +35,13 @@
 	double v_double;
 }
 
+%token BEGINLIB
+
 %token DEF
 %token X
+%token F
+%token C
+%token S
 %token ENDDEF
 
 %token DRAW
@@ -50,9 +55,7 @@
 
 %%
 
-symbol_file:
-	symbol_sections
-;
+symbol_file: BEGINLIB symbol_sections;
 
 symbol_sections:
 	  symbol_section
@@ -60,27 +63,41 @@ symbol_sections:
 ;
 
 symbol_section:
-	  symbol_header pins ENDDEF
+	  symbol_header fields DRAW drawable_list ENDDRAW ENDDEF
 ;
 
 symbol_header:
-DEF STRING STRING INTEGER INTEGER STRING STRING STRING STRING
+DEF STRING STRING INTEGER INTEGER STRING STRING INTEGER STRING STRING
 {
-	symboldata->addPart(*$2,*$3,$4,$5,*$6,*$7,*$8,*$9);
+	//symboldata->addPart(*$2,*$3,$4,$5,*$6,*$7,*$8,*$9);
 }
 ;
 
-pins:
-	| DRAW pin_list ENDDRAW
+fields:
+	  field
+	| fields field
 ;
 
-pin_list:
-	  pin_entry
-	| pin_list pin_entry
+field:
+	F STRING INTEGER INTEGER INTEGER STRING STRING STRING STRING
 ;
 
-pin_entry:
-X STRING INTEGER INTEGER INTEGER STRING INTEGER INTEGER INTEGER INTEGER STRING STRING
+drawable_list:
+	  drawable_entry
+	| drawable_list drawable_entry
+;
+
+drawable_entry:
+	  pin
+	| crect
+	| srect
+;
+
+crect: C INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER STRING;
+srect: S INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER STRING;
+
+pin:
+X STRING INTEGER INTEGER INTEGER INTEGER STRING INTEGER INTEGER INTEGER INTEGER STRING
 {
 	symboldata->addPin(*$2,$3,$4);
 }
