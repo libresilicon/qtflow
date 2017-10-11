@@ -38,4 +38,12 @@ namespace symbol {
 	{
 
 	}
+
+	bool SymbolData::isDefinedSymbol(QString name)
+	{
+		foreach(SchematicsSymbol *s, partsymbols)
+			if(s->getName()==name)
+				return true;
+		return false;
+	}
 }

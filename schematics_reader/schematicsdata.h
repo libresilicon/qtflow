@@ -12,8 +12,8 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-#include "schematicswire.h"
-#include "schematicspart.h"
+#include "schematics/schematicswire.h"
+#include "schematics/schematicspart.h"
 
 namespace schematics {
 	class SchematicsScanner;

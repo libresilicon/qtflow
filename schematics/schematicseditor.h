@@ -10,7 +10,7 @@
 
 #include "qschematics/qschematicsscene.h"
 
-#include "schematics/schematicsdata.h"
+#include "schematics_reader/schematicsdata.h"
 
 #include "schematicspartselection.h"
 #include "schematicslibraryeditor.h"

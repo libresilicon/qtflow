@@ -654,6 +654,23 @@ void Project::loadLibraryFiles()
 	}
 }
 
+// Schematics operations:
+bool  Project::isDefinedPart(QString s)
+{
+	foreach(QString key, slibdata.keys()) {
+		if(slibdata[key]->isDefinedSymbol(s))
+			return true;
+	}
+	return false;
+}
+
+SchematicsSymbol* getSchematicsPart(QString s)
+{
+
+}
+
+
+
 void Project::loadSchematicsLibraryFiles()
 {
 	QTemporaryDir temporaryDir;

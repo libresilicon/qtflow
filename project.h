@@ -21,11 +21,11 @@
 
 #include <PythonQt.h>
 
+#include "lef/lefdata.h"
+
 #include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
 #include "symbol_reader/symboldata.h"
-#include "lef/lefdata.h"
-#include "schematics/schematicsdata.h"
 
 class IProject: public QObject
 {
@@ -93,6 +93,10 @@ public:
 	// LEF operations:
 	bool isDefinedMacro(QString s);
 	lef::LEFMacro* getMacro(QString s);
+
+	// Schematics operations:
+	bool isDefinedPart(QString s);
+	lef::LEFMacro* getSchematicsPart(QString s);
 
 private:
 	// LEF operations:

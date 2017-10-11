@@ -14,6 +14,8 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
+#include "schematicssymbol.h"
+
 namespace symbol {
 	class SymbolScanner;
 	class SymbolData
@@ -23,6 +25,8 @@ namespace symbol {
 
 		// building the info:
 		class SymbolScanner *getLexer();
+
+		bool isDefinedSymbol(QString name);
 
 		// setter:
 		void addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, std::string f, std::string font);
@@ -34,6 +38,8 @@ namespace symbol {
 		bool trace_parsing;
 		bool trace_scanning;
 		QString streamname;
+
+		QVector<SchematicsSymbol*> partsymbols;
 	};
 }
 
