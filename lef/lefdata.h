@@ -108,9 +108,7 @@ namespace lef {
 	class LEFData
 	{
 	public:
-		LEFData();
 		LEFData(QString);
-		void loadFile(QString);
 		void saveFile(QString);
 		LEFScanner *getLexer();
 

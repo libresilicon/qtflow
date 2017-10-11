@@ -17,6 +17,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 
 	if(QFile(path).exists()) {
 		project_settings = new QSettings(path, QSettings::NativeFormat);
+		rootdir = QFileInfo(project_settings->fileName()).absolutePath();
 		if(project_settings->value("sourcedir","").toString()=="") {
 			QTextStream(stdout) << "No variable called sourcedir set!!\n";
 		}
@@ -47,7 +48,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/tech";
 	QFile::copy(getTechnologyDisplayFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << filedest;
 		techDisplayData = new tech::TechData(filedest);
 	}
 
@@ -55,7 +55,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/color";
 	QFile::copy(getColorMapFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << filedest;
 		colorMap->loadColors(filedest);
 	}
 
@@ -63,10 +62,11 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/style";
 	QFile::copy(getDesignStyleFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << filedest;
 		colorMap->loadDesign(filedest);
 	}
 
+	loadLibraryFiles();
+	loadSchematicsLibraryFiles();
 }
 
 Project::~Project()
@@ -78,17 +78,22 @@ Project::~Project()
 
 QString Project::getSourceDir()
 {
-	return project_settings->value("sourcedir").toString();
+	return rootdir+'/'+project_settings->value("sourcedir").toString();
 }
 
 QString Project::getSynthesisDir()
 {
-	return project_settings->value("synthesis").toString();
+	return rootdir+'/'+project_settings->value("synthesis").toString();
+}
+
+QString Project::getLayoutDir()
+{
+	return rootdir+'/'+project_settings->value("layout").toString();
 }
 
 QString Project::getRootDir()
 {
-	return project_settings->value("rootdir").toString();
+	return rootdir;
 }
 
 QString Project::getTopLevel()
@@ -99,11 +104,6 @@ QString Project::getTopLevel()
 QString Project::getTestBench()
 {
 	return project_settings->value("testbench").toString();
-}
-
-QString Project::getLayoutDir()
-{
-	return project_settings->value("layout").toString();
 }
 
 QString Project::getVCDFile()
@@ -150,6 +150,48 @@ QStringList Project::getLibraryFiles()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="lef") {
+								nl4 = e3.childNodes();
+								for(int l = 0; l < nl4.count(); l++) {
+									e4 = nl4.at(l).toElement();
+									if(e4.tagName()=="file") {
+										ret.append(e4.text());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+QStringList Project::getSchematicsLibraryFiles()
+{
+	QStringList ret;
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3, e4;
+
+	QDomNodeList nl1, nl2, nl3, nl4;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="symbols") {
 								nl4 = e3.childNodes();
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
@@ -381,14 +423,11 @@ void Project::setProjectType(QString proc)
 
 void Project::create(QString path)
 {
-	QString rootdir;
-
 	project_settings = new QSettings(path, QSettings::NativeFormat);
+	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
+
 	project_settings->setValue("technology", "osu035");
 	project_settings->sync();
-
-	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
-	project_settings->setValue("rootdir", rootdir);
 	project_settings->setValue("sourcedir", rootdir+"/source");
 	project_settings->setValue("synthesis", rootdir+"/synthesis");
 	project_settings->setValue("layout", rootdir+"/layout");
@@ -577,4 +616,84 @@ QStringList Project::getAlternativeNames(QString s)
 	}
 
 	return QStringList();
+}
+
+// LEF operations:
+bool Project::isDefinedMacro(QString s)
+{
+	foreach(QString key, lefdata.keys()) {
+		if(lefdata[key]->isDefinedMacro(s))
+			return true;
+	}
+	return false;
+}
+
+lef::LEFMacro* Project::getMacro(QString s)
+{
+	foreach(QString key, lefdata.keys()) {
+		if(lefdata[key]->isDefinedMacro(s)) {
+			return lefdata[key]->getMacro(s);
+		}
+	}
+	return NULL;
+}
+
+void Project::loadLibraryFiles()
+{
+	QTemporaryDir temporaryDir;
+	QString filedest;
+	QString libname;
+
+	foreach(QString filename, getLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.lef";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+				libname = QFileInfo(filename).baseName();
+				lefdata[libname] = new lef::LEFData(filedest);
+		}
+	}
+}
+
+// Schematics operations:
+bool  Project::isDefinedPart(QString s)
+{
+	foreach(QString key, slibdata.keys()) {
+		if(slibdata[key]->isDefinedSymbol(s))
+			return true;
+	}
+	return false;
+}
+
+symbol::SchematicsSymbol* Project::getSchematicsPart(QString s)
+{
+	foreach(QString key, slibdata.keys()) {
+		if(slibdata[key]->isDefinedSymbol(s))
+			return slibdata[key]->getSymbol(s);
+	}
+	return NULL;
+}
+
+QStringList Project::getListOfSchematicParts()
+{
+	QStringList ret;
+	foreach(QString key, slibdata.keys()) {
+		ret+=slibdata[key]->getSymbolNames();
+	}
+	return ret;
+}
+
+void Project::loadSchematicsLibraryFiles()
+{
+	QTemporaryDir temporaryDir;
+	QString filedest;
+	QString libname;
+
+	foreach(QString filename, getSchematicsLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.slib";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+			libname = QFileInfo(filename).baseName();
+			slibdata[libname] = new symbol::SymbolData(filedest);
+		}
+	}
 }

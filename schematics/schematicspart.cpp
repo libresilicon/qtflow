@@ -1,17 +1,9 @@
 #include "schematicspart.h"
 
-SchematicsPart::SchematicsPart()
+SchematicsPart::SchematicsPart(QString type, QString id)
 {
-}
-
-void SchematicsPart::setType(QString n)
-{
-	m_type = n;
-}
-
-void SchematicsPart::setName(QString n)
-{
-	m_name = n;
+	m_type = type;
+	m_id = id;
 }
 
 void SchematicsPart::setPosition(int x, int y)
@@ -20,14 +12,14 @@ void SchematicsPart::setPosition(int x, int y)
 	m_y = y;
 }
 
-QString SchematicsPart::getName()
-{
-	return m_name;
-}
-
 QString SchematicsPart::getType()
 {
 	return m_type;
+}
+
+QString SchematicsPart::getID()
+{
+	return m_id;
 }
 
 qreal SchematicsPart::x()

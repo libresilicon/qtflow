@@ -4,7 +4,7 @@
 
 #include <QString>
 
-#include "schematics/schematicsscanner.h"
+#include "schematics_reader/schematicsscanner.h"
 
 void schematics_error(const char *s);
 #define YY_DECL int schematics::SchematicsScanner::schematicslex( \
@@ -14,7 +14,7 @@ void schematics_error(const char *s);
 
 %top {
 #include "schematics_parser/schematics_parser.h"
-#include "schematics/schematicsdata.h"
+#include "schematics_reader/schematicsdata.h"
 }
 
 %option yywrap
@@ -23,6 +23,12 @@ void schematics_error(const char *s);
 %option prefix="schematics"
 
 STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=#?~\"]
+
+BEGIN_SCHEMATIC		"EESchema"
+HASH				"#"
+
+LIBS				"LIBS"
+EELAYER				"EELAYER"
 
 DESCR				"$Descr"
 DESCR_ENC			"encoding"
@@ -51,6 +57,20 @@ END_SCHEMATIC		"$EndSCHEMATC"
 %x descr
 
 %%
+
+{HASH}.*						{}
+
+{BEGIN_SCHEMATIC}.*				{
+	return schematics::SchematicsParser::token::BEGIN_SCHEMATIC;
+}
+
+{LIBS}[:]+							{
+	return schematics::SchematicsParser::token::LIBS;
+}
+
+{EELAYER}+							{
+	return schematics::SchematicsParser::token::EELAYER;
+}
 
 {DESCR}+						{
 	BEGIN(descr);

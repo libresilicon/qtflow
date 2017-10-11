@@ -16,7 +16,6 @@
 #include <qmath.h>
 
 #include "magic/magicdata.h"
-#include "lef/lefdata.h"
 #include "project.h"
 
 enum orient_mode {
@@ -76,7 +75,6 @@ private:
 	QPoint lastPos;
 	QString filePath;
 	magic::MagicData *magicdata;
-	lef::LEFData *lefdata;
 	Project *project;
 };
 

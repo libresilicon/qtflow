@@ -12,8 +12,8 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-#include "schematicswire.h"
-#include "schematicspart.h"
+#include "schematics/schematicswire.h"
+#include "schematics/schematicspart.h"
 
 namespace schematics {
 	class SchematicsScanner;
@@ -30,17 +30,16 @@ namespace schematics {
 
 		// wires:
 		void addWire(std::string name, int x1, int y1, int x2, int y2);
-		QVector<SchematicsWire> getWires();
+		QVector<SchematicsWire *> getWires();
 
 		// components:
-		void setRecentPartName(std::string name);
-		void setRecentPartType(std::string name);
+		void setRecentPart(std::string name, std::string prefix);
 		void setRecentPartPosition(int x, int y);
-		void storeRecentComponent();
-		QVector<SchematicsPart> getParts();
+		QVector<SchematicsPart*> getParts();
 
 	private:
-		SchematicsPart recentComponent;
+		SchematicsPart *recentComponent;
+		SchematicsWire *recentWire;
 
 		class SchematicsScanner* lexer;
 		class SchematicsParser* parser;
@@ -49,8 +48,8 @@ namespace schematics {
 		bool trace_scanning;
 		QString streamname;
 
-		QVector<SchematicsWire> wires;
-		QVector<SchematicsPart> parts;
+		QVector<SchematicsWire*> wires;
+		QVector<SchematicsPart*> parts;
 
 		int paperHeigth;
 		int paperWidth;

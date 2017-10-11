@@ -3,7 +3,6 @@
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
-	lefdata(NULL),
 	project(NULL),
 	activeLayerSelection(NULL),
 	visibles(NULL),
@@ -45,8 +44,7 @@ void MagicLayoutEditor::addMacroInstances()
 void MagicLayoutEditor::loadFile(QString file)
 {
 	int x, y, w, h;
-	QString filedest;
-	QTemporaryDir temporaryDir;
+
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
@@ -58,19 +56,6 @@ void MagicLayoutEditor::loadFile(QString file)
 
 	if(w<this->width()) w = this->width();
 	if(h<this->height()) h = this->height();
-
-	if(project->getTechnology()==magicdata->getTechnology()) {
-		if(lefdata) delete lefdata;
-		lefdata = new lef::LEFData();
-		foreach(QString filename, project->getLibraryFiles()) {
-			filedest = temporaryDir.path()+"/cells.lef";
-			QFile::copy(filename, filedest);
-			if(QFile(filedest).exists()) {
-				lefdata->loadFile(filedest);
-			}
-		}
-		editScene->setLEF(lefdata);
-	}
 
 	editScene->setGridSize(10);
 	editScene->setSceneRect(x,y,w,h);

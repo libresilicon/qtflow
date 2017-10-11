@@ -14,8 +14,6 @@
 
 #include "project.h"
 
-#include "lef/lefdata.h"
-
 enum drawing_operations {
 	DRAWING_OPERATION_NONE,
 	DRAWING_OPERATION_SELECT,
@@ -36,7 +34,6 @@ public:
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 
 	void setProject(Project *p);
-	void setLEF(lef::LEFData *d);
 
 	void setDrawingOperation(drawing_operations o);
 	void setActiveLayer(QString layer);
@@ -72,7 +69,6 @@ private:
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
 	Project *project;
-	lef::LEFData *lefdata;
 
 	QString activeLayer;
 	QLayoutRectItem *recentRectangle;

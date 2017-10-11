@@ -107,7 +107,6 @@ void MainWindow::onCurrentChanged(int id)
 				on_setDigitalSimulationMode_triggered();
 				break;
 			default:
-				qDebug() << "Current changed " << w->getType();
 				break;
 		}
 	}

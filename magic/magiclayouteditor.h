@@ -3,7 +3,6 @@
 
 #include "ieditor.h"
 #include "magic/magicdata.h"
-#include "lef/lefdata.h"
 #include "project.h"
 #include "layoutvisibles.h"
 
@@ -21,10 +20,6 @@
 
 namespace magic {
 	class MagicData;
-}
-
-namespace lef {
-	class LEFData;
 }
 
 class MagicLayoutEditor : public QGraphicsView, public IEditor
@@ -73,7 +68,6 @@ private:
 	QString filePath;
 	QLayoutScene *editScene;
 	magic::MagicData *magicdata;
-	lef::LEFData *lefdata;
 
 	QRectF sceneRect;
 	Project *project;

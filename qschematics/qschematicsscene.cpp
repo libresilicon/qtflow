@@ -2,22 +2,19 @@
 
 QSchematicsScene::QSchematicsScene(QObject *parent) :
 	QGraphicsScene(parent),
-	project(NULL),
-	lefdata(NULL)
+	project(NULL)
 {
 }
 
 QSchematicsScene::QSchematicsScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
-	project(NULL),
-	lefdata(NULL)
+	project(NULL)
 {
 }
 
 QSchematicsScene::QSchematicsScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
-	project(NULL),
-	lefdata(NULL)
+	project(NULL)
 {
 }
 
@@ -28,11 +25,16 @@ void QSchematicsScene::addWire(QString type, qreal x1, qreal y1, qreal x2, qreal
 	addItem(w);
 }
 
-void QSchematicsScene::addPart(QString name, QString type, qreal x, qreal y)
+void QSchematicsScene::addPart(QString type, QString id, int x, int y)
 {
-	//QSchematicsParametricPart *p = new QSchematicsParametricPart(name, x, y);
-	//parts.append(p);
-	//addItem(p);
+	QSchematicsPart* part;
+	symbol::SchematicsSymbol* partsymbol;
+	if(project) if(project->isDefinedPart(type)) {
+		partsymbol = project->getSchematicsPart(type);
+		part = new QSchematicsPart(partsymbol, id, x, y);
+		addItem(part);
+		partList[id] = part;
+	}
 }
 
 void QSchematicsScene::setProject(Project *p)
@@ -40,7 +42,3 @@ void QSchematicsScene::setProject(Project *p)
 	project = p;
 }
 
-void QSchematicsScene::setLEF(lef::LEFData *d)
-{
-	lefdata = d;
-}

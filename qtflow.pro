@@ -158,6 +158,7 @@ bison.CONFIG += target_predeps
 QMAKE_EXTRA_COMPILERS += bison
 
 include(schematics/schematics.pri)
+include(schematics_reader/schematics_reader.pri)
 include(magic/magic.pri)
 include(magic3d/magic3d.pri)
 include(vcd/vcd.pri)
@@ -167,3 +168,4 @@ include(tech_reader/tech_reader.pri)
 include(cmap_reader/cmap_reader.pri)
 include(qlayout/qlayout.pri)
 include(qschematics/qschematics.pri)
+include(symbol_reader/symbol_reader.pri)

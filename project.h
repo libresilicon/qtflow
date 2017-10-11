@@ -21,8 +21,11 @@
 
 #include <PythonQt.h>
 
+#include "lef/lefdata.h"
+
 #include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
+#include "symbol_reader/symboldata.h"
 
 class IProject: public QObject
 {
@@ -82,14 +85,29 @@ public:
 	QString getVCDFile();
 	QString getVCDPath();
 
-	QStringList getLibraryFiles();
-
 	QStringList getPlanes();
 	QStringList getTypeNames();
 	QStringList getType(QString s);
 	QStringList getAlternativeNames(QString s);
 
+	// LEF operations:
+	bool isDefinedMacro(QString s);
+	lef::LEFMacro* getMacro(QString s);
+
+	// Schematics operations:
+	bool isDefinedPart(QString s);
+	symbol::SchematicsSymbol* getSchematicsPart(QString s);
+	QStringList getListOfSchematicParts();
+
 private:
+	// LEF operations:
+	QStringList getLibraryFiles();
+	void loadLibraryFiles();
+
+	// Schematics operations:
+	QStringList getSchematicsLibraryFiles();
+	void loadSchematicsLibraryFiles();
+
 	QSettings *settings;
 	QSettings *project_settings;
 	QString rootdir;
@@ -97,6 +115,8 @@ private:
 	QDomDocument *settingsFileProcess;
 	tech::TechData *techDisplayData;
 	ColorMap *colorMap;
+	QMap<QString,lef::LEFData*> lefdata;
+	QMap<QString,symbol::SymbolData*> slibdata;
 
 };
 

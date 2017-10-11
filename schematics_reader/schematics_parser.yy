@@ -18,8 +18,8 @@
 #include <QMap>
 #include <QStack>
 
-#include "schematics/schematicsscanner.h"
-#include "schematics/schematicsdata.h"
+#include "schematics_reader/schematicsscanner.h"
+#include "schematics_reader/schematicsdata.h"
 
 #define schematicslex (schematicsdata->getLexer())->schematicslex
 #define schematicslineno (int)(schematicsdata->getLexer())->lineno()
@@ -32,6 +32,11 @@
 	double v_double;
 	int v_int;
 }
+
+%token BEGIN_SCHEMATIC
+%token HASH
+%token LIBS
+%token EELAYER
 
 %token COMPONENT
 %token COMPONENT_L
@@ -64,7 +69,7 @@
 
 %%
 
-schematics_file: schematics_entries END_SCHEMATIC;
+schematics_file: BEGIN_SCHEMATIC schematics_entries END_SCHEMATIC;
 
 schematics_entries:
 	| schematics_entry
@@ -72,11 +77,19 @@ schematics_entries:
 ;
 
 schematics_entry:
+	| library
+	| eelayer
 	| description
 	| component
 	| text
 	| wire
 	| connection
+;
+
+library: LIBS STRING;
+eelayer:
+	  EELAYER INTEGER INTEGER
+	| EELAYER STRING
 ;
 
 description:
@@ -100,12 +113,7 @@ description_content:
 	| DESCR_COMMENT STRING
 ;
 
-component:
-COMPONENT component_list END_COMPONENT
-{
-	schematicsdata->storeRecentComponent();
-}
-;
+component: COMPONENT component_list END_COMPONENT;
 
 component_list:
 	| component_content
@@ -115,7 +123,7 @@ component_list:
 component_content:
 | COMPONENT_L STRING STRING
 {
-
+	schematicsdata->setRecentPart(*$2,*$3);
 }
 | COMPONENT_L STRING
 
@@ -123,10 +131,16 @@ component_content:
 | COMPONENT_U INTEGER INTEGER
 
 | COMPONENT_P INTEGER INTEGER
+{
+	schematicsdata->setRecentPartPosition($2,$3);
+}
 
 | COMPONENT_F INTEGER STRING STRING INTEGER INTEGER INTEGER INTEGER STRING STRING
 | COMPONENT_F INTEGER STRING STRING INTEGER INTEGER INTEGER INTEGER STRING
 | COMPONENT_F INTEGER STRING STRING INTEGER INTEGER INTEGER INTEGER
+
+| INTEGER INTEGER INTEGER
+| INTEGER INTEGER INTEGER INTEGER
 ;
 
 text: TEXT STRING INTEGER INTEGER INTEGER INTEGER STRING STRING INTEGER STRING;
