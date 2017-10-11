@@ -10,8 +10,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	mainContext(main),
 	settingsFileProcess(NULL),
 	techDisplayData(NULL),
-	colorMap(new ColorMap()),
-	lefdata(NULL)
+	colorMap(new ColorMap())
 {
 	QTemporaryDir temporaryDir;
 	QString filedest;
@@ -49,7 +48,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/tech";
 	QFile::copy(getTechnologyDisplayFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << filedest;
 		techDisplayData = new tech::TechData(filedest);
 	}
 
@@ -57,7 +55,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/color";
 	QFile::copy(getColorMapFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << filedest;
 		colorMap->loadColors(filedest);
 	}
 
@@ -65,19 +62,11 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	filedest = temporaryDir.path()+"/style";
 	QFile::copy(getDesignStyleFile(), filedest);
 	if(QFile(filedest).exists()) {
-		qDebug() << "Opening here: " << filedest;
 		colorMap->loadDesign(filedest);
 	}
 
-	if(lefdata) delete lefdata;
-	lefdata = new lef::LEFData();
-	foreach(QString filename, getLibraryFiles()) {
-		filedest = temporaryDir.path()+"/cells.lef";
-		QFile::copy(filename, filedest);
-		if(QFile(filedest).exists()) {
-				lefdata->loadFile(filedest);
-		}
-	}
+	loadLibraryFiles();
+	loadSchematicsLibraryFiles();
 }
 
 Project::~Project()
@@ -161,6 +150,48 @@ QStringList Project::getLibraryFiles()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="lef") {
+								nl4 = e3.childNodes();
+								for(int l = 0; l < nl4.count(); l++) {
+									e4 = nl4.at(l).toElement();
+									if(e4.tagName()=="file") {
+										ret.append(e4.text());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+QStringList Project::getSchematicsLibraryFiles()
+{
+	QStringList ret;
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3, e4;
+
+	QDomNodeList nl1, nl2, nl3, nl4;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="symbols") {
 								nl4 = e3.childNodes();
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
@@ -590,12 +621,51 @@ QStringList Project::getAlternativeNames(QString s)
 // LEF operations:
 bool Project::isDefinedMacro(QString s)
 {
-	if(lefdata) return lefdata->isDefinedMacro(s);
+	foreach(QString key, lefdata.keys()) {
+		if(lefdata[key]->isDefinedMacro(s))
+			return true;
+	}
 	return false;
 }
 
 lef::LEFMacro* Project::getMacro(QString s)
 {
-	if(lefdata) return lefdata->getMacro(s);
+	foreach(QString key, lefdata.keys()) {
+		if(lefdata[key]->isDefinedMacro(s)) {
+			return lefdata[key]->getMacro(s);
+		}
+	}
 	return NULL;
+}
+
+void Project::loadLibraryFiles()
+{
+	QTemporaryDir temporaryDir;
+	QString filedest;
+	QString libname;
+
+	foreach(QString filename, getLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.lef";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+				libname = QFileInfo(filename).baseName();
+				lefdata[libname] = new lef::LEFData(filedest);
+		}
+	}
+}
+
+void Project::loadSchematicsLibraryFiles()
+{
+	QTemporaryDir temporaryDir;
+	QString filedest;
+	QString libname;
+
+	foreach(QString filename, getSchematicsLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.slib";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+			libname = QFileInfo(filename).baseName();
+			slibdata[libname] = new symbol::SymbolData(filedest);
+		}
+	}
 }

@@ -23,7 +23,9 @@
 
 #include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
+#include "symbol_reader/symboldata.h"
 #include "lef/lefdata.h"
+#include "schematics/schematicsdata.h"
 
 class IProject: public QObject
 {
@@ -83,8 +85,6 @@ public:
 	QString getVCDFile();
 	QString getVCDPath();
 
-	QStringList getLibraryFiles();
-
 	QStringList getPlanes();
 	QStringList getTypeNames();
 	QStringList getType(QString s);
@@ -95,6 +95,14 @@ public:
 	lef::LEFMacro* getMacro(QString s);
 
 private:
+	// LEF operations:
+	QStringList getLibraryFiles();
+	void loadLibraryFiles();
+
+	// Schematics operations:
+	QStringList getSchematicsLibraryFiles();
+	void loadSchematicsLibraryFiles();
+
 	QSettings *settings;
 	QSettings *project_settings;
 	QString rootdir;
@@ -102,7 +110,8 @@ private:
 	QDomDocument *settingsFileProcess;
 	tech::TechData *techDisplayData;
 	ColorMap *colorMap;
-	lef::LEFData *lefdata;
+	QMap<QString,lef::LEFData*> lefdata;
+	QMap<QString,symbol::SymbolData*> slibdata;
 
 };
 

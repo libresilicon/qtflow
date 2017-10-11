@@ -37,5 +37,4 @@ void SchematicsPartSelection::updatePartList()
 
 void SchematicsPartSelection::on_partList_currentTextChanged(QString s)
 {
-	qDebug() << "Current changed " << s;
 }

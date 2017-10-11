@@ -221,16 +221,6 @@ namespace lef {
 		input.close();
 	}
 
-	LEFData::LEFData() :
-		lexer(NULL),
-		parser(NULL),
-		trace_scanning(false),
-		trace_parsing(false),
-		baseUnitMicrons(false),
-		baseUnitMicronsValue(1)
-	{
-	}
-
 	void LEFData::saveFile(QString filename)
 	{
 		std::ofstream output;
@@ -238,26 +228,6 @@ namespace lef {
 
 		output.open(stdfilename, std::ios::out);
 		output.close();
-	}
-
-	void LEFData::loadFile(QString filename)
-	{
-		std::ifstream input;
-		std::string stdfilename = filename.toStdString();
-
-		streamname = filename;
-		input.open(stdfilename, std::ios::in);
-
-		if(lexer) delete lexer;
-		lexer = new LEFScanner(&input, &std::cout);
-		lexer->set_debug(trace_scanning);
-
-		if(parser) delete parser;
-		parser = new LEFParser(this);
-		parser->set_debug_level(trace_parsing);
-		parser->parse();
-
-		input.close();
 	}
 
 	bool LEFData::isDefinedMacro(QString name)

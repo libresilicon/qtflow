@@ -171,7 +171,6 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		default:
-			qDebug() << "QLayoutScene::" << __FUNCTION__;
 			break;
 	}
 }
@@ -233,7 +232,6 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		default:
-			qDebug() << "QLayoutScene::" << __FUNCTION__;
 			break;
 	}
 }
@@ -274,7 +272,6 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		default:
-			qDebug() << "QLayoutScene::" << __FUNCTION__;
 			break;
 	}
 	Q_UNUSED(event);

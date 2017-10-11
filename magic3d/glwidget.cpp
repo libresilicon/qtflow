@@ -183,8 +183,6 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	y1+=m_offsetY;
 	y2+=m_offsetY;
 
-	//qDebug() << __FUNCTION__ << '\t' << x1 << '\t' << y1 << '\t' << x2 << '\t' << y2;
-
 	glBegin(GL_QUAD_STRIP);
 	glColor3f(color.redF(), color.greenF(), color.blueF());
 
