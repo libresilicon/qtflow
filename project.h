@@ -23,6 +23,7 @@
 
 #include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
+#include "lef/lefdata.h"
 
 class IProject: public QObject
 {
@@ -89,6 +90,10 @@ public:
 	QStringList getType(QString s);
 	QStringList getAlternativeNames(QString s);
 
+	// LEF operations:
+	bool isDefinedMacro(QString s);
+	lef::LEFMacro* getMacro(QString s);
+
 private:
 	QSettings *settings;
 	QSettings *project_settings;
@@ -97,6 +102,7 @@ private:
 	QDomDocument *settingsFileProcess;
 	tech::TechData *techDisplayData;
 	ColorMap *colorMap;
+	lef::LEFData *lefdata;
 
 };
 

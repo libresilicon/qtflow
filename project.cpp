@@ -10,7 +10,8 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	mainContext(main),
 	settingsFileProcess(NULL),
 	techDisplayData(NULL),
-	colorMap(new ColorMap())
+	colorMap(new ColorMap()),
+	lefdata(NULL)
 {
 	QTemporaryDir temporaryDir;
 	QString filedest;
@@ -68,6 +69,15 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 		colorMap->loadDesign(filedest);
 	}
 
+	if(lefdata) delete lefdata;
+	lefdata = new lef::LEFData();
+	foreach(QString filename, getLibraryFiles()) {
+		filedest = temporaryDir.path()+"/cells.lef";
+		QFile::copy(filename, filedest);
+		if(QFile(filedest).exists()) {
+				lefdata->loadFile(filedest);
+		}
+	}
 }
 
 Project::~Project()
@@ -575,4 +585,17 @@ QStringList Project::getAlternativeNames(QString s)
 	}
 
 	return QStringList();
+}
+
+// LEF operations:
+bool Project::isDefinedMacro(QString s)
+{
+	if(lefdata) return lefdata->isDefinedMacro(s);
+	return false;
+}
+
+lef::LEFMacro* Project::getMacro(QString s)
+{
+	if(lefdata) return lefdata->getMacro(s);
+	return NULL;
 }

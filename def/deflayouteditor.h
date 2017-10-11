@@ -12,14 +12,9 @@
 #include "qlayout/qlayoutscene.h"
 #include "ieditor.h"
 #include "defdata.h"
-#include "lef/lefdata.h"
 
 namespace def {
 	class DEFData;
-}
-
-namespace lef {
-	class LEFData;
 }
 
 class DEFLayoutEditor : public QGraphicsView, public IEditor
@@ -47,7 +42,6 @@ private:
 	QString filePath;
 	QLayoutScene *editScene;
 	def::DEFData *defdata;
-	lef::LEFData *lefdata;
 	Project *project;
 };
 

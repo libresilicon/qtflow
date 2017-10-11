@@ -2,22 +2,19 @@
 
 QSchematicsScene::QSchematicsScene(QObject *parent) :
 	QGraphicsScene(parent),
-	project(NULL),
-	lefdata(NULL)
+	project(NULL)
 {
 }
 
 QSchematicsScene::QSchematicsScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
-	project(NULL),
-	lefdata(NULL)
+	project(NULL)
 {
 }
 
 QSchematicsScene::QSchematicsScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
-	project(NULL),
-	lefdata(NULL)
+	project(NULL)
 {
 }
 
@@ -40,7 +37,3 @@ void QSchematicsScene::setProject(Project *p)
 	project = p;
 }
 
-void QSchematicsScene::setLEF(lef::LEFData *d)
-{
-	lefdata = d;
-}

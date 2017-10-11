@@ -8,7 +8,7 @@
 
 #include "ui_partselection.h"
 
-#include "lef/lefdata.h"
+#include "project.h"
 
 class SchematicsPartSelection : public QDialog
 {
@@ -16,8 +16,7 @@ class SchematicsPartSelection : public QDialog
 
 public:
 	SchematicsPartSelection(QWidget *parent);
-
-	void setLEF(lef::LEFData *d);
+	void setProject(Project *p);
 
 public slots:
 	void on_buttonBox_accepted();
@@ -28,7 +27,7 @@ private:
 	void updatePartList();
 
 	Ui::PartSelection *ui;
-	lef::LEFData *lefdata;
+	Project *project;
 };
 
 #endif // SCHEMATICSPARTSELECTION_H

@@ -12,8 +12,6 @@
 
 #include "project.h"
 
-#include "lef/lefdata.h"
-
 #include "qschematicswire.h"
 #include "qschematicspart.h"
 
@@ -28,14 +26,12 @@ public:
 	void addPart(QString name, QString type, qreal x, qreal y);
 
 	void setProject(Project *p);
-	void setLEF(lef::LEFData *d);
 
 private:
 	QVector<QSchematicsWire*> wires;
 	QVector<QSchematicsPart*> parts;
 
 	Project *project;
-	lef::LEFData *lefdata;
 };
 
 #endif // QSCHEMATICSSCENE_H

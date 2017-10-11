@@ -7,7 +7,6 @@ GLWidget::GLWidget(QWidget *parent):
 	m_offsetX(0),
 	m_offsetY(0),
 	magicdata(NULL),
-	lefdata(NULL),
 	project(NULL),
 	lastOrient(ORIENT_NONE),
 	m_angle1(0),
@@ -20,23 +19,10 @@ void GLWidget::loadFile(QString file)
 {
 	layer_rects_t layers;
 	rects_t layer;
-	QString filedest;
-	QTemporaryDir temporaryDir;
+
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
-
-	if(project->getTechnology()==magicdata->getTechnology()) {
-		if(lefdata) delete lefdata;
-		lefdata = new lef::LEFData();
-		foreach(QString filename, project->getLibraryFiles()) {
-			filedest = temporaryDir.path()+"/cells.lef";
-			QFile::copy(filename, filedest);
-			if(QFile(filedest).exists()) {
-				lefdata->loadFile(filedest);
-			}
-		}
-	}
 
 	layers = magicdata->getRectangles();
 
@@ -108,8 +94,8 @@ void GLWidget::addModules()
 	foreach (module_info e, mods)
 	{
 		// fill in library content:
-		if(lefdata) if(lefdata->isDefinedMacro(e.module_name)) {
-			macro = lefdata->getMacro(e.module_name);
+		if(project) if(project->isDefinedMacro(e.module_name)) {
+			macro = project->getMacro(e.module_name);
 			macro->scaleMacro(e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
 
 			foreach(pin, macro->getPins()) {

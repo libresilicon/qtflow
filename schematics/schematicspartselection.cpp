@@ -3,7 +3,7 @@
 SchematicsPartSelection::SchematicsPartSelection(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::PartSelection),
-	lefdata(NULL)
+	project(NULL)
 {
 	ui->setupUi(this);
 	hide();
@@ -19,26 +19,23 @@ void SchematicsPartSelection::on_buttonBox_rejected()
 	hide();
 }
 
-void SchematicsPartSelection::setLEF(lef::LEFData *d)
+void SchematicsPartSelection::setProject(Project *p)
 {
-	lefdata = d;
+	project = p;
 	updatePartList();
 }
 
 void SchematicsPartSelection::updatePartList()
 {
-	if(lefdata) {
+	/*if(lefdata) {
 		ui->partList->clear();
 		foreach(lef::LEFMacro *m, lefdata->getMacros()) {
 			ui->partList->addItem(m->getName());
 		}
-	}
+	}*/
 }
 
 void SchematicsPartSelection::on_partList_currentTextChanged(QString s)
 {
-	if(lefdata) {
-
-	}
 	qDebug() << "Current changed " << s;
 }

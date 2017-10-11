@@ -4,7 +4,6 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	QGraphicsScene(parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
-	lefdata(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
@@ -22,7 +21,6 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
-	lefdata(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
@@ -40,7 +38,6 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	QGraphicsScene(x, y, width, height, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
-	lefdata(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
@@ -114,11 +111,6 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 void QLayoutScene::setProject(Project *p)
 {
 	project = p;
-}
-
-void QLayoutScene::setLEF(lef::LEFData *d)
-{
-	lefdata = d;
 }
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -395,8 +387,8 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	y*=m_scaleFactor;
 
 	// fill in library content:
-	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
-		macro = lefdata->getMacro(macro_name);
+	if(project) if(project->isDefinedMacro(macro_name)) {
+		macro = project->getMacro(macro_name);
 		w = macro->getWidth();
 		h = macro->getHeight();
 		w*=m_scaleFactor;
@@ -459,8 +451,8 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	mi->setVisible(true);
 
 	// fill in library content:
-	if(lefdata) if(lefdata->isDefinedMacro(macro_name)) {
-		macro = lefdata->getMacro(macro_name);
+	if(project) if(project->isDefinedMacro(macro_name)) {
+		macro = project->getMacro(macro_name);
 		macro->scaleMacro(w, h);
 
 		foreach(pin, macro->getPins()) {

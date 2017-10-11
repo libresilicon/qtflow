@@ -3,7 +3,6 @@
 DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	defdata(NULL),
-	lefdata(NULL),
 	project(NULL),
 	filePath(QString()),
 	editScene(new QLayoutScene(this))
@@ -21,8 +20,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	filePath = file;
 
 	int x, y, w, h;
-	QString filedest;
-	QTemporaryDir temporaryDir;
+
 	filePath = file;
 	if(defdata) delete defdata;
 	defdata = new def::DEFData(file);
@@ -34,17 +32,6 @@ void DEFLayoutEditor::loadFile(QString file)
 
 	if(w<this->width()) w = this->width();
 	if(h<this->height()) h = this->height();
-
-	if(lefdata) delete lefdata;
-	lefdata = new lef::LEFData();
-	foreach(QString filename, project->getLibraryFiles()) {
-		filedest = temporaryDir.path()+"/cells.lef";
-		QFile::copy(filename, filedest);
-		if(QFile(filedest).exists()) {
-			lefdata->loadFile(filedest);
-		}
-	}
-	editScene->setLEF(lefdata);
 
 	editScene->setGridSize(10);
 	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
