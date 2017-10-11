@@ -57,16 +57,12 @@ namespace schematics {
 	void SchematicsData::setRecentPart(std::string name, std::string prefix)
 	{
 		recentComponent = new SchematicsPart(QString::fromStdString(name),QString::fromStdString(prefix));
+		parts.append(recentComponent);
 	}
 
 	void SchematicsData::setRecentPartPosition(int x, int y)
 	{
 		recentComponent->setPosition(x,y);
-	}
-
-	void SchematicsData::storeRecentComponent()
-	{
-		parts.append(recentComponent);
 	}
 
 	qreal SchematicsData::getPaperWidth()

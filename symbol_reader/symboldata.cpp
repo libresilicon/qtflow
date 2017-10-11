@@ -33,15 +33,11 @@ namespace symbol {
 	void SymbolData::addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, int foo, std::string f, std::string font)
 	{
 		recentSymbol = new SchematicsSymbol(QString::fromStdString(name),QString::fromStdString(prefix));
+		partsymbols.append(recentSymbol);
 	}
 
 	void SymbolData::addPin(std::string name, int x, int y)
 	{
-	}
-
-	void SymbolData::storeRecentPart()
-	{
-		if(recentSymbol) partsymbols.append(recentSymbol);
 	}
 
 	bool SymbolData::isDefinedSymbol(QString name)

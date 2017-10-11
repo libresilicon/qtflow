@@ -31,7 +31,6 @@ namespace symbol {
 		// setter:
 		void addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, int foo, std::string f, std::string font);
 		void addPin(std::string name, int x, int y);
-		void storeRecentPart();
 
 	private:
 		class SymbolScanner* lexer;

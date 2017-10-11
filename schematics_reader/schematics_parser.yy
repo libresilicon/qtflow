@@ -113,12 +113,7 @@ description_content:
 	| DESCR_COMMENT STRING
 ;
 
-component:
-COMPONENT component_list END_COMPONENT
-{
-	schematicsdata->storeRecentComponent();
-}
-;
+component: COMPONENT component_list END_COMPONENT;
 
 component_list:
 	| component_content

@@ -35,7 +35,6 @@ namespace schematics {
 		// components:
 		void setRecentPart(std::string name, std::string prefix);
 		void setRecentPartPosition(int x, int y);
-		void storeRecentComponent();
 		QVector<SchematicsPart*> getParts();
 
 	private:
