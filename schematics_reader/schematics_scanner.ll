@@ -4,7 +4,7 @@
 
 #include <QString>
 
-#include "schematics/schematicsscanner.h"
+#include "schematics_reader/schematicsscanner.h"
 
 void schematics_error(const char *s);
 #define YY_DECL int schematics::SchematicsScanner::schematicslex( \
@@ -14,7 +14,7 @@ void schematics_error(const char *s);
 
 %top {
 #include "schematics_parser/schematics_parser.h"
-#include "schematics/schematicsdata.h"
+#include "schematics_reader/schematicsdata.h"
 }
 
 %option yywrap

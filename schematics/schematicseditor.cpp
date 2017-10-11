@@ -43,14 +43,14 @@ void SchematicsEditor::addWires()
 	qreal x1, y1, x2, y2;
 
 	if(schematicsdata && editScene) {
-		foreach(SchematicsWire w, schematicsdata->getWires()) {
-			p1 = w.getPos1();
-			p2 = w.getPos2();
+		foreach(SchematicsWire *w, schematicsdata->getWires()) {
+			p1 = w->getPos1();
+			p2 = w->getPos2();
 			x1 = p1.x();
 			y1 = p1.y();
 			x2 = p2.x();
 			y2 = p2.y();
-			editScene->addWire(w.getName(), x1, y1, x2, y2);
+			editScene->addWire(w->getName(), x1, y1, x2, y2);
 		}
 	}
 }
@@ -58,8 +58,10 @@ void SchematicsEditor::addWires()
 void SchematicsEditor::addParts()
 {
 	if(schematicsdata && editScene) {
-		foreach(SchematicsPart p, schematicsdata->getParts()) {
-			editScene->addPart(p.getName(),p.getType(),p.x(),p.y());
+		foreach(SchematicsPart *p, schematicsdata->getParts()) {
+			qDebug() << "Adding part " << p->getName();
+			qDebug() << "Adding part " << p->getType();
+			editScene->addPart(p->getName(),p->getType(),p->x(),p->y());
 		}
 	}
 }

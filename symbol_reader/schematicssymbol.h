@@ -6,11 +6,12 @@
 class SchematicsSymbol
 {
 public:
-	SchematicsSymbol();
+	SchematicsSymbol(QString n, QString p);
 	QString getName();
 
 private:
 	QString name;
+	QString prefix;
 };
 
 #endif // SCHEMATICSSYMBOL_H

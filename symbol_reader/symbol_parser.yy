@@ -69,7 +69,7 @@ symbol_section:
 symbol_header:
 DEF STRING STRING INTEGER INTEGER STRING STRING INTEGER STRING STRING
 {
-	//symboldata->addPart(*$2,*$3,$4,$5,*$6,*$7,*$8,*$9);
+	symboldata->addPart(*$2,*$3,$4,$5,*$6,*$7,$8,*$9,*$10);
 }
 ;
 

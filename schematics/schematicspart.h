@@ -6,10 +6,8 @@
 class SchematicsPart
 {
 public:
-	SchematicsPart();
+	SchematicsPart(QString name, QString type);
 
-	void setName(QString);
-	void setType(QString);
 	void setPosition(int x, int y);
 
 	QString getName();

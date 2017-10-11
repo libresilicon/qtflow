@@ -1,17 +1,9 @@
 #include "schematicspart.h"
 
-SchematicsPart::SchematicsPart()
+SchematicsPart::SchematicsPart(QString name, QString type)
 {
-}
-
-void SchematicsPart::setType(QString n)
-{
-	m_type = n;
-}
-
-void SchematicsPart::setName(QString n)
-{
-	m_name = n;
+	m_name = name;
+	m_type = type;
 }
 
 void SchematicsPart::setPosition(int x, int y)

@@ -18,8 +18,8 @@
 #include <QMap>
 #include <QStack>
 
-#include "schematics/schematicsscanner.h"
-#include "schematics/schematicsdata.h"
+#include "schematics_reader/schematicsscanner.h"
+#include "schematics_reader/schematicsdata.h"
 
 #define schematicslex (schematicsdata->getLexer())->schematicslex
 #define schematicslineno (int)(schematicsdata->getLexer())->lineno()
@@ -128,7 +128,7 @@ component_list:
 component_content:
 | COMPONENT_L STRING STRING
 {
-
+	schematicsdata->setRecentPart(*$2,*$3);
 }
 | COMPONENT_L STRING
 
