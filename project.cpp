@@ -17,6 +17,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 
 	if(QFile(path).exists()) {
 		project_settings = new QSettings(path, QSettings::NativeFormat);
+		rootdir = QFileInfo(project_settings->fileName()).absolutePath();
 		if(project_settings->value("sourcedir","").toString()=="") {
 			QTextStream(stdout) << "No variable called sourcedir set!!\n";
 		}
@@ -78,17 +79,22 @@ Project::~Project()
 
 QString Project::getSourceDir()
 {
-	return project_settings->value("sourcedir").toString();
+	return rootdir+'/'+project_settings->value("sourcedir").toString();
 }
 
 QString Project::getSynthesisDir()
 {
-	return project_settings->value("synthesis").toString();
+	return rootdir+'/'+project_settings->value("synthesis").toString();
+}
+
+QString Project::getLayoutDir()
+{
+	return rootdir+'/'+project_settings->value("layout").toString();
 }
 
 QString Project::getRootDir()
 {
-	return project_settings->value("rootdir").toString();
+	return rootdir;
 }
 
 QString Project::getTopLevel()
@@ -99,11 +105,6 @@ QString Project::getTopLevel()
 QString Project::getTestBench()
 {
 	return project_settings->value("testbench").toString();
-}
-
-QString Project::getLayoutDir()
-{
-	return project_settings->value("layout").toString();
 }
 
 QString Project::getVCDFile()
@@ -381,14 +382,11 @@ void Project::setProjectType(QString proc)
 
 void Project::create(QString path)
 {
-	QString rootdir;
-
 	project_settings = new QSettings(path, QSettings::NativeFormat);
+	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
+
 	project_settings->setValue("technology", "osu035");
 	project_settings->sync();
-
-	rootdir = QFileInfo(project_settings->fileName()).absolutePath();
-	project_settings->setValue("rootdir", rootdir);
 	project_settings->setValue("sourcedir", rootdir+"/source");
 	project_settings->setValue("synthesis", rootdir+"/synthesis");
 	project_settings->setValue("layout", rootdir+"/layout");
