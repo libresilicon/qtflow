@@ -2,16 +2,28 @@
 #define SCHEMATICSSYMBOL_H
 
 #include <QString>
+#include <QGraphicsRectItem>
+#include <QGraphicsItem>
 
-class SchematicsSymbol
-{
-public:
-	SchematicsSymbol(QString n, QString p);
-	QString getName();
+namespace symbol {
+	class SchematicsSymbol
+	{
+	public:
+		SchematicsSymbol(QString n, QString p);
+		void addRect(int x1, int y1, int x2, int y2);
+		QGraphicsRectItem *createRect(QGraphicsItem*p);
 
-private:
-	QString name;
-	QString prefix;
-};
+		QString getName();
+
+	private:
+		QString m_name;
+		QString m_prefix;
+
+		qreal m_box_x1;
+		qreal m_box_x2;
+		qreal m_box_y1;
+		qreal m_box_y2;
+	};
+}
 
 #endif // SCHEMATICSSYMBOL_H

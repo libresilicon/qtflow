@@ -47,4 +47,25 @@ namespace symbol {
 				return true;
 		return false;
 	}
+
+	SchematicsSymbol* SymbolData::getSymbol(QString name)
+	{
+		foreach(SchematicsSymbol *s, partsymbols)
+			if(s->getName()==name)
+				return s;
+		return NULL;
+	}
+
+	QStringList SymbolData::getSymbolNames()
+	{
+		QStringList ret;
+		foreach(SchematicsSymbol *s, partsymbols)
+			ret << s->getName();
+		return ret;
+	}
+
+	void SymbolData::addRect(int x1, int y1, int x2, int y2)
+	{
+		recentSymbol->addRect(x1,y1,x2,y2);
+	}
 }

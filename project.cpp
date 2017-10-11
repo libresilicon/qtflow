@@ -664,12 +664,23 @@ bool  Project::isDefinedPart(QString s)
 	return false;
 }
 
-SchematicsSymbol* getSchematicsPart(QString s)
+symbol::SchematicsSymbol* Project::getSchematicsPart(QString s)
 {
-
+	foreach(QString key, slibdata.keys()) {
+		if(slibdata[key]->isDefinedSymbol(s))
+			return slibdata[key]->getSymbol(s);
+	}
+	return NULL;
 }
 
-
+QStringList Project::getListOfSchematicParts()
+{
+	QStringList ret;
+	foreach(QString key, slibdata.keys()) {
+		ret+=slibdata[key]->getSymbolNames();
+	}
+	return ret;
+}
 
 void Project::loadSchematicsLibraryFiles()
 {

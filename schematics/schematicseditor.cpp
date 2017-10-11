@@ -59,9 +59,7 @@ void SchematicsEditor::addParts()
 {
 	if(schematicsdata && editScene) {
 		foreach(SchematicsPart *p, schematicsdata->getParts()) {
-			qDebug() << "Adding part " << p->getName();
-			qDebug() << "Adding part " << p->getType();
-			editScene->addPart(p->getName(),p->getType(),p->x(),p->y());
+			editScene->addPart(p->getType(),p->getID(),p->x(),p->y());
 		}
 	}
 }

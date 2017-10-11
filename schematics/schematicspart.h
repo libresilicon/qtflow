@@ -6,18 +6,18 @@
 class SchematicsPart
 {
 public:
-	SchematicsPart(QString name, QString type);
+	SchematicsPart(QString type, QString id);
 
 	void setPosition(int x, int y);
 
-	QString getName();
 	QString getType();
+	QString getID();
 	qreal x();
 	qreal y();
 
 private:
-	QString m_name;
 	QString m_type;
+	QString m_id;
 	qreal m_x;
 	qreal m_y;
 };

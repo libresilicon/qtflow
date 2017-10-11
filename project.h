@@ -96,7 +96,8 @@ public:
 
 	// Schematics operations:
 	bool isDefinedPart(QString s);
-	lef::LEFMacro* getSchematicsPart(QString s);
+	symbol::SchematicsSymbol* getSchematicsPart(QString s);
+	QStringList getListOfSchematicParts();
 
 private:
 	// LEF operations:

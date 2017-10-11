@@ -26,11 +26,16 @@ namespace symbol {
 		// building the info:
 		class SymbolScanner *getLexer();
 
+		// getter:
+		SchematicsSymbol *getSymbol(QString);
+		QStringList getSymbolNames();
+
 		bool isDefinedSymbol(QString name);
 
 		// setter:
 		void addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, int foo, std::string f, std::string font);
 		void addPin(std::string name, int x, int y);
+		void addRect(int x1, int y1, int x2, int y2);
 
 	private:
 		class SymbolScanner* lexer;
