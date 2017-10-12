@@ -109,7 +109,6 @@ FORMS    += \
 	mainwindow.ui \
 	grid.ui \
 	templates.ui \
-	environment.ui \
 	savechanges.ui \
 	welcome.ui \
 	iopads.ui \

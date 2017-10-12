@@ -453,18 +453,17 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
-	QString scriptfile = project_settings->value("synthesis_script",":/synthesis.py").toString();
-	if(QFile(scriptfile).exists()) {
-		mainContext->evalFile(scriptfile);
+
+	if(QFile(getSynthesisScript()).exists()) {
+		mainContext->evalFile(getSynthesisScript());
 		mainContext->evalScript("main()");
 	}
 }
 
 void Project::simulation()
 {
-	QString scriptfile = project_settings->value("simulation_script",":/simulation.py").toString();
-	if(QFile(scriptfile).exists()) {
-		mainContext->evalFile(scriptfile);
+	if(QFile(getSimulationScript()).exists()) {
+		mainContext->evalFile(getSimulationScript());
 		mainContext->evalScript("main()");
 	}
 	emit(simulationDone());
@@ -722,4 +721,45 @@ void Project::loadSchematicsLibraryFiles()
 			slibdata[libname] = new symbol::SymbolData(filedest);
 		}
 	}
+}
+
+// python script paths:
+QString Project::getSimulationScript()
+{
+	return project_settings->value("simulation_script",":/simulation.py").toString();
+}
+
+QString Project::getSynthesisScript()
+{
+	return project_settings->value("synthesis_script",":/synthesis.py").toString();
+}
+
+QString Project::getPlacementScript()
+{
+
+}
+
+QString Project::getRoutingScript()
+{
+
+}
+
+void Project::setSimulationScript(QString)
+{
+
+}
+
+void Project::setSynthesisScript(QString)
+{
+
+}
+
+void Project::setPlacementScript(QString)
+{
+
+}
+
+void Project::setRoutingScript(QString)
+{
+
 }

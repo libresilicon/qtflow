@@ -96,5 +96,8 @@ void ProjectSettings::setProject(Project *p)
 	if(project) {
 		ui->comboBoxTechnology->setCurrentIndex(ui->comboBoxTechnology->findData(project->getTechnology()));
 		technologyActivated();
+
+		ui->pathSynthesisScript->setText(project->getSynthesisScript());
+		ui->pathSimulationScript->setText(project->getSimulationScript());
 	}
 }

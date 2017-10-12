@@ -7,18 +7,18 @@
     <x>0</x>
     <y>0</y>
     <width>678</width>
-    <height>411</height>
+    <height>522</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Project settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="qtflow.qrc">
+   <iconset resource="icons/icons.qrc">
     <normaloff>:/qflow_logo.png</normaloff>:/qflow_logo.png</iconset>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QGroupBox" name="groupBox">
@@ -98,43 +98,103 @@
      <item>
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
-        <string>Yosys (Synthesis)</string>
+        <string>Scripts</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QCheckBox" name="yosys_clean">
-          <property name="text">
-           <string>Remove unused cells and wires</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="yosys_check">
-          <property name="text">
-           <string>Check for obvious problems in the design</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QCheckBox" name="yosys_connect">
-          <property name="text">
-           <string>Create or remove connections</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="yosys_delete">
-          <property name="text">
-           <string>Delete objects in the design</string>
-          </property>
-         </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QFormLayout" name="formLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="pathOfYosysLabel">
+            <property name="text">
+             <string>Simulation script:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLineEdit" name="pathSimulationScript"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="simulationScriptButton">
+              <property name="text">
+               <string>Select</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="pathOfGraywolfLabel">
+            <property name="text">
+             <string>Synthesis script:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLineEdit" name="pathSynthesisScript"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="synthesisScriptButton">
+              <property name="text">
+               <string>Select</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLineEdit" name="pathPlacementScript"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="placementScriptButton">
+              <property name="text">
+               <string>Select</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="pathOfIcarusLabel">
+            <property name="text">
+             <string>Routing script:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QLineEdit" name="pathRoutingScript"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="routingScriptButton">
+              <property name="text">
+               <string>Select</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="pathOfQRouterLabel">
+            <property name="text">
+             <string>Placement script</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -147,22 +207,22 @@
   </layout>
  </widget>
  <resources>
-  <include location="qtflow.qrc"/>
+  <include location="icons/icons.qrc"/>
  </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
    <receiver>ProjectSettings</receiver>
-   <slot>accept()</slot>
+   <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>338</x>
+     <y>500</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
+     <x>338</x>
+     <y>260</y>
     </hint>
    </hints>
   </connection>
@@ -170,15 +230,15 @@
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
    <receiver>ProjectSettings</receiver>
-   <slot>reject()</slot>
+   <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>338</x>
+     <y>500</y>
     </hint>
     <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>338</x>
+     <y>260</y>
     </hint>
    </hints>
   </connection>

@@ -90,6 +90,17 @@ public:
 	QStringList getType(QString s);
 	QStringList getAlternativeNames(QString s);
 
+	// python script paths:
+	QString getSimulationScript();
+	QString getSynthesisScript();
+	QString getPlacementScript();
+	QString getRoutingScript();
+
+	void setSimulationScript(QString);
+	void setSynthesisScript(QString);
+	void setPlacementScript(QString);
+	void setRoutingScript(QString);
+
 	// LEF operations:
 	bool isDefinedMacro(QString s);
 	lef::LEFMacro* getMacro(QString s);
