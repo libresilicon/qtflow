@@ -30,10 +30,13 @@ namespace symbol {
 		return new QGraphicsRectItem(m_box_x1, m_box_y1, m_box_x2-m_box_x1, m_box_y2-m_box_y1, p);
 	}
 
-	QVector<QSchematicsPin*> SchematicsSymbol::createPins(QGraphicsItem*p)
+	QVector<QSchematicsPin*> SchematicsSymbol::createPins(QGraphicsItem* p)
 	{
 		QVector<QSchematicsPin*> ret;
-		QSchematicsPin *qp;
+
+		foreach(SymbolPin* sp, m_pins) {
+			ret.append(sp->createSchematicsPin(p));
+		}
 
 		return ret;
 	}

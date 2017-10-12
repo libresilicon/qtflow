@@ -3,12 +3,17 @@
 
 #include <string>
 #include <QString>
+#include <QGraphicsItem>
+
+#include "qschematics/qschematicspin.h"
 
 namespace symbol {
 	class SymbolPin
 	{
 	public:
 		SymbolPin(std::string name, int index, int x, int y, int length, std::string orient, int tw, int th, int a, int b, std::string mode);
+
+		QSchematicsPin* createSchematicsPin(QGraphicsItem* p);
 
 	private:
 		QString m_name;
