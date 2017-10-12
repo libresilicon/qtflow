@@ -2,13 +2,14 @@
 
 SchematicsEditor::SchematicsEditor(QWidget *parent):
 	QGraphicsView(parent),
-	editScene(new QSchematicsScene(this)),
 	filePath(QString()),
 	schematicsdata(NULL),
+	editScene(NULL),
 	project(NULL),
 	partSelection(new SchematicsPartSelection(this)),
 	libraryEditor(new SchematicsLibraryEditor(this))
 {
+	editScene = new QSchematicsScene(this);
 	setScene(editScene);
 }
 
@@ -59,7 +60,7 @@ void SchematicsEditor::addParts()
 {
 	if(schematicsdata && editScene) {
 		foreach(SchematicsPart *p, schematicsdata->getParts()) {
-			editScene->addPart(p->getType(),p->getID(),p->x(),p->y());
+			if(p) editScene->addPart(p->getType(),p->getID(),p->x(),p->y());
 		}
 	}
 }

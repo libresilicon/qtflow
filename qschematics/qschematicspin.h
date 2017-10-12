@@ -3,6 +3,8 @@
 
 #include <QGraphicsItem>
 #include <QPainter>
+#include <QGraphicsSimpleTextItem>
+#include <QDebug>
 
 class QSchematicsPin : public QGraphicsItem
 {
@@ -16,6 +18,7 @@ private:
 
 	QRectF m_externalRect;
 	QGraphicsLineItem *m_pinLine;
+	QGraphicsSimpleTextItem *m_pinLabel;
 };
 
 #endif // QSCHEMATICSPIN_H

@@ -31,9 +31,11 @@ void QSchematicsScene::addPart(QString type, QString id, int x, int y)
 	symbol::SchematicsSymbol* partsymbol;
 	if(project) if(project->isDefinedPart(type)) {
 		partsymbol = project->getSchematicsPart(type);
-		part = new QSchematicsPart(partsymbol, id, x, y);
-		addItem(part);
-		partList[id] = part;
+		if(partsymbol) {
+			part = new QSchematicsPart(partsymbol, id, x, y);
+			addItem(part);
+			partList[id] = part;
+		}
 	}
 }
 

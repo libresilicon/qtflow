@@ -34,8 +34,10 @@ namespace symbol {
 	{
 		QVector<QSchematicsPin*> ret;
 
+		ret.clear();
 		foreach(SymbolPin* sp, m_pins) {
-			ret.append(sp->createSchematicsPin(p));
+			QSchematicsPin* o = sp->createSchematicsPin(p);
+			if(o) ret.append(o);
 		}
 
 		return ret;

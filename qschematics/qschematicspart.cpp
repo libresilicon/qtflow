@@ -5,9 +5,10 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, QString name, in
 	m_name = name;
 	QGraphicsRectItem* r = obj->createRect(this);
 	m_externalRect = r->rect();
-	obj;
+
 	setPos(x,y);
 
+	qDebug() << "Part: " << m_name;
 	m_pins = obj->createPins(this);
 }
 
