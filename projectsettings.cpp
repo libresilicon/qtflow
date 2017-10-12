@@ -87,6 +87,8 @@ void ProjectSettings::storeData()
 	if(project) {
 		project->setTechnology(ui->comboBoxTechnology->currentText());
 		project->setProcess(ui->comboBoxProcess->currentText());
+		project->setSimulationScript(ui->pathSimulationScript->text());
+		project->setSynthesisScript(ui->pathSynthesisScript->text());
 	}
 }
 

@@ -96,7 +96,7 @@ public:
 	QString getPlacementScript();
 	QString getRoutingScript();
 
-	void setSimulationScript(QString);
+	void setSimulationScript(QString s);
 	void setSynthesisScript(QString);
 	void setPlacementScript(QString);
 	void setRoutingScript(QString);

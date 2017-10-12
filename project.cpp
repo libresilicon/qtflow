@@ -744,14 +744,16 @@ QString Project::getRoutingScript()
 
 }
 
-void Project::setSimulationScript(QString)
+void Project::setSimulationScript(QString s)
 {
-
+	project_settings->setValue("simulation_script", s);
+	project_settings->sync();
 }
 
-void Project::setSynthesisScript(QString)
+void Project::setSynthesisScript(QString s)
 {
-
+	project_settings->setValue("synthesis_script", s);
+	project_settings->sync();
 }
 
 void Project::setPlacementScript(QString)
