@@ -19,6 +19,6 @@ namespace symbol {
 
 	QSchematicsPin* SymbolPin::createSchematicsPin(QGraphicsItem* p)
 	{
-
+		return new QSchematicsPin(m_name, m_index, m_x, m_y, m_length, m_orient, m_text_width, m_text_heigth, m_a, m_b, m_mode, p);
 	}
 }
