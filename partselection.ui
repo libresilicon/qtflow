@@ -49,14 +49,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="shape" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>40</width>
-          <height>40</height>
-         </size>
-        </property>
-       </widget>
+       <widget class="QGraphicsView" name="partPreview"/>
       </item>
      </layout>
     </widget>

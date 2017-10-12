@@ -177,6 +177,14 @@ QStringList Project::getSchematicsLibraryNames()
 	return ret;
 }
 
+QStringList Project::getSchematicsLibraryParts(QString s)
+{
+	if(slibdata.contains(s)) {
+		return slibdata[s]->getSymbolNames();
+	}
+	return QStringList();
+}
+
 QStringList Project::getSchematicsLibraryFiles()
 {
 	QStringList ret;

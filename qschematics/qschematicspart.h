@@ -11,6 +11,7 @@ class QSchematicsPart : public QGraphicsItem
 {
 public:
 	QSchematicsPart(symbol::SchematicsSymbol*obj, QString name, int x, int y);
+	QSchematicsPart(symbol::SchematicsSymbol*obj, int x, int y);
 
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);

@@ -99,6 +99,7 @@ public:
 	symbol::SchematicsSymbol* getSchematicsPart(QString s);
 	QStringList getListOfSchematicParts();
 	QStringList getSchematicsLibraryNames();
+	QStringList getSchematicsLibraryParts(QString n);
 
 private:
 	// LEF operations:

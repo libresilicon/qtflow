@@ -21,6 +21,7 @@ namespace symbol {
 		QVector<QSchematicsPin*> createPins(QGraphicsItem*p);
 
 		QString getName();
+		QString getPrefix();
 
 	private:
 		QString m_name;

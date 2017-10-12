@@ -12,6 +12,11 @@ namespace symbol {
 		return m_name;
 	}
 
+	QString SchematicsSymbol::getPrefix()
+	{
+		return m_prefix;
+	}
+
 	void SchematicsSymbol::addRect(int x1, int y1, int x2, int y2)
 	{
 		m_box_x1 = x1;
