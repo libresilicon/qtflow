@@ -5,11 +5,13 @@ SOURCES += \
     $$PWD/qschematicsscene.cpp \
     $$PWD/qschematicsparametricpart.cpp \
     $$PWD/qschematicswire.cpp \
-    $$PWD/qschematicspart.cpp
+    $$PWD/qschematicspart.cpp \
+    $$PWD/qschematicspin.cpp
 
 HEADERS += \
     $$PWD/qschematicsscene.h \
     $$PWD/qschematicsparametricpart.h \
     $$PWD/qschematicswire.h \
-    $$PWD/qschematicspart.h
+    $$PWD/qschematicspart.h \
+    $$PWD/qschematicspin.h
 

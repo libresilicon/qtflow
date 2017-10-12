@@ -12,12 +12,13 @@ class QSchematicsPart : public QGraphicsItem
 public:
 	QSchematicsPart(symbol::SchematicsSymbol*obj, QString name, int x, int y);
 
-	QPainterPath shape() const;
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
 private:
 	QRectF m_externalRect;
+	QString m_name;
+	QVector<QSchematicsPin*> m_pins;
 };
 
 #endif // QSCHEMATICSPART_H

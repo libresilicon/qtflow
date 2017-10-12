@@ -20,8 +20,21 @@ namespace symbol {
 		m_box_y2 = y2;
 	}
 
+	void SchematicsSymbol::addPin(std::string name, int index, int x, int y, int length, std::string orient, int tw, int th, int a, int b, std::string mode)
+	{
+		m_pins.append(new SymbolPin(name, index, x, y, length, orient, tw, th, a, b, mode));
+	}
+
 	QGraphicsRectItem* SchematicsSymbol::createRect(QGraphicsItem* p)
 	{
-		return new QGraphicsRectItem(m_box_x1,m_box_y1,m_box_x2-m_box_x1,m_box_y2-m_box_y1,p);
+		return new QGraphicsRectItem(m_box_x1, m_box_y1, m_box_x2-m_box_x1, m_box_y2-m_box_y1, p);
+	}
+
+	QVector<QSchematicsPin*> SchematicsSymbol::createPins(QGraphicsItem*p)
+	{
+		QVector<QSchematicsPin*> ret;
+		QSchematicsPin *qp;
+
+		return ret;
 	}
 }
