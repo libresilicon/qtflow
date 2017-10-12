@@ -453,12 +453,21 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
-	mainContext->evalFile(":/scripts/synthesis.py");
+	QString scriptfile = project_settings->value("synthesis_script",":/synthesis.py").toString();
+	if(QFile(scriptfile).exists()) {
+		mainContext->evalFile(scriptfile);
+		mainContext->evalScript("main()");
+	}
 }
 
 void Project::simulation()
 {
-	mainContext->evalFile(":/scripts/simulation.py");
+	QString scriptfile = project_settings->value("simulation_script",":/simulation.py").toString();
+	if(QFile(scriptfile).exists()) {
+		mainContext->evalFile(scriptfile);
+		mainContext->evalScript("main()");
+	}
+	emit(simulationDone());
 }
 
 void Project::placement()

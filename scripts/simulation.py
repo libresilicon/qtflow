@@ -101,7 +101,7 @@ def check_and_fix(filepath):
 	if not finish_set:
 		add_finish(filepath)
 
-def simulation():
+def main():
 	test_bench_found = False
 
 	source = project_settings.getSourceDir() 
@@ -145,5 +145,3 @@ def simulation():
 		print("Error: No simulator generated!\n")
 		print(result)
 		return
-
-simulation()

@@ -12,9 +12,22 @@ CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
     view(doc->createView(this)),
     fileInfo(QFileInfo())
 {
+	QAction *button;
+	QToolBar *toolbar = new QToolBar(this);
+
     setCentralWidget(view);
     setType(VerilogCodeEditorWidgetType);
-    connect(edit,SIGNAL(blockCountChanged(int)),this,SLOT(onContentChanged()));
+	connect(doc,SIGNAL(textChanged(KTextEditor::Document*)),this,SLOT(onContentChanged()));
+
+	button = new QAction(QPixmap(":/simulator.svg"), "Run simulation", toolbar);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(runSimulation()));
+	toolbar->addAction(button);
+
+	button = new QAction(QPixmap(":/component_select_unit.svg"), "Run synthesis", toolbar);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(runSynthesis()));
+	toolbar->addAction(button);
+
+	addToolBar(toolbar);
 }
 
 void CodeEditorWidget::saveFile()
@@ -54,4 +67,14 @@ void CodeEditorWidget::onContentChanged()
 {
 	setStatusChanged(true);
 	emit(contentChanged());
+}
+
+void CodeEditorWidget::runSynthesis()
+{
+	project->synthesis();
+}
+
+void CodeEditorWidget::runSimulation()
+{
+	project->simulation();
 }

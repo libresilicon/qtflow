@@ -1,5 +1,5 @@
 import os
-def synthesis():
-	print "Hello World"
 
-synthesis()
+def main():
+    print "Hello World"
+

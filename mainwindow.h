@@ -20,8 +20,6 @@
 #include "projectselector.h"
 #include "fileselector.h"
 #include "moduleselector.h"
-#include "testbenchtoolbox.h"
-#include "synthesistoolbox.h"
 
 #include "editortabmanager.h"
 
@@ -125,9 +123,6 @@ private:
 	ProjectSelector *projectsWidget;
 	ModuleSelector *modulesWidget;
 	PythonConsoleDockWidget *pythonConsoleWidget;
-
-	TestBenchToolBox *toolBoxWidgetTestBench;
-	SynthesisToolBox *toolBoxWidgetSynthesis;
 
 	EditorTabManager *editArea;
 

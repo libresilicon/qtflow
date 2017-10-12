@@ -9,7 +9,7 @@ PyProjectSettings::PyProjectSettings(Project *parent) :
 
 PyObject* PyProjectSettings::getMainModule()
 {
-		return PythonQt::self()->getMainModule();
+	return PythonQt::self()->getMainModule();
 }
 
 QString PyProjectSettings::getTopLevel()

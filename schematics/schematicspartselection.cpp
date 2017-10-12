@@ -55,8 +55,8 @@ void SchematicsPartSelection::updatePartList()
 			partsymbol = project->getSchematicsPart(partname);
 			partWidget = new QSchematicsPart(partsymbol, 0, 0);
 			m_libraryPartWidgets[partname] = partWidget;
+			ui->partPreview->fitInView(partWidget);
 			partPreview->addItem(partWidget);
-			//ui->partPreview->scale(0.1,0.1);
 		}
 	}
 }
@@ -76,6 +76,7 @@ void SchematicsPartSelection::on_partList_currentItemChanged(QTreeWidgetItem *cu
 	}
 
 	if(m_libraryPartWidgets.contains(currentItem)) {
+		ui->partPreview->fitInView(m_libraryPartWidgets[currentItem]);
 		m_libraryPartWidgets[currentItem]->setVisible(true);
 	}
 

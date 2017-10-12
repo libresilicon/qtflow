@@ -3,7 +3,6 @@
 QSchematicsPin::QSchematicsPin(QString name, int index, int x, int y, int length, QString orient, int tw, int th, int a, int b, QString mode, QGraphicsItem *p) :
 	QGraphicsItem(p)
 {
-	qDebug() << "\t Pin: " << name;
 	m_pinLine = new QGraphicsLineItem(drawLine(x,-y,length,orient),p);
 
 	// adding label:
@@ -26,8 +25,6 @@ QSchematicsPin::QSchematicsPin(QString name, int index, int x, int y, int length
 
 void QSchematicsPin::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	painter->setPen(QPen(Qt::black));
-	painter->drawPath(shape());
 }
 
 QRectF QSchematicsPin::boundingRect() const

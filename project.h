@@ -101,6 +101,9 @@ public:
 	QStringList getSchematicsLibraryNames();
 	QStringList getSchematicsLibraryParts(QString n);
 
+signals:
+	void simulationDone();
+
 private:
 	// LEF operations:
 	QStringList getLibraryFiles();
