@@ -98,6 +98,7 @@ public:
 	bool isDefinedPart(QString s);
 	symbol::SchematicsSymbol* getSchematicsPart(QString s);
 	QStringList getListOfSchematicParts();
+	QStringList getSchematicsLibraryNames();
 
 private:
 	// LEF operations:

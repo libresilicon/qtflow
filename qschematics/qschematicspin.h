@@ -19,6 +19,7 @@ private:
 	QRectF m_externalRect;
 	QGraphicsLineItem *m_pinLine;
 	QGraphicsSimpleTextItem *m_pinLabel;
+	QGraphicsRectItem *m_pinContact;
 };
 
 #endif // QSCHEMATICSPIN_H

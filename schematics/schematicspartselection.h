@@ -28,6 +28,8 @@ private:
 
 	Ui::PartSelection *ui;
 	Project *project;
+
+	QVector<QTreeWidgetItem*> m_libraries;
 };
 
 #endif // SCHEMATICSPARTSELECTION_H

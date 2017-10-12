@@ -18,7 +18,10 @@ public:
 private:
 	QRectF m_externalRect;
 	QString m_name;
+
 	QVector<QSchematicsPin*> m_pins;
+	QGraphicsSimpleTextItem *m_partLabel;
+	QGraphicsSimpleTextItem *m_typeLabel;
 };
 
 #endif // QSCHEMATICSPART_H

@@ -168,6 +168,15 @@ QStringList Project::getLibraryFiles()
 	return ret;
 }
 
+QStringList Project::getSchematicsLibraryNames()
+{
+	QStringList ret;
+	foreach(QString filename, getSchematicsLibraryFiles()) {
+		ret << QFileInfo(filename).baseName();
+	}
+	return ret;
+}
+
 QStringList Project::getSchematicsLibraryFiles()
 {
 	QStringList ret;

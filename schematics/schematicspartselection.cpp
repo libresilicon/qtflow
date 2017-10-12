@@ -27,12 +27,17 @@ void SchematicsPartSelection::setProject(Project *p)
 
 void SchematicsPartSelection::updatePartList()
 {
-	/*if(lefdata) {
-		ui->partList->clear();
-		foreach(lef::LEFMacro *m, lefdata->getMacros()) {
-			ui->partList->addItem(m->getName());
-		}
-	}*/
+	QTreeWidgetItem *lib;
+
+	ui->partList->header()->close();
+	ui->partList->clear();
+	m_libraries.clear();
+
+	foreach(QString libname, project->getSchematicsLibraryNames()) {
+		lib = new QTreeWidgetItem(ui->partList);
+		lib->setText(0,libname);
+		m_libraries.append(lib);
+	}
 }
 
 void SchematicsPartSelection::on_partList_currentTextChanged(QString s)

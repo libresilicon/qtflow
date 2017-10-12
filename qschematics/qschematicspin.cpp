@@ -6,7 +6,7 @@ QSchematicsPin::QSchematicsPin(QString name, int index, int x, int y, int length
 	qDebug() << "\t Pin: " << name;
 	m_pinLine = new QGraphicsLineItem(drawLine(x,-y,length,orient),p);
 
-	// adding label
+	// adding label:
 	m_pinLabel = new QGraphicsSimpleTextItem(name,p);
 	if(orient=="U") {
 		m_pinLabel->setPos(x+5,-y-length/2);
@@ -17,6 +17,11 @@ QSchematicsPin::QSchematicsPin(QString name, int index, int x, int y, int length
 	} else if(orient=="R") {
 		m_pinLabel->setPos(x+length/2,-y);
 	}
+
+	// adding contact:
+	m_pinContact = new QGraphicsRectItem(x-4,-4-y,8,8,p);
+	m_pinContact->setBrush(QBrush(Qt::black));
+
 }
 
 void QSchematicsPin::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

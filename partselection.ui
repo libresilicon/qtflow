@@ -21,7 +21,13 @@
        <widget class="QWidget" name="widget_3" native="true">
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QListWidget" name="partList"/>
+          <widget class="QTreeWidget" name="partList">
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
          </item>
          <item>
           <widget class="QWidget" name="widget_4" native="true">

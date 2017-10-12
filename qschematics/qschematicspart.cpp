@@ -8,8 +8,15 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, QString name, in
 
 	setPos(x,y);
 
-	qDebug() << "Part: " << m_name;
 	m_pins = obj->createPins(this);
+
+	m_partLabel = new QGraphicsSimpleTextItem(name,this);
+	m_partLabel->setPos(0,20);
+	m_partLabel->setScale(2);
+
+	m_typeLabel = new QGraphicsSimpleTextItem(obj->getName(),this);
+	m_typeLabel->setPos(0,-20);
+	m_typeLabel->setScale(2);
 }
 
 void QSchematicsPart::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
