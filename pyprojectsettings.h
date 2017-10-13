@@ -34,6 +34,8 @@ public Q_SLOTS:
 	QString getSourceDir();
 	QString getSynthesisDir();
 
+	QStringList getSearchDirectories();
+
 	// synthesis files:
 	QString getLibertyFile();
 

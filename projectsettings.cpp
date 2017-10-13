@@ -61,7 +61,7 @@ void ProjectSettings::setSearchPathButtons()
 
 void ProjectSettings::addDirectory()
 {
-	QString d = QFileDialog::getExistingDirectory ( this, "Choose search path" );
+	QString d = QFileDialog::getExistingDirectory ( this, "Choose search path", project->getSourceDir() );
 	if(d==QString()) return;
 	ui->searchPaths->addItem(d);
 }

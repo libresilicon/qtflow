@@ -135,15 +135,19 @@ def main():
 		print("Error: No test bench defined!\n")
 		return
 
+	command = [
+		settings.getIcarus(),
+		"-s",project_settings.getTestBench(),
+		"-o",project_settings.getTestBench(),
+		project_settings.getTestBenchFile()
+	]
+
+	for f in project_settings.getSearchDirectories():
+		command.append("-I")
+		command.append(f)
+
 	chdir(project_settings.getSynthesisDir())
-	icarus=Popen(
-		[
-			settings.getIcarus(),
-			"-s",project_settings.getTestBench(),
-			"-o",project_settings.getTestBench(),
-			"-I",project_settings.getSourceDir(),
-			project_settings.getTestBenchFile()
-		], stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+	icarus=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
 	for line in iter(icarus.stdout.readline, ''):
 		print line # do something with the output here

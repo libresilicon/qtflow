@@ -52,6 +52,11 @@ QString PyProjectSettings::getVCDPath()
 	return project->getVCDPath();
 }
 
+QStringList PyProjectSettings::getSearchDirectories()
+{
+	return project->getSearchDirectories();
+}
+
 QString PyProjectSettings::getTestBenchFile()
 {
 	return project->getTestBenchFile();
