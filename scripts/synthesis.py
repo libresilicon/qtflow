@@ -30,7 +30,7 @@ def main():
 	    command+=" "
 	command+=project_settings.getTopLevelFile()+"\n"
 	command+="synth -top "+project_settings.getTopLevel()+"\n"
-	command+="abc -liberty "+project_settings.getLibertyFile()+" -script +strash;scorr;ifraig;retime,{D};strash;dch,-f;map,-M,1,{D}\n"
+	#command+="abc -liberty "+project_settings.getLibertyFile()+" -script +strash;scorr;ifraig;retime,{D};strash;dch,-f;map,-M,1,{D}\n"
 	command+="write_blif "+project_settings.getTopLevel()+".blif\n"
 	command+="exit\n"
 
@@ -38,5 +38,6 @@ def main():
 	p.stdin.close() # eof
 
 	for line in iter(p.stdout.readline, ''):
-		print line, # do something with the output here
+		print line
+		print '\n'
 	p.stdout.close()
