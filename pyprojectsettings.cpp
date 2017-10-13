@@ -51,3 +51,18 @@ QString PyProjectSettings::getVCDPath()
 {
 	return project->getVCDPath();
 }
+
+QString PyProjectSettings::getTestBenchFile()
+{
+	return project->getTestBenchFile();
+}
+
+QString PyProjectSettings::getTopLevelFile()
+{
+	return project->getTopLevelFile();
+}
+
+QString PyProjectSettings::getLibertyFile()
+{
+	return project->getLibertyFile();
+}

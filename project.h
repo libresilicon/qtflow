@@ -69,10 +69,22 @@ public:
 	qreal posMat(QString material);
 	qreal thicknessMat(QString material);
 
-	QString getSourceDir();
-	QString getTopLevel();
+	// directories
+	QString getSynthesisDir();
 	QString getRootDir();
+	QString getSourceDir();
+	QString getLayoutDir();
+
+	// module names:
+	QString getTopLevel();
 	QString getTestBench();
+
+	// files for processing:
+	QString getTopLevelFile();
+	QString getTestBenchFile();
+	QString getVCDFile();
+
+	// infos:
 	QString getTechnology();
 	QString getProcess();
 	QString getTechnologyFile();
@@ -80,9 +92,6 @@ public:
 	QString getColorMapFile();
 	QString getDesignStyleFile();
 	QString getProjectType();
-	QString getSynthesisDir();
-	QString getLayoutDir();
-	QString getVCDFile();
 	QString getVCDPath();
 
 	QStringList getPlanes();
@@ -111,6 +120,8 @@ public:
 	QStringList getListOfSchematicParts();
 	QStringList getSchematicsLibraryNames();
 	QStringList getSchematicsLibraryParts(QString n);
+
+	QString getLibertyFile();
 
 signals:
 	void simulationDone();
