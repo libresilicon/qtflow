@@ -23,7 +23,12 @@ def main():
 	p=Popen(settings.getYosys(), stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 	command=""
 	command+="read_liberty -lib -ignore_miss_dir -setattr blackbox "+project_settings.getLibertyFile()+"\n"
-	command+="read_verilog "+project_settings.getTopLevelFile()+"\n"
+	command+="read_verilog "
+	for f in project_settings.getSearchDirectories():
+	    command+="-I"
+	    command+=f
+	    command+=" "
+	command+=project_settings.getTopLevelFile()+"\n"
 	command+="synth\n"
 	command+="write_blif "+project_settings.getTopLevel()+".blif\n"
 	command+="exit\n"
