@@ -1,7 +1,5 @@
 #include "projectsettings.h"
 
-#include <QTextStream>
-
 ProjectSettings::ProjectSettings(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::ProjectSettings),
@@ -30,6 +28,51 @@ ProjectSettings::ProjectSettings(QWidget *parent) :
 	connect(ui->buttonBox,SIGNAL(accepted()), this, SLOT(storeData()));
 
 	technologyActivated();
+
+	setSearchPathButtons();
+	setSearchPathList();
+}
+
+void ProjectSettings::setSearchPathList()
+{
+	if(project) {
+		ui->searchPaths->clear();
+		foreach(QString s, project->getSearchDirectories())
+			ui->searchPaths->addItem(s);
+	}
+}
+
+void ProjectSettings::setSearchPathButtons()
+{
+	QToolBar *toolbar;
+	QAction *button;
+
+	toolbar = new QToolBar(ui->groupBoxSearchPaths);
+	ui->groupBoxSearchPaths->layout()->addWidget(toolbar);
+
+	button = new QAction(QPixmap(":/add.svg"), "Add directory", toolbar);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(addDirectory()));
+	toolbar->addAction(button);
+
+	button = new QAction(QPixmap(":/delete.svg"), "Delete directory", toolbar);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(deleteDirectory()));
+	toolbar->addAction(button);
+}
+
+void ProjectSettings::addDirectory()
+{
+	QString d = QFileDialog::getExistingDirectory ( this, "Choose search path" );
+	if(d==QString()) return;
+	ui->searchPaths->addItem(d);
+}
+
+void ProjectSettings::deleteDirectory()
+{
+	QListWidgetItem *m = ui->searchPaths->currentItem();
+	if(m) {
+		qDebug() << m->text();
+		ui->searchPaths->removeItemWidget(m);
+	}
 }
 
 void ProjectSettings::technologyActivated()
@@ -84,11 +127,21 @@ void ProjectSettings::processActivated()
 
 void ProjectSettings::storeData()
 {
+	QListWidgetItem *item;
+	QStringList paths;
+
 	if(project) {
 		project->setTechnology(ui->comboBoxTechnology->currentText());
 		project->setProcess(ui->comboBoxProcess->currentText());
 		project->setSimulationScript(ui->pathSimulationScript->text());
 		project->setSynthesisScript(ui->pathSynthesisScript->text());
+
+		for(int row = 0; row < ui->searchPaths->count(); row++)
+		{
+			item = ui->searchPaths->item(row);
+			paths << item->text();
+		}
+		project->setSearchDirectories(paths);
 	}
 }
 
@@ -101,5 +154,7 @@ void ProjectSettings::setProject(Project *p)
 
 		ui->pathSynthesisScript->setText(project->getSynthesisScript());
 		ui->pathSimulationScript->setText(project->getSimulationScript());
+
+		setSearchPathList();
 	}
 }

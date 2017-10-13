@@ -123,7 +123,8 @@ FORMS    += \
 	projectsettings.ui \
 	console.ui \
 	layoutvisibles.ui \
-    partselection.ui
+    partselection.ui \
+    librarysettings.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc

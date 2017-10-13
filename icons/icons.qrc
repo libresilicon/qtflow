@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 <file>./about.svg</file>
+<file>./add.svg</file>
 <file>./add_arc.svg</file>
 <file>./add_bus.svg</file>
 <file>./add_bus2bus.svg</file>

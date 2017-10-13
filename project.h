@@ -74,6 +74,9 @@ public:
 	QString getRootDir();
 	QString getSourceDir();
 	QString getLayoutDir();
+	QStringList getSearchDirectories();
+
+	void setSearchDirectories(QStringList l);
 
 	// module names:
 	QString getTopLevel();

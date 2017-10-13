@@ -76,6 +76,20 @@ Project::~Project()
 	delete project_settings;
 }
 
+QStringList Project::getSearchDirectories()
+{
+	QStringList ret = project_settings->value("search_dirs").toStringList();
+	if(ret.count()==0)
+		ret << getSourceDir();
+	return ret;
+}
+
+void Project::setSearchDirectories(QStringList l)
+{
+	project_settings->setValue("search_dirs",l);
+	project_settings->sync();
+}
+
 QString Project::getSourceDir()
 {
 	return QDir(rootdir).filePath(project_settings->value("sourcedir").toString());
