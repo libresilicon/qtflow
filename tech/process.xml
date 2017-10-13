@@ -73,6 +73,7 @@
 				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/qrouter/A_CELLS_IO_CELLS_qrouter.lef</file>
 			</lef>
 			<tech>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.tech/magic/20161116/EFXH035A.tech</tech>
+			<liberty>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/liberty/D_CELLS/PVT_3_30V_range/D_CELLS_MOS_typ_3_30V_25C.lib</liberty>
 		</process>
 	</technology>
 	

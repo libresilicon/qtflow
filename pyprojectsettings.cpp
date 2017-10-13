@@ -64,5 +64,10 @@ QString PyProjectSettings::getTopLevelFile()
 
 QString PyProjectSettings::getLibertyFile()
 {
-	return project->getLibertyFile();
+	QTemporaryDir temporaryDir;
+	QString filedest;
+
+	filedest = temporaryDir.path()+"/cells.lib";
+	QFile::copy(project->getLibertyFile(), filedest);
+	return filedest;
 }
