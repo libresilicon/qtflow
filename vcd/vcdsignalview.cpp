@@ -314,6 +314,9 @@ void VcdSignalView::drawTimeScale()
 		}
 	} else {
 		qDebug() << "(not supported) time scale: " << scale;
+		for(int i=0; i < this->width()/10 ; i++) {
+			signalScene->addLine(i*10, 0, i*10, 10, white);
+		}
 	}
 }
 

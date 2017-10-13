@@ -29,7 +29,8 @@ def main():
 	    command+=f
 	    command+=" "
 	command+=project_settings.getTopLevelFile()+"\n"
-	command+="synth\n"
+	command+="synth -top "+project_settings.getTopLevel()+"\n"
+	command+="abc -liberty "+project_settings.getLibertyFile()+" -script +strash;scorr;ifraig;retime,{D};strash;dch,-f;map,-M,1,{D}\n"
 	command+="write_blif "+project_settings.getTopLevel()+".blif\n"
 	command+="exit\n"
 
