@@ -20,6 +20,9 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	projectSettingsDialog = new ProjectSettings(this);
 	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
 
+	synthesisOptionsDialog = new SynthesisOptions(this);
+	connect(ui->synthesisSettings, SIGNAL(triggered(bool)), synthesisOptionsDialog, SLOT(open()));
+
 	iopadsWidget = new IOPads(this);
 	iopadsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, iopadsWidget);
@@ -58,15 +61,15 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	QAction *recent_action;
 
 	settings->beginGroup("history");
-    QStringList reverseProjectsList = settings->value("recentProjects").toStringList();
+	QStringList reverseProjectsList = settings->value("recentProjects").toStringList();
 	settings->endGroup();
 
-    QStringList recentProjectsList;
-    QStringList::const_reverse_iterator rev;
-    for (rev = reverseProjectsList.rbegin(); rev != reverseProjectsList.rend(); ++rev)
-        recentProjectsList << *rev;
+	QStringList recentProjectsList;
+	QStringList::const_reverse_iterator rev;
+	for(rev = reverseProjectsList.rbegin(); rev != reverseProjectsList.rend(); ++rev)
+		recentProjectsList << *rev;
 
-    foreach(QString recentProject, recentProjectsList) {
+	foreach(QString recentProject, recentProjectsList) {
 		recent_action=recent->addAction(recentProject);
 		recent_action->setData(recentProject);
 		connect(recent_action, SIGNAL(triggered()), this, SLOT(openRecentProject()));
@@ -109,6 +112,8 @@ void MainWindow::disableAllFunctions()
 	ui->setAnalogSimulationMode->setEnabled(false);
 	ui->setSynthesisMode->setEnabled(false);
 	ui->projectSettings->setEnabled(false);
+	ui->synthesisSettings->setEnabled(false);
+	ui->librarySettings->setEnabled(false);
 }
 
 void MainWindow::enableAllFunctions()
@@ -118,6 +123,17 @@ void MainWindow::enableAllFunctions()
 	ui->setAnalogSimulationMode->setEnabled(true);
 	ui->setSynthesisMode->setEnabled(true);
 	ui->projectSettings->setEnabled(true);
+	ui->synthesisSettings->setEnabled(true);
+	ui->librarySettings->setEnabled(true);
+}
+
+void MainWindow::on_synthesisSettings_triggered(bool)
+{
+}
+
+void MainWindow::on_librarySettings_triggered(bool)
+{
+
 }
 
 void MainWindow::hideAllDockerWidgets()

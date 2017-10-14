@@ -1,7 +1,7 @@
 #include "synthesisoptions.h"
 
 SynthesisOptions::SynthesisOptions(QWidget *parent) :
-	QWidget(parent),
+	QDialog(parent),
 	ui(new Ui::SynthesisOptions)
 {
 	ui->setupUi(this);

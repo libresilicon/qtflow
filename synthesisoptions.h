@@ -1,11 +1,11 @@
 #ifndef SYNTHESISOPTIONS_H
 #define SYNTHESISOPTIONS_H
 
-#include <QWidget>
+#include <QDialog>
 
 #include "ui_synthesisoptions.h"
 
-class SynthesisOptions : public QWidget
+class SynthesisOptions : public QDialog
 {
 	Q_OBJECT
 public:

@@ -52,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>22</height>
+     <height>29</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -96,8 +96,8 @@
      <string>&amp;Project</string>
     </property>
     <addaction name="projectSettings"/>
-    <addaction name="actionSynthesis_settings"/>
-    <addaction name="actionLibrary_settings"/>
+    <addaction name="synthesisSettings"/>
+    <addaction name="librarySettings"/>
    </widget>
    <widget class="QMenu" name="menuDesign_Rules">
     <property name="title">
@@ -108,7 +108,7 @@
    </widget>
    <widget class="QMenu" name="menuTools_2">
     <property name="title">
-     <string>Tools</string>
+     <string>&amp;Tools</string>
     </property>
     <addaction name="actionNetlist"/>
     <addaction name="actionDRC"/>
@@ -299,7 +299,7 @@
   </action>
   <action name="projectSettings">
    <property name="text">
-    <string>General settings</string>
+    <string>&amp;General settings</string>
    </property>
   </action>
   <action name="setDigitalSimulationMode">
@@ -393,14 +393,14 @@
     <string>&amp;Wave viewer</string>
    </property>
   </action>
-  <action name="actionSynthesis_settings">
+  <action name="synthesisSettings">
    <property name="text">
-    <string>Synthesis settings</string>
+    <string>&amp;Synthesis settings</string>
    </property>
   </action>
-  <action name="actionLibrary_settings">
+  <action name="librarySettings">
    <property name="text">
-    <string>Library settings</string>
+    <string>&amp;Library settings</string>
    </property>
   </action>
  </widget>

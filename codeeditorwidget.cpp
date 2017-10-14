@@ -7,16 +7,16 @@
 
 CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
-    edit(KTextEditor::Editor::instance()),
-    doc(edit->createDocument(this)),
-    view(doc->createView(this)),
-    fileInfo(QFileInfo())
+	edit(KTextEditor::Editor::instance()),
+	doc(edit->createDocument(this)),
+	view(doc->createView(this)),
+	fileInfo(QFileInfo())
 {
 	QAction *button;
 	QToolBar *toolbar = new QToolBar(this);
 
-    setCentralWidget(view);
-    setType(VerilogCodeEditorWidgetType);
+	setCentralWidget(view);
+	setType(VerilogCodeEditorWidgetType);
 	connect(doc,SIGNAL(textChanged(KTextEditor::Document*)),this,SLOT(onContentChanged()));
 
 	button = new QAction(QPixmap(":/simulator.svg"), "Run simulation", toolbar);
@@ -32,25 +32,25 @@ CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
 
 void CodeEditorWidget::saveFile()
 {
-    QString filePath = fileInfo.absoluteFilePath();
-    if (filePath == QString())
-        return;
+	QString filePath = fileInfo.absoluteFilePath();
+	if (filePath == QString())
+		return;
 
-    doc->saveAs(QUrl::fromLocalFile(filePath));
+	doc->saveAs(QUrl::fromLocalFile(filePath));
 	setStatusChanged(false);
 	emit(contentSaved());
 }
 
 void CodeEditorWidget::loadFile(QString path)
 {
-    fileInfo = QFileInfo(path);
+	fileInfo = QFileInfo(path);
 
-    QString filePath = fileInfo.absoluteFilePath();
-    if (filePath == QString())
-        return;
+	QString filePath = fileInfo.absoluteFilePath();
+	if (filePath == QString())
+		return;
 
-    doc->openUrl(QUrl::fromLocalFile(filePath));
-    setStatusChanged(false);
+	doc->openUrl(QUrl::fromLocalFile(filePath));
+	setStatusChanged(false);
 }
 
 void CodeEditorWidget::setProject(Project *p)
@@ -60,7 +60,7 @@ void CodeEditorWidget::setProject(Project *p)
 
 QString CodeEditorWidget::getFilePath()
 {
-    return fileInfo.absoluteFilePath();
+	return fileInfo.absoluteFilePath();
 }
 
 void CodeEditorWidget::onContentChanged()

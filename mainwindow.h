@@ -35,6 +35,8 @@
 #include "wave.h"
 #include "pysettings.h"
 
+#include "synthesisoptions.h"
+
 #include "pythonconsoledockwidget.h"
 
 namespace Ui {
@@ -98,6 +100,9 @@ private slots:
 	void on_setSynthesisMode_triggered();
 	void on_setLayoutMode_triggered();
 
+	void on_synthesisSettings_triggered(bool);
+	void on_librarySettings_triggered(bool);
+
 	void onProjectCreated(QString);
 	void setTopLevel(QString);
 	void setTestBench(QString);
@@ -115,8 +120,11 @@ private:
 	IOPads *iopadsWidget;
 
 	QSettings *settings;
+
 	Settings *settingsDialog;
 	ProjectSettings *projectSettingsDialog;
+	SynthesisOptions *synthesisOptionsDialog;
+
 	QCommandLineParser *parser;
 
 	FileSelector *filesWidget;
