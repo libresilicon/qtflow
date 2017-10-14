@@ -1,9 +1,22 @@
+import io
+import time
+import sys
+
 from os import path
 from os import popen
 from os import listdir
 from os import remove
+from os import chdir
+from os import path
+
 from re import search
+
+from subprocess import PIPE
+from subprocess import STDOUT
+from subprocess import Popen
+
 from shutil import move
+from glob import glob
 
 def add_before_end(filepath, lines):
 	f = open(filepath,'r')
@@ -74,7 +87,7 @@ def add_dumpfile(filepath):
 	add_before_end(filepath, "\n$dumpfile(\""+project_settings.getVCDFile()+"\");\n");
 
 def check_and_fix(filepath):
-	dumpvars_name = project_settings.getTestBench() + ".vcd"
+	dumpvars_name = project_settings.getVCDFile()
 	f = open(filepath, "r")
 	dumpvars_set = False
 	dumpfile_set =  False
@@ -101,27 +114,20 @@ def check_and_fix(filepath):
 	if not finish_set:
 		add_finish(filepath)
 
-def simulation():
+def main():
 	test_bench_found = False
 
-	source = project_settings.getSourceDir() 
-	source += "/*.v"
-
-	binary = project_settings.getSynthesisDir() 
-	binary += "/"
-	binary += project_settings.getTestBench()
-
-	for f in listdir(project_settings.getSourceDir()):
-		filepath=project_settings.getSourceDir()+'/'+f
-		file = open(filepath, "r")
+	chdir(project_settings.getSourceDir())
+	for f in glob('*.v'):
+		file = open(f, "r")
 		for line in file:
 			if search(project_settings.getTestBench(), line):
 				test_bench_found = True
-				check_and_fix(filepath)
+				file.close()
+				check_and_fix(f)
 				break;
 
-	simulationCommand = settings.getIcarus()
-	if not path.isfile(simulationCommand):
+	if not path.isfile(settings.getIcarus()):
 		print("Error: No verilog compiler defined!\n")
 		return
 
@@ -129,21 +135,31 @@ def simulation():
 		print("Error: No test bench defined!\n")
 		return
 
-	simulationCommand += " -s "
-	simulationCommand += project_settings.getTestBench()
-	simulationCommand += " "
-	simulationCommand += source
-	simulationCommand += " -o "
-	simulationCommand += binary
+	command = [
+		settings.getIcarus(),
+		"-s",project_settings.getTestBench(),
+		"-o",project_settings.getTestBench(),
+		project_settings.getTestBenchFile()
+	]
 
-	result = popen(simulationCommand).read()
+	for f in project_settings.getSearchDirectories():
+		command.append("-I")
+		command.append(f)
+
+	chdir(project_settings.getSynthesisDir())
+	icarus=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+
+	for line in iter(icarus.stdout.readline, ''):
+		print line # do something with the output here
+	icarus.stdout.close()
+
+	chdir(project_settings.getSynthesisDir())
+	binary = path.join(project_settings.getSynthesisDir(), project_settings.getTestBench())
 	if path.isfile(binary):
-		result=popen(binary).read()
-		print(result)
-		move(project_settings.getVCDFile(),project_settings.getVCDPath())
+		binaryExec=Popen(binary, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+		for line in iter(binaryExec.stdout.readline, ''):
+			print line # do something with the output here
+		binaryExec.stdout.close()
 	else:
 		print("Error: No simulator generated!\n")
-		print(result)
 		return
-
-simulation()

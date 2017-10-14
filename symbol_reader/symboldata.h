@@ -34,7 +34,7 @@ namespace symbol {
 
 		// setter:
 		void addPart(std::string name, std::string prefix, int x, int y, std::string a, std::string b, int foo, std::string f, std::string font);
-		void addPin(std::string name, int x, int y);
+		void addPin(std::string name, int index, int x, int y, int length, std::string orient, int tw, int th, int a, int b, std::string mode);
 		void addRect(int x1, int y1, int x2, int y2);
 
 	private:

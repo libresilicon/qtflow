@@ -69,10 +69,25 @@ public:
 	qreal posMat(QString material);
 	qreal thicknessMat(QString material);
 
-	QString getSourceDir();
-	QString getTopLevel();
+	// directories
+	QString getSynthesisDir();
 	QString getRootDir();
+	QString getSourceDir();
+	QString getLayoutDir();
+	QStringList getSearchDirectories();
+
+	void setSearchDirectories(QStringList l);
+
+	// module names:
+	QString getTopLevel();
 	QString getTestBench();
+
+	// files for processing:
+	QString getTopLevelFile();
+	QString getTestBenchFile();
+	QString getVCDFile();
+
+	// infos:
 	QString getTechnology();
 	QString getProcess();
 	QString getTechnologyFile();
@@ -80,15 +95,23 @@ public:
 	QString getColorMapFile();
 	QString getDesignStyleFile();
 	QString getProjectType();
-	QString getSynthesisDir();
-	QString getLayoutDir();
-	QString getVCDFile();
 	QString getVCDPath();
 
 	QStringList getPlanes();
 	QStringList getTypeNames();
 	QStringList getType(QString s);
 	QStringList getAlternativeNames(QString s);
+
+	// python script paths:
+	QString getSimulationScript();
+	QString getSynthesisScript();
+	QString getPlacementScript();
+	QString getRoutingScript();
+
+	void setSimulationScript(QString s);
+	void setSynthesisScript(QString);
+	void setPlacementScript(QString);
+	void setRoutingScript(QString);
 
 	// LEF operations:
 	bool isDefinedMacro(QString s);
@@ -98,6 +121,13 @@ public:
 	bool isDefinedPart(QString s);
 	symbol::SchematicsSymbol* getSchematicsPart(QString s);
 	QStringList getListOfSchematicParts();
+	QStringList getSchematicsLibraryNames();
+	QStringList getSchematicsLibraryParts(QString n);
+
+	QString getLibertyFile();
+
+signals:
+	void simulationDone();
 
 private:
 	// LEF operations:

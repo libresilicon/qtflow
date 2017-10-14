@@ -9,7 +9,7 @@ PyProjectSettings::PyProjectSettings(Project *parent) :
 
 PyObject* PyProjectSettings::getMainModule()
 {
-		return PythonQt::self()->getMainModule();
+	return PythonQt::self()->getMainModule();
 }
 
 QString PyProjectSettings::getTopLevel()
@@ -50,4 +50,29 @@ QString PyProjectSettings::getVCDFile()
 QString PyProjectSettings::getVCDPath()
 {
 	return project->getVCDPath();
+}
+
+QStringList PyProjectSettings::getSearchDirectories()
+{
+	return project->getSearchDirectories();
+}
+
+QString PyProjectSettings::getTestBenchFile()
+{
+	return project->getTestBenchFile();
+}
+
+QString PyProjectSettings::getTopLevelFile()
+{
+	return project->getTopLevelFile();
+}
+
+QString PyProjectSettings::getLibertyFile()
+{
+	QTemporaryDir temporaryDir;
+	QString filedest;
+
+	filedest = temporaryDir.path()+"/cells.lib";
+	QFile::copy(project->getLibertyFile(), filedest);
+	return filedest;
 }

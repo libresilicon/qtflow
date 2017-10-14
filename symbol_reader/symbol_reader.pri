@@ -7,10 +7,12 @@ BISONSOURCES += $$PWD/symbol_parser.yy
 SOURCES += \
 	$$PWD/symboldata.cpp \
 	$$PWD/symbolscanner.cpp \
-    $$PWD/schematicssymbol.cpp
+    $$PWD/schematicssymbol.cpp \
+    $$PWD/symbolpin.cpp
  
 HEADERS += \
 	$$PWD/symboldata.h \
 	$$PWD/symbolscanner.h \
-    $$PWD/schematicssymbol.h
+    $$PWD/schematicssymbol.h \
+    $$PWD/symbolpin.h
 

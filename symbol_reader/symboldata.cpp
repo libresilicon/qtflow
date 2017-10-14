@@ -36,8 +36,9 @@ namespace symbol {
 		partsymbols.append(recentSymbol);
 	}
 
-	void SymbolData::addPin(std::string name, int x, int y)
+	void SymbolData::addPin(std::string name, int index, int x, int y, int length, std::string orient, int tw, int th, int a, int b, std::string mode)
 	{
+		recentSymbol->addPin(name, index, x, y, length, orient, tw, th, a, b, mode);
 	}
 
 	bool SymbolData::isDefinedSymbol(QString name)

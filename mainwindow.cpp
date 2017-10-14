@@ -32,16 +32,6 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	projectsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, projectsWidget);
 
-	toolBoxWidgetTestBench = new TestBenchToolBox(this);
-	toolBoxWidgetTestBench->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
-	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetTestBench);
-	connect(toolBoxWidgetTestBench,SIGNAL(runSimulation()),this,SLOT(on_menuSimulation_triggered()));
-
-	toolBoxWidgetSynthesis = new SynthesisToolBox(this);
-	toolBoxWidgetSynthesis->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea );
-	addDockWidget(Qt::RightDockWidgetArea, toolBoxWidgetSynthesis);
-	connect(toolBoxWidgetSynthesis,SIGNAL(runSynthesis()),this,SLOT(on_menuSynthesis_triggered()));
-
 	modulesWidget = new ModuleSelector(this);
 	modulesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, modulesWidget);
@@ -137,8 +127,6 @@ void MainWindow::hideAllDockerWidgets()
 	modulesWidget->setVisible(false);
 	timingWidget->setVisible(false);
 	iopadsWidget->setVisible(false);
-	toolBoxWidgetTestBench->setVisible(false);
-	toolBoxWidgetSynthesis->setVisible(false);
 	pythonConsoleWidget->setVisible(false);
 }
 
@@ -148,6 +136,7 @@ void MainWindow::openProject(QString path)
 	if (project_path.exists()) {
 		if(project) delete project;
 		project = new Project(settings, path, mainContext);
+		connect(project,SIGNAL(simulationDone()),this,SLOT(on_menuSimulation_triggered()));
 		modulesWidget->setProject(project);
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);
@@ -187,7 +176,6 @@ void MainWindow::on_MainWindow_destroyed()
 void MainWindow::on_setDigitalSimulationMode_triggered()
 {
 	hideAllDockerWidgets();
-	toolBoxWidgetTestBench->setVisible(true);
 	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
@@ -207,7 +195,6 @@ void MainWindow::on_setAnalogSimulationMode_triggered()
 void MainWindow::on_setSynthesisMode_triggered()
 {
 	hideAllDockerWidgets();
-	toolBoxWidgetSynthesis->setVisible(true);
 	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
@@ -282,7 +269,6 @@ void MainWindow::on_buildAll_triggered()
 void MainWindow::on_menuSimulation_triggered()
 {
 	if(project) {
-		project->simulation();
 		timingWidget->loadVcd(project->getVCDPath());
 		timingWidget->setEnabled(true);
 		timingWidget->setVisible(true);
@@ -335,24 +321,6 @@ void MainWindow::enableProject()
 
 	enableAllFunctions();
 
-	/*filter.clear();
-	filter << "asic_mixed" << "asic_digital" << "cell_digital" << "cell_mixed";
-	if(filter.contains(project->getProjectType())) {
-		ui->setLayoutMode->setEnabled(true);
-		ui->setDigitalSimulationMode->setEnabled(true);
-		ui->setAnalogSimulationMode->setEnabled(true);
-		ui->setSynthesisMode->setEnabled(true);
-		ui->projectSettings->setEnabled(true);
-	}
-
-	filter.clear();
-	filter << "asic_analog" << "cell_analog";
-	if(filter.contains(project->getProjectType())) {
-		ui->setLayoutMode->setEnabled(true);
-		ui->setAnalogSimulationMode->setEnabled(true);
-		ui->projectSettings->setEnabled(true);
-	}*/
-
 	ui->newFile->setDisabled(false);
 	ui->buildAll->setDisabled(false);
 	ui->buildSteps->setDisabled(false);
@@ -363,6 +331,10 @@ void MainWindow::enableProject()
 	ui->menuRouting->setDisabled(false);
 	ui->menuModules->setDisabled(false);
 	ui->toolRefresh->setDisabled(false);
+
+	filesWidget->setVisible(true);
+	projectsWidget->setVisible(true);
+	modulesWidget->setVisible(true);
 }
 
 void MainWindow::disableProject()

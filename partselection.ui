@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>595</width>
-    <height>430</height>
+    <width>622</width>
+    <height>267</height>
    </rect>
+  </property>
+  <property name="baseSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -21,7 +27,13 @@
        <widget class="QWidget" name="widget_3" native="true">
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
-          <widget class="QListWidget" name="partList"/>
+          <widget class="QTreeWidget" name="partList">
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
          </item>
          <item>
           <widget class="QWidget" name="widget_4" native="true">
@@ -43,11 +55,23 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="shape" native="true">
+       <widget class="QGraphicsView" name="partPreview">
         <property name="minimumSize">
          <size>
-          <width>40</width>
-          <height>40</height>
+          <width>200</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>200</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>100</width>
+          <height>100</height>
          </size>
         </property>
        </widget>

@@ -52,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>25</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -96,10 +96,8 @@
      <string>&amp;Project</string>
     </property>
     <addaction name="projectSettings"/>
-    <addaction name="setSynthesisMode"/>
-    <addaction name="setDigitalSimulationMode"/>
-    <addaction name="setAnalogSimulationMode"/>
-    <addaction name="setLayoutMode"/>
+    <addaction name="actionSynthesis_settings"/>
+    <addaction name="actionLibrary_settings"/>
    </widget>
    <widget class="QMenu" name="menuDesign_Rules">
     <property name="title">
@@ -119,11 +117,21 @@
     <addaction name="separator"/>
     <addaction name="menuSettings"/>
    </widget>
+   <widget class="QMenu" name="menuWorkbench">
+    <property name="title">
+     <string>Wor&amp;kbench</string>
+    </property>
+    <addaction name="setSynthesisMode"/>
+    <addaction name="setDigitalSimulationMode"/>
+    <addaction name="setLayoutMode"/>
+    <addaction name="setAnalogSimulationMode"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuProject"/>
    <addaction name="menuTools_2"/>
    <addaction name="menuDesign_Rules"/>
+   <addaction name="menuWorkbench"/>
   </widget>
   <action name="openMagicFile">
    <property name="text">
@@ -291,7 +299,7 @@
   </action>
   <action name="projectSettings">
    <property name="text">
-    <string>&amp;Settings</string>
+    <string>General settings</string>
    </property>
   </action>
   <action name="setDigitalSimulationMode">
@@ -373,7 +381,7 @@
      <normaloff>:/py_script.svg</normaloff>:/py_script.svg</iconset>
    </property>
    <property name="text">
-    <string>Python shell</string>
+    <string>&amp;Python shell</string>
    </property>
   </action>
   <action name="actionWaveViewer">
@@ -382,7 +390,17 @@
      <normaloff>:/simulator.svg</normaloff>:/simulator.svg</iconset>
    </property>
    <property name="text">
-    <string>Wave viewer</string>
+    <string>&amp;Wave viewer</string>
+   </property>
+  </action>
+  <action name="actionSynthesis_settings">
+   <property name="text">
+    <string>Synthesis settings</string>
+   </property>
+  </action>
+  <action name="actionLibrary_settings">
+   <property name="text">
+    <string>Library settings</string>
    </property>
   </action>
  </widget>

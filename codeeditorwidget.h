@@ -13,6 +13,8 @@
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QFileInfo>
+#include <QErrorMessage>
+#include <QMessageBox>
 
 class CodeEditorWidget : public EditorWidget
 {
@@ -25,6 +27,8 @@ public:
 
 public slots:
 	void onContentChanged();
+	void runSimulation();
+	void runSynthesis();
 	void saveFile();
 
 private:

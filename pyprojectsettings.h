@@ -26,10 +26,18 @@ public Q_SLOTS:
 	QString getTopLevel();
 	QString getTestBench();
 
+	QString getTopLevelFile();
+	QString getTestBenchFile();
+
 	QString getRootDir();
 	QString getLayoutDir();
 	QString getSourceDir();
 	QString getSynthesisDir();
+
+	QStringList getSearchDirectories();
+
+	// synthesis files:
+	QString getLibertyFile();
 
 	QString getVCDFile();
 	QString getVCDPath();

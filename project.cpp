@@ -76,24 +76,48 @@ Project::~Project()
 	delete project_settings;
 }
 
+QStringList Project::getSearchDirectories()
+{
+	QStringList ret = project_settings->value("search_dirs").toStringList();
+	if(ret.count()==0)
+		ret << getSourceDir();
+	return ret;
+}
+
+void Project::setSearchDirectories(QStringList l)
+{
+	project_settings->setValue("search_dirs",l);
+	project_settings->sync();
+}
+
 QString Project::getSourceDir()
 {
-	return rootdir+'/'+project_settings->value("sourcedir").toString();
+	return QDir(rootdir).filePath(project_settings->value("sourcedir").toString());
 }
 
 QString Project::getSynthesisDir()
 {
-	return rootdir+'/'+project_settings->value("synthesis").toString();
+	return QDir(rootdir).filePath(project_settings->value("synthesis").toString());
 }
 
 QString Project::getLayoutDir()
 {
-	return rootdir+'/'+project_settings->value("layout").toString();
+	return QDir(rootdir).filePath(project_settings->value("layout").toString());
 }
 
 QString Project::getRootDir()
 {
 	return rootdir;
+}
+
+QString Project::getTopLevelFile()
+{
+	return QDir(getSourceDir()).filePath(project_settings->value("toplevel").toString()+".v");
+}
+
+QString Project::getTestBenchFile()
+{
+	return QDir(getSourceDir()).filePath(project_settings->value("testbench").toString()+".v");
 }
 
 QString Project::getTopLevel()
@@ -166,6 +190,23 @@ QStringList Project::getLibraryFiles()
 	}
 
 	return ret;
+}
+
+QStringList Project::getSchematicsLibraryNames()
+{
+	QStringList ret;
+	foreach(QString filename, getSchematicsLibraryFiles()) {
+		ret << QFileInfo(filename).baseName();
+	}
+	return ret;
+}
+
+QStringList Project::getSchematicsLibraryParts(QString s)
+{
+	if(slibdata.contains(s)) {
+		return slibdata[s]->getSymbolNames();
+	}
+	return QStringList();
 }
 
 QStringList Project::getSchematicsLibraryFiles()
@@ -436,12 +477,20 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
-	mainContext->evalFile(":/scripts/synthesis.py");
+
+	if(QFile(getSynthesisScript()).exists()) {
+		mainContext->evalFile(getSynthesisScript());
+		mainContext->evalScript("main()");
+	}
 }
 
 void Project::simulation()
 {
-	mainContext->evalFile(":/scripts/simulation.py");
+	if(QFile(getSimulationScript()).exists()) {
+		mainContext->evalFile(getSimulationScript());
+		mainContext->evalScript("main()");
+	}
+	emit(simulationDone());
 }
 
 void Project::placement()
@@ -696,4 +745,83 @@ void Project::loadSchematicsLibraryFiles()
 			slibdata[libname] = new symbol::SymbolData(filedest);
 		}
 	}
+}
+
+// python script paths:
+QString Project::getSimulationScript()
+{
+	return project_settings->value("simulation_script",":/simulation.py").toString();
+}
+
+QString Project::getSynthesisScript()
+{
+	return project_settings->value("synthesis_script",":/synthesis.py").toString();
+}
+
+QString Project::getPlacementScript()
+{
+
+}
+
+QString Project::getRoutingScript()
+{
+
+}
+
+void Project::setSimulationScript(QString s)
+{
+	project_settings->setValue("simulation_script", s);
+	project_settings->sync();
+}
+
+void Project::setSynthesisScript(QString s)
+{
+	project_settings->setValue("synthesis_script", s);
+	project_settings->sync();
+}
+
+void Project::setPlacementScript(QString)
+{
+
+}
+
+void Project::setRoutingScript(QString)
+{
+
+}
+
+QString Project::getLibertyFile()
+{
+	QString ret = ":/scmos.tech";
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="liberty") {
+								ret=e3.text();
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
 }

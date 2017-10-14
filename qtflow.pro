@@ -27,7 +27,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-INCLUDEPATH += /usr/include/python2.7
+#INCLUDEPATH += /usr/include/python2.7
+INCLUDEPATH += /usr/include/python3.6m
 #INCLUDEPATH += PYTHON_WIN32 (add here windows path when building)
 
 include(PythonQt.prf)
@@ -35,7 +36,8 @@ include(PythonQt_QtAll.prf)
 
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
-QMAKE_CXXFLAGS += -lpython2.7
+#QMAKE_CXXFLAGS += -lpython2.7
+QMAKE_CXXFLAGS += -lpython3
 QMAKE_CXXFLAGS += -lPythonQt
 QMAKE_CXXFLAGS += -lPythonQt_QtAll
 
@@ -66,14 +68,13 @@ SOURCES += \
 	editortabmanager.cpp \
 	codeeditorwidget.cpp \
 	qtflowfilelist.cpp \
-	testbenchtoolbox.cpp \
-	synthesistoolbox.cpp \
 	projectsettings.cpp \
 	pythonconsoledockwidget.cpp \
 	pysettings.cpp \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
-	layoutvisibles.cpp
+	layoutvisibles.cpp \
+    synthesisoptions.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -98,20 +99,18 @@ HEADERS  += \
 	codeeditorwidget.h \
 	ieditor.h \
 	qtflowfilelist.h \
-	testbenchtoolbox.h \
-	synthesistoolbox.h \
 	projectsettings.h \
 	pythonconsoledockwidget.h \
 	pysettings.h \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
-	layoutvisibles.h
+	layoutvisibles.h \
+    synthesisoptions.h
 
 FORMS    += \
 	mainwindow.ui \
 	grid.ui \
 	templates.ui \
-	environment.ui \
 	savechanges.ui \
 	welcome.ui \
 	iopads.ui \
@@ -123,13 +122,12 @@ FORMS    += \
 	projects.ui \
 	files.ui \
 	wave.ui \
-	testbenchtoolbox.ui \
-	synthesistoolbox.ui \
 	projectsettings.ui \
 	console.ui \
-	schematicstoolbox.ui \
 	layoutvisibles.ui \
-    partselection.ui
+    partselection.ui \
+    librarysettings.ui \
+    synthesisoptions.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc

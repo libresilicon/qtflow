@@ -5,6 +5,9 @@
 #include <QWidget>
 #include <QDialog>
 #include <QFile>
+#include <QToolBar>
+#include <QFileDialog>
+#include <QTextStream>
 
 #include <QXmlSimpleReader>
 #include <QDomDocument>
@@ -27,7 +30,13 @@ public slots:
 	void processActivated();
 	void storeData();
 
+	void addDirectory();
+	void deleteDirectory();
+
 private:
+	void setSearchPathList();
+	void setSearchPathButtons();
+
 	Ui::ProjectSettings *ui;
 
 	Project *project;
