@@ -8,7 +8,6 @@
 class ProjectsItem
 {
 public:
-	explicit ProjectsItem(const QVector<QVariant> &data, ProjectsItem *parentItem = 0);
 	explicit ProjectsItem(QString name, ProjectsItem *parentItem = 0);
 	~ProjectsItem();
 
@@ -26,7 +25,7 @@ public:
 	bool removeChildren(int position, int count);
 
 private:
-	QFileInfo fileInfoData;
+	QFileInfo m_fileInfoData;
 
 	ProjectsItem* m_parentItem;
 	QVector<QVariant> m_itemData;

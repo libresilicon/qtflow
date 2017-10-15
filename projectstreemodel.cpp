@@ -11,9 +11,7 @@ ProjectsTreeModel::ProjectsTreeModel(QObject *parent) :
 	watcher(new QFileSystemWatcher(parent)),
 	project(NULL)
 {
-	QVector<QVariant> rootData;
-	rootData << "Item";
-	rootItem = new ProjectsItem(rootData);
+	rootItem = new ProjectsItem("Project member");
 }
 
 ProjectsTreeModel::~ProjectsTreeModel()

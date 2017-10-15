@@ -1,11 +1,5 @@
 #include "projectsitem.h"
 
-ProjectsItem::ProjectsItem(const QVector<QVariant> &data, ProjectsItem *parentItem)
-{
-	m_parentItem = parentItem;
-	m_itemData = data;
-}
-
 ProjectsItem::ProjectsItem(QString name, ProjectsItem *parentItem)
 {
 	QVector<QVariant> rootData;
@@ -27,12 +21,12 @@ void ProjectsItem::appendChild(ProjectsItem *child)
 
 void ProjectsItem::setFileData(const QFileInfo &file)
 {
-	fileInfoData = file;
+	m_fileInfoData = file;
 }
 
 QFileInfo ProjectsItem::fileData() const
 {
-	return fileInfoData;
+	return m_fileInfoData;
 }
 
 ProjectsItem *ProjectsItem::child(int row)
