@@ -7,7 +7,7 @@
 #include <QMenu>
 #include <QAction>
 
-#include "vcd/vcd_data.hpp"
+#include "vcd_reader/vcd_data.hpp"
 
 #define RAISE_TIME 10
 
@@ -50,11 +50,6 @@ public slots:
 	void wheelEvent(QWheelEvent *event);
 
 	void contextMenuEvent(QContextMenuEvent *event);
-
-	void dragEnterEvent(QDragEnterEvent *event);
-	void dragLeaveEvent(QDragLeaveEvent *e);
-	void dragMoveEvent(QDragMoveEvent *e);
-	void dropEvent(QDropEvent *event);
 
 	void onZoomIn();
 	void onZoomOut();

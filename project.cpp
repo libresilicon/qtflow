@@ -137,7 +137,7 @@ QString Project::getVCDFile()
 
 QString Project::getVCDPath()
 {
-	return this->getSynthesisDir()+'/'+this->getVCDFile();
+	return QDir(this->getSynthesisDir()).filePath(this->getVCDFile());
 }
 
 QString Project::getTechnology()
@@ -489,8 +489,8 @@ void Project::simulation()
 	if(QFile(getSimulationScript()).exists()) {
 		mainContext->evalFile(getSimulationScript());
 		mainContext->evalScript("main()");
+		emit(simulationDone());
 	}
-	emit(simulationDone());
 }
 
 void Project::placement()

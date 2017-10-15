@@ -1,4 +1,5 @@
-#include "vcd/vcd_data.hpp"
+#include "vcd_reader/vcd_data.hpp"
+
 #include "vcdtreeitem.h"
 #include "vcdtreemodel.h"
 

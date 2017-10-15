@@ -16,12 +16,12 @@
 #include "ui_wave.h"
 
 #include "vcd/vcdtreemodel.h"
-#include "vcd/vcdlistmodel.h"
 #include "vcd/vcdsignaltreemodel.h"
 #include "vcd/vcdsignalviewtreemodel.h"
 #include "vcd/vcdsignalview.h"
+
 #include "vcd_parser/location.hh"
-#include "vcd/vcd_loader.hpp"
+#include "vcd_reader/vcd_loader.hpp"
 
 namespace Ui {
 class Wave;

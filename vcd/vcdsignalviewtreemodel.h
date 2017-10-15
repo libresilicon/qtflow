@@ -1,7 +1,7 @@
 #ifndef VCDSIGNALVIEWTREEMODEL_H
 #define VCDSIGNALVIEWTREEMODEL_H
 
-#include "vcd/vcd_data.hpp"
+#include "vcd_reader/vcd_data.hpp"
 
 #include <QAbstractItemModel>
 
