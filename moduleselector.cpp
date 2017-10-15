@@ -86,8 +86,8 @@ void ModuleSelector::setTopModule_clicked()
 	QString origin = moduleList->file(ui->listView->currentIndex());
 	QFile target(sourcedir + "/" + top + ".v");
 	QFile file(sourcedir + "/" + origin + ".v");
-	if (top != origin)
-	{
+
+	if (top != origin) {
 		QMessageBox dialog;
 		dialog.setText("Rename " + origin + ".v to " + top + ".v?");
 		dialog.setStandardButtons(QMessageBox::No | QMessageBox::Yes);

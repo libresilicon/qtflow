@@ -239,7 +239,9 @@ void MainWindow::on_actionPythonShell_triggered()
 
 void MainWindow::on_actionWaveViewer_triggered()
 {
+	qDebug() << "Loading " << project->getVCDPath();
 	timingWidget->setVisible(!timingWidget->isVisible());
+	timingWidget->loadVcd(project->getVCDPath());
 }
 
 void MainWindow::onProjectCreated(QString s)

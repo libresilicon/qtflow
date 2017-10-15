@@ -17,51 +17,53 @@ VcdSignalView::VcdSignalView(QWidget *parent) :
 
 void VcdSignalView::onZoomIn()
 {
-	timeScale++;
-	redraw();
+	//timeScale++;
+	//redraw();
+	scale(1.1,1.0);
 }
 
 void VcdSignalView::onZoomOut()
 {
-	if(timeScale>1) timeScale--;
-	redraw();
+	//if(timeScale>1) timeScale--;
+	//redraw();
+	scale(0.9,1.0);
 }
 
 void VcdSignalView::onZoomFitWidth()
 {
-	timeScale=1;
-	redraw();
+	//timeScale=1;
+	//redraw();
 }
 
 void VcdSignalView::onMoveRight()
 {
-	recentZeroTime++;
-	redraw();
+	//recentZeroTime++;
+	//redraw();
 }
 
 void VcdSignalView::onMoveLeft()
 {
-	if(recentZeroTime>1) recentZeroTime--;
-	redraw();
+	//if(recentZeroTime>1) recentZeroTime--;
+	//redraw();
 }
 
 void VcdSignalView::resizeEvent(QResizeEvent *event)
 {
-	redraw();
+	//redraw();
 }
 
 void VcdSignalView::mousePressEvent(QMouseEvent *e)
 {
-	if (e->button() == Qt::MiddleButton)
+	/*if (e->button() == Qt::MiddleButton)
 	{
 		QPointF pt = mapToScene(e->pos());
 		moveDragLastX = pt.x();
-	}
+	}*/
 }
 
 void VcdSignalView::mouseMoveEvent(QMouseEvent *e)
 {
-	int x;
+	/*int x;
 	if (e->buttons() & Qt::MidButton)
 	{
 		QPointF pt = mapToScene(e->pos());
@@ -75,12 +77,12 @@ void VcdSignalView::mouseMoveEvent(QMouseEvent *e)
 			moveDragLastX=x;
 		}
 		redraw();
-	}
+	}*/
 }
 
 void VcdSignalView::wheelEvent(QWheelEvent *event)
 {
-	int numDegrees = event->delta() / 8;
+	/*int numDegrees = event->delta() / 8;
 	int numSteps = numDegrees / 15;
 
 	int newZeroTime=recentZeroTime+numSteps*100;
@@ -90,7 +92,7 @@ void VcdSignalView::wheelEvent(QWheelEvent *event)
 		recentZeroTime=newZeroTime;
 		event->accept();
 	}
-	redraw();
+	redraw();*/
 }
 
 void VcdSignalView::mouseReleaseEvent(QMouseEvent * e)
@@ -191,33 +193,6 @@ void VcdSignalView::onRemoveSignal()
 	redraw();
 }
 
-void VcdSignalView::dragEnterEvent(QDragEnterEvent *event)
-{
-}
-
-void VcdSignalView::dragLeaveEvent(QDragLeaveEvent *e)
-{
-}
-
-void VcdSignalView::dragMoveEvent(QDragMoveEvent *e)
-{
-	QPointF pt = mapToScene(e->pos());
-	int x = pt.x();
-	if(moveDragLastX<x) {
-		onMoveRight();
-		moveDragLastX = x;
-	}
-	if(moveDragLastX>x) {
-		onMoveLeft();
-		moveDragLastX = x;
-	}
-}
-
-void VcdSignalView::dropEvent(QDropEvent *event)
-{
-
-}
-
 void VcdSignalView::setVCD(vcd::VcdData d)
 {
 	QString hname;
@@ -250,6 +225,7 @@ void VcdSignalView::append(QString s)
 	if(!signalViewFilter.contains(s)) {
 		signalViewFilter.append(s);
 	}
+
 	redraw();
 }
 
@@ -257,7 +233,7 @@ void VcdSignalView::redraw()
 {
 	signalScene->clear();
 
-	drawTimeScale();
+	//drawTimeScale();
 
 	drawingIndex = 0;
 	foreach(QString s, signalViewFilter) {
@@ -406,6 +382,8 @@ bool VcdSignalView::drawSignalBus(QString signal_name)
 				text = signalScene->addSimpleText(QString("%1").arg(QString(busValueStd).toInt(0,2)));
 				text->setPos(time, (drawingIndex*height)+(height/2));
 				text->setBrush(QColor(Qt::white));
+				text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+
 				lastBusValueStd = busValueStd;
 			} else {
 				signalScene->addLine(lastTime, drawingIndex*height+space*2, time+raise_time, drawingIndex*height+space*2, sigPen);
@@ -428,6 +406,7 @@ bool VcdSignalView::drawSignalBus(QString signal_name)
 		text = signalScene->addSimpleText(signal_name);
 		text->setPos(recentZeroTime+space, drawingIndex*height+space);
 		text->setBrush(QColor(Qt::white));
+		text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
 
 		drawingIndex++;
 
@@ -607,6 +586,7 @@ bool VcdSignalView::drawSignal(QString signal_name)
 		text = signalScene->addSimpleText(signal_name);
 		text->setPos(recentZeroTime+space, drawingIndex*height+space);
 		text->setBrush(QColor(Qt::white));
+		text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
 
 		drawingIndex++;
 

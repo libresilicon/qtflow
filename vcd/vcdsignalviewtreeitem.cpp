@@ -3,7 +3,7 @@
 #include <QDebug>
 #include <QTextStream>
 
-#include "vcd/vcd_data.hpp"
+#include "vcd_reader/vcd_data.hpp"
 
 #include "vcdsignalviewtreeitem.h"
 

@@ -192,8 +192,7 @@ QVariant ProjectsTreeModel::data(const QModelIndex &index, int role) const
 	if (!index.isValid())
 		return QVariant();
 
-	if (role == Qt::FontRole)
-	{
+	if (role == Qt::FontRole) {
 		QFont font;
 		if (!topModule(index))
 			return font;

@@ -9,14 +9,18 @@ from os import remove
 from os import chdir
 from os import path
 
-from re import search
-
 from subprocess import PIPE
 from subprocess import STDOUT
 from subprocess import Popen
 
 from shutil import move
 from glob import glob
+from re import search
+
+#stuff for threads:
+import commands
+from threading import Thread
+from Queue import Queue
 
 def add_before_end(filepath, lines):
 	f = open(filepath,'r')
@@ -150,7 +154,7 @@ def main():
 	icarus=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
 	for line in iter(icarus.stdout.readline, ''):
-		print line # do something with the output here
+		print line
 	icarus.stdout.close()
 
 	chdir(project_settings.getSynthesisDir())
@@ -158,7 +162,7 @@ def main():
 	if path.isfile(binary):
 		binaryExec=Popen(binary, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 		for line in iter(binaryExec.stdout.readline, ''):
-			print line # do something with the output here
+			print line
 		binaryExec.stdout.close()
 	else:
 		print("Error: No simulator generated!\n")
