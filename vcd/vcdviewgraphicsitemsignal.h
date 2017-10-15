@@ -1,18 +1,29 @@
 #ifndef VCDVIEWGRAPHICSITEMSIGNAL_H
 #define VCDVIEWGRAPHICSITEMSIGNAL_H
 
-#include <QObject>
-#include <QWidget>
+#include <QGraphicsItem>
+#include <QRect>
 
-class VcdViewGraphicsItemSignal : public QWidget
+class VcdViewGraphicsItemSignal : public QGraphicsItem
 {
-	Q_OBJECT
 public:
-	explicit VcdViewGraphicsItemSignal(QWidget *parent = nullptr);
+	explicit VcdViewGraphicsItemSignal(QGraphicsItem *parent = nullptr);
+
+	QRectF boundingRect() const;
+	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
 signals:
 
 public slots:
+
+private:
+	// bounding rect:
+	void setBoundingRect();
+	qreal m_xmin;
+	qreal m_xmax;
+	qreal m_ymin;
+	qreal m_ymax;
+
 };
 
 #endif // VCDVIEWGRAPHICSITEMSIGNAL_H

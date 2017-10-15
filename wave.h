@@ -1,7 +1,6 @@
 #ifndef WAVE_H
 #define WAVE_H
 
-#include <QGraphicsScene>
 #include <QDockWidget>
 #include <QDebug>
 #include <QFile>
@@ -38,13 +37,11 @@ public:
 	void loadVcd(QString);
 
 public slots:
-	void onSignalsChanged();
 	void onSelectScope(QModelIndex);
 	void onSelectSignal(QModelIndex);
 
 private:
 	Ui::Wave *ui;
-	QGraphicsScene *scene;
 	VcdTreeModel *tree;
 	VcdSignalTreeModel *signalTree;
 	VcdSignalView *signalView;

@@ -1,8 +1,4 @@
-#include "vcdsignaltreeitem.h"
 #include "vcdsignaltreemodel.h"
-
-#include <QStringList>
-#include <QTextStream>
 
 VcdSignalTreeModel::VcdSignalTreeModel(vcd::VcdData data, QVector<QString> filter, QObject *parent) :
 	QAbstractItemModel(parent),

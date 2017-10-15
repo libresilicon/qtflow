@@ -1,12 +1,15 @@
 #ifndef VCDSIGNALTREEMODEL_H
 #define VCDSIGNALTREEMODEL_H
 
+#include "vcdsignaltreeitem.h"
+
 #include "vcd_reader/vcd_data.hpp"
 
 #include <QAbstractItemModel>
-
-#include <QAbstractItemModel>
 #include <QModelIndex>
+#include <QStringList>
+#include <QTextStream>
+
 #include <QVariant>
 
 namespace vcd {

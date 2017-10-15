@@ -3,7 +3,6 @@
 Wave::Wave(QWidget *parent) :
 	QDockWidget(parent),
 	ui(new Ui::Wave),
-	scene(new QGraphicsScene),
 	tree(NULL),
 	signalTree(NULL)
 {
@@ -19,25 +18,6 @@ Wave::Wave(QWidget *parent) :
 	ui->treeSelectionView->setAcceptDrops(true);
 	ui->treeSelectionView->setDropIndicatorShown(true);
 
-	/*ui->treeSignalView->setDragDropMode(QAbstractItemView::DragDrop);
-	ui->treeSignalView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-	ui->treeSignalView->setDefaultDropAction(Qt::MoveAction);
-	ui->treeSignalView->setDragEnabled(true);
-	ui->treeSignalView->setAcceptDrops(true);
-	ui->treeSignalView->setDropIndicatorShown(true);*/
-
-	//ui->treeSelectionView->setDragEnabled(true);
-	//ui->treeSelectionView->setDragDropMode(QAbstractItemView::DragOnly);
-	//ui->treeSelectionView->setDefaultDropAction(Qt::CopyAction);
-
-	//ui->treeSignalView->setAcceptDrops(true);
-	//ui->treeSignalView->setDragDropOverwriteMode(true);
-	//ui->treeSignalView->setItemDelegate(new VcdListDelegate(ui->treeSignalView));
-
-	//ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
-	scene->setBackgroundBrush(QBrush(Qt::black, Qt::SolidPattern));
-	//ui->graphicsView->setScene(scene);
-
 	connect(ui->treeView, SIGNAL(clicked(QModelIndex)), this, SLOT(onSelectScope(QModelIndex)));
 	connect(ui->treeSelectionView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(onSelectSignal(QModelIndex)));
 
@@ -51,7 +31,6 @@ Wave::Wave(QWidget *parent) :
 Wave::~Wave()
 {
     delete ui;
-    delete scene;
 }
 
 void Wave::loadVcd(QString path)
@@ -71,20 +50,8 @@ void Wave::loadVcd(QString path)
 			ui->treeSelectionView->setModel(signalTree);
 
 			signalView->setVCD(vcd_data);
-			//if(signalViewTree) delete signalViewTree;
-			//signalViewTree = new VcdSignalViewTreeModel(vcd_data,QVector<QString>(),this);
-			//ui->treeSignalView->setModel(signalViewTree);
-
-			//ui->listView->setModel(list);
-			//connect(list, SIGNAL(signalsChanged()), this, SLOT(onSignalsChanged()));
-			scene->clear();
 		}
 	}
-}
-
-void Wave::onSignalsChanged()
-{
-    scene->clear();
 }
 
 void Wave::onSelectScope(QModelIndex i)
