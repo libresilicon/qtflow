@@ -1,11 +1,7 @@
 #ifndef VCDSIGNALTREEMODEL_H
 #define VCDSIGNALTREEMODEL_H
 
-<<<<<<< HEAD
 #include "vcdsignaltreeitem.h"
-=======
-#include "vcd_reader/vcd_data.hpp"
->>>>>>> 932eb96b4ac9650b004c477d793fd5661e50e58e
 
 #include "vcd_reader/vcd_data.hpp"
 

@@ -6,6 +6,11 @@
 #include <QMouseEvent>
 #include <QMenu>
 #include <QAction>
+#include <QDebug>
+
+#include "vcdviewgraphicsitemsignal.h"
+#include "vcdviewgraphicsitembus.h"
+#include "vcdviewgraphicsitemtimescale.h"
 
 #include "vcd_reader/vcd_data.hpp"
 
@@ -32,12 +37,8 @@ public:
 signals:
 
 protected:
-	bool drawSignal(QString signal_name);
 	bool drawSignalBus(QString signal_name);
 	bool drawSubSignals(QString signal_name);
-	void drawTimeScale();
-	void redraw();
-	void rescale();
 
 	QString getHierarchyNameString(std::vector<std::string> l);
 
@@ -64,6 +65,8 @@ public slots:
 	void resizeEvent(QResizeEvent *event);
 
 private:
+	QString longSignalID(std::vector<std::string> arr);
+
 	QStringList signalViewFilter;
 	QGraphicsScene *signalScene;
 	vcd::VcdData vcd_data;

@@ -1,7 +1,5 @@
 #include "vcdsignalview.h"
 
-#include <QDebug>
-
 VcdSignalView::VcdSignalView(QWidget *parent) :
 	QGraphicsView(parent),
 	signalScene(new QGraphicsScene(this)),
@@ -163,8 +161,6 @@ void VcdSignalView::onFoldSignalBus()
 	if(busSignalAreas.contains(key)) {
 		busSignalAreas[key].isUnfolded = false;
 	}
-
-	redraw();
 }
 
 void VcdSignalView::onUnFoldSignalBus()
@@ -175,8 +171,6 @@ void VcdSignalView::onUnFoldSignalBus()
 	if(busSignalAreas.contains(key)) {
 		busSignalAreas[key].isUnfolded = true;
 	}
-
-	redraw();
 }
 
 void VcdSignalView::onRemoveSignal()
@@ -189,8 +183,32 @@ void VcdSignalView::onRemoveSignal()
 			signalViewFilter.removeAt(i);
 		}
 	}
+}
 
-	redraw();
+QString VcdSignalView::longSignalID(std::vector<std::string> arr)
+{
+	QString ret;
+	foreach(std::string s, arr) {
+		ret+='/';
+		ret+=QString::fromStdString(s);
+	}
+	return ret;
+}
+
+void VcdSignalView::append(QString s)
+{
+	foreach(vcd::Var var, vcd_data.vars()) {
+		if(longSignalID(var.hierarchical_name())==s) {
+			if(var.width()>1) {
+				VcdViewGraphicsItemBus *bus = new VcdViewGraphicsItemBus(var,vcd_data.time_bus_values());
+				signalScene->addItem(bus);
+			} else {
+				VcdViewGraphicsItemSignal *signal = new VcdViewGraphicsItemSignal(var,vcd_data.time_values());
+				signalScene->addItem(signal);
+			}
+		}
+	}
+	update();
 }
 
 void VcdSignalView::setVCD(vcd::VcdData d)
@@ -217,82 +235,6 @@ void VcdSignalView::setVCD(vcd::VcdData d)
 	lowest_time = highest_time;
 	foreach(vcd::TimeValue value, vcd_data.time_values()) {
 		if(value.time()<lowest_time) lowest_time = value.time();
-	}
-}
-
-void VcdSignalView::append(QString s)
-{
-	if(!signalViewFilter.contains(s)) {
-		signalViewFilter.append(s);
-	}
-
-	redraw();
-}
-
-void VcdSignalView::redraw()
-{
-	signalScene->clear();
-
-	//drawTimeScale();
-
-	drawingIndex = 0;
-	foreach(QString s, signalViewFilter) {
-		drawSignalBus(s);
-		drawSignal(s);
-	}
-
-	rescale();
-}
-
-void VcdSignalView::rescale()
-{
-	signalScene->setSceneRect(recentZeroTime,0,this->width()-20,this->height()-20);
-}
-
-void VcdSignalView::drawTimeScale()
-{
-	QPen white(Qt::white);
-	QString orig = QString::fromStdString(vcd_data.header().timescale());
-	QString scale = "";
-	QString scaleValueString = "";
-	int scaleValue = 1;
-	foreach(QChar c, orig) {
-		if(c!='\x9') {
-			scale.append(c);
-		}
-	}
-	if(scale.contains("ps")) {
-		foreach(QChar c, scale) {
-			if(c=='p') break;
-			scaleValueString.append(c);
-			scaleValue = scaleValueString.toInt();
-		}
-		for(int i=0; i < this->width()/10 ; i++) {
-			signalScene->addLine(i*10, 0, i*10, 10, white);
-		}
-	} else if(scale.contains("ns")) {
-		foreach(QChar c, scale) {
-			if(c=='n') break;
-			scaleValueString.append(c);
-			scaleValue = scaleValueString.toInt();
-		}
-		for(int i=0; i < this->width()/10 ; i++) {
-			signalScene->addLine(i*10, 0, i*10, 10, white);
-		}
-	} else if(scale.contains("s")) {
-		foreach(QChar c, scale) {
-			if(c=='s') break;
-			scaleValueString.append(c);
-			scaleValue = scaleValueString.toInt();
-		}
-		for(int i=0; i < this->width()/10 ; i++) {
-			signalScene->addLine(i*10, 0, i*10, 10, white);
-		}
-	} else {
-		qDebug() << "(not supported) time scale: " << scale;
-		for(int i=0; i < this->width()/10 ; i++) {
-			signalScene->addLine(i*10, 0, i*10, 10, white);
-		}
 	}
 }
 
@@ -525,73 +467,4 @@ bool VcdSignalView::drawSubSignals(QString signal_name)
 		}
 		drawingIndex = idx;
 	}
-}
-
-bool VcdSignalView::drawSignal(QString signal_name)
-{
-	if(!mapIdName.contains(signal_name)) return false;
-
-	bool drawn = false;
-	int height;
-	int divisor;
-	QGraphicsSimpleTextItem *text;
-
-	divisor = signalViewFilter.count();
-	foreach(QString key, busSignalAreas.keys()) {
-		if(signalViewFilter.contains(key))
-			if(busSignalAreas[key].isUnfolded)
-				divisor += busSignalAreas[key].bus_width;
-	}
-
-	height = this->height()-10;
-	height /= divisor;
-
-	int space = height;
-	space /= 10;
-
-	QPen sigPen(Qt::green);
-
-	vcd::LogicValue lastValue;
-	int lastTime = 0;
-	int time;
-	foreach(vcd::TimeValue value, vcd_data.time_values()) {
-		if(value.var_id()==mapIdName[signal_name]) {
-			time = timeScale*this->width()*(value.time()-lowest_time)/(highest_time-lowest_time);
-			sigPen.setColor(Qt::green);
-			signalScene->addLine(time, drawingIndex*height+space*2, time, (drawingIndex+1)*height-space*2, sigPen);
-			if(lastValue==vcd::LogicValue::ONE) {
-				sigPen.setColor(Qt::green);
-				signalScene->addLine(lastTime, (drawingIndex+1)*height-space*2, time, (drawingIndex+1)*height-space*2 , sigPen);
-			} else if (lastValue==vcd::LogicValue::ZERO) {
-				sigPen.setColor(Qt::green);
-				signalScene->addLine(lastTime, drawingIndex*height+space*2, time, drawingIndex*height+space*2, sigPen);
-			} else if (lastValue==vcd::LogicValue::HIGHZ) {
-				sigPen.setColor(Qt::red);
-				signalScene->addLine(lastTime, drawingIndex*height+space*2, time, drawingIndex*height+space*2, sigPen);
-			}
-			lastValue = value.value();
-			lastTime = time;
-			drawn = true;
-		}
-	}
-
-	if(drawn) {
-		// box for the signal
-		signalScene->addRect(0, drawingIndex*height+space, lastTime, height-space*2, QPen(Qt::white));
-
-		// add it to the list
-		signalAreas[signal_name]=QRect(0, drawingIndex*height+space, lastTime, height-space*2);
-
-		// name of the signal bus:
-		text = signalScene->addSimpleText(signal_name);
-		text->setPos(recentZeroTime+space, drawingIndex*height+space);
-		text->setBrush(QColor(Qt::white));
-		text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
-
-		drawingIndex++;
-
-		return true;
-	}
-
-	return false;
 }
