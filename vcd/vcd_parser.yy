@@ -97,10 +97,14 @@
 %token TIMESCALE "$timescale"
 %token SCOPE "$scope"
 %token MODULE "module"
+%token BEGIN "begin"
+%token FUNCTION "function"
+%token TASK "task"
 %token VAR "$var"
 %token WIRE "wire"
 %token REG "reg"
 %token PARAMETER "parameter"
+%token VARINTEGER "integer"
 %token UPSCOPE "$upscope"
 %token ENDDEFINITIONS "$enddefinitions"
 %token DUMPVARS "$dumpvars"
@@ -182,6 +186,21 @@ SCOPE MODULE String END
 {
 	$$ = $3;
 }
+|
+SCOPE BEGIN String END
+{
+	$$ = $3;
+}
+|
+SCOPE FUNCTION String END
+{
+	$$ = $3;
+}
+|
+SCOPE TASK String END
+{
+	$$ = $3;
+}
 ;
 
 definitions :
@@ -245,6 +264,11 @@ REG
 PARAMETER
 {
         $$ = Var::Type::PARAMETER;
+}
+|
+VARINTEGER
+{
+		$$ = Var::Type::VARINTEGER;
 }
 ;
 

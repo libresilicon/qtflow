@@ -16,6 +16,7 @@ namespace vcd {
         if(type == Var::Type::WIRE) os << "wire";
         else if(type == Var::Type::REG) os << "reg";
         else if(type == Var::Type::PARAMETER) os << "parameter";
+		else if(type == Var::Type::VARINTEGER) os << "integer";
         else assert(false);
         return os;
     }

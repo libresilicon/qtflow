@@ -26,7 +26,8 @@ namespace vcd {
 			enum class Type {
 				WIRE,
 				REG,
-				PARAMETER
+				PARAMETER,
+				VARINTEGER
 			};
 
 			typedef int Id;

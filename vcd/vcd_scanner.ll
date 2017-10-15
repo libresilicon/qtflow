@@ -116,6 +116,15 @@ module                                          {
                                                      /*cout << "MODULE\n";  */
 													return vcd::Parser::make_MODULE(loc_);
                                                 }
+begin                                           {
+													return vcd::Parser::make_BEGIN(loc_);
+												}
+function                                        {
+													return vcd::Parser::make_FUNCTION(loc_);
+												}
+task                                            {
+													return vcd::Parser::make_TASK(loc_);
+												}
 $upscope                                        { 
                                                      /*cout << "UPSCOPE\n";  */
 													return vcd::Parser::make_UPSCOPE(loc_);
@@ -134,6 +143,9 @@ $var                                            {
                                                     /*cout << "WIRE\n"; */
 													return vcd::Parser::make_WIRE(loc_);
                                                 }
+<var>integer                                    {
+													return vcd::Parser::make_VARINTEGER(loc_);
+												}
 <var>reg                                        { 
                                                     /*cout << "REG\n"; */
 													return vcd::Parser::make_REG(loc_);
