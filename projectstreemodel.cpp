@@ -30,19 +30,14 @@ void ProjectsTreeModel::setProject(Project *p)
 	watcher = new QFileSystemWatcher(this);
 
 	if(project) foreach(QString path, project->getSearchDirectories()) {
-		addSearchPath(path);
+		addFolderNodes(path,rootItem);
 	}
-}
-
-void ProjectsTreeModel::addSearchPath(const QString &path)
-{
-	addFolderNodes(path,rootItem);
 }
 
 void ProjectsTreeModel::addFolderNodes(const QString &path, ProjectsItem *top)
 {
 	QDir dir(path);
-	QString subpath;
+	QStringList fileList;
 
 	ProjectsItem *folderItem;
 
@@ -53,10 +48,9 @@ void ProjectsTreeModel::addFolderNodes(const QString &path, ProjectsItem *top)
 	addFileNodes(folderItem);
 
 	dir.setFilter( QDir::Dirs | QDir::NoDotAndDotDot );
-	QStringList fileList = dir.entryList();
+	fileList = dir.entryList();
 	for (int i=0; i<fileList.count(); i++) {
-		subpath = dir.filePath(fileList[i]);
-		addFolderNodes(subpath,folderItem);
+		addFolderNodes(dir.filePath(fileList[i]),folderItem);
 	}
 }
 
@@ -66,11 +60,14 @@ void ProjectsTreeModel::addFileNodes(ProjectsItem *folderItem)
 	ProjectsItem *sourceItem = new ProjectsItem("Sources", folderItem);
 	ProjectsItem *layoutItem = new ProjectsItem("Layouts", folderItem);
 	ProjectsItem *schematicsItem = new ProjectsItem("Schematics", folderItem);
-	QDir dir(folderItem->fileData().absolutePath());
+	ProjectsItem *othersItem = new ProjectsItem("Others", folderItem);
+
+	QDir dir(folderItem->fileData().absoluteFilePath());
 
 	folderItem->appendChild(sourceItem);
 	folderItem->appendChild(layoutItem);
 	folderItem->appendChild(schematicsItem);
+	folderItem->appendChild(othersItem);
 
 	dir.setFilter( QDir::Files | QDir::NoDotAndDotDot );
 	QStringList fileList = dir.entryList();
@@ -78,17 +75,21 @@ void ProjectsTreeModel::addFileNodes(ProjectsItem *folderItem)
 		QFileInfo file(dir.filePath(fileList[i]));
 
 		if(file.suffix()=="mag"||file.suffix()=="def") {
-			current = new ProjectsItem(fileList[i], layoutItem);
+			current = new ProjectsItem(file.fileName(), layoutItem);
 			current->setFileData(file);
 			layoutItem->appendChild(current);
 		} else if(file.suffix()=="sch"||file.suffix()=="sym") {
-			current = new ProjectsItem(fileList[i], schematicsItem);
+			current = new ProjectsItem(file.fileName(), schematicsItem);
 			current->setFileData(file);
 			schematicsItem->appendChild(current);
 		} else if(file.suffix()=="v"||file.suffix()=="hs") {
-			current = new ProjectsItem(fileList[i], sourceItem);
+			current = new ProjectsItem(file.fileName(), sourceItem);
 			current->setFileData(file);
 			sourceItem->appendChild(current);
+		} else {
+			current = new ProjectsItem(file.fileName(), othersItem);
+			current->setFileData(file);
+			othersItem->appendChild(current);
 		}
 	}
 }

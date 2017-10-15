@@ -40,7 +40,6 @@ public slots:
 	void onChange(const QString&);
 
 private:
-	void addSearchPath(const QString &path);
 	void addFileNodes(ProjectsItem *folderItem);
 	void addFolderNodes(const QString &path, ProjectsItem *top);
 
