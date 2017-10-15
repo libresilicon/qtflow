@@ -19,8 +19,6 @@ public:
 
 	void setProject(Project*);
 
-	void refresh();
-
 signals:
 	void openFile(QString);
 
@@ -33,7 +31,7 @@ private:
 
 	Project *project;
 
-	ProjectsTreeModel *projects;
+	ProjectsTreeModel *projectMembers;
 	QMenu *context;
 };
 

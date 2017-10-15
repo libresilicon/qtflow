@@ -74,7 +74,8 @@ SOURCES += \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
 	layoutvisibles.cpp \
-    synthesisoptions.cpp
+    synthesisoptions.cpp \
+    projectsitem.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -105,7 +106,8 @@ HEADERS  += \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
 	layoutvisibles.h \
-    synthesisoptions.h
+    synthesisoptions.h \
+    projectsitem.h
 
 FORMS    += \
 	mainwindow.ui \

@@ -3,23 +3,16 @@
 
 ProjectSelector::ProjectSelector(QWidget *parent) :
 	ui(new Ui::Projects),
-	projects(new ProjectsTreeModel),
+	projectMembers(new ProjectsTreeModel),
 	QDockWidget(parent),
 	project(NULL)
 {
 	ui->setupUi(this);
-	ui->treeView->setModel(projects);
+	ui->treeView->setModel(projectMembers);
+
 	context = new QMenu(ui->treeView);
 
 	connect(ui->treeView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onOpen(const QModelIndex&)));
-}
-
-void ProjectSelector::refresh()
-{
-	if(project) {
-		projects->setRootPath(project->getRootDir());
-		ui->treeView->setModel(projects);
-	}
 }
 
 void ProjectSelector::onOpen(const QModelIndex &i)
@@ -46,5 +39,6 @@ void ProjectSelector::onContextMenu(const QPoint &point)
 void ProjectSelector::setProject(Project* p)
 {
 	project = p;
-	refresh();
+	projectMembers->setProject(project);
+	ui->treeView->setModel(projectMembers);
 }

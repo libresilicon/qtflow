@@ -5,35 +5,9 @@
 #include <QFileSystemWatcher>
 #include <QFileInfo>
 
-class ProjectsItem
-{
-public:
-	explicit ProjectsItem(const QVector<QVariant> &data, ProjectsItem *parentItem = 0);
-	~ProjectsItem();
+#include "project.h"
 
-	void appendChild(ProjectsItem *child);
-
-	bool setFileData(const QFileInfo &file);
-	QFileInfo fileData() const;
-
-	ProjectsItem *child(int row);
-	int childCount() const;
-	int columnCount() const;
-	QVariant data(int column) const;
-	bool insertChildren(int position, int count, int columns);
-	int row() const;
-	ProjectsItem *parentItem();
-	bool removeChildren(int position, int count);
-	bool removeColumns(int position, int columns);
-	int childNumber() const;
-	bool setData(int column, const QVariant &value);
-
-private:
-	QList<ProjectsItem*> childItems;
-	QVector<QVariant> itemData;
-	QFileInfo fileInfoData;
-	ProjectsItem *parent;
-};
+#include "projectsitem.h"
 
 class ProjectsTreeModel : public QAbstractItemModel
 {
@@ -43,9 +17,10 @@ public:
 	explicit ProjectsTreeModel(QObject *parent = 0);
 	~ProjectsTreeModel();
 
-	void reset();
+	void setProject(Project *p);
 
-	void setRootPath(const QString &path);
+	bool topModule(const QModelIndex &index) const;
+
 	QString filePath(const QModelIndex &index);
 
 	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
@@ -58,8 +33,6 @@ public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-	bool topModule(const QModelIndex &index) const;
-	void setTopModule(QString);
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 	Qt::ItemFlags flags(const QModelIndex &index) const override;
 
@@ -67,14 +40,15 @@ public slots:
 	void onChange(const QString&);
 
 private:
-	ProjectsItem *rootItem;
-	ProjectsItem *sourceItem;
-	ProjectsItem *layoutItem;
-	ProjectsItem *schematicsItem;
+	void addSearchPath(const QString &path);
+	void addFileNodes(ProjectsItem *folderItem);
+	void addFolderNodes(const QString &path, ProjectsItem *top);
 
-	QString top;
+	ProjectsItem *rootItem;
 
 	QFileSystemWatcher *watcher;
+
+	Project *project;
 };
 
 #endif // PROJECTSTREEMODEL_H
