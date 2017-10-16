@@ -17,6 +17,8 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
 	qreal height();
+	qreal width();
+
 	QPointF bottomLeft();
 	bool contains(const QPointF &point) const;
 
@@ -32,6 +34,7 @@ public slots:
 private:
 	// bounding rect:
 	qreal m_height;
+	qreal m_width;
 
 	qreal m_lastTime;
 	qreal m_firstTime;

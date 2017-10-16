@@ -24,6 +24,11 @@ void VcdSignalView::onZoomOut()
 
 void VcdSignalView::onZoomFitWidth()
 {
+	qreal highestWidth = 0;
+	foreach(VcdViewGraphicsItem *m, m_signals) {
+		if(m->width() > highestWidth) highestWidth = m->width();
+	}
+	scale(width()/highestWidth,1.0);
 }
 
 void VcdSignalView::onRemoveSignal()

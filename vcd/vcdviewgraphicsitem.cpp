@@ -4,6 +4,7 @@ VcdViewGraphicsItem::VcdViewGraphicsItem(vcd::Var var, QGraphicsItem *parent) :
 	QGraphicsItem(parent),
 	m_name(QString::fromStdString(var.name())),
 	m_height(40),
+	m_width(0),
 	m_lastTime(10),
 	m_firstTime(0),
 	m_firstTimeSet(false)
@@ -31,11 +32,12 @@ void VcdViewGraphicsItem::addTime(qreal time)
 		m_lastTime = time;
 		m_firstTimeSet = true;
 	}
+	m_width = m_lastTime;
 }
 
 QRectF VcdViewGraphicsItem::boundingRect() const
 {
-	return QRect(m_firstTime,0,m_lastTime-m_firstTime,m_height);
+	return QRect(m_firstTime,0,m_lastTime-m_firstTime+50,m_height);
 }
 
 void VcdViewGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {}
@@ -43,6 +45,11 @@ void VcdViewGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsIte
 qreal VcdViewGraphicsItem::height()
 {
 	return m_height;
+}
+
+qreal VcdViewGraphicsItem::width()
+{
+	return m_width;
 }
 
 QPointF VcdViewGraphicsItem::bottomLeft()
