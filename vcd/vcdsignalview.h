@@ -38,7 +38,7 @@ public slots:
 	void onZoomOut();
 	void onZoomFitWidth();
 
-	void onRemoveSignal();
+	void onRemoveSignal(VcdViewGraphicsItem *m);
 
 private:
 	QString longSignalID(std::vector<std::string> arr);

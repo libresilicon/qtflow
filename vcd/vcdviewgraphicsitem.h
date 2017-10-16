@@ -8,8 +8,10 @@
 
 #include "vcd_reader/vcd_data.hpp"
 
-class VcdViewGraphicsItem : public QGraphicsItem
+class VcdViewGraphicsItem : public QObject, public QGraphicsItem
 {
+	Q_OBJECT
+
 public:
 	explicit VcdViewGraphicsItem(vcd::Var var, QGraphicsItem *parent = nullptr);
 
@@ -19,7 +21,6 @@ public:
 	qreal height();
 	qreal width();
 
-	QPointF bottomLeft();
 	bool contains(const QPointF &point) const;
 
 	QString getLongName();
@@ -28,8 +29,10 @@ protected:
 	void addTime(qreal time);
 
 signals:
+	void deleteInstance(VcdViewGraphicsItem*);
 
 public slots:
+	void deleteMe();
 
 private:
 	// bounding rect:

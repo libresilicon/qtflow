@@ -72,3 +72,12 @@ VcdViewGraphicsItemSignal::VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValu
 		line->setPen(sigPen);
 	}
 }
+
+void VcdViewGraphicsItemSignal::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+	QAction *action;
+	QMenu menu;
+	action = menu.addAction("Remove");
+	connect(action,SIGNAL(triggered(bool)),this,SLOT(deleteMe()));
+	menu.exec(event->screenPos());
+}

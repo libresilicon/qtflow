@@ -91,4 +91,12 @@ VcdViewGraphicsItemBus::VcdViewGraphicsItemBus(vcd::Var var, vcd::TimeBusValues 
 	}*/
 }
 
-
+void VcdViewGraphicsItemBus::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+	QAction *action;
+	QMenu menu;
+	action = menu.addAction("Remove");
+	connect(action,SIGNAL(triggered(bool)),this,SLOT(deleteMe()));
+	action = menu.addAction("Unfold bus");
+	menu.exec(event->screenPos());
+}

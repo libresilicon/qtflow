@@ -1,6 +1,7 @@
 #include "vcdviewgraphicsitem.h"
 
 VcdViewGraphicsItem::VcdViewGraphicsItem(vcd::Var var, QGraphicsItem *parent) :
+	QObject(),
 	QGraphicsItem(parent),
 	m_name(QString::fromStdString(var.name())),
 	m_height(40),
@@ -43,7 +44,7 @@ void VcdViewGraphicsItem::addTime(qreal time)
 
 QRectF VcdViewGraphicsItem::boundingRect() const
 {
-	return QRect(m_firstTime,0,m_lastTime-m_firstTime+50,m_height);
+	return QRect(0,0,m_lastTime,m_height);
 }
 
 void VcdViewGraphicsItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {}
@@ -58,21 +59,10 @@ qreal VcdViewGraphicsItem::width()
 	return m_width;
 }
 
-QPointF VcdViewGraphicsItem::bottomLeft()
-{
-	QPointF p = pos();
-	QRectF r = boundingRect();
-	r.setX(p.x());
-	r.setY(p.y());
-
-	return r.bottomLeft();
-}
-
 bool VcdViewGraphicsItem::contains(const QPointF &point) const
 {
 	QPointF p = pos();
 	QRectF r = boundingRect();
-	r.setX(0);
 	r.setY(p.y());
 
 	return r.contains(point);
@@ -81,4 +71,9 @@ bool VcdViewGraphicsItem::contains(const QPointF &point) const
 QString VcdViewGraphicsItem::getLongName()
 {
 	return m_long_name;
+}
+
+void VcdViewGraphicsItem::deleteMe()
+{
+	emit(deleteInstance(this));
 }

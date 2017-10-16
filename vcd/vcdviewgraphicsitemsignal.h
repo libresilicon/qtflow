@@ -3,10 +3,17 @@
 
 #include "vcdviewgraphicsitem.h"
 
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMenu>
+
 class VcdViewGraphicsItemSignal : public VcdViewGraphicsItem
 {
 public:
 	explicit VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValues values, QGraphicsItem *parent = nullptr);
+
+protected:
+	void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+
 private:
 	bool m_isFirstValue;
 };

@@ -31,16 +31,24 @@ void VcdSignalView::onZoomFitWidth()
 	scale(width()/highestWidth,1.0);
 }
 
-void VcdSignalView::onRemoveSignal()
+void VcdSignalView::onRemoveSignal(VcdViewGraphicsItem* m)
 {
-	QAction *action = qobject_cast<QAction *>(sender());
-	QString key = action->data().toString();
+	qreal lastHeight = 0;
 
-	for(int i=0;i<signalViewFilter.count();i++) {
-		if(signalViewFilter.at(i)==key) {
-			signalViewFilter.removeAt(i);
+	for(int i; i<m_signals.count();i++) {
+		if(m_signals.at(i)==m) {
+			m_signals.remove(i);
+			break;
 		}
 	}
+	signalScene->removeItem(m);
+
+	foreach(VcdViewGraphicsItem *m, m_signals) {
+		m->setPos(0,lastHeight);
+		lastHeight+=m->height()+20;
+	}
+
+	update();
 }
 
 QString VcdSignalView::longSignalID(std::vector<std::string> arr)
@@ -67,10 +75,12 @@ void VcdSignalView::append(QString s)
 		if(longSignalID(var.hierarchical_name())==s) {
 			if(var.width()>1) {
 				bus = new VcdViewGraphicsItemBus(var,vcd_data.time_bus_values());
+				connect(bus,SIGNAL(deleteInstance(VcdViewGraphicsItem*)),this,SLOT(onRemoveSignal(VcdViewGraphicsItem*)));
 				signalScene->addItem(bus);
 				m_signals.append(bus);
 			} else {
 				signal = new VcdViewGraphicsItemSignal(var,vcd_data.time_values());
+				connect(signal,SIGNAL(deleteInstance(VcdViewGraphicsItem*)),this,SLOT(onRemoveSignal(VcdViewGraphicsItem*)));
 				signalScene->addItem(signal);
 				m_signals.append(signal);
 			}
