@@ -17,6 +17,8 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
 
 	qreal height();
+	QPointF bottomLeft();
+	bool contains(const QPointF &point) const;
 
 protected:
 	void addTime(qreal time);

@@ -42,7 +42,6 @@ public slots:
 
 private:
 	QString longSignalID(std::vector<std::string> arr);
-	QPointF findBetterPosition(QPointF orig);
 
 	QStringList signalViewFilter;
 	QGraphicsScene *signalScene;
@@ -52,6 +51,7 @@ private:
 	int m_highest_time;
 
 	QMap<QString,QRect> signalAreas;
+	QVector<VcdViewGraphicsItem*> m_signals;
 
 	int moveDragLastX;
 

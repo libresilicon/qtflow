@@ -48,40 +48,31 @@ QString VcdSignalView::longSignalID(std::vector<std::string> arr)
 	return ret;
 }
 
-QPointF VcdSignalView::findBetterPosition(QPointF orig)
-{
-	QPointF ret = orig;
-	VcdViewGraphicsItem *nm;
-
-	foreach(QGraphicsItem *m, signalScene->items()) {
-		nm = (VcdViewGraphicsItem*)m;
-		ret.setY(ret.y()+nm->height());
-	}
-
-	return ret;
-}
-
 void VcdSignalView::append(QString s)
 {
 	VcdViewGraphicsItem *nm;
 	VcdViewGraphicsItemBus *bus;
 	VcdViewGraphicsItemSignal *signal;
+	int i;
 
 	foreach(vcd::Var var, vcd_data.vars()) {
 		if(longSignalID(var.hierarchical_name())==s) {
 			if(var.width()>1) {
 				bus = new VcdViewGraphicsItemBus(var,vcd_data.time_bus_values());
 				signalScene->addItem(bus);
+				m_signals.append(bus);
 			} else {
 				signal = new VcdViewGraphicsItemSignal(var,vcd_data.time_values());
 				signalScene->addItem(signal);
+				m_signals.append(signal);
 			}
 		}
 	}
 
-	foreach(QGraphicsItem *m, signalScene->items()) {
-		nm = (VcdViewGraphicsItem*)m;
-		nm->setPos(findBetterPosition(nm->pos()));
+	i = 0;
+	foreach(VcdViewGraphicsItem *m, m_signals) {
+		m->setPos(0,i*20);
+		i++;
 	}
 
 	update();
