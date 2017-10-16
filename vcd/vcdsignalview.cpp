@@ -50,10 +50,13 @@ QString VcdSignalView::longSignalID(std::vector<std::string> arr)
 
 void VcdSignalView::append(QString s)
 {
-	VcdViewGraphicsItem *nm;
 	VcdViewGraphicsItemBus *bus;
 	VcdViewGraphicsItemSignal *signal;
 	int i;
+
+	foreach(VcdViewGraphicsItem *m, m_signals) {
+		if(m->getLongName()==s) return;
+	}
 
 	foreach(vcd::Var var, vcd_data.vars()) {
 		if(longSignalID(var.hierarchical_name())==s) {
@@ -71,7 +74,8 @@ void VcdSignalView::append(QString s)
 
 	i = 0;
 	foreach(VcdViewGraphicsItem *m, m_signals) {
-		m->setPos(0,i*20);
+		m->setPos(0,i*80);
+		m->scale();
 		i++;
 	}
 

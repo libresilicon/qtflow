@@ -20,6 +20,8 @@ public:
 	QPointF bottomLeft();
 	bool contains(const QPointF &point) const;
 
+	QString getLongName();
+
 protected:
 	void addTime(qreal time);
 
@@ -36,7 +38,7 @@ private:
 	bool m_firstTimeSet;
 
 	QString m_name;
-
+	QString m_long_name;
 };
 
 #endif // VCDVIEWGRAPHICSITEM_H

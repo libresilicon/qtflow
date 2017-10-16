@@ -3,7 +3,7 @@
 VcdViewGraphicsItem::VcdViewGraphicsItem(vcd::Var var, QGraphicsItem *parent) :
 	QGraphicsItem(parent),
 	m_name(QString::fromStdString(var.name())),
-	m_height(20),
+	m_height(40),
 	m_lastTime(10),
 	m_firstTime(0),
 	m_firstTimeSet(false)
@@ -13,6 +13,12 @@ VcdViewGraphicsItem::VcdViewGraphicsItem(vcd::Var var, QGraphicsItem *parent) :
 	//text->setPos(recentZeroTime+space, drawingIndex*height+space);
 	text->setBrush(QColor(Qt::white));
 	text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+
+	m_long_name = "";
+	foreach(std::string s, var.hierarchical_name()) {
+		m_long_name+='/';
+		m_long_name+=QString::fromStdString(s);
+	}
 }
 
 void VcdViewGraphicsItem::addTime(qreal time)
@@ -57,4 +63,9 @@ bool VcdViewGraphicsItem::contains(const QPointF &point) const
 	r.setY(p.y());
 
 	return r.contains(point);
+}
+
+QString VcdViewGraphicsItem::getLongName()
+{
+	return m_long_name;
 }
