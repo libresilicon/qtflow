@@ -17,13 +17,12 @@ VcdViewGraphicsItemSignal::VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValu
 
 	foreach(vcd::TimeValue value, values) {
 		time = value.time();
+		addTime(time);
 
 		if(time>biggestTime)
 			biggestTime = time;
 
 		if(value.var_id()==var.id()) {
-			addTime(time);
-
 			sigPen.setColor(QColor(Qt::green));
 			line = new QGraphicsLineItem(time, 0, time, height(), this);
 			line->setPen(sigPen);

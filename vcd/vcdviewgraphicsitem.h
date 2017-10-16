@@ -42,6 +42,9 @@ private:
 
 	QString m_name;
 	QString m_long_name;
+
+	QGraphicsSimpleTextItem *sigLabel;
+	QGraphicsRectItem *sigFrame;
 };
 
 #endif // VCDVIEWGRAPHICSITEM_H

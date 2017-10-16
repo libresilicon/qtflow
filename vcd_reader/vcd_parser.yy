@@ -34,7 +34,7 @@
 %define parse.assert
 
 /* Enable debugging info */
-%define parse.trace
+/* %define parse.trace */
 
 /* Better error reporting */
 %define parse.error verbose
@@ -47,7 +47,7 @@
 
 /* Track locations */
 %locations
-%debug
+/* %debug */
 
 /* Generate a table of token names */
 %token-table

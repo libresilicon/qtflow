@@ -8,20 +8,17 @@ VcdViewGraphicsItemBus::VcdViewGraphicsItemBus(vcd::Var var, vcd::TimeBusValues 
 	int i;
 	int lastTime = 0;
 	int time;
-	int raise_time;
 	QString lastBusValueStd;
 	QVector<vcd::LogicValue> reverse;
 	QGraphicsLineItem *line;
+	QGraphicsSimpleTextItem *text;
 
 	char busValueStd[var.width()+1];
 
 	foreach(vcd::TimeBusValue bus, values) {
+		time = bus.time();
+		addTime(time);
 		if(bus.var_id()==var.id()) {
-			time = bus.time();
-			addTime(time);
-
-			raise_time = (time-lastTime)/RAISE_TIME;
-
 			busValueStd[var.width()]='\0';
 			for(i=0;i<var.width();i++) {
 				busValueStd[i]='0';
@@ -42,26 +39,26 @@ VcdViewGraphicsItemBus::VcdViewGraphicsItemBus(vcd::Var var, vcd::TimeBusValues 
 			}
 
 			sigPen.setColor(Qt::green);
-			if(lastBusValueStd != busValueStd) {
-				line = new QGraphicsLineItem(time+raise_time, 0, time-raise_time, height(), this);
-				line->setPen(sigPen);
 
-				line = new QGraphicsLineItem(time-raise_time, 0, time+raise_time, height(), this);
-				line->setPen(sigPen);
+			line = new QGraphicsLineItem(time+RAISE_TIME, 0, time-RAISE_TIME, height(), this);
+			line->setPen(sigPen);
 
-				line = new QGraphicsLineItem(lastTime+raise_time, 0, time-raise_time, 0, this);
-				line->setPen(sigPen);
+			line = new QGraphicsLineItem(time-RAISE_TIME, 0, time+RAISE_TIME, height(), this);
+			line->setPen(sigPen);
 
-				line = new QGraphicsLineItem(lastTime+raise_time, height(), time-raise_time, height(), this);
-				line->setPen(sigPen);
+			line = new QGraphicsLineItem(lastTime+RAISE_TIME, 0, time-RAISE_TIME, 0, this);
+			line->setPen(sigPen);
 
-				/*text = signalScene->addSimpleText(QString("%1").arg(QString(busValueStd).toInt(0,2)));
-				text->setPos(time, (drawingIndex*height)+(height/2));
-				text->setBrush(QColor(Qt::white));
-				text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);*/
+			line = new QGraphicsLineItem(lastTime+RAISE_TIME, height(), time-RAISE_TIME, height(), this);
+			line->setPen(sigPen);
 
-				lastBusValueStd = busValueStd;
-			} /*else {
+			text = new QGraphicsSimpleTextItem(QString("%1").arg(QString(busValueStd).toInt(0,2)),this);
+			text->setPos(lastTime+(time-lastTime)/2,height()/3);
+			text->setBrush(QColor(Qt::white));
+			text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+
+			lastBusValueStd = busValueStd;
+			/*else {
 				signalScene->addLine(lastTime, drawingIndex*height+space*2, time+raise_time, drawingIndex*height+space*2, sigPen);
 				signalScene->addLine(lastTime, (drawingIndex+1)*height-space*2, time+raise_time, (drawingIndex+1)*height-space*2, sigPen);
 			}*/

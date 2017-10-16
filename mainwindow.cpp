@@ -114,6 +114,8 @@ void MainWindow::disableAllFunctions()
 	ui->projectSettings->setEnabled(false);
 	ui->synthesisSettings->setEnabled(false);
 	ui->librarySettings->setEnabled(false);
+	ui->actionDRC->setEnabled(false);
+	ui->actionWaveViewer->setEnabled(false);
 }
 
 void MainWindow::enableAllFunctions()
@@ -125,6 +127,8 @@ void MainWindow::enableAllFunctions()
 	ui->projectSettings->setEnabled(true);
 	ui->synthesisSettings->setEnabled(true);
 	ui->librarySettings->setEnabled(true);
+	ui->actionDRC->setEnabled(true);
+	ui->actionWaveViewer->setEnabled(true);
 }
 
 void MainWindow::on_synthesisSettings_triggered(bool)

@@ -4,16 +4,20 @@ VcdViewGraphicsItem::VcdViewGraphicsItem(vcd::Var var, QGraphicsItem *parent) :
 	QGraphicsItem(parent),
 	m_name(QString::fromStdString(var.name())),
 	m_height(40),
-	m_width(0),
+	m_width(10),
 	m_lastTime(10),
 	m_firstTime(0),
 	m_firstTimeSet(false)
 {
-	QGraphicsSimpleTextItem *text;
-	text = new QGraphicsSimpleTextItem(m_name, this);
-	//text->setPos(recentZeroTime+space, drawingIndex*height+space);
-	text->setBrush(QColor(Qt::white));
-	text->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+	sigLabel = new QGraphicsSimpleTextItem(m_name, this);
+	//sigLabel->setPos(recentZeroTime+space, drawingIndex*height+space);
+	sigLabel->setBrush(QColor(Qt::white));
+	sigLabel->setFlag(QGraphicsItem::ItemIgnoresTransformations, true);
+
+	QPen pen;
+	pen.setColor(Qt::gray);
+	sigFrame = new QGraphicsRectItem(0,0,m_width,m_height,this);
+	sigFrame->setPen(pen);
 
 	m_long_name = "";
 	foreach(std::string s, var.hierarchical_name()) {
@@ -33,6 +37,8 @@ void VcdViewGraphicsItem::addTime(qreal time)
 		m_firstTimeSet = true;
 	}
 	m_width = m_lastTime;
+
+	sigFrame->setRect(0,0,m_width,m_height);
 }
 
 QRectF VcdViewGraphicsItem::boundingRect() const

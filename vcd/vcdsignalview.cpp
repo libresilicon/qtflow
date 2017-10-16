@@ -77,11 +77,10 @@ void VcdSignalView::append(QString s)
 		}
 	}
 
-	i = 0;
+	qreal lastHeight = 0;
 	foreach(VcdViewGraphicsItem *m, m_signals) {
-		m->setPos(0,i*80);
-		m->scale();
-		i++;
+		m->setPos(0,lastHeight);
+		lastHeight+=m->height()+20;
 	}
 
 	update();
@@ -89,6 +88,7 @@ void VcdSignalView::append(QString s)
 
 void VcdSignalView::setVCD(vcd::VcdData d)
 {
+	QStringList toReAdd;
 	vcd_data = d;
 
 	m_highest_time = 0;
@@ -99,6 +99,17 @@ void VcdSignalView::setVCD(vcd::VcdData d)
 	foreach(vcd::TimeValue value, vcd_data.time_values()) {
 			if(value.time()<m_lowest_time) m_lowest_time = value.time();
 	}
+
+	foreach(VcdViewGraphicsItem *m, m_signals) {
+		toReAdd << m->getLongName();
+		signalScene->removeItem(m);
+	}
+	m_signals.clear();
+
+	foreach(QString s, toReAdd) {
+		append(s);
+	}
+
 }
 
 QString VcdSignalView::getHierarchyNameString(std::vector<std::string> l)

@@ -27,6 +27,7 @@
 
 /* unistd.h doesn't exist on windows */
 %option nounistd
+%option batch
 
 /* isatty() doesn't exist on windows */
 %option never-interactive
@@ -34,8 +35,8 @@
 /* no default rule to echo unrecongaized tokens to output */
 %option nodefault
 
-%option debug
-%option verbose
+/* %option debug
+%option verbose */
 
 /* 
  * We want the yylex() member function to be implemented
