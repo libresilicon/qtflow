@@ -16,13 +16,6 @@ signals:
 
 public slots:
 
-private:
-	// bounding rect:
-	void setBoundingRect();
-	qreal m_xmin;
-	qreal m_xmax;
-	qreal m_ymin;
-	qreal m_ymax;
 
 };
 

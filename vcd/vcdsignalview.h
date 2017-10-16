@@ -7,6 +7,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QDebug>
+#include <QGraphicsLinearLayout>
 
 #include "vcdviewgraphicsitemsignal.h"
 #include "vcdviewgraphicsitembus.h"
@@ -15,15 +16,6 @@
 #include "vcd_reader/vcd_data.hpp"
 
 #define RAISE_TIME 10
-
-class SignalBusArea
-{
-public:
-	SignalBusArea() : isUnfolded(false), bus_width(1) {}
-	QRect area;
-	bool isUnfolded;
-	int bus_width;
-};
 
 class VcdSignalView : public QGraphicsView
 {
@@ -37,46 +29,28 @@ public:
 signals:
 
 protected:
-	bool drawSignalBus(QString signal_name);
 	bool drawSubSignals(QString signal_name);
 
 	QString getHierarchyNameString(std::vector<std::string> l);
 
 public slots:
-	void mousePressEvent(QMouseEvent *e);
-	void mouseReleaseEvent(QMouseEvent *e);
-	void mouseDoubleClickEvent(QMouseEvent *e);
-	void mouseMoveEvent(QMouseEvent *e);
-
-	void wheelEvent(QWheelEvent *event);
-
-	void contextMenuEvent(QContextMenuEvent *event);
-
 	void onZoomIn();
 	void onZoomOut();
 	void onZoomFitWidth();
-	void onMoveRight();
-	void onMoveLeft();
 
 	void onRemoveSignal();
-	void onUnFoldSignalBus();
-	void onFoldSignalBus();
-
-	void resizeEvent(QResizeEvent *event);
 
 private:
 	QString longSignalID(std::vector<std::string> arr);
+	QPointF findBetterPosition(QPointF orig);
 
 	QStringList signalViewFilter;
 	QGraphicsScene *signalScene;
 	vcd::VcdData vcd_data;
-	QMap<QString,vcd::Var::Id> mapIdName;
-	int lowest_time;
-	int highest_time;
-	int timeScale;
-	int recentZeroTime;
 
-	QMap<QString,SignalBusArea> busSignalAreas;
+	int m_lowest_time;
+	int m_highest_time;
+
 	QMap<QString,QRect> signalAreas;
 
 	int moveDragLastX;

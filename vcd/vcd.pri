@@ -12,7 +12,8 @@ SOURCES += \
 	$$PWD/vcdviewgraphicsitemsignal.cpp \
 	$$PWD/vcdviewgraphicsitembus.cpp \
     $$PWD/vcdviewgraphicsitemtimescale.cpp \
-    $$PWD/vcdviewgraphicsitembussubsignal.cpp
+    $$PWD/vcdviewgraphicsitembussubsignal.cpp \
+    $$PWD/vcdviewgraphicsitem.cpp
 
 HEADERS += \
 	$$PWD/vcdtreemodel.h \
@@ -25,5 +26,6 @@ HEADERS += \
 	$$PWD/vcdviewgraphicsitemsignal.h \
 	$$PWD/vcdviewgraphicsitembus.h \
     $$PWD/vcdviewgraphicsitemtimescale.h \
-    $$PWD/vcdviewgraphicsitembussubsignal.h
+    $$PWD/vcdviewgraphicsitembussubsignal.h \
+    $$PWD/vcdviewgraphicsitem.h
 

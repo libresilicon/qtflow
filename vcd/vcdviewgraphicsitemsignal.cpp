@@ -1,10 +1,7 @@
 #include "vcdviewgraphicsitemsignal.h"
 
 VcdViewGraphicsItemSignal::VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValues values, QGraphicsItem *parent) :
-	QGraphicsItem(parent),
-	m_name(QString::fromStdString(var.name())),
-	m_heigth(100),
-	m_width(10)
+	VcdViewGraphicsItem(var,parent)
 {
 	QGraphicsSimpleTextItem *text;
 	QGraphicsLineItem *line;
@@ -19,9 +16,10 @@ VcdViewGraphicsItemSignal::VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValu
 	foreach(vcd::TimeValue value, values) {
 		if(value.var_id()==var.id()) {
 			time = value.time();
+			addTime(time);
 
 			sigPen.setColor(QColor(Qt::green));
-			line = new QGraphicsLineItem(time, 0, time, m_heigth, this);
+			line = new QGraphicsLineItem(time, 0, time, height(), this);
 			line->setPen(sigPen);
 
 			if(lastValue==vcd::LogicValue::ONE) {
@@ -30,18 +28,17 @@ VcdViewGraphicsItemSignal::VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValu
 				line->setPen(sigPen);
 			} else if (lastValue==vcd::LogicValue::ZERO) {
 				sigPen.setColor(QColor(Qt::green));
-				line = new QGraphicsLineItem(lastTime, m_heigth, time, m_heigth, this);
+				line = new QGraphicsLineItem(lastTime, height(), time, height(), this);
 				line->setPen(sigPen);
 			} else if (lastValue==vcd::LogicValue::HIGHZ) {
 				sigPen.setColor(QColor(Qt::red));
-				line = new QGraphicsLineItem(lastTime, m_heigth, time, m_heigth, this);
+				line = new QGraphicsLineItem(lastTime, height(), time, height(), this);
 				line->setPen(sigPen);
 			}
 			lastValue = value.value();
 			lastTime = time;
 			drawn = true;
 		}
-		if(value.time()>m_width) m_width = value.time();
 	}
 
 	if(drawn) {
@@ -59,13 +56,4 @@ VcdViewGraphicsItemSignal::VcdViewGraphicsItemSignal(vcd::Var var, vcd::TimeValu
 
 		//drawingIndex++;
 	}
-}
-
-QRectF VcdViewGraphicsItemSignal::boundingRect() const
-{
-	return QRect(0,0,m_width,m_heigth);
-}
-
-void VcdViewGraphicsItemSignal::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
 }
