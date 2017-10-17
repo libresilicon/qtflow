@@ -69,9 +69,13 @@ void ProjectSettings::addDirectory()
 void ProjectSettings::deleteDirectory()
 {
 	QListWidgetItem *m = ui->searchPaths->currentItem();
+	QListWidgetItem *o;
+	QModelIndex index = ui->searchPaths->currentIndex();
+	int i;
+
 	if(m) {
-		qDebug() << m->text();
-		ui->searchPaths->removeItemWidget(m);
+		i = index.row();
+		o = ui->searchPaths->takeItem(i);
 	}
 }
 
