@@ -9,6 +9,7 @@
 *.so
 *.dll
 *.dylib
+*.pyc
 
 # Qt-es
 
