@@ -39,27 +39,27 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 	settings->sync();
 
 	settingsFileProcess = new QDomDocument();
-	QFile file(":/process.xml");
+	QFile file(QDir(getTechPath()).filePath("process.xml"));
 	if(file.open(QIODevice::ReadOnly)) {
 		settingsFileProcess->setContent(&file);
 		file.close();
 	}
 
-	filedest = temporaryDir.path()+"/tech";
+	filedest = QDir(temporaryDir.path()).filePath("tech");
 	QFile::copy(getTechnologyDisplayFile(), filedest);
 	if(QFile(filedest).exists()) {
 		techDisplayData = new tech::TechData(filedest);
 	}
 
 	// setting up color table:
-	filedest = temporaryDir.path()+"/color";
+	filedest = QDir(temporaryDir.path()).filePath("color");
 	QFile::copy(getColorMapFile(), filedest);
 	if(QFile(filedest).exists()) {
 		colorMap->loadColors(filedest);
 	}
 
 	// setting up color object match table:
-	filedest = temporaryDir.path()+"/style";
+	filedest = QDir(temporaryDir.path()).filePath("style");
 	QFile::copy(getDesignStyleFile(), filedest);
 	if(QFile(filedest).exists()) {
 		colorMap->loadDesign(filedest);
@@ -447,10 +447,7 @@ void Project::createFiles()
 		if(!folder.exists()) folder.mkdir(f);
 	}
 
-	magicLayout = getLayoutDir();
-	magicLayout += '/';
-	magicLayout += getTopLevel();
-	magicLayout += ".mag";
+	magicLayout = QDir(getLayoutDir()).filePath(getTopLevel()+".mag");
 
 	QFile magicFile(magicLayout);
 	if(magicFile.open(QIODevice::WriteOnly)) {
@@ -477,9 +474,9 @@ void Project::create(QString path)
 
 	project_settings->setValue("technology", "osu035");
 	project_settings->sync();
-	project_settings->setValue("sourcedir", rootdir+"/source");
-	project_settings->setValue("synthesis", rootdir+"/synthesis");
-	project_settings->setValue("layout", rootdir+"/layout");
+	project_settings->setValue("sourcedir", QDir(rootdir).filePath("source"));
+	project_settings->setValue("synthesis", QDir(rootdir).filePath("synthesis"));
+	project_settings->setValue("layout", QDir(rootdir).filePath("layout"));
 	project_settings->sync();
 }
 
@@ -717,7 +714,7 @@ void Project::loadLibraryFiles()
 	QString libname;
 
 	foreach(QString filename, getLibraryFiles()) {
-		filedest = temporaryDir.path()+"/cells.lef";
+		filedest = QDir(temporaryDir.path()).filePath("cells.lef");
 		QFile::copy(filename, filedest);
 		if(QFile(filedest).exists()) {
 				libname = QFileInfo(filename).baseName();
@@ -761,7 +758,7 @@ void Project::loadSchematicsLibraryFiles()
 	QString libname;
 
 	foreach(QString filename, getSchematicsLibraryFiles()) {
-		filedest = temporaryDir.path()+"/cells.slib";
+		filedest = QDir(temporaryDir.path()).filePath("cells.slib");
 		QFile::copy(filename, filedest);
 		if(QFile(filedest).exists()) {
 			libname = QFileInfo(filename).baseName();

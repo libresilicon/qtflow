@@ -73,7 +73,8 @@ SOURCES += \
 	qtreeviewdragdrop.cpp \
 	layoutvisibles.cpp \
 	synthesisoptions.cpp \
-	projectsitem.cpp
+	projectsitem.cpp \
+    generictexteditorwidget.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -105,7 +106,8 @@ HEADERS  += \
 	qtreeviewdragdrop.h \
 	layoutvisibles.h \
 	synthesisoptions.h \
-	projectsitem.h
+	projectsitem.h \
+    generictexteditorwidget.h
 
 FORMS    += \
 	mainwindow.ui \

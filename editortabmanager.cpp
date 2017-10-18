@@ -1,7 +1,5 @@
 #include "editortabmanager.h"
 
-#include <QLabel>
-
 EditorTabManager::EditorTabManager(QWidget *parent) :
 	QTabWidget(parent),
 	project(NULL),
@@ -19,7 +17,11 @@ void EditorTabManager::openFile(QString filepath)
 
 	for(int idx=0; idx < count(); idx++) {
 		ed = (EditorWidget *)widget(idx);
-		if(ed->getFilePath()==filepath) return; // already open
+		if(ed->getFilePath()==filepath) {
+			// already open, set recent:
+			setCurrentIndex(idx);
+			return;
+		}
 	}
 
 	if(isCode(info.suffix())) {
@@ -52,7 +54,14 @@ void EditorTabManager::openFile(QString filepath)
 			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 		}
-	} else return;
+	} else {
+		GenericTextEditorWidget *editorWidget = new GenericTextEditorWidget(this);
+		editorWidget->setProject(project);
+		editorWidget->loadFile(filepath);
+		addTab(editorWidget,info.fileName());
+		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+	}
 
 	setCurrentIndex(currentIndex() + 1);
 }

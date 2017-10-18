@@ -3,6 +3,9 @@
 
 #include <QWidget>
 #include <QTabWidget>
+#include <QLabel>
+
+#include "generictexteditorwidget.h"
 #include "codeeditorwidget.h"
 #include "schematics/schematicseditorwidget.h"
 #include "magic/magiclayouteditorwidget.h"

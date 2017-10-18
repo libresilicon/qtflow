@@ -1,8 +1,3 @@
-
-#include <KTextEditor/Document>
-#include <KTextEditor/Editor>
-#include <KTextEditor/View>
-
 #include "codeeditorwidget.h"
 
 CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
