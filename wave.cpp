@@ -24,8 +24,8 @@ Wave::Wave(QWidget *parent) :
 	connect(ui->pushZoomIn,SIGNAL(clicked(bool)),signalView,SLOT(onZoomIn()));
 	connect(ui->pushZoomOut,SIGNAL(clicked(bool)),signalView,SLOT(onZoomOut()));
 	connect(ui->pushZoomFitWidth,SIGNAL(clicked(bool)),signalView,SLOT(onZoomFitWidth()));
-	connect(ui->pushMoveLeft,SIGNAL(clicked(bool)),signalView,SLOT(onMoveLeft()));
-	connect(ui->pushMoveRight,SIGNAL(clicked(bool)),signalView,SLOT(onMoveRight()));
+	//connect(ui->pushMoveLeft,SIGNAL(clicked(bool)),signalView,SLOT(onMoveLeft()));
+	//connect(ui->pushMoveRight,SIGNAL(clicked(bool)),signalView,SLOT(onMoveRight()));
 }
 
 Wave::~Wave()

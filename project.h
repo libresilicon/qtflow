@@ -96,6 +96,7 @@ public:
 	QString getDesignStyleFile();
 	QString getProjectType();
 	QString getVCDPath();
+	QString getTechPath();
 
 	QStringList getPlanes();
 	QStringList getTypeNames();
@@ -112,6 +113,10 @@ public:
 	void setSynthesisScript(QString);
 	void setPlacementScript(QString);
 	void setRoutingScript(QString);
+
+	// synthesis options:
+	bool hasSettingABC();
+	void setSettingABC(bool t);
 
 	// LEF operations:
 	bool isDefinedMacro(QString s);

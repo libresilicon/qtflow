@@ -178,7 +178,7 @@ QStringList Project::getLibraryFiles()
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
 									if(e4.tagName()=="file") {
-										ret.append(e4.text());
+										ret.append(QDir(getTechPath()).filePath(e4.text()));
 									}
 								}
 							}
@@ -237,7 +237,7 @@ QStringList Project::getSchematicsLibraryFiles()
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
 									if(e4.tagName()=="file") {
-										ret.append(e4.text());
+										ret.append(QDir(getTechPath()).filePath(e4.text()));
 									}
 								}
 							}
@@ -253,7 +253,7 @@ QStringList Project::getSchematicsLibraryFiles()
 
 QString Project::getTechnologyDisplayFile()
 {
-	QString ret = ":/scmos.tech";
+	QString ret = "scmos.tech";
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -284,12 +284,20 @@ QString Project::getTechnologyDisplayFile()
 		}
 	}
 
+	return QDir(getTechPath()).filePath(ret);
+}
+
+QString Project::getTechPath()
+{
+	QString ret;
+	ret = settings->value("tech_path").toString();
+	if(ret==QString()) ret = ":/";
 	return ret;
 }
 
 QString Project::getTechnologyFile()
 {
-	QString ret = ":/scmos.tech";
+	QString ret = "scmos.tech";
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -320,12 +328,12 @@ QString Project::getTechnologyFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath(ret);
 }
 
 QString Project::getDesignStyleFile()
 {
-	QString ret = ":/mos.dstyle";
+	QString ret = "mos.dstyle";
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -356,12 +364,12 @@ QString Project::getDesignStyleFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath(ret);
 }
 
 QString Project::getColorMapFile()
 {
-	QString ret = ":/mos.cmap";
+	QString ret = "mos.cmap";
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -392,7 +400,7 @@ QString Project::getColorMapFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath(ret);
 }
 
 QString Project::getProjectType()
@@ -480,7 +488,6 @@ void Project::synthesis()
 
 	if(QFile(getSynthesisScript()).exists()) {
 		mainContext->evalFile(getSynthesisScript());
-		mainContext->evalScript("main()");
 	}
 }
 
@@ -488,7 +495,6 @@ void Project::simulation()
 {
 	if(QFile(getSimulationScript()).exists()) {
 		mainContext->evalFile(getSimulationScript());
-		mainContext->evalScript("main()");
 		emit(simulationDone());
 	}
 }
@@ -667,6 +673,23 @@ QStringList Project::getAlternativeNames(QString s)
 	return QStringList();
 }
 
+bool Project::hasSettingABC()
+{
+	bool r;
+	project_settings->beginGroup("synthesis");
+	r = project_settings->value("runABC",false).toBool();
+	project_settings->endGroup();
+	return r;
+}
+
+void Project::setSettingABC(bool t)
+{
+	project_settings->beginGroup("synthesis");
+	project_settings->setValue("runABC",t);
+	project_settings->endGroup();
+	project_settings->sync();
+}
+
 // LEF operations:
 bool Project::isDefinedMacro(QString s)
 {
@@ -792,7 +815,7 @@ void Project::setRoutingScript(QString)
 
 QString Project::getLibertyFile()
 {
-	QString ret = ":/scmos.tech";
+	QString ret = "osu035/osu035_stdcells.lib";
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -823,5 +846,5 @@ QString Project::getLibertyFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath(ret);
 }

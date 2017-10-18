@@ -13,7 +13,7 @@ void QtFlowFileList::refresh()
 	if(project) setRootPath(project->getSourceDir());
 
 	QRegExp rx("^\\s*module ([a-zA-Z0-9_]+)");
-	QDirIterator it(rootPath(), QStringList() << "*.v", QDir::Files, QDirIterator::Subdirectories);
+	QDirIterator it(rootPath(), QStringList() << "*.v" << "*.sch", QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
 		QFile file(it.next());

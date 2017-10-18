@@ -17,11 +17,6 @@ Settings::Settings(QWidget *parent, QSettings *s) :
 {
 	ui->setupUi(this);
 
-	connect(ui->yosysButton,SIGNAL(clicked(bool)),this,SLOT(selectYosys_triggered()));
-	connect(ui->graywolfButton,SIGNAL(clicked(bool)),this,SLOT(selectGraywolf_triggered()));
-	connect(ui->qrouterButton,SIGNAL(clicked(bool)),this,SLOT(selectQRouter_triggered()));
-	connect(ui->icarusButton,SIGNAL(clicked(bool)),this,SLOT(selectIcarus_triggered()));
-
     // pages
     page1 = ui->stackedWidget->currentWidget();
 
@@ -42,26 +37,42 @@ Settings::Settings(QWidget *parent, QSettings *s) :
     ui->pathGraywolf->setText(settings->value("graywolf").toString());
     ui->pathQRouter->setText(settings->value("qrouter").toString());
     ui->pathIcarus->setText(settings->value("icarus").toString());
+	ui->pathTechnologies->setText(settings->value("tech_path").toString());
 }
 
-void Settings::selectYosys_triggered()
+void Settings::on_selectYosys_pressed()
 {
-	ui->pathYosys->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
+	QString s = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath());
+	if(s==QString()) return;
+	ui->pathYosys->setText(s);
 }
 
-void Settings::selectGraywolf_triggered()
+void Settings::on_selectGraywolf_pressed()
 {
-	ui->pathGraywolf->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
+	QString s = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath());
+	if(s==QString()) return;
+	ui->pathGraywolf->setText(s);
 }
 
-void Settings::selectQRouter_triggered()
+void Settings::on_selectQrouter_pressed()
 {
-	ui->pathQRouter->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
+	QString s = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath());
+	if(s==QString()) return;
+	ui->pathQRouter->setText(s);
 }
 
-void Settings::selectIcarus_triggered()
+void Settings::on_selectIcarus_pressed()
 {
-	ui->pathIcarus->setText(QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath()));
+	QString s = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath());
+	if(s==QString()) return;
+	ui->pathIcarus->setText(s);
+}
+
+void Settings::on_selectTechnologies_pressed()
+{
+	QString s = QFileDialog::getExistingDirectory(this, "Select a file...", QDir::homePath());
+	if(s==QString()) return;
+	ui->pathTechnologies->setText(s);
 }
 
 void Settings::applyEnvironment()
@@ -70,6 +81,7 @@ void Settings::applyEnvironment()
 	settings->setValue("graywolf",ui->pathGraywolf->displayText());
 	settings->setValue("qrouter",ui->pathQRouter->displayText());
 	settings->setValue("icarus",ui->pathIcarus->displayText());
+	settings->setValue("tech_path",ui->pathTechnologies->displayText());
 }
 
 void Settings::on_listWidget_currentRowChanged(int currentRow)

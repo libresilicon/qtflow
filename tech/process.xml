@@ -84,34 +84,44 @@
 		<process xml:id="osu018">
 			<description>The SCMOS 180nm process</description>
 			<lef>
-				<file>:/osu018/osu018_stdcells.lef</file>
+				<file>osu018/osu018_stdcells.lef</file>
 			</lef>
-			<tech>:/osu018/SCN6M_SUBM.10.tech</tech>
-			<liberty>:/osu018/osu018_stdcells.lib</liberty>
+			<tech>osu018/SCN6M_SUBM.10.tech</tech>
+			<liberty>osu018/osu018_stdcells.lib</liberty>
 		</process>
 
 		<process xml:id="osu035">
 			<description>The SCMOS 350nm process</description>
 			<lef>
-				<file>:/osu035/osu035_stdcells.lef</file>
+				<file>osu035/osu035_stdcells.lef</file>
 			</lef>
-			<tech>:/osu035/SCN4M_SUBM.20.tech</tech>
-			<techdisplay>:/osu035/SCN4M_SUBM.20.tech</techdisplay>
+			<tech>osu035/SCN4M_SUBM.20.tech</tech>
+			<techdisplay>osu035/SCN4M_SUBM.20.tech</techdisplay>
 			<symbols>
-				<file>:/osu035/osu035_stdcells.slib</file>
+				<file>osu035/osu035_stdcells.slib</file>
 			</symbols>
-			<liberty>:/osu035/osu035_stdcells.lib</liberty>
+			<liberty>osu035/osu035_stdcells.lib</liberty>
 		</process>
 
 		<process xml:id="osu050">
 			<description>The SCMOS 500nm process</description>
 			<lef>
-				<file>:/osu050/osu050_stdcells.lef</file>
+				<file>osu050/osu050_stdcells.lef</file>
 			</lef>
-			<tech>:/osu050/SCN3ME_SUBM.30.tech</tech>
-			<liberty>:/osu050/osu05_stdcells.lib</liberty>
+			<tech>osu050/SCN3ME_SUBM.30.tech</tech>
+			<liberty>osu050/osu05_stdcells.lib</liberty>
+		</process>
+
+		<process xml:id="sxlib">
+			<description>The SCMOS 500nm process</description>
+			<lef>
+				<file>sxlib/sxlib.lef</file>
+			</lef>
+			<tech>scmos.tech</tech>
+			<liberty>sxlib/sxlib.lib</liberty>
 		</process>
 
 	</technology>
+
 </technologies>
 

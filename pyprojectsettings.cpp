@@ -69,10 +69,10 @@ QString PyProjectSettings::getTopLevelFile()
 
 QString PyProjectSettings::getLibertyFile()
 {
-	QTemporaryDir temporaryDir;
-	QString filedest;
+	return QFileInfo(project->getLibertyFile()).absoluteFilePath();
+}
 
-	filedest = temporaryDir.path()+"/cells.lib";
-	QFile::copy(project->getLibertyFile(), filedest);
-	return filedest;
+bool PyProjectSettings::hasSettingABC()
+{
+	return project->hasSettingABC();
 }

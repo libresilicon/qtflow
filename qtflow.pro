@@ -27,7 +27,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-#INCLUDEPATH += /usr/include/python2.7
 INCLUDEPATH += /usr/include/python3.6m
 #INCLUDEPATH += PYTHON_WIN32 (add here windows path when building)
 
@@ -36,7 +35,6 @@ include(PythonQt_QtAll.prf)
 
 QMAKE_CXXFLAGS += -g
 QMAKE_CXXFLAGS += -std=c++0x
-#QMAKE_CXXFLAGS += -lpython2.7
 QMAKE_CXXFLAGS += -lpython3
 QMAKE_CXXFLAGS += -lPythonQt
 QMAKE_CXXFLAGS += -lPythonQt_QtAll
@@ -74,8 +72,8 @@ SOURCES += \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
 	layoutvisibles.cpp \
-    synthesisoptions.cpp \
-    projectsitem.cpp
+	synthesisoptions.cpp \
+	projectsitem.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -106,8 +104,8 @@ HEADERS  += \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
 	layoutvisibles.h \
-    synthesisoptions.h \
-    projectsitem.h
+	synthesisoptions.h \
+	projectsitem.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -127,9 +125,9 @@ FORMS    += \
 	projectsettings.ui \
 	console.ui \
 	layoutvisibles.ui \
-    partselection.ui \
-    librarysettings.ui \
-    synthesisoptions.ui
+	partselection.ui \
+	librarysettings.ui \
+	synthesisoptions.ui
 
 RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc

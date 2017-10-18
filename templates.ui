@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>588</width>
-    <height>668</height>
+    <width>918</width>
+    <height>789</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -211,7 +211,7 @@
          <item>
           <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>Library file:</string>
+            <string>LEF file:</string>
            </property>
           </widget>
          </item>
@@ -232,6 +232,47 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushLibraryPath">
+           <property name="text">
+            <string>Select</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QWidget" name="widget_11" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_8">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Schematics library file:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QWidget" name="widget_12" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLineEdit" name="libraryPath_2"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushLibraryPath_2">
            <property name="text">
             <string>Select</string>
            </property>

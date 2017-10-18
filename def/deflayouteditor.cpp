@@ -86,6 +86,7 @@ bool DEFLayoutEditor::changes()
 void DEFLayoutEditor::setProject(Project *p)
 {
 	project = p;
+	editScene->setGridSize(4000);
 	editScene->setProject(p);
 }
 

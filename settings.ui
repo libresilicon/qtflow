@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1170</width>
-    <height>740</height>
+    <width>863</width>
+    <height>319</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -81,6 +81,9 @@
       </property>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
         <widget class="QWidget" name="page1">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -94,90 +97,107 @@
             <property name="title">
              <string>Synthesis tools</string>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <item>
-              <layout class="QFormLayout" name="formLayout">
-               <item row="0" column="0">
-                <widget class="QLabel" name="pathOfYosysLabel">
+            <layout class="QFormLayout" name="formLayout">
+             <item row="0" column="0">
+              <widget class="QLabel" name="pathOfYosysLabel">
+               <property name="text">
+                <string>Path of Yosys</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLineEdit" name="pathYosys"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="selectYosys">
                  <property name="text">
-                  <string>Path of Yosys</string>
+                  <string>Select</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <item>
-                  <widget class="QLineEdit" name="pathYosys"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="yosysButton">
-                   <property name="text">
-                    <string>Select</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+              </layout>
+             </item>
+             <item row="1" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QLineEdit" name="pathGraywolf"/>
                </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="pathOfGraywolfLabel">
+               <item>
+                <widget class="QPushButton" name="selectGraywolf">
                  <property name="text">
-                  <string>Path of Graywolf</string>
+                  <string>Select</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
-                 <item>
-                  <widget class="QLineEdit" name="pathGraywolf"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="graywolfButton">
-                   <property name="text">
-                    <string>Select</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="pathOfGraywolfLabel">
+               <property name="text">
+                <string>Path of Graywolf</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="pathOfQRouterLabel">
+               <property name="text">
+                <string>Path of QRouter</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QLineEdit" name="pathQRouter"/>
                </item>
-               <item row="2" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_3">
-                 <item>
-                  <widget class="QLineEdit" name="pathQRouter"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="qrouterButton">
-                   <property name="text">
-                    <string>Select</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="pathOfIcarusLabel">
+               <item>
+                <widget class="QPushButton" name="selectQrouter">
                  <property name="text">
-                  <string>Path of Icarus iVerilog</string>
+                  <string>Select</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
-                <layout class="QHBoxLayout" name="horizontalLayout_4">
-                 <item>
-                  <widget class="QLineEdit" name="pathIcarus"/>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="icarusButton">
-                   <property name="text">
-                    <string>Select</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+              </layout>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="pathOfIcarusLabel">
+               <property name="text">
+                <string>Path of Icarus iVerilog</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QLineEdit" name="pathIcarus"/>
                </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="pathOfQRouterLabel">
+               <item>
+                <widget class="QPushButton" name="selectIcarus">
                  <property name="text">
-                  <string>Path of QRouter</string>
+                  <string>Select</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="pathOfIcarusLabel_2">
+               <property name="text">
+                <string>Technologies directory:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QLineEdit" name="pathTechnologies"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="selectTechnologies">
+                 <property name="text">
+                  <string>Select</string>
                  </property>
                 </widget>
                </item>

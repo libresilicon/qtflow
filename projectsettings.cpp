@@ -140,8 +140,7 @@ void ProjectSettings::storeData()
 		project->setSimulationScript(ui->pathSimulationScript->text());
 		project->setSynthesisScript(ui->pathSynthesisScript->text());
 
-		for(int row = 0; row < ui->searchPaths->count(); row++)
-		{
+		for(int row = 0; row < ui->searchPaths->count(); row++) {
 			item = ui->searchPaths->item(row);
 			paths << item->text();
 		}

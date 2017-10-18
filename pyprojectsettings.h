@@ -42,6 +42,9 @@ public Q_SLOTS:
 	QString getVCDFile();
 	QString getVCDPath();
 
+	// synthesis options:
+	bool hasSettingABC();
+
 private:
 	Project *project;
 };
