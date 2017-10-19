@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 <file>./gencmap.py</file>
+<file>./generate_schematic_symbols.py</file>
 <file>./mos.cmap</file>
 <file>./mos.dstyle</file>
 <file>./osu018/osu018.magicrc</file>
@@ -12,7 +13,6 @@
 <file>./osu018/osu018_stdcells.sp</file>
 <file>./osu018/osu018_stdcells.v</file>
 <file>./osu018/SCN6M_SUBM.10.tech</file>
-<file>./osu035/generate_schematic_symbols.py</file>
 <file>./osu035/osu035.magicrc</file>
 <file>./osu035/osu035.par</file>
 <file>./osu035/osu035.prm</file>
@@ -34,7 +34,9 @@
 <file>./osu050/SCN3ME_SUBM.30.tech</file>
 <file>./process.xml</file>
 <file>./scmos.tech</file>
+<file>./sxlib/sxlib.alliance.lib</file>
 <file>./sxlib/sxlib.lef</file>
 <file>./sxlib/sxlib.lib</file>
+<file>./sxlib/sxlib.slib</file>
 </qresource>
 </RCC>
