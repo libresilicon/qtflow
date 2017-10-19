@@ -113,11 +113,15 @@
 		</process>
 
 		<process xml:id="sxlib">
-			<description>The SCMOS 500nm process</description>
+			<description>The SX 120nm process</description>
 			<lef>
 				<file>sxlib/sxlib.lef</file>
 			</lef>
 			<tech>scmos.tech</tech>
+			<techdisplay>scmos.tech</techdisplay>
+			<symbols>
+				<file>sxlib/sxlib.slib</file>
+			</symbols>
 			<liberty>sxlib/sxlib.lib</liberty>
 		</process>
 
