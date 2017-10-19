@@ -67,6 +67,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
 
 	loadLibraryFiles();
 	loadSchematicsLibraryFiles();
+	loadScriptFiles();
 }
 
 Project::~Project()
@@ -482,18 +483,11 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
-
-	if(QFile(getSynthesisScript()).exists()) {
-		mainContext->evalFile(getSynthesisScript());
-	}
 }
 
 void Project::simulation()
 {
-	if(QFile(getSimulationScript()).exists()) {
-		mainContext->evalFile(getSimulationScript());
-		emit(simulationDone());
-	}
+	emit(simulationDone());
 }
 
 void Project::placement()
@@ -506,6 +500,10 @@ void Project::routing()
 
 void Project::buildAll()
 {
+	QString blif = QDir(getSynthesisDir()).filePath(getTopLevel()+".blif");
+	QString cel = QDir(getLayoutDir()).filePath(getTopLevel()+".blif");
+	mainContext->evalScript("synth()");
+	mainContext->evalScript("blif2cel(\""+blif+"\",\""+cel+"\")");
 }
 
 bool Project::hasMaterialTypeMapping(QString material)
@@ -751,6 +749,25 @@ QStringList Project::getListOfSchematicParts()
 	return ret;
 }
 
+void Project::loadScriptFiles()
+{
+	if(QFile(getSynthesisScript()).exists()) {
+		mainContext->evalFile(getSynthesisScript());
+	} else {
+		mainContext->evalScript("def synth():\n\tprint \"not defined\"");
+	}
+	if(QFile(getSimulationScript()).exists()) {
+		mainContext->evalFile(getSimulationScript());
+	} else {
+		mainContext->evalScript("def sim():\n\tprint \"not defined\"");
+	}
+	if(QFile(getSynthesisOutputConversionScript()).exists()) {
+		mainContext->evalFile(getSynthesisOutputConversionScript());
+	} else {
+		mainContext->evalScript("def blif2cel(a,b):\n\tprint \"not defined\"");
+	}
+}
+
 void Project::loadSchematicsLibraryFiles()
 {
 	QTemporaryDir temporaryDir;
@@ -770,12 +787,17 @@ void Project::loadSchematicsLibraryFiles()
 // python script paths:
 QString Project::getSimulationScript()
 {
-	return project_settings->value("simulation_script",":/simulation.py").toString();
+	return project_settings->value("simulation_script").toString();
 }
 
 QString Project::getSynthesisScript()
 {
-	return project_settings->value("synthesis_script",":/synthesis.py").toString();
+	return project_settings->value("synthesis_script").toString();
+}
+
+QString  Project::getSynthesisOutputConversionScript()
+{
+	return project_settings->value("blif2cel_script").toString();
 }
 
 QString Project::getPlacementScript()

@@ -21,6 +21,8 @@
 #include "fileselector.h"
 #include "moduleselector.h"
 
+#include "buildflow.h"
+
 #include "editortabmanager.h"
 
 #include "projectsettings.h"
@@ -34,8 +36,6 @@
 #include "iopads.h"
 #include "wave.h"
 #include "pysettings.h"
-
-#include "synthesisoptions.h"
 
 #include "pythonconsoledockwidget.h"
 
@@ -123,7 +123,7 @@ private:
 
 	Settings *settingsDialog;
 	ProjectSettings *projectSettingsDialog;
-	SynthesisOptions *synthesisOptionsDialog;
+	BuildFlow *buildFlowConfig;
 
 	QCommandLineParser *parser;
 

@@ -137,8 +137,6 @@ void ProjectSettings::storeData()
 	if(project) {
 		project->setTechnology(ui->comboBoxTechnology->currentText());
 		project->setProcess(ui->comboBoxProcess->currentText());
-		project->setSimulationScript(ui->pathSimulationScript->text());
-		project->setSynthesisScript(ui->pathSynthesisScript->text());
 
 		for(int row = 0; row < ui->searchPaths->count(); row++) {
 			item = ui->searchPaths->item(row);
@@ -154,10 +152,6 @@ void ProjectSettings::setProject(Project *p)
 	if(project) {
 		ui->comboBoxTechnology->setCurrentIndex(ui->comboBoxTechnology->findData(project->getTechnology()));
 		technologyActivated();
-
-		ui->pathSynthesisScript->setText(project->getSynthesisScript());
-		ui->pathSimulationScript->setText(project->getSimulationScript());
-
 		setSearchPathList();
 	}
 }

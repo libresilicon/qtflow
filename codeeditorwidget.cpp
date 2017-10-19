@@ -18,7 +18,7 @@ CodeEditorWidget::CodeEditorWidget(QWidget *parent) :
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(runSimulation()));
 	toolbar->addAction(button);
 
-	button = new QAction(QPixmap(":/component_select_unit.svg"), "Run synthesis", toolbar);
+	button = new QAction(QPixmap(":/component_select_unit.svg"), "Build flow", toolbar);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(runSynthesis()));
 	toolbar->addAction(button);
 
@@ -66,7 +66,7 @@ void CodeEditorWidget::onContentChanged()
 
 void CodeEditorWidget::runSynthesis()
 {
-	project->synthesis();
+	project->buildAll();
 }
 
 void CodeEditorWidget::runSimulation()

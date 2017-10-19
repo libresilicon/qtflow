@@ -21,7 +21,7 @@
 %option yylineno
 
 TILDE				"~"
-STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=]
+STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=!]
 HASH				"#"
 QUOTE				"\""
 
@@ -51,6 +51,8 @@ STYLE				"style"
 SCALEFACTOR			"scalefactor"
 LAYER				"layer"
 BLOAT_OR			"bloat-or"
+BLOAT_MIN			"bloat-min"
+RENDER				"render"
 GROW				"grow"
 SHRINK				"shrink"
 LABELS				"labels"
@@ -66,6 +68,7 @@ MZROUTER			"mzrouter"
 NOTACTIVE			"notactive"
 DRC					"drc"
 WIDTH				"width"
+EDGE				"edge"
 EDGE4WAY			"edge4way"
 SPACING				"spacing"
 GRIDSPACING			"gridspacing"
@@ -81,6 +84,8 @@ LAMBDA				"lambda"
 STEP				"step"
 SIDEHALO			"sidehalo"
 PLANEORDER			"planeorder"
+NOPLANEORDERING		"noplaneordering"
+HEIGHT				"height"
 RESIST				"resist"
 AREACAP				"areacap"
 PERIMC				"perimc"
@@ -166,6 +171,8 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 {SCALEFACTOR}+			{ return tech::TechParser::token::SCALEFACTOR; }
 {LAYER}+				{ return tech::TechParser::token::LAYER; }
 {BLOAT_OR}+				{ return tech::TechParser::token::BLOAT_OR; }
+{BLOAT_MIN}+			{ return tech::TechParser::token::BLOAT_MIN; }
+{RENDER}+				{ return tech::TechParser::token::RENDER; }
 {GROW}+					{ return tech::TechParser::token::GROW; }
 {SHRINK}+				{ return tech::TechParser::token::SHRINK; }
 {LABELS}+				{ return tech::TechParser::token::LABELS; }
@@ -182,6 +189,7 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 {DRC}+					{ return tech::TechParser::token::DRC; }
 {WIDTH}+				{ return tech::TechParser::token::WIDTH; }
 {EDGE4WAY}+				{ return tech::TechParser::token::EDGE4WAY; }
+{EDGE}+					{ return tech::TechParser::token::EDGE; }
 {SPACING}+				{ return tech::TechParser::token::SPACING; }
 {GRIDSPACING}+			{ return tech::TechParser::token::GRIDSPACING; }
 {AREA}+					{ return tech::TechParser::token::AREA; }
@@ -195,7 +203,9 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 {LAMBDA}+				{ return tech::TechParser::token::LAMBDA; }
 {STEP}+					{ return tech::TechParser::token::STEP; }
 {SIDEHALO}+				{ return tech::TechParser::token::SIDEHALO; }
+{NOPLANEORDERING}+		{ return tech::TechParser::token::NOPLANEORDERING; }
 {PLANEORDER}+			{ return tech::TechParser::token::PLANEORDER; }
+{HEIGHT}+				{ return tech::TechParser::token::HEIGHT; }
 {RESIST}+				{ return tech::TechParser::token::RESIST; }
 {AREACAP}+				{ return tech::TechParser::token::AREACAP; }
 {PERIMC}+				{ return tech::TechParser::token::PERIMC; }
@@ -245,13 +255,14 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 			if(*end) {
 				if(*end=='\\') {
 					BEGIN(multiline);
+					return tech::TechParser::token::Multiline;
 				} else {
 					BEGIN(INITIAL);
+					return tech::TechParser::token::Multiline;
 				}
-				break;
+				return tech::TechParser::token::Multiline;
 			}
 		}
-	return tech::TechParser::token::Multiline;
 }
 
 -[0-9]+|[0-9]+			{
@@ -259,7 +270,7 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 	return tech::TechParser::token::INTEGER;
 }
 
-[0-9]+"."[0-9]*			{
+-[0-9]+"."[0-9]*|[0-9]+"."[0-9]*			{
 	techlval->v_double = atof(yytext);
 	return tech::TechParser::token::DOUBLE;
 }

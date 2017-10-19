@@ -55,7 +55,6 @@ void SchematicsPartSelection::updatePartList()
 			partsymbol = project->getSchematicsPart(partname);
 			partWidget = new QSchematicsPart(partsymbol, 0, 0);
 			m_libraryPartWidgets[partname] = partWidget;
-			ui->partPreview->fitInView(partWidget);
 			partPreview->addItem(partWidget);
 		}
 	}

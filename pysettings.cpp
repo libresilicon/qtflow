@@ -20,6 +20,13 @@ QString PySettings::getYosys()
 	return r;
 }
 
+QString PySettings::getYosysABC()
+{
+	QString r;
+	if(settings) r = settings->value("yosys-abc").toString();
+	return r;
+}
+
 QString PySettings::getGrayWolf()
 {
 	QString r;

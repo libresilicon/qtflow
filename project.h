@@ -106,6 +106,7 @@ public:
 	// python script paths:
 	QString getSimulationScript();
 	QString getSynthesisScript();
+	QString getSynthesisOutputConversionScript();
 	QString getPlacementScript();
 	QString getRoutingScript();
 
@@ -142,6 +143,7 @@ private:
 	// Schematics operations:
 	QStringList getSchematicsLibraryFiles();
 	void loadSchematicsLibraryFiles();
+	void loadScriptFiles();
 
 	QSettings *settings;
 	QSettings *project_settings;

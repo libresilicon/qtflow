@@ -31,6 +31,7 @@ signals:
 
 private slots:
 	void on_selectYosys_pressed();
+	void on_selectYosysABC_pressed();
 	void on_selectGraywolf_pressed();
 	void on_selectQrouter_pressed();
 	void on_selectIcarus_pressed();

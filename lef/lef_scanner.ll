@@ -25,7 +25,7 @@ INTEGER			-{NUMBER}+|{NUMBER}+
 EXPONENT		[eE][+-]?{INTEGER}
 DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 
-STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/]
+STRING			[A-Za-z]|[A-Za-z0-9_,.-<>\"\[\]\/\(\)]
 
 SEMICOLON			";"
 COMMENT				"#"
@@ -69,6 +69,7 @@ FOREIGN				"FOREIGN"
 ORIGIN				"ORIGIN"
 SHAPE				"SHAPE"
 PORT				"PORT"
+PATH				"PATH"
 LIBRARY				"LIBRARY"
 
 %%
@@ -94,6 +95,7 @@ LIBRARY				"LIBRARY"
 {DIRECTION}+				{ return lef::LEFParser::token::DIRECTION; }
 {PITCH}+					{ return lef::LEFParser::token::PITCH; }
 {OFFSET}+					{ return lef::LEFParser::token::OFFSET; }
+{PATH}+						{ return lef::LEFParser::token::PATH; }
 {WIDTH}+					{ return lef::LEFParser::token::WIDTH; }
 {RESISTANCE}+				{ return lef::LEFParser::token::RESISTANCE; }
 {CAPACITANCE}+				{ return lef::LEFParser::token::CAPACITANCE; }
@@ -111,9 +113,9 @@ LIBRARY				"LIBRARY"
 {MACRO}+					{ return lef::LEFParser::token::MACRO; }
 {FOREIGN}+					{ return lef::LEFParser::token::FOREIGN; }
 {ORIGIN}+					{ return lef::LEFParser::token::ORIGIN; }
-{USE}+					{ return lef::LEFParser::token::USE; }
+{USE}+						{ return lef::LEFParser::token::USE; }
 {SHAPE}+					{ return lef::LEFParser::token::SHAPE; }
-{PORT}+					{ return lef::LEFParser::token::PORT; }
+{PORT}+						{ return lef::LEFParser::token::PORT; }
 {LIBRARY}+					{ return lef::LEFParser::token::LIBRARY; }
 
 {INTEGER}* {

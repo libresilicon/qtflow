@@ -20,9 +20,6 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	projectSettingsDialog = new ProjectSettings(this);
 	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
 
-	synthesisOptionsDialog = new SynthesisOptions(this);
-	connect(ui->synthesisSettings, SIGNAL(triggered(bool)), synthesisOptionsDialog, SLOT(open()));
-
 	iopadsWidget = new IOPads(this);
 	iopadsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::RightDockWidgetArea, iopadsWidget);
@@ -46,6 +43,9 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	timingWidget = new Wave(this);
 	timingWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::BottomDockWidgetArea, timingWidget);
+
+	buildFlowConfig = new BuildFlow(this);
+	connect(ui->buildFlowSettings, SIGNAL(triggered(bool)), buildFlowConfig, SLOT(open()));
 
 	pythonConsoleWidget = new PythonConsoleDockWidget(this, mainContext);
 	pythonConsoleWidget->setAllowedAreas(Qt::TopDockWidgetArea | Qt::BottomDockWidgetArea );
@@ -112,6 +112,7 @@ void MainWindow::disableAllFunctions()
 	ui->setAnalogSimulationMode->setEnabled(false);
 	ui->setSynthesisMode->setEnabled(false);
 	ui->projectSettings->setEnabled(false);
+	ui->buildFlowSettings->setEnabled(false);
 	ui->synthesisSettings->setEnabled(false);
 	ui->librarySettings->setEnabled(false);
 	ui->actionDRC->setEnabled(false);
@@ -125,6 +126,7 @@ void MainWindow::enableAllFunctions()
 	ui->setAnalogSimulationMode->setEnabled(true);
 	ui->setSynthesisMode->setEnabled(true);
 	ui->projectSettings->setEnabled(true);
+	ui->buildFlowSettings->setEnabled(true);
 	ui->synthesisSettings->setEnabled(true);
 	ui->librarySettings->setEnabled(true);
 	ui->actionDRC->setEnabled(true);
@@ -162,7 +164,7 @@ void MainWindow::openProject(QString path)
 		projectsWidget->setProject(project);
 		projectSettingsDialog->setProject(project);
 		editArea->setProject(project);
-		synthesisOptionsDialog->setProject(project);
+		buildFlowConfig->setProject(project);
 		mainContext->addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}

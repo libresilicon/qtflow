@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>863</width>
-    <height>319</height>
+    <width>1007</width>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -120,6 +120,27 @@
               </layout>
              </item>
              <item row="1" column="1">
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
+               <item>
+                <widget class="QLineEdit" name="pathYosysABC"/>
+               </item>
+               <item>
+                <widget class="QPushButton" name="selectYosysABC">
+                 <property name="text">
+                  <string>Select</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="pathOfYosysLabel_2">
+               <property name="text">
+                <string>Path of Yosys ABC</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_2">
                <item>
                 <widget class="QLineEdit" name="pathGraywolf"/>
@@ -133,21 +154,14 @@
                </item>
               </layout>
              </item>
-             <item row="1" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="pathOfGraywolfLabel">
                <property name="text">
                 <string>Path of Graywolf</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="pathOfQRouterLabel">
-               <property name="text">
-                <string>Path of QRouter</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
+             <item row="3" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
                 <widget class="QLineEdit" name="pathQRouter"/>
@@ -162,13 +176,13 @@
               </layout>
              </item>
              <item row="3" column="0">
-              <widget class="QLabel" name="pathOfIcarusLabel">
+              <widget class="QLabel" name="pathOfQRouterLabel">
                <property name="text">
-                <string>Path of Icarus iVerilog</string>
+                <string>Path of QRouter</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="4" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
                 <widget class="QLineEdit" name="pathIcarus"/>
@@ -183,13 +197,20 @@
               </layout>
              </item>
              <item row="4" column="0">
+              <widget class="QLabel" name="pathOfIcarusLabel">
+               <property name="text">
+                <string>Path of Icarus iVerilog</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
               <widget class="QLabel" name="pathOfIcarusLabel_2">
                <property name="text">
                 <string>Technologies directory:</string>
                </property>
               </widget>
              </item>
-             <item row="4" column="1">
+             <item row="5" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
                 <widget class="QLineEdit" name="pathTechnologies"/>

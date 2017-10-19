@@ -52,7 +52,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>29</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -93,10 +93,10 @@
    </widget>
    <widget class="QMenu" name="menuProject">
     <property name="title">
-     <string>&amp;Project</string>
+     <string>Pro&amp;ject</string>
     </property>
     <addaction name="projectSettings"/>
-    <addaction name="synthesisSettings"/>
+    <addaction name="buildFlowSettings"/>
     <addaction name="librarySettings"/>
    </widget>
    <widget class="QMenu" name="menuDesign_Rules">
@@ -401,6 +401,11 @@
   <action name="librarySettings">
    <property name="text">
     <string>&amp;Library settings</string>
+   </property>
+  </action>
+  <action name="buildFlowSettings">
+   <property name="text">
+    <string>Flow config</string>
    </property>
   </action>
  </widget>

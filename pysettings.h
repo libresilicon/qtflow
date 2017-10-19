@@ -22,6 +22,7 @@ public Q_SLOTS:
 
 	QString getIcarus();
 	QString getYosys();
+	QString getYosysABC();
 	QString getGrayWolf();
 	QString getQRouter();
 

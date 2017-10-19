@@ -34,6 +34,7 @@ Settings::Settings(QWidget *parent, QSettings *s) :
 
     // page1
     ui->pathYosys->setText(settings->value("yosys").toString());
+	ui->pathYosysABC->setText(settings->value("yosys-abc").toString());
     ui->pathGraywolf->setText(settings->value("graywolf").toString());
     ui->pathQRouter->setText(settings->value("qrouter").toString());
     ui->pathIcarus->setText(settings->value("icarus").toString());
@@ -45,6 +46,13 @@ void Settings::on_selectYosys_pressed()
 	QString s = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath());
 	if(s==QString()) return;
 	ui->pathYosys->setText(s);
+}
+
+void Settings::on_selectYosysABC_pressed()
+{
+	QString s = QFileDialog::getOpenFileName(this, "Select a file...", QDir::homePath());
+	if(s==QString()) return;
+	ui->pathYosysABC->setText(s);
 }
 
 void Settings::on_selectGraywolf_pressed()
@@ -78,6 +86,7 @@ void Settings::on_selectTechnologies_pressed()
 void Settings::applyEnvironment()
 {
 	settings->setValue("yosys",ui->pathYosys->displayText());
+	settings->setValue("yosys-abc",ui->pathYosysABC->displayText());
 	settings->setValue("graywolf",ui->pathGraywolf->displayText());
 	settings->setValue("qrouter",ui->pathQRouter->displayText());
 	settings->setValue("icarus",ui->pathIcarus->displayText());

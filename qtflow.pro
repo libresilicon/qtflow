@@ -72,9 +72,9 @@ SOURCES += \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
 	layoutvisibles.cpp \
-	synthesisoptions.cpp \
 	projectsitem.cpp \
-    generictexteditorwidget.cpp
+    generictexteditorwidget.cpp \
+    buildflow.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -105,9 +105,9 @@ HEADERS  += \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
 	layoutvisibles.h \
-	synthesisoptions.h \
 	projectsitem.h \
-    generictexteditorwidget.h
+    generictexteditorwidget.h \
+    buildflow.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -129,11 +129,9 @@ FORMS    += \
 	layoutvisibles.ui \
 	partselection.ui \
 	librarysettings.ui \
-	synthesisoptions.ui
+    buildflow.ui
 
-RESOURCES += scripts/scripts.qrc
 RESOURCES += icons/icons.qrc
-RESOURCES += tech/tech.qrc
 
 include(PythonQt/src/src.pri)
 include(PythonQt/generated_cpp_56/com_trolltech_qt_core_builtin/com_trolltech_qt_core_builtin.pri)
@@ -170,3 +168,48 @@ include(cmap_reader/cmap_reader.pri)
 include(qlayout/qlayout.pri)
 include(qschematics/qschematics.pri)
 include(symbol_reader/symbol_reader.pri)
+
+DISTFILES += \
+	scripts/blif2cel.py \
+	scripts/synthesis.py \
+	scripts/simulation.py \
+	tech/osu018/osu018.prm \
+	tech/osu018/osu018_stdcells.lef \
+	tech/osu018/osu018_stdcells.lib \
+	tech/osu018/osu018_stdcells.v \
+	tech/osu018/osu018.par \
+	tech/osu018/osu018_stdcells.sp \
+	tech/osu018/SCN6M_SUBM.10.tech \
+	tech/osu018/osu018.sh \
+	tech/osu018/osu018.magicrc \
+	tech/process.xml \
+	tech/osu050/SCN3ME_SUBM.30.tech \
+	tech/osu050/osu050.prm \
+	tech/osu050/osu05_stdcells.lib \
+	tech/osu050/osu05_stdcells.v \
+	tech/osu050/osu050_stdcells.lef \
+	tech/osu050/osu050.par \
+	tech/osu050/osu050_stdcells.sp \
+	tech/osu050/osu050.magicrc \
+	tech/osu050/osu050.sh \
+	tech/scmos.tech \
+	tech/sxlib/sxlib.lib \
+	tech/sxlib/sxlib.alliance.lib \
+	tech/sxlib/sxlib.slib \
+	tech/sxlib/sxlib.lef \
+	tech/generate_schematic_symbols.py \
+	tech/mos.dstyle \
+	tech/osu035/osu035_stdcells.slib \
+	tech/osu035/osu035_stdcells.v \
+	tech/osu035/osu035_stdcells.lef \
+	tech/osu035/osu035_stdcells.lib \
+	tech/osu035/osu035.magicrc \
+	tech/osu035/osu035.sh \
+	tech/osu035/osu035.prm \
+	tech/osu035/osu035.par \
+	tech/osu035/SCN4M_SUBM.20.tech \
+	tech/osu035/osu035_stdcells.sp \
+	tech/tech.qrc \
+	tech/gencmap.py \
+	tech/mos.cmap
+

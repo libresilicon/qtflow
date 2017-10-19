@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import io
 import time
 import sys
@@ -167,5 +170,3 @@ def sim():
 	else:
 		print("Error: No simulator generated!\n")
 		return
-
-sim()

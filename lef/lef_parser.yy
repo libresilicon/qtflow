@@ -23,6 +23,7 @@
 
 #define leflex (lefdata->getLexer())->leflex
 #define leflineno (int)(lefdata->getLexer())->lineno()
+#define leftext (lefdata->getLexer())->YYText()
 
 %}
 
@@ -75,15 +76,26 @@
 %token USE
 %token SHAPE
 %token PORT
+%token PATH
 %token LIBRARY
 
 %start lef_file
 
 %%
-lef_file: options layers vias viarules sites macros end_library;
+lef_file:
+	  lef_file_alternative1
+	| lef_file_alternative2
+;
+
+lef_file_alternative1: options layers vias viarules sites macros end_library;
+lef_file_alternative2: options macros end_library;
+
 end_library: END LIBRARY;
 
-options: option | option options;
+options:
+	  option
+	| option options;
+
 option:
 	  version
 	| cases
@@ -100,16 +112,21 @@ cases: NAMESCASESENSITIVE STRING;
 bitchars: BUSBITCHARS STRING;
 dividechar: DIVIDERCHAR STRING;
 units: UNITS database_list END UNITS;
-database_list: DATABASE MICRONS INTEGER
-	{
+database_list:
+DATABASE MICRONS INTEGER
+{
 	lefdata->setBaseUnitMicrons($3);
-	}
-	;
+}
+;
 useminamespacing: USEMINSPACING OBS STRING | USEMINSPACING PIN STRING;
 clearensmeasure: CLEARANCEMEASURE STRING;
 manufacturinggrid: MANUFACTURINGGRID DOUBLE;
 
-layers: layer | layers layer;
+layers:
+	  layer
+	| layers layer
+;
+
 layer: layer_name layer_options END STRING;
 layer_name: LAYER STRING;
 
@@ -128,9 +145,13 @@ layer_option:
 	| RESISTANCE STRING INTEGER
 	| CAPACITANCE STRING DOUBLE
 	| CAPACITANCE STRING INTEGER
-	;
+;
 
-vias: via | vias via;
+vias:
+	  via
+	| vias via
+;
+
 via: via_name via_layers END STRING;
 via_name: VIA STRING STRING;
 via_layers: via_layer | via_layers via_layer;
@@ -138,7 +159,11 @@ via_layer: LAYER STRING via_rects;
 via_rects: via_rect | via_rects via_rect;
 via_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
 
-viarules: viarule | viarules viarule;
+viarules:
+	  viarule
+	| viarules viarule
+;
+
 viarule: viarule_name viarule_layers END STRING;
 viarule_name: VIARULE STRING STRING;
 viarule_layers: viarule_layer | viarule_layers viarule_layer;
@@ -162,7 +187,11 @@ viarule_layer_option_metaloverhang: METALOVERHANG INTEGER | METALOVERHANG DOUBLE
 viarule_layer_option_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
 viarule_layer_option_spacing: SPACING INTEGER BY INTEGER | SPACING INTEGER BY DOUBLE | SPACING DOUBLE BY INTEGER | SPACING DOUBLE BY DOUBLE;
 
-sites: site | sites site;
+sites:
+	  site
+	| sites site
+;
+
 site: site_name site_options END STRING;
 site_name: SITE STRING;
 site_options: site_option | site_options site_option;
@@ -239,7 +268,7 @@ macro_pin_name: PIN STRING
 	}
 	;
 macro_pin_use: USE STRING;
-macro_pin_direction: DIRECTION STRING;
+macro_pin_direction: DIRECTION STRING | DIRECTION STRING STRING;
 macro_pin_shape: SHAPE STRING;
 macro_pin_port: PORT macro_pin_port_infos END;
 macro_pin_port_infos:
@@ -251,7 +280,10 @@ macro_pin_port_info:
 	  macro_pin_port_layer
 	| macro_pin_port_rect
 	| macro_pin_port_class
-	;
+	| WIDTH DOUBLE
+	| WIDTH INTEGER
+	| PATH DOUBLE DOUBLE DOUBLE DOUBLE
+;
 
 macro_pin_port_layer: LAYER STRING
 	{
@@ -284,5 +316,5 @@ macro_obs_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE
 %%
 
 void lef::LEFParser::error(const std::string &s) {
-	std::cout << "Error message: " << s << " on line " << leflineno << std::endl;
+	std::cout << "Error message: " << s << " on line " << leflineno << ", yytext: " << leftext <<std::endl;
 }
