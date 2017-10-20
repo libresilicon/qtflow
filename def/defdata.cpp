@@ -98,4 +98,9 @@ namespace def {
 		m_BBLowerY = y1;
 		m_BBUpperY = y2;
 	}
+
+	int DEFData::getDistanceUnit()
+	{
+		return distanceMicronsValue;
+	}
 }

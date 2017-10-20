@@ -41,6 +41,9 @@ namespace def {
 		void addUsedModulePlacement(double x, double y);
 		void addUsedModule();
 
+
+		int getDistanceUnit();
+
 		// get bbox values
 		int getLowerX();
 		int getLowerY();

@@ -25,17 +25,17 @@ void DEFLayoutEditor::loadFile(QString file)
 	if(defdata) delete defdata;
 	defdata = new def::DEFData(file);
 
-	x = defdata->getLowerX();
-	y = defdata->getLowerY();
-	w = defdata->getUpperX()-x;
-	h = defdata->getUpperY()-y;
+	x = defdata->getLowerX()*defdata->getDistanceUnit();
+	y = defdata->getLowerY()*defdata->getDistanceUnit();
+	w = defdata->getUpperX()*defdata->getDistanceUnit()-x;
+	h = defdata->getUpperY()*defdata->getDistanceUnit()-y;
 
-	if(w<this->width()) w = this->width();
-	if(h<this->height()) h = this->height();
+	//if(w<this->width()) w = this->width();
+	//if(h<this->height()) h = this->height();
 
-	editScene->setGridSize(10);
+	editScene->setGridSize(defdata->getDistanceUnit());
 	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
-	editScene->addRect(defdata->getLowerX(),defdata->getLowerY(),defdata->getUpperX()-defdata->getLowerX(),defdata->getUpperY()-defdata->getLowerY());
+	editScene->addRect(x,y,w,h);
 
 	//editScene->setScaleFactor(100);
 	addMacroInstances();
@@ -64,8 +64,8 @@ void DEFLayoutEditor::addMacroInstances()
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
-		x = e.x / 100;
-		y = e.y / 100;
+		x = e.x;
+		y = e.y;
 		editScene->addMacro(e.macro_name, e.instance_name, x, y);
 	}
 }
