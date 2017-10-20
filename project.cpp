@@ -254,8 +254,6 @@ QStringList Project::getSchematicsLibraryFiles()
 
 QString Project::getTechnologyDisplayFile()
 {
-	QString ret = QDir(getTechPath()).filePath("scmos.tech");
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -276,7 +274,7 @@ QString Project::getTechnologyDisplayFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="techdisplay") {
-								ret = QDir(getTechPath()).filePath(e3.text());
+								return QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -285,7 +283,7 @@ QString Project::getTechnologyDisplayFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath("scmos.tech");
 }
 
 QString Project::getTechPath()
@@ -301,8 +299,6 @@ QString Project::getTechPath()
 
 QString Project::getProcessPath()
 {
-	QString ret = QDir(getTechPath()).filePath("osu035"); // default technology
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -323,7 +319,7 @@ QString Project::getProcessPath()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="folder") {
-								ret = QDir(getTechPath()).filePath(e3.text());
+								return QDir(getTechPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -332,13 +328,11 @@ QString Project::getProcessPath()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath("osu035"); // default technology
 }
 
 QString Project::getParametersFile()
 {
-	QString ret = QDir(getTechPath()).filePath("scmos.par"); // default technology
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -359,7 +353,7 @@ QString Project::getParametersFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="parameter") {
-								ret=QDir(getProcessPath()).filePath(e3.text());
+								return QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -368,13 +362,11 @@ QString Project::getParametersFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath("scmos.par"); // default technology;
 }
 
 QString Project::getTechnologyFile()
 {
-	QString ret = QDir(getTechPath()).filePath("scmos.tech"); // default technology
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -395,7 +387,7 @@ QString Project::getTechnologyFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="tech") {
-								ret=QDir(getProcessPath()).filePath(e3.text());
+								return QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -404,13 +396,11 @@ QString Project::getTechnologyFile()
 		}
 	}
 
-	return ret;
+	return QDir(getTechPath()).filePath("scmos.tech"); // default technology;
 }
 
 QString Project::getDesignStyleFile()
 {
-	QString ret = "mos.dstyle";
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -431,7 +421,7 @@ QString Project::getDesignStyleFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="design") {
-								ret=e3.text();
+								return QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -440,13 +430,11 @@ QString Project::getDesignStyleFile()
 		}
 	}
 
-	return QDir(getTechPath()).filePath(ret);
+	return QDir(getTechPath()).filePath("mos.dstyle");
 }
 
 QString Project::getColorMapFile()
 {
-	QString ret = "mos.cmap";
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -467,7 +455,7 @@ QString Project::getColorMapFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="colors") {
-								ret=e3.text();
+								return QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -476,7 +464,7 @@ QString Project::getColorMapFile()
 		}
 	}
 
-	return QDir(getTechPath()).filePath(ret);
+	return QDir(getTechPath()).filePath("mos.cmap");
 }
 
 QString Project::getProjectType()
@@ -629,7 +617,8 @@ QColor Project::colorMat(QString material)
 			}
 		}
 	}
-	return QColor(Qt::white);
+	qDebug() << "Can't find material: " << material;
+	return QColor(Qt::green);
 }
 
 QIcon Project::materialIcon(QString material)
@@ -958,8 +947,6 @@ void Project::setRoutingScript(QString)
 
 QString Project::getLibertyFile()
 {
-	QString ret = QDir(QDir(getTechnology()).filePath("osu035")).filePath("osu035_stdcells.lib");
-
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -980,7 +967,7 @@ QString Project::getLibertyFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="liberty") {
-								ret =  QDir(getProcessPath()).filePath(e3.text());
+								return QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -989,5 +976,5 @@ QString Project::getLibertyFile()
 		}
 	}
 
-	return ret;
+	return QDir(QDir(getTechnology()).filePath("osu035")).filePath("osu035_stdcells.lib");
 }

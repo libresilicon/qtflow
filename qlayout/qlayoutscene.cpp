@@ -380,16 +380,16 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 
 	double w, h;
 
-	x*=m_scaleFactor;
-	y*=m_scaleFactor;
+	//x*=m_scaleFactor;
+	//y*=m_scaleFactor;
 
 	// fill in library content:
 	if(project) if(project->isDefinedMacro(macro_name)) {
 		macro = project->getMacro(macro_name);
 		w = macro->getWidth();
 		h = macro->getHeight();
-		w*=m_scaleFactor;
-		h*=m_scaleFactor;
+		//w*=m_scaleFactor;
+		//h*=m_scaleFactor;
 
 		macro->scaleMacro(w,h);
 
@@ -422,6 +422,8 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 
 		addItem(mi);
 		macros.append(mi);
+	} else {
+		qDebug() << macro_name << "Macro not defined";
 	}
 
 	update();
