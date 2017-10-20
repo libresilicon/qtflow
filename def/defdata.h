@@ -46,7 +46,8 @@ namespace def {
 		int getLowerY();
 		int getUpperX();
 		int getUpperY();
-		void setBoundaryRectangle(int x, int y);
+
+		void setDieArea(int x1, int x2, int y1, int y2);
 
 	private:
 		mods_t parsedModules;

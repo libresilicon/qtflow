@@ -133,6 +133,4 @@ LIBRARY				"LIBRARY"
 	return lef::LEFParser::token::STRING;
 }
 
-[ \n\t\r]+ {
-	/* yylloc->step(); */
-}
+[ \n\t\r]+ {}

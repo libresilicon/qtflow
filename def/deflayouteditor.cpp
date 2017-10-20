@@ -35,12 +35,13 @@ void DEFLayoutEditor::loadFile(QString file)
 
 	editScene->setGridSize(10);
 	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
+	editScene->addRect(defdata->getLowerX(),defdata->getLowerY(),defdata->getUpperX()-defdata->getLowerX(),defdata->getUpperY()-defdata->getLowerY());
 
-	editScene->setScaleFactor(100);
+	//editScene->setScaleFactor(100);
 	addMacroInstances();
 	//addRectangles();
 
-	scale(0.1,0.1);
+	//scale(0.1,0.1);
 
 	editScene->update();
 }

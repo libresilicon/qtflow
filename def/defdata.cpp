@@ -48,8 +48,6 @@ namespace def {
 	{
 		recent_module.x = x;
 		recent_module.y = y;
-
-		setBoundaryRectangle(x, y);
 	}
 
 	void DEFData::addUsedModule()
@@ -93,12 +91,11 @@ namespace def {
 		return m_BBUpperY;
 	}
 
-	void DEFData::setBoundaryRectangle(int x, int y)
+	void DEFData::setDieArea(int x1, int x2, int y1, int y2)
 	{
-		if(m_BBLowerX>x) m_BBLowerX = x;
-		if(m_BBLowerY>y) m_BBLowerY = y;
-
-		if(m_BBUpperX<x) m_BBUpperX = x;
-		if(m_BBUpperY<y) m_BBUpperY = y;
+		m_BBLowerX = x1;
+		m_BBUpperX = x2;
+		m_BBLowerY = y1;
+		m_BBUpperY = y2;
 	}
 }

@@ -1,7 +1,31 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def blif2cel(inf,outf):
+import io
+import time
+import sys
+
+from os import path
+from os import popen
+from os import listdir
+from os import remove
+from os import chdir
+from os import path
+
+from re import search
+
+from subprocess import PIPE
+from subprocess import STDOUT
+from subprocess import Popen
+
+from shutil import move
+from glob import glob
+
+def blif2cel():
+	inf = path.join(project_settings.getSynthesisDir(), project_settings.getTopLevel()+".blif")
+	outf = path.join(project_settings.getLayoutDir(), project_settings.getTopLevel()+".cel")
+
+	print "Opening file "+inf+" for reading"
 	print "Opening file "+outf+" for writing"
 
 	cell_count = 0

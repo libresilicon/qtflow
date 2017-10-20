@@ -22,6 +22,7 @@ class ProjectSettings : public QDialog
 public:
 	explicit ProjectSettings(QWidget *parent = nullptr);
 	void setProject(Project*);
+	void setSettings(QSettings*s);
   
 signals:
 	
@@ -36,8 +37,10 @@ public slots:
 private:
 	void setSearchPathList();
 	void setSearchPathButtons();
+	void setupEverything();
 
 	Ui::ProjectSettings *ui;
+	QSettings *settings;
 
 	Project *project;
 	QDomDocument *settingsFileProcess;

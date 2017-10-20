@@ -3,13 +3,21 @@
 ProjectSettings::ProjectSettings(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::ProjectSettings),
-	project(NULL)
+	project(NULL),
+	settingsFileProcess(NULL)
 {
 	ui->setupUi(this);
+}
+
+void  ProjectSettings::setupEverything()
+{
+	QString techpath = settings->value("tech_path").toString();
+	if(techpath==QString()) return;
+
 	QDomNodeList nl;
 
 	settingsFileProcess = new QDomDocument();
-	QFile file(":/process.xml");
+	QFile file(QDir(techpath).filePath("process.xml"));
 	if(file.open(QIODevice::ReadOnly)) {
 		settingsFileProcess->setContent(&file);
 		file.close();
@@ -146,7 +154,13 @@ void ProjectSettings::storeData()
 	}
 }
 
-void ProjectSettings::setProject(Project *p)
+void  ProjectSettings::setSettings(QSettings* s)
+{
+	settings = s;
+	setupEverything();
+}
+
+void ProjectSettings::setProject(Project* p)
 {
 	project = p;
 	if(project) {

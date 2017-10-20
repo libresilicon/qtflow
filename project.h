@@ -47,7 +47,7 @@ class Project : public IProject
 	Q_OBJECT
 
 public:
-	Project(QSettings *settings, QString path, PythonQtObjectPtr *main);
+	Project(QSettings *settings, QString path, PythonQtObjectPtr main);
 	~Project();
 	void create(QString);
 	void synthesis();
@@ -97,6 +97,8 @@ public:
 	QString getProjectType();
 	QString getVCDPath();
 	QString getTechPath();
+	QString getProcessPath();
+	QString getParametersFile();
 
 	QStringList getPlanes();
 	QStringList getTypeNames();
@@ -106,7 +108,8 @@ public:
 	// python script paths:
 	QString getSimulationScript();
 	QString getSynthesisScript();
-	QString getSynthesisOutputConversionScript();
+	QString getBLIF2CELScript();
+	QString getPlace2DEFScript();
 	QString getPlacementScript();
 	QString getRoutingScript();
 
@@ -123,6 +126,7 @@ public:
 	bool isDefinedMacro(QString s);
 	lef::LEFMacro* getMacro(QString s);
 	int getBaseUnits(QString macro_name);
+	int getSmallestUnit();
 
 	// Schematics operations:
 	bool isDefinedPart(QString s);
@@ -149,7 +153,7 @@ private:
 	QSettings *settings;
 	QSettings *project_settings;
 	QString rootdir;
-	PythonQtObjectPtr *mainContext;
+	PythonQtObjectPtr mainContext;
 	QDomDocument *settingsFileProcess;
 	tech::TechData *techDisplayData;
 	ColorMap *colorMap;

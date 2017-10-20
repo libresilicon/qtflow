@@ -58,5 +58,5 @@ def synth():
 
 	for line in iter(p.stdout.readline, ''):
 		print line
-		print '\n'
+
 	p.stdout.close()

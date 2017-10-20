@@ -36,6 +36,8 @@ public Q_SLOTS:
 
 	QStringList getSearchDirectories();
 
+	QString getParametersFile();
+
 	// synthesis files:
 	QString getLibertyFile();
 
@@ -47,6 +49,8 @@ public Q_SLOTS:
 
 	int getMacroValue(QString macro_name, QString value_name);
 	int getMacroPinValue(QString macro_name, QString pin_name, QString value_name);
+	int getBaseUnits(QString macro_name);
+	int getDistanceUnits();
 
 private:
 	Project *project;

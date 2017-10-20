@@ -4,7 +4,7 @@ IProject::IProject() : QObject()
 {
 }
 
-Project::Project(QSettings *s, QString path, PythonQtObjectPtr *main) :
+Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 	IProject(),
 	settings(s),
 	mainContext(main),
@@ -179,7 +179,7 @@ QStringList Project::getLibraryFiles()
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
 									if(e4.tagName()=="file") {
-										ret.append(QDir(getTechPath()).filePath(e4.text()));
+										ret.append(QDir(getProcessPath()).filePath(e4.text()));
 									}
 								}
 							}
@@ -238,7 +238,7 @@ QStringList Project::getSchematicsLibraryFiles()
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
 									if(e4.tagName()=="file") {
-										ret.append(QDir(getTechPath()).filePath(e4.text()));
+										ret.append(QDir(getProcessPath()).filePath(e4.text()));
 									}
 								}
 							}
@@ -254,7 +254,7 @@ QStringList Project::getSchematicsLibraryFiles()
 
 QString Project::getTechnologyDisplayFile()
 {
-	QString ret = "scmos.tech";
+	QString ret = QDir(getTechPath()).filePath("scmos.tech");
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -276,7 +276,7 @@ QString Project::getTechnologyDisplayFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="techdisplay") {
-								ret=e3.text();
+								ret = QDir(getTechPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -285,20 +285,95 @@ QString Project::getTechnologyDisplayFile()
 		}
 	}
 
-	return QDir(getTechPath()).filePath(ret);
+	return ret;
 }
 
 QString Project::getTechPath()
 {
 	QString ret;
 	ret = settings->value("tech_path").toString();
-	if(ret==QString()) ret = ":/";
+	if(ret==QString()) {
+		qDebug() << "No technology search path set!";
+		exit(0);
+	}
+	return ret;
+}
+
+QString Project::getProcessPath()
+{
+	QString ret = QDir(getTechPath()).filePath("osu035"); // default technology
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="folder") {
+								ret = QDir(getTechPath()).filePath(e3.text());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+QString Project::getParametersFile()
+{
+	QString ret = QDir(getTechPath()).filePath("scmos.par"); // default technology
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3;
+
+	QDomNodeList nl1, nl2, nl3;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="parameter") {
+								ret=QDir(getProcessPath()).filePath(e3.text());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return ret;
 }
 
 QString Project::getTechnologyFile()
 {
-	QString ret = "scmos.tech";
+	QString ret = QDir(getTechPath()).filePath("scmos.tech"); // default technology
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -320,7 +395,7 @@ QString Project::getTechnologyFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="tech") {
-								ret=e3.text();
+								ret=QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -329,7 +404,7 @@ QString Project::getTechnologyFile()
 		}
 	}
 
-	return QDir(getTechPath()).filePath(ret);
+	return ret;
 }
 
 QString Project::getDesignStyleFile()
@@ -483,12 +558,12 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
-	mainContext->evalScript("synth()");
+	mainContext.evalScript("synth()");
 }
 
 void Project::simulation()
 {
-	mainContext->evalScript("sim()");
+	mainContext.evalScript("sim()");
 	emit(simulationDone());
 }
 
@@ -502,10 +577,10 @@ void Project::routing()
 
 void Project::buildAll()
 {
-	QString blif = QDir(getSynthesisDir()).filePath(getTopLevel()+".blif");
-	QString cel = QDir(getLayoutDir()).filePath(getTopLevel()+".cel");
-	mainContext->evalScript("synth()");
-	mainContext->evalScript("blif2cel(\""+blif+"\",\""+cel+"\")");
+	mainContext.evalScript("synth()");
+	mainContext.evalScript("blif2cel()");
+	mainContext.evalScript("place()");
+	mainContext.evalScript("place2def()");
 }
 
 bool Project::hasMaterialTypeMapping(QString material)
@@ -719,6 +794,28 @@ int Project::getBaseUnits(QString macro_name)
 	return ret;
 }
 
+int Project::getSmallestUnit()
+{
+	int ret = 0;
+	int u;
+
+	foreach(QString key, lefdata.keys()) { // get biggest value
+		u = lefdata[key]->getBaseUnits();
+		if(u>0) {
+			if(u>ret) ret = u;
+		}
+	}
+
+	foreach(QString key, lefdata.keys()) { // get smallest value >0
+		u = lefdata[key]->getBaseUnits();
+		if(u>0) {
+			if(u<ret) ret = u;
+		}
+	}
+
+	return ret;
+}
+
 void Project::loadLibraryFiles()
 {
 	QTemporaryDir temporaryDir;
@@ -765,18 +862,28 @@ QStringList Project::getListOfSchematicParts()
 
 void Project::loadScriptFiles()
 {
-	mainContext->evalScript("def synth():\n\tprint \"not defined\"");
-	mainContext->evalScript("def sim():\n\tprint \"not defined\"");
-	mainContext->evalScript("def blif2cel(a,b):\n\tprint \"not defined\"");
+
+	mainContext.evalScript("def sim():\n\tprint \"not defined\"");
+	mainContext.evalScript("def blif2cel():\n\tprint \"not defined\"");
 
 	if(QFile(getSynthesisScript()).exists()) {
-		mainContext->evalFile(getSynthesisScript());
+		mainContext.evalFile(getSynthesisScript());
+	} else {
+		mainContext.evalScript("def synth():\n\tprint \"not defined\"");
 	}
 	if(QFile(getSimulationScript()).exists()) {
-		mainContext->evalFile(getSimulationScript());
+		mainContext.evalFile(getSimulationScript());
 	}
-	if(QFile(getSynthesisOutputConversionScript()).exists()) {
-		mainContext->evalFile(getSynthesisOutputConversionScript());
+	if(QFile(getBLIF2CELScript()).exists()) {
+		mainContext.evalFile(getBLIF2CELScript());
+	}
+	if(QFile(getPlacementScript()).exists()) {
+		mainContext.evalFile(getPlacementScript());
+	}
+	if(QFile(getPlace2DEFScript()).exists()) {
+		mainContext.evalFile(getPlace2DEFScript());
+	} else {
+		mainContext.evalScript("def place2def():\n\tprint \"not defined\"");
 	}
 }
 
@@ -807,14 +914,19 @@ QString Project::getSynthesisScript()
 	return project_settings->value("synthesis_script").toString();
 }
 
-QString  Project::getSynthesisOutputConversionScript()
+QString  Project::getBLIF2CELScript()
 {
 	return project_settings->value("blif2cel_script").toString();
 }
 
+QString  Project::getPlace2DEFScript()
+{
+	return project_settings->value("place2def_script").toString();
+}
+
 QString Project::getPlacementScript()
 {
-
+	return project_settings->value("placement_script").toString();
 }
 
 QString Project::getRoutingScript()
@@ -846,7 +958,7 @@ void Project::setRoutingScript(QString)
 
 QString Project::getLibertyFile()
 {
-	QString ret = "osu035/osu035_stdcells.lib";
+	QString ret = QDir(QDir(getTechnology()).filePath("osu035")).filePath("osu035_stdcells.lib");
 
 	QString technology = getTechnology();
 	QString process = getProcess();
@@ -868,7 +980,7 @@ QString Project::getLibertyFile()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="liberty") {
-								ret=e3.text();
+								ret =  QDir(getProcessPath()).filePath(e3.text());
 							}
 						}
 					}
@@ -877,5 +989,5 @@ QString Project::getLibertyFile()
 		}
 	}
 
-	return QDir(getTechPath()).filePath(ret);
+	return ret;
 }

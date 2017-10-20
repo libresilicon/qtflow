@@ -23,6 +23,7 @@
 
 #define deflex (defdata->getLexer())->deflex
 #define deflineno (int)(defdata->getLexer())->lineno()
+#define deftext (defdata->getLexer())->YYText()
 
 %}
 
@@ -98,8 +99,14 @@ units: UNITS DISTANCE MICRONS INTEGER
 }
 ;
 
-diearea: DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE
+diearea:
+DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE
 {
+}
+|
+DIEAREA BRACKETOPEN INTEGER INTEGER BRACKETCLOSE BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+{
+	defdata->setDieArea($3,$4,$7,$8);
 }
 ;
 
@@ -254,5 +261,5 @@ special_new_metal:
 %%
 
 void def::DEFParser::error(const std::string &s) {
-	std::cout << "Error message: " << s << " on line " << deflineno << std::endl;
+	std::cout << "Error message: " << s << " on line " << deflineno << ", yytext: " << deftext <<std::endl;
 }

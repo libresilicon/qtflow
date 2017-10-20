@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
+MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	QMainWindow(NULL),
 	parser(p),
 	ui(new Ui::MainWindow),
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr *context ) :
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
-	mainContext->addObject("settings", new PySettings(this, settings));
+	mainContext.addObject("settings", new PySettings(this, settings));
 
 	projectSettingsDialog = new ProjectSettings(this);
 	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
@@ -162,10 +162,11 @@ void MainWindow::openProject(QString path)
 		modulesWidget->setProject(project);
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);
+		projectSettingsDialog->setSettings(settings);
 		projectSettingsDialog->setProject(project);
 		editArea->setProject(project);
 		buildFlowConfig->setProject(project);
-		mainContext->addObject("project_settings", new PyProjectSettings(project));
+		mainContext.addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
 }

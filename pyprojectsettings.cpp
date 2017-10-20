@@ -47,6 +47,11 @@ QString PyProjectSettings::getVCDFile()
 	return project->getVCDFile();
 }
 
+QString PyProjectSettings::getParametersFile()
+{
+	return project->getParametersFile();
+}
+
 QString PyProjectSettings::getVCDPath()
 {
 	return project->getVCDPath();
@@ -123,7 +128,6 @@ int PyProjectSettings::getMacroPinValue(QString macro_name, QString pin_name, QS
 			macro = project->getMacro(macro_name);
 			if(macro) {
 				units = project->getBaseUnits(macro_name);
-				units = project->getBaseUnits(macro_name);
 				w = (units*macro->getWidth());
 				h = (units*macro->getHeight());
 
@@ -142,4 +146,14 @@ int PyProjectSettings::getMacroPinValue(QString macro_name, QString pin_name, QS
 		}
 	}
 	return ret;
+}
+
+int PyProjectSettings::getBaseUnits(QString macro_name)
+{
+	return project->getBaseUnits(macro_name);
+}
+
+int PyProjectSettings::getDistanceUnits()
+{
+	return project->getSmallestUnit();
 }

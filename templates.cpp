@@ -3,7 +3,7 @@
 
 #include "project.h"
 
-Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr *main) :
+Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr main) :
 	QDialog(parent),
 	ui(new Ui::Templates),
 	mainContext(main),
@@ -109,7 +109,7 @@ void Templates::on_buttonBox_accepted()
 	if (path == QString())
 		return;
 
-	ppath = path+'/'+name+".pro";
+	ppath = QDir(path).filePath(name+".pro");
 
 	if(project) delete project;
 	project = new Project(settings, ppath, mainContext);

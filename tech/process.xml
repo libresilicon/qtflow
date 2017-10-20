@@ -1,130 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <technologies>
-	<technology xml:id="xfab">
-	<title>X-Fab</title>
-		<description>A foundry somewhere in Germany</description>
-	
-		<process xml:id="xh035">
-			<description>X-Fabs 350nm process</description>
-			<lef>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aadcc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aadcc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc01ji.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc04.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc07.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc08.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc09.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abgpc11.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abiac01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abiac02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/abiac03.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acmpc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acmpc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acmpc03.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acmpc04.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acmpcn01ji.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acmpcp01ji.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acsoc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/acsoc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/adacc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac01ji.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac03.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac04.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac05.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac06.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac08.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac12.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aopac13.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aporc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aporc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/aporc03.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc03.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc04.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc05.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc06.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/arcoc08.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/atmpc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/atmpc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/auvdet_vdd01ji.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/axtoc01.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/A_CELLS/axtoc02.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_D_CELLS.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_D_CELLS_qrouter.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_xx0x_METAL2_D_CELLS_mprobe.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_xx1x_METAL3_D_CELLS_mprobe.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_xx2x_METAL4_D_CELLS_mprobe.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_xx3x_THKMET_D_CELLS_mprobe.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/D_CELLS/xh035_xx4x_THKMET3_D_CELLS_mprobe.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS_F/xh035_xx1x_METAL3_IO_CELLS_F.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS_F/xh035_xx2x_METAL4_IO_CELLS_F.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS_F/xh035_xx3x_THKMET_IO_CELLS_F.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS_MV/xh035_xx1x_METAL3_IO_CELLS_MV.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS_MV/xh035_xx2x_METAL4_IO_CELLS_MV.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS_MV/xh035_xx3x_THKMET_IO_CELLS_MV.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS/xh035_xx1x_METAL3_IO_CELLS.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS/xh035_xx2x_METAL4_IO_CELLS.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/IO_CELLS/xh035_xx3x_THKMET_IO_CELLS.lef</file>
-				<file>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/lef/qrouter/A_CELLS_IO_CELLS_qrouter.lef</file>
-			</lef>
-			<tech>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.tech/magic/20161116/EFXH035A.tech</tech>
-			<liberty>/home/leviathan/northpoint/ips/xh035/EFXH035A/libs.ref/liberty/D_CELLS/PVT_3_30V_range/D_CELLS_MOS_typ_3_30V_25C.lib</liberty>
-		</process>
-	</technology>
-	
+
 	<technology xml:id="scmos">
 		<title>Generic free technology</title>
 		<description>Can be manufactured by LanceVille minifab</description>
 
 		<process xml:id="osu018">
 			<description>The SCMOS 180nm process</description>
+			<folder>osu018</folder>
 			<lef>
-				<file>osu018/osu018_stdcells.lef</file>
+				<file>osu018_stdcells.lef</file>
 			</lef>
-			<tech>osu018/SCN6M_SUBM.10.tech</tech>
-			<liberty>osu018/osu018_stdcells.lib</liberty>
+			<tech>SCN6M_SUBM.10.tech</tech>
+			<liberty>osu018_stdcells.lib</liberty>
+			<parameter>osu018.par</parameter>
 		</process>
 
 		<process xml:id="osu035">
 			<description>The SCMOS 350nm process</description>
+			<folder>osu035</folder>
 			<lef>
-				<file>osu035/osu035_stdcells.lef</file>
+				<file>osu035_stdcells.lef</file>
 			</lef>
-			<tech>osu035/SCN4M_SUBM.20.tech</tech>
-			<techdisplay>osu035/SCN4M_SUBM.20.tech</techdisplay>
+			<tech>SCN4M_SUBM.20.tech</tech>
+			<techdisplay>SCN4M_SUBM.20.tech</techdisplay>
 			<symbols>
-				<file>osu035/osu035_stdcells.slib</file>
+				<file>osu035_stdcells.slib</file>
 			</symbols>
-			<liberty>osu035/osu035_stdcells.lib</liberty>
+			<liberty>osu035_stdcells.lib</liberty>
+			<parameter>osu035.par</parameter>
 		</process>
 
 		<process xml:id="osu050">
 			<description>The SCMOS 500nm process</description>
+			<folder>osu050</folder>
 			<lef>
-				<file>osu050/osu050_stdcells.lef</file>
+				<file>osu050_stdcells.lef</file>
 			</lef>
-			<tech>osu050/SCN3ME_SUBM.30.tech</tech>
-			<liberty>osu050/osu05_stdcells.lib</liberty>
+			<tech>SCN3ME_SUBM.30.tech</tech>
+			<liberty>osu05_stdcells.lib</liberty>
+			<parameter>osu050.par</parameter>
 		</process>
+	</technology>
 
+	<technology xml:id="cmos">
 		<process xml:id="sxlib">
 			<description>The SX 120nm process</description>
+			<folder>sxlib</folder>
 			<lef>
-				<file>sxlib/sxlib.lef</file>
+				<file>sxlib.lef</file>
 			</lef>
-			<tech>scmos.tech</tech>
-			<techdisplay>scmos.tech</techdisplay>
 			<symbols>
-				<file>sxlib/sxlib.slib</file>
+				<file>sxlib.slib</file>
 			</symbols>
-			<liberty>sxlib/sxlib.lib</liberty>
+			<liberty>sxlib.lib</liberty>
 		</process>
-
 	</technology>
 
 </technologies>

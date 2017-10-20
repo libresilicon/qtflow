@@ -57,7 +57,6 @@ SOURCES += \
 	moduleslistmodel.cpp \
 	new.cpp \
 	wave.cpp \
-	headlessmainapp.cpp \
 	settings.cpp \
 	fileselector.cpp \
 	projectselector.cpp \
@@ -74,7 +73,8 @@ SOURCES += \
 	layoutvisibles.cpp \
 	projectsitem.cpp \
     generictexteditorwidget.cpp \
-    buildflow.cpp
+    buildflow.cpp \
+    mainapplication.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -89,7 +89,6 @@ HEADERS  += \
 	moduleslistmodel.h \
 	new.h \
 	wave.h \
-	headlessmainapp.h \
 	settings.h \
 	fileselector.h \
 	projectselector.h \
@@ -107,7 +106,8 @@ HEADERS  += \
 	layoutvisibles.h \
 	projectsitem.h \
     generictexteditorwidget.h \
-    buildflow.h
+    buildflow.h \
+    mainapplication.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -211,5 +211,7 @@ DISTFILES += \
 	tech/osu035/osu035_stdcells.sp \
 	tech/tech.qrc \
 	tech/gencmap.py \
-	tech/mos.cmap
+	tech/mos.cmap \
+    scripts/place2def.py \
+    scripts/placement.py
 
