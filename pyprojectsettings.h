@@ -45,6 +45,9 @@ public Q_SLOTS:
 	// synthesis options:
 	bool hasSettingABC();
 
+	int getMacroValue(QString macro_name, QString value_name);
+	int getMacroPinValue(QString macro_name, QString pin_name, QString value_name);
+
 private:
 	Project *project;
 };

@@ -76,3 +76,70 @@ bool PyProjectSettings::hasSettingABC()
 {
 	return project->hasSettingABC();
 }
+
+// for building CEL data:
+int PyProjectSettings::getMacroValue(QString macro_name, QString value_name)
+{
+	int ret = 0;
+	int w,h,units;
+	int left,right,bottom,top;
+	lef::LEFMacro* macro;
+	if(project) {
+		if(project->isDefinedMacro(macro_name)) {
+			macro = project->getMacro(macro_name);
+			if(macro) {
+				units = project->getBaseUnits(macro_name);
+				w = (units*macro->getWidth());
+				h = (units*macro->getHeight());
+				left = -w/2;
+				right = left+w;
+				bottom = -h/2;
+				top = bottom+h;
+				if(value_name=="left") {
+					ret = left;
+				} else if(value_name=="right") {
+					ret = right;
+				} else if(value_name=="bottom") {
+					ret = bottom;
+				} else if(value_name=="top") {
+					ret = top;
+				}
+			}
+		}
+	}
+	return ret;
+}
+
+int PyProjectSettings::getMacroPinValue(QString macro_name, QString pin_name, QString value_name)
+{
+	int ret = 0;
+	int w,h,units;
+	int xp, yp;
+	lef::LEFMacro* macro;
+	lef::LEFPin* pin;
+	QPointF center;
+	if(project) {
+		if(project->isDefinedMacro(macro_name)) {
+			macro = project->getMacro(macro_name);
+			if(macro) {
+				units = project->getBaseUnits(macro_name);
+				units = project->getBaseUnits(macro_name);
+				w = (units*macro->getWidth());
+				h = (units*macro->getHeight());
+
+				if(macro->pinExists(pin_name)) {
+					pin = macro->getPin(pin_name);
+					center = pin->getCenter();
+					xp = center.x()*units-w/2;
+					yp = center.y()*units-h/2;
+
+					if(value_name=="xp")
+						ret = xp;
+					if(value_name=="yp")
+						ret = yp;
+				}
+			}
+		}
+	}
+	return ret;
+}

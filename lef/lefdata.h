@@ -69,13 +69,21 @@ namespace lef {
 	public:
 		LEFPin(QString);
 		void scalePin(double,double);
+		void setBoundingBox(double x, double y, double w, double h);
 
 		QString getName();
 		LEFPort *getPort();
 		QVector<LEFLayer*> getPortLayers();
+		QPointF getCenter();
 	private:
 		QString name;
 		LEFPort *port;
+
+		// bounding box:
+		double m_x;
+		double m_y;
+		double m_w;
+		double m_h;
 	};
 
 	class LEFMacro {
@@ -117,6 +125,7 @@ namespace lef {
 		QVector<LEFMacro*> getMacros();
 
 		void setBaseUnitMicrons(int);
+		int getBaseUnits();
 
 		void storeMacro();
 		void setMacroSize(double w, double h);

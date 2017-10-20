@@ -483,10 +483,12 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
+	mainContext->evalScript("synth()");
 }
 
 void Project::simulation()
 {
+	mainContext->evalScript("sim()");
 	emit(simulationDone());
 }
 
@@ -501,7 +503,7 @@ void Project::routing()
 void Project::buildAll()
 {
 	QString blif = QDir(getSynthesisDir()).filePath(getTopLevel()+".blif");
-	QString cel = QDir(getLayoutDir()).filePath(getTopLevel()+".blif");
+	QString cel = QDir(getLayoutDir()).filePath(getTopLevel()+".cel");
 	mainContext->evalScript("synth()");
 	mainContext->evalScript("blif2cel(\""+blif+"\",\""+cel+"\")");
 }
@@ -705,6 +707,18 @@ lef::LEFMacro* Project::getMacro(QString s)
 	return NULL;
 }
 
+int Project::getBaseUnits(QString macro_name)
+{
+	int ret = 0;
+	foreach(QString key, lefdata.keys()) {
+		if(lefdata[key]->isDefinedMacro(macro_name)) {
+			ret = lefdata[key]->getBaseUnits();
+			break;
+		}
+	}
+	return ret;
+}
+
 void Project::loadLibraryFiles()
 {
 	QTemporaryDir temporaryDir;
@@ -751,20 +765,18 @@ QStringList Project::getListOfSchematicParts()
 
 void Project::loadScriptFiles()
 {
+	mainContext->evalScript("def synth():\n\tprint \"not defined\"");
+	mainContext->evalScript("def sim():\n\tprint \"not defined\"");
+	mainContext->evalScript("def blif2cel(a,b):\n\tprint \"not defined\"");
+
 	if(QFile(getSynthesisScript()).exists()) {
 		mainContext->evalFile(getSynthesisScript());
-	} else {
-		mainContext->evalScript("def synth():\n\tprint \"not defined\"");
 	}
 	if(QFile(getSimulationScript()).exists()) {
 		mainContext->evalFile(getSimulationScript());
-	} else {
-		mainContext->evalScript("def sim():\n\tprint \"not defined\"");
 	}
 	if(QFile(getSynthesisOutputConversionScript()).exists()) {
 		mainContext->evalFile(getSynthesisOutputConversionScript());
-	} else {
-		mainContext->evalScript("def blif2cel(a,b):\n\tprint \"not defined\"");
 	}
 }
 

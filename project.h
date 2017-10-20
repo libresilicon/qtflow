@@ -122,6 +122,7 @@ public:
 	// LEF operations:
 	bool isDefinedMacro(QString s);
 	lef::LEFMacro* getMacro(QString s);
+	int getBaseUnits(QString macro_name);
 
 	// Schematics operations:
 	bool isDefinedPart(QString s);
