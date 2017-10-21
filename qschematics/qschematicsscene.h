@@ -24,16 +24,23 @@ public:
 
 	void addWire(QString type, qreal x1, qreal y1, qreal x2, qreal y2);
 	void addPart(QString type, QString id, int x, int y);
+	void addPart(QString type, int x, int y);
 
 	void setProject(Project *p);
 
+protected:
+	void mousePressEvent(QGraphicsSceneMouseEvent *event);
+	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
 private:
-	QVector<QSchematicsWire*> wires;
-	QVector<QSchematicsPart*> parts;
+	QVector<QSchematicsWire*> m_wires;
+	QVector<QSchematicsPart*> m_parts;
 
-	Project *project;
+	Project *m_project;
 
-	QMap<QString,QSchematicsPart*> partList;
+	QPointF m_lastOrig;
+	bool m_dragging;
 };
 
 #endif // QSCHEMATICSSCENE_H

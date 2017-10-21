@@ -14,6 +14,9 @@ SchematicsPartSelection::SchematicsPartSelection(QWidget *parent) :
 
 void SchematicsPartSelection::on_buttonBox_accepted()
 {
+	foreach(QTreeWidgetItem *item,  ui->partList->selectedItems()) {
+		emit(insertPart(item->text(0)));
+	}
 	hide();
 }
 

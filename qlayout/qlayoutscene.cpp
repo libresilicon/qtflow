@@ -137,11 +137,11 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 					if(m->contains(lastOrig)||m->isSelected()) {
 						if(!m->isSelected()) {
 							foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-								m->unSelectItem();
+								m->setSelected(false);
 							}
 						}
-						m->selectItem();
-						m->startMoving();
+						m->setSelected(true);
+						m->setDragMode(true);
 						m->setCursor(QCursor(Qt::ClosedHandCursor));
 					}
 				}
@@ -151,7 +151,7 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		case DRAWING_OPERATION_SELECT:
 			if(activeLayer=="") return; // no layer selected
 			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-				m->unSelectItem();
+				m->setSelected(false);
 			}
 
 			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), 1, 1));
@@ -216,7 +216,7 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			if(activeLayer=="") return; // no layer selected
 			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
 				if(srect.contains(m->offsetRect())) {
-					m->selectItem();
+					m->setSelected(true);
 				}
 			}
 			update();
@@ -255,6 +255,7 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 			if(activeLayer=="") return; // no layer selected
 			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
 				m->setCursor(QCursor(Qt::ArrowCursor));
+				m->setDragMode(false);
 				m_dragging = false;
 			}
 			update();

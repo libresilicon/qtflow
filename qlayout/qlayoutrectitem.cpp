@@ -4,9 +4,10 @@ QLayoutRectItem::QLayoutRectItem(QGraphicsItem* parent) :
 	QGraphicsItem(parent),
 	m_locked(false),
 	m_color(Qt::black),
-	m_selected(false),
-	m_recentCutOutRectangle(NULL)
+	m_recentCutOutRectangle(NULL),
+	m_dragMode(false)
 {
+	setFlags(QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable);
 }
 
 QLayoutRectItem::QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent) :
@@ -14,9 +15,10 @@ QLayoutRectItem::QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsIt
 	m_locked(false),
 	m_color(Qt::black),
 	m_externalRect(QRectF(x,y,w,h)),
-	m_selected(false),
-	m_recentCutOutRectangle(NULL)
+	m_recentCutOutRectangle(NULL),
+	m_dragMode(false)
 {
+	setFlags(QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable);
 }
 
 bool QLayoutRectItem::contains(const QPointF &point) const
@@ -26,11 +28,6 @@ bool QLayoutRectItem::contains(const QPointF &point) const
 	offsetOrig.setY(point.y()-y());
 
 	return m_externalRect.contains(offsetOrig);
-}
-
-void QLayoutRectItem::startMoving()
-{
-	m_lastOrig = pos();
 }
 
 void QLayoutRectItem::updateMovingOffset(qreal dx, qreal dy)
@@ -67,19 +64,12 @@ bool QLayoutRectItem::isLocked()
 	return m_locked;
 }
 
-bool QLayoutRectItem::isSelected()
+bool QLayoutRectItem::setDragMode(bool m)
 {
-	return m_selected;
-}
-
-void QLayoutRectItem::selectItem()
-{
-	m_selected = true;
-}
-
-void QLayoutRectItem::unSelectItem()
-{
-	m_selected = false;
+	if(m && !m_dragMode) {
+		m_lastOrig = pos();
+	}
+	m_dragMode = m;
 }
 
 void QLayoutRectItem::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
@@ -286,7 +276,7 @@ QVector<QRectF> QLayoutRectItem::getStripes()
 
 void QLayoutRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-	if(m_selected) {
+	if(isSelected()) {
 		painter->setPen(QPen(Qt::black));
 		painter->setBrush(QBrush(m_color));
 		painter->setOpacity(0.5);

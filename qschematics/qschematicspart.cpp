@@ -1,7 +1,8 @@
 #include "qschematicspart.h"
 
 QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, QString name, int x, int y, QGraphicsItem *parent) :
-	QGraphicsItem(parent)
+	QGraphicsItem(parent),
+	m_dragMode(false)
 {
 	m_name = name;
 
@@ -20,10 +21,13 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, QString name, in
 	m_typeLabel->setScale(2);
 
 	setBoundingRect();
+
+	setFlags(QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable);
 }
 
 QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, int x, int y, QGraphicsItem *parent) :
-	QGraphicsItem(parent)
+	QGraphicsItem(parent),
+	m_dragMode(false)
 {
 	m_name = obj->getPrefix();
 
@@ -42,6 +46,8 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, int x, int y, QG
 	m_typeLabel->setScale(2);
 
 	setBoundingRect();
+
+	setFlags(QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable);
 }
 
 void QSchematicsPart::setBoundingRect()
@@ -65,9 +71,46 @@ void QSchematicsPart::setBoundingRect()
 
 QRectF QSchematicsPart::boundingRect() const
 {
-	return QRect(m_xmin,m_ymin,m_xmax-m_xmin,m_ymax-m_ymin);
+	return m_externalRect->rect();
 }
 
 void QSchematicsPart::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+}
+
+bool QSchematicsPart::setDragMode(bool m)
+{
+	if(m && !m_dragMode) {
+		m_lastOrig = pos();
+	}
+	m_dragMode = m;
+}
+
+bool QSchematicsPart::contains(const QPointF &point) const
+{
+	QPointF offsetOrig;
+	offsetOrig.setX(point.x()-x());
+	offsetOrig.setY(point.y()-y());
+
+	return m_externalRect->contains(offsetOrig);
+}
+
+void QSchematicsPart::updateMovingOffset(qreal dx, qreal dy)
+{
+	setPos(m_lastOrig.x()+dx,m_lastOrig.y()+dy);
+}
+
+void QSchematicsPart::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+	qDebug() << __FUNCTION__;
+}
+
+void QSchematicsPart::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+	qDebug() << __FUNCTION__;
+}
+
+void QSchematicsPart::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+	qDebug() << __FUNCTION__;
 }

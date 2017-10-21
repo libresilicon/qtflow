@@ -26,6 +26,9 @@ public slots:
 	void on_buttonBox_rejected();
 	void on_partList_currentItemChanged(QTreeWidgetItem*current, QTreeWidgetItem*previous);
 
+signals:
+	void insertPart(QString);
+
 private:
 	void updatePartList();
 

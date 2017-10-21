@@ -17,15 +17,12 @@ public:
 
 	bool contains(const QPointF &point) const Q_DECL_OVERRIDE;
 	bool isLocked();
-	bool isSelected();
-	void selectItem();
-	void unSelectItem();
+	bool setDragMode(bool m);
 
 	void setRect(qreal x, qreal y, qreal w, qreal h);
 	void setCutOutStart(qreal x, qreal y);
 	void updateRecentCutOut(qreal w, qreal h);
 	void setColor(QColor c);
-	void startMoving();
 	void updateMovingOffset(qreal dx, qreal dy);
 
 	qreal width() const;
@@ -37,7 +34,6 @@ public:
 	QPainterPath shape() const;
 	QRectF boundingRect() const;
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = Q_NULLPTR);
-
 
 public slots:
 	void removeFromScene();
@@ -53,10 +49,10 @@ private:
 	QRectF *m_recentCutOutRectangle;
 
 	QPointF m_lastOrig;
+	bool m_dragMode;
 	QPointF m_orig;
 	bool m_locked;
 	QColor m_color;
-	bool m_selected;
 };
 
 #endif // QLAYOUTRECTITEM_H

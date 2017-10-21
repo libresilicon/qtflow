@@ -36,6 +36,8 @@ public slots:
 	void showPartSelection();
 	void showLibraryEditor();
 
+	void onInsertPart(QString name);
+
 protected:
 
 private:

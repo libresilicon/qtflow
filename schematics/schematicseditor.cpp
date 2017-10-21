@@ -11,6 +11,8 @@ SchematicsEditor::SchematicsEditor(QWidget *parent):
 {
 	editScene = new QSchematicsScene(this);
 	setScene(editScene);
+
+	connect(partSelection,SIGNAL(insertPart(QString)),this,SLOT(onInsertPart(QString)));
 }
 
 void SchematicsEditor::setProject(Project *p)
@@ -18,6 +20,11 @@ void SchematicsEditor::setProject(Project *p)
 	project = p;
 	editScene->setProject(project);
 	partSelection->setProject(project);
+}
+
+void SchematicsEditor::onInsertPart(QString name)
+{
+	editScene->addPart(name,0,0);
 }
 
 void SchematicsEditor::loadFile(QString file)
