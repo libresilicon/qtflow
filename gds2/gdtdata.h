@@ -12,6 +12,7 @@ class GDTData
 public:
 	GDTData(QString fileName); // constructor to open (create if WRITE) stream file (calls opstrm())
 	bool containsCell(QString name);
+	GDSCell* getCell(QString name);
 
 private:
 	void goThroughFile();
@@ -21,7 +22,6 @@ private:
 	QString m_fileName;
 
 	QVector<GDSCell*> m_cells;
-	GDSCell* m_recentCell;
 };
 
 #endif // GDTDATA_H

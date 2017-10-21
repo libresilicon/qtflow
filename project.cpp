@@ -794,6 +794,26 @@ void Project::setSettingABC(bool t)
 	project_settings->sync();
 }
 
+// GDS operations:
+bool Project::isDefinedGDSMacro(QString s)
+{
+	foreach(QString key, gdtdata.keys()) {
+		if(gdtdata[key]->containsCell(s))
+			return true;
+	}
+	return false;
+}
+
+GDSCell* Project::getGDSMacro(QString s)
+{
+	foreach(QString key, gdtdata.keys()) {
+		if(gdtdata[key]->containsCell(s)) {
+			return gdtdata[key]->getCell(s);
+		}
+	}
+	return NULL;
+}
+
 // LEF operations:
 bool Project::isDefinedMacro(QString s)
 {

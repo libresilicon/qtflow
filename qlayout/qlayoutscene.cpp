@@ -369,15 +369,7 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 
 void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y)
 {
-	lef::LEFPort *port;
-	lef::LEFLayer *layer;
 	lef::LEFMacro *macro;
-	lef::LEFPin *pin;
-	QColor color;
-	QString layer_name;
-
-	QGraphicsRectItem *mw;
-	QLayoutMacroItem *mi;
 
 	double w, h;
 
@@ -392,37 +384,8 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 		w*=m_gridSize;
 		h*=m_gridSize;
 
-		macro->scaleMacro(w,h);
+		addMacro(macro_name, instance_name, x, y, w, h);
 
-		mi = new QLayoutMacroItem(x,y,w,h);
-		mi->setVisible(true);
-
-		foreach(pin, macro->getPins()) {
-			port = pin->getPort();
-			foreach(layer, port->getLayers()) {
-				layer_name = layer->getName();
-				color = project->colorMat(layer_name);
-				foreach(lef::rect_t rect, layer->getRects()) {
-					mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
-					mw->setBrush(QBrush(color));
-					mw->setVisible(true);
-					macro_wires[layer_name].append(mw);
-				}
-			}
-		}
-		foreach (layer, macro->getObstruction()->getLayers()) {
-			layer_name = layer->getName();
-			color = project->colorMat(layer_name);
-			foreach(lef::rect_t rect, layer->getRects()) {
-				mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
-				mw->setBrush(QBrush(color));
-				mw->setVisible(true);
-				macro_wires[layer_name].append(mw);
-			}
-		}
-
-		addItem(mi);
-		macros.append(mi);
 	} else {
 		qDebug() << macro_name << "Macro not defined";
 	}
@@ -435,22 +398,20 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	lef::LEFPort *port;
 	lef::LEFLayer *layer;
 	lef::LEFMacro *macro;
+	GDSCell* cell;
 	lef::LEFPin *pin;
 	QColor color;
 	QString layer_name;
 
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
+	QGraphicsPolygonItem *polygon;
 
-	x*=m_scaleFactor;
-	y*=m_scaleFactor;
-	w*=m_scaleFactor;
-	h*=m_scaleFactor;
 
 	mi = new QLayoutMacroItem(x,y,w,h);
 	mi->setVisible(true);
 
-	// fill in library content:
+	// fill in library content from LEF:
 	if(project) if(project->isDefinedMacro(macro_name)) {
 		macro = project->getMacro(macro_name);
 		macro->scaleMacro(w, h);
@@ -476,6 +437,19 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 				mw->setBrush(QBrush(color));
 				mw->setVisible(true);
 				macro_wires[layer_name].append(mw);
+			}
+		}
+	}
+
+	if(project) if(project->isDefinedGDSMacro(macro_name)) {
+		cell = project->getGDSMacro(macro_name);
+		if(cell) {
+			//qDebug() << "Contains cell " << macro_name;
+			foreach(GDSBoundary *b, cell->getBoundaries()) {
+				polygon = new QGraphicsPolygonItem(mi);
+				polygon->setBrush(QBrush(Qt::black));
+				b->fillInPoints(polygon);
+				qDebug() << "Is closed: " << polygon->polygon().isClosed();
 			}
 		}
 	}

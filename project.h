@@ -123,6 +123,10 @@ public:
 	bool hasSettingABC();
 	void setSettingABC(bool t);
 
+	// GDS operations:
+	bool isDefinedGDSMacro(QString s);
+	GDSCell* getGDSMacro(QString s);
+
 	// LEF operations:
 	bool isDefinedMacro(QString s);
 	lef::LEFMacro* getMacro(QString s);

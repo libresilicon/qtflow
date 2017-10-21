@@ -5,14 +5,20 @@
 #include <QPointF>
 #include <QVector>
 
+#include "gdsboundary.h"
+
+typedef QVector<QPointF> path_t;
+
 class GDSCell
 {
 public:
 	GDSCell(QString name);
+	void addBoundary(GDSBoundary* b);
 	QString getName();
+	QVector<GDSBoundary*> getBoundaries();
 
 private:
-	QVector<QPointF> m_path;
+	QVector<GDSBoundary*> m_boundaries;
 	QString m_name;
 };
 

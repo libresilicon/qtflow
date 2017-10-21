@@ -1,7 +1,6 @@
 #include "gdtdata.h"
 
-GDTData::GDTData(QString fileName) :
-	m_recentCell(NULL)
+GDTData::GDTData(QString fileName)
 {
 	qDebug() << __FUNCTION__ << " Loading file: " << fileName;
 	m_fileName = fileName;
@@ -10,6 +9,14 @@ GDTData::GDTData(QString fileName) :
 	m_file->rdstrm();  // header
 	//goThroughFile();
 	buildDataStructure();
+}
+
+GDSCell* GDTData::getCell(QString name)
+{
+	foreach(GDSCell *cell, m_cells) {
+		if(cell->getName()==name) return cell;
+	}
+	return NULL;
 }
 
 bool GDTData::containsCell(QString name)
@@ -22,6 +29,8 @@ bool GDTData::containsCell(QString name)
 
 void GDTData::buildDataStructure()
 {
+	GDSCell* m_recentCell = NULL;
+	GDSBoundary* m_recentBoundary = NULL;
 	int layer;
 	int rectyp;
 	int xcoord,ycoord;
@@ -54,9 +63,14 @@ void GDTData::buildDataStructure()
 		} else if (rectyp == STRING) {
 			qDebug() << QString(m_file->record());
 		} else if (rectyp == ENDEL) {
+			m_recentBoundary = NULL;
 			qDebug() << "\t End entry";
 		} else if (rectyp == BOUNDARY) {
-			qDebug() << "Boundary:";
+			if(m_recentCell) {
+				qDebug() << "Boundary:";
+				m_recentBoundary = new GDSBoundary(layer);
+				m_recentCell->addBoundary(m_recentBoundary);
+			}
 		} else if (rectyp == ENDSTR) {
 			qDebug() << "End Str";
 		} else if (rectyp == BOXTYPE) {
@@ -66,6 +80,7 @@ void GDTData::buildDataStructure()
 				xcoord = m_file->getI32(i);
 				ycoord = m_file->getI32(i+4);
 				qDebug() << "\t\t x : " << xcoord << " y : " << ycoord;
+				if(m_recentBoundary) m_recentBoundary->addPoint(xcoord,ycoord);
 			}
 		} else if (rectyp == SREF) {
 			qDebug() << "SREF";
