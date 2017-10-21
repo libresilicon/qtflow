@@ -198,8 +198,7 @@ void GDSFile::wrstrm()
 	else                  Buffer[Ptr+1] = (char)(len & 0xff) | 0x80;
 
 	Ptr += 2;
-	if(Ptr > 204799)
-	{
+	if(Ptr > 204799) {
 		if (write(Fd, Buffer, 204800) < 0) errorCnt++;
 		Ptr = 0;
 	}
@@ -207,8 +206,7 @@ void GDSFile::wrstrm()
 	Buffer[Ptr]     = (char)Rectyp;
 	Buffer[Ptr + 1] = (char)Dattyp;
 	Ptr += 2;
-	if(Ptr > 204799)
-	{
+	if(Ptr > 204799) {
 		if (write(Fd, Buffer, 204800) < 0) errorCnt++;
 		Ptr = 0;
 	}
@@ -254,8 +252,7 @@ void GDSFile::wrstrm(char record[204800], GDSFile* gds2file)
 	else                  Buffer[Ptr+1] = (char)(len & 0xff) | 0x80;
 
 	Ptr += 2;
-	if(Ptr > 204799)
-	{
+	if(Ptr > 204799) {
 		if (write(Fd, Buffer, 204800) < 0) errorCnt++;
 		Ptr = 0;
 	}
@@ -263,31 +260,26 @@ void GDSFile::wrstrm(char record[204800], GDSFile* gds2file)
 	Buffer[Ptr]     = (char)Rectyp;
 	Buffer[Ptr + 1] = (char)Dattyp;
 	Ptr += 2;
-	if(Ptr > 204799)
-	{
+	if(Ptr > 204799) {
 		if (write(Fd, Buffer, 204800) < 0) errorCnt++;
 		Ptr = 0;
 	}
 
-	if(Length >= 0)
-	{
+	if(Length >= 0) {
 		remain = 204800 - Ptr;
-		if(remain <= Length)
-		{
+		if(remain <= Length) {
 			copy(record, &Buffer[Ptr], remain);
 			if (write(Fd, Buffer, 204800) < 0) errorCnt++;
 			Ptr = 0;
 			for(i = 0; i < 204800; Buffer[i] = 0, i++);
 		}
 
-		if(remain < Length)
-		{
+		if(remain < Length) {
 			copy(&record[remain], Buffer, (Length - remain));
 			Ptr = Length - remain;
 		}
 
-		if(remain > Length)
-		{
+		if(remain > Length) {
 			copy(record, &Buffer[Ptr], Length);
 			Ptr += Length;
 		}
@@ -357,8 +349,7 @@ void GDSFile::clstrm()
 	int i;              // loop counter for zero fill
 	int errorCnt = 0;
 
-	if(Writtn == WRITE) // pad w/ zeros
-	{
+	if(Writtn == WRITE) { // pad w/ zeros
 		for(i = Ptr; i < 204800; i++) Buffer[i] = 0;
 
 		if (write(Fd, Buffer, 204800) < 0) errorCnt++;
@@ -411,23 +402,20 @@ double GDSFile::getDbl()
 			dbl;
 
 	byte = (int)(*Record & 0xff);
-	if (byte > 127)
-	{
+	if (byte > 127) {
 		negative = TRUE;
 		expon = byte - 192;
-	}
-	else
-	{
+	} else {
 		negative = FALSE;
 		expon = byte - 64;
 	}
 
 	mant = 0.0;
-	for (i = 1; i <= 7; i++)
-	{
+	for (i = 1; i <= 7; i++) {
 		byte = (int)(*(Record + i) & 0xff);
 		mant = mant + ((double)byte) / pow((double)256, (double)i);
 	}
+
 	dbl = mant * pow((double)16, (double)expon);
 	if (negative) dbl = -dbl;
 
@@ -446,20 +434,16 @@ double GDSFile::getDbl(int offset)
 			dbl;
 
 	byte = (int)(*(Record + offset) & 0xff);
-	if (byte > 127)
-	{
+	if (byte > 127) {
 		negative = TRUE;
 		expon = byte - 192;
-	}
-	else
-	{
+	} else {
 		negative = FALSE;
 		expon = byte - 64;
 	}
 
 	mant = 0.0;
-	for (i = 1; i <= 7; i++)
-	{
+	for (i = 1; i <= 7; i++) {
 		byte = (int)(*(Record + offset + i) & 0xff);
 		mant = mant + ((double)byte) / pow((double)256, (double)i);
 	}
@@ -523,16 +507,15 @@ int GDSFile::getI32()
 			int32;
 
 	byte = (int)(*Record & 0xff);
-	if(byte > 127)
-	{
+	if(byte > 127) {
 		byte = byte - 255;
 		negative = TRUE;
 	}
-	else  negative = FALSE;
+	else
+		negative = FALSE;
 
 	int32 = byte;
-	for(i = 1; i <= 3; i++)
-		{
+	for(i = 1; i <= 3; i++) {
 		byte = (int)(*(Record + i) & 0xff);
 		if(negative) byte = byte - 255;
 		int32 = int32 * 256 + byte;
@@ -553,12 +536,12 @@ int GDSFile::getI32(int offset)
 			int32;
 
 	byte = (int)(*(Record + offset) & 0xff);
-	if(byte > 127)
-	{
+	if(byte > 127) {
 		byte = byte - 255;
 		negative = TRUE;
 	}
-	else  negative = FALSE;
+	else
+		negative = FALSE;
 
 	int32 = byte;
 	for(i = 1; i <= 3; i++)
@@ -719,12 +702,9 @@ void GDSFile::foundLayerDatatype(short layerNum, short dataTypeNum)
 // use to save the fact that you found a datatype in the gds file
 void GDSFile::foundLayerTexttype(short layerNum, short textTypeNum)
 {
-	if ((layerNum < NUMGDSLAYERS) && (textTypeNum < NUMGDSLAYERS))
-	{
+	if ((layerNum < NUMGDSLAYERS) && (textTypeNum < NUMGDSLAYERS)) {
 		LayerTextTypes[layerNum][textTypeNum] = TRUE;
-	}
-	else
-	{
+	} else {
 		cout << "ERROR **** Found graphics layer " << layerNum << " with texttype " << textTypeNum << " in structure " << CurrentStrName << endl;
 	}
 }
@@ -891,14 +871,14 @@ void GDSFile::putAref(
 
 /// PUTS AREF IN LIBRARY {like Calma's AREF command}
 void GDSFile::putAref(
-		 char*  sname,
-		 unsigned short ref,   // 1 for reflection, 0 for no reflection
-		 double mag,
-		 double angle,
-		 short  col,
-		 short  row,
-		 double x1, double y1, double x2, double y2, double x3, double y3, // x1y1:Origin, x2y2:Column, x3y3:Row
-		 double dbu_uu
+		char*  sname,
+		unsigned short ref,   // 1 for reflection, 0 for no reflection
+		double mag,
+		double angle,
+		short  col,
+		short  row,
+		double x1, double y1, double x2, double y2, double x3, double y3, // x1y1:Origin, x2y2:Column, x3y3:Row
+		double dbu_uu
 )
 {
 	double factor = (1 / dbu_uu);

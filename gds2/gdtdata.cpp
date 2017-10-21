@@ -1,13 +1,82 @@
 #include "gdtdata.h"
 
-GDTData::GDTData(QString fileName)
+GDTData::GDTData(QString fileName) :
+	m_recentCell(NULL)
 {
 	qDebug() << __FUNCTION__ << " Loading file: " << fileName;
-	m_name = fileName;
+	m_fileName = fileName;
 	m_file = new GDSFile(fileName.toStdString().c_str(), READ);
 
 	m_file->rdstrm();  // header
-	goThroughFile();
+	//goThroughFile();
+	buildDataStructure();
+}
+
+bool GDTData::containsCell(QString name)
+{
+	foreach(GDSCell *cell, m_cells) {
+		if(cell->getName()==name) return true;
+	}
+	return false;
+}
+
+void GDTData::buildDataStructure()
+{
+	int layer;
+	int rectyp;
+	int xcoord,ycoord;
+
+	while (! m_file->eof())
+	{
+		m_file->rdstrm();
+		rectyp = m_file->rectyp();
+		if (rectyp == BGNSTR) {
+			qDebug() << "BGNSTR:";
+		} else if (rectyp == STRNAME) {
+			QString cellname(m_file->record());
+			m_recentCell = new GDSCell(cellname);
+			m_cells.append(m_recentCell);
+			qDebug() << "STRNAME: " << cellname;
+		} else if (rectyp == LAYER) {
+			layer = m_file->getI16();
+			qDebug() << "\t Layer : " << layer;
+		} else if (rectyp == BOX) {
+			qDebug() << "Box:";
+		} else if (rectyp == PATH) {
+			qDebug() << "Path:";
+		} else if (rectyp == DATATYPE) {
+			qDebug() << "\t Data type:";
+		} else if (rectyp == TEXT) {
+			qDebug() << "\t Text";
+		} else if (rectyp == TEXTTYPE) {
+			qDebug() << "\t TEXTTYPE";
+			qDebug() << m_file->getI16();
+		} else if (rectyp == STRING) {
+			qDebug() << QString(m_file->record());
+		} else if (rectyp == ENDEL) {
+			qDebug() << "\t End entry";
+		} else if (rectyp == BOUNDARY) {
+			qDebug() << "Boundary:";
+		} else if (rectyp == ENDSTR) {
+			qDebug() << "End Str";
+		} else if (rectyp == BOXTYPE) {
+			qDebug() << "Box type:";
+		} else if (rectyp == XY) {
+			for(int i=0; i< m_file->length(); i+=8) {
+				xcoord = m_file->getI32(i);
+				ycoord = m_file->getI32(i+4);
+				qDebug() << "\t\t x : " << xcoord << " y : " << ycoord;
+			}
+		} else if (rectyp == SREF) {
+			qDebug() << "SREF";
+		} else if (rectyp == SNAME) {
+			qDebug() << "SNAME: " << QString(m_file->record());
+		} else if (rectyp == STRANS) {
+			qDebug() << "STRANS: " << m_file->getI16();
+		} else {
+			qDebug() << "entry type: " << rectyp;
+		}
+	}
 }
 
 void GDTData::goThroughFile()
@@ -312,34 +381,36 @@ void GDTData::goThroughFile()
 			if (inBoundary) length -= 8; //remove closure -- last 2 points
 			printf(" xy(");
 			int skip=0;
-			for(i=0; i<length; i+=8)
-			{
-				if (i == MAXPAIRSXY)
-				{
+			for(i=0; i<length; i+=8) {
+				if (i == MAXPAIRSXY) {
 					cerr << "ERROR: element has > " << MAXPAIRSXY << " coordinates. GDT output lines xy() list is truncated." << endl;
 					skip=1;
 				}
+
 				xcoord = m_file->getI32(i);
 				ycoord = m_file->getI32(i+4);
-				if (xcoord < 0.0)
-				{
-					sprintf(xstring,"%0.*f",precision,(xcoord * userUnits) - epsilon);
-				}
-				else
-				{
-					sprintf(xstring,"%0.*f",precision,(xcoord * userUnits) + epsilon);
-				}
-				if (ycoord < 0.0)
-				{
-					sprintf(ystring,"%0.*f",precision,(ycoord * userUnits) - epsilon);
-				}
-				else
-				{
-					sprintf(ystring,"%0.*f",precision,(ycoord * userUnits) + epsilon);
-				}
+
+				//if (xcoord < 0.0)
+				//{
+				sprintf(xstring,"%0.*f", precision, (xcoord * userUnits) - epsilon);
+				//}
+				//else
+				//{
+				//	sprintf(xstring,"%0.*f",precision,(xcoord * userUnits) + epsilon);
+				//}
+				//if (ycoord < 0.0)
+				//{
+				sprintf(ystring,"%0.*f", precision, (ycoord * userUnits) - epsilon);
+				//}
+				//else
+				//{
+				//	sprintf(ystring,"%0.*f",precision,(ycoord * userUnits) + epsilon);
+				//}
 				//if (! skip) printf("%s%s %s",(i?" ":""),sRemoveTrailingZeros(xstring,tmpString1),sRemoveTrailingZeros(ystring,tmpString2));
 			}
-			if (debug) cerr << "DEBUG line:" << __LINE__ << " LAST XY i=" << i << " xstring=" << xstring << " ystring=" << ystring << endl;
+			qDebug() << "(" << xstring << "," << ystring << ")";
+
+			//if (debug) cerr << "DEBUG line:" << __LINE__ << " LAST XY i=" << i << " xstring=" << xstring << " ystring=" << ystring << endl;
 			inBoundary = 0; //done
 			printf(")");
 		}

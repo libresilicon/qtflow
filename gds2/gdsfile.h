@@ -258,7 +258,7 @@ string              6  odd length strings must be padded w/ null character and b
 #define  BGNSTR         5  // 2-byte Signed Integer
 #define  STRNAME        6  // ASCII String
 #define  ENDSTR         7  // no data present
-#define  BOUNDARY       8  // no data p/resent
+#define  BOUNDARY       8  // no data present
 #define  PATH           9  // no data present
 #define  SREF          10  // no data present
 #define  AREF          11  // no data present
