@@ -35,7 +35,7 @@ void DEFLayoutEditor::loadFile(QString file)
 
 	editScene->setGridSize(defdata->getDistanceUnit());
 	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
-	editScene->addRect(x,y,w,h);
+	//editScene->addRect(x,y,w,h);
 
 	//editScene->setScaleFactor(100);
 	addMacroInstances();

@@ -85,7 +85,7 @@ bool PyProjectSettings::hasSettingABC()
 // for building CEL data:
 int PyProjectSettings::getMacroValue(QString macro_name, QString value_name)
 {
-	int ret = 0;
+	int ret = 1;
 	int w,h,units;
 	int left,right,bottom,top;
 	lef::LEFMacro* macro;
@@ -110,6 +110,8 @@ int PyProjectSettings::getMacroValue(QString macro_name, QString value_name)
 					ret = top;
 				}
 			}
+		} else {
+			qDebug() << __FUNCTION__ << " unknown: " << macro_name << " " << value_name;
 		}
 	}
 	return ret;
@@ -117,7 +119,7 @@ int PyProjectSettings::getMacroValue(QString macro_name, QString value_name)
 
 int PyProjectSettings::getMacroPinValue(QString macro_name, QString pin_name, QString value_name)
 {
-	int ret = 0;
+	int ret = 1;
 	int w,h,units;
 	int xp, yp;
 	lef::LEFMacro* macro;
@@ -143,6 +145,8 @@ int PyProjectSettings::getMacroPinValue(QString macro_name, QString pin_name, QS
 						ret = yp;
 				}
 			}
+		} else {
+			qDebug() << __FUNCTION__ << " unknown: " << macro_name << " " << pin_name << " " << value_name;
 		}
 	}
 	return ret;

@@ -1,6 +1,6 @@
 #include "gdsfile.h"
 
-GDSFile::GDSFile(char* fileName, int readOrWrite)
+GDSFile::GDSFile(const char *fileName, int readOrWrite)
 {
 	int   i,j;
 	char* tmpName;
@@ -8,7 +8,7 @@ GDSFile::GDSFile(char* fileName, int readOrWrite)
 	// remake FileName if found with one of these std extensions ".gds2, .gdsii, .sf, .gds"
 	tmpName = new char[2048];
 	strncpy(tmpName, fileName, 2048);
-	if(!strcmp(fileName,"")) {
+	if (! strcmp(fileName,"")) {
 		Fd = fileno(stdin);
 		//setbuf(stdin, NULL);
 		//setbuf(stdin, Buffer);
@@ -16,25 +16,25 @@ GDSFile::GDSFile(char* fileName, int readOrWrite)
 		Fd = open(tmpName, O_RDONLY, 0777);
 	}
 
-	if(Fd == -1) {
+	if (Fd == -1) {
 		strcpy(tmpName, fileName);
 		strcat(tmpName, ".gds2");
 		Fd = open(tmpName, O_RDONLY, 0777);
 	}
 
-	if(Fd == -1) {
+	if (Fd == -1) {
 		strcpy(tmpName, fileName);
 		strcat(tmpName, ".gdsii");
 		Fd = open(tmpName, O_RDONLY, 0777);
 	}
 
-	if(Fd == -1) {
+	if (Fd == -1) {
 		strcpy(tmpName, fileName);
 		strcat(tmpName, ".sf");
 		Fd = open(tmpName, O_RDONLY, 0777);
 	}
 
-	if(Fd == -1) {
+	if (Fd == -1) {
 		strcpy(tmpName, fileName);
 		strcat(tmpName, ".gds");
 		Fd = open(tmpName, O_RDONLY, 0777);
@@ -50,7 +50,7 @@ GDSFile::GDSFile(char* fileName, int readOrWrite)
 	EndOfLib = FALSE;
 	Writtn   = readOrWrite;
 	Ptr      = 0;
-	for (i=0; i< NUMGDSLAYERS; i++) {
+	for (i=0; i<NUMGDSLAYERS; i++) {
 		Tlayers[i] = Glayers[i] = FALSE;
 		for (j=0; j<NUMGDSLAYERS; j++) {
 			LayerDataTypes[i][j] = LayerTextTypes[i][j] = FALSE;
@@ -668,7 +668,7 @@ char* GDSFile::libName()
 
 
 // get stored stream file name
-char* GDSFile::fileName()
+const char* GDSFile::fileName()
 {
 	return FileName;
 }

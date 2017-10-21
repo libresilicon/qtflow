@@ -14,6 +14,9 @@
 			<tech>SCN6M_SUBM.10.tech</tech>
 			<liberty>osu018_stdcells.lib</liberty>
 			<parameter>osu018.par</parameter>
+			<gds>
+				<file>osu018_stdcells.gds</file>
+			</gds>
 		</process>
 
 		<process xml:id="osu035">

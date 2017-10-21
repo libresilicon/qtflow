@@ -2,8 +2,9 @@
 #define GDSFILE_H
 
 // Copyright 1995-2014 by Ken Schumack (Schumack@cpan.org)
-// STREAM stuff
-// @(#) $Id: gdsStream.C 95 2014-12-08 17:16:36Z schumack $
+
+#include <QString>
+
 #include <time.h>
 #include <sstream>
 #include <sys/file.h>
@@ -57,7 +58,7 @@ protected:
 	void    endEl(); // end of element
 
 public:
-	GDSFile(char* fileName, int readOrWrite); // constructor to open (create if WRITE) stream file (calls opstrm())
+	GDSFile(const char *fileName, int readOrWrite); // constructor to open (create if WRITE) stream file (calls opstrm())
 	void    opstrm();                 // open stream file
 	int     rdstrm();                 // read Record from stream file
 	void    wrstrm();                 // write Record to stream file
@@ -129,7 +130,7 @@ public:
 	int     length();   // retrive length of current record
 	void    length(int);// set length of current record
 	char*   record();   // return current record
-	char*   fileName(); // return FileName of stream file.
+	const char *fileName(); // return FileName of stream file.
 
 	void    foundGraphicsLayer(short layerFound);
 	void    foundLayerDatatype(short layerFound, short dataTypeFound);

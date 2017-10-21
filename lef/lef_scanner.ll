@@ -50,6 +50,7 @@ PITCH				"PITCH"
 OFFSET				"OFFSET"
 WIDTH				"WIDTH"
 RESISTANCE			"RESISTANCE"
+EDGECAPACITANCE		"EDGECAPACITANCE"
 CAPACITANCE			"CAPACITANCE"
 VIA					"VIA"
 RECT				"RECT"
@@ -98,6 +99,7 @@ LIBRARY				"LIBRARY"
 {PATH}+						{ return lef::LEFParser::token::PATH; }
 {WIDTH}+					{ return lef::LEFParser::token::WIDTH; }
 {RESISTANCE}+				{ return lef::LEFParser::token::RESISTANCE; }
+{EDGECAPACITANCE}+			{ return lef::LEFParser::token::EDGECAPACITANCE; }
 {CAPACITANCE}+				{ return lef::LEFParser::token::CAPACITANCE; }
 {VIA}+						{ return lef::LEFParser::token::VIA; }
 {RECT}+						{ return lef::LEFParser::token::RECT; }

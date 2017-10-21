@@ -22,6 +22,7 @@
 #include <PythonQt.h>
 
 #include "lef/lefdata.h"
+#include "gds2/gdtdata.h"
 
 #include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
@@ -145,6 +146,10 @@ private:
 	QStringList getLibraryFiles();
 	void loadLibraryFiles();
 
+	// LEF operations:
+	QStringList getGDSFiles();
+	void loadGDSFiles();
+
 	// Schematics operations:
 	QStringList getSchematicsLibraryFiles();
 	void loadSchematicsLibraryFiles();
@@ -159,6 +164,7 @@ private:
 	ColorMap *colorMap;
 	QMap<QString,lef::LEFData*> lefdata;
 	QMap<QString,symbol::SymbolData*> slibdata;
+	QMap<QString,GDTData*> gdtdata;
 
 };
 

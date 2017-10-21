@@ -388,8 +388,8 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 		macro = project->getMacro(macro_name);
 		w = macro->getWidth();
 		h = macro->getHeight();
-		//w*=m_scaleFactor;
-		//h*=m_scaleFactor;
+		w*=m_gridSize;
+		h*=m_gridSize;
 
 		macro->scaleMacro(w,h);
 

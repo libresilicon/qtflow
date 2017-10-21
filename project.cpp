@@ -68,6 +68,7 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 	loadLibraryFiles();
 	loadSchematicsLibraryFiles();
 	loadScriptFiles();
+	loadGDSFiles();
 }
 
 Project::~Project()
@@ -175,6 +176,48 @@ QStringList Project::getLibraryFiles()
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
 							if(e3.tagName()=="lef") {
+								nl4 = e3.childNodes();
+								for(int l = 0; l < nl4.count(); l++) {
+									e4 = nl4.at(l).toElement();
+									if(e4.tagName()=="file") {
+										ret.append(QDir(getProcessPath()).filePath(e4.text()));
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
+QStringList Project::getGDSFiles()
+{
+	QStringList ret;
+
+	QString technology = getTechnology();
+	QString process = getProcess();
+
+	QDomElement e1, e2, e3, e4;
+
+	QDomNodeList nl1, nl2, nl3, nl4;
+
+	nl1 = settingsFileProcess->elementsByTagName("technology");
+	for(int i = 0; i< nl1.count(); i++) {
+		e1 = nl1.at(i).toElement();
+		if(e1.attribute("xml:id")==technology) {
+			nl2 = e1.childNodes();
+			for(int j = 0; j < nl2.count(); j++) {
+				e2 = nl2.at(j).toElement();
+				if(e2.tagName()=="process") {
+					if(e2.attribute("xml:id")==process) {
+						nl3 = e2.childNodes();
+						for(int k = 0; k < nl3.count(); k++) {
+							e3 = nl3.at(k).toElement();
+							if(e3.tagName()=="gds") {
 								nl4 = e3.childNodes();
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
@@ -773,7 +816,7 @@ lef::LEFMacro* Project::getMacro(QString s)
 
 int Project::getBaseUnits(QString macro_name)
 {
-	int ret = 0;
+	int ret = 1;
 	foreach(QString key, lefdata.keys()) {
 		if(lefdata[key]->isDefinedMacro(macro_name)) {
 			ret = lefdata[key]->getBaseUnits();
@@ -807,16 +850,26 @@ int Project::getSmallestUnit()
 
 void Project::loadLibraryFiles()
 {
-	QTemporaryDir temporaryDir;
-	QString filedest;
 	QString libname;
-
 	foreach(QString filename, getLibraryFiles()) {
-		filedest = QDir(temporaryDir.path()).filePath("cells.lef");
-		QFile::copy(filename, filedest);
-		if(QFile(filedest).exists()) {
+		if(QFile(filename).exists()) {
 				libname = QFileInfo(filename).baseName();
-				lefdata[libname] = new lef::LEFData(filedest);
+				lefdata[libname] = new lef::LEFData(filename);
+		} else {
+			qDebug() << __FUNCTION__ << ": File " << filename << " doesn't exist";
+		}
+	}
+}
+
+void Project::loadGDSFiles()
+{
+	QString libname;
+	foreach(QString filename, getGDSFiles()) {
+		if(QFile(filename).exists()) {
+				libname = QFileInfo(filename).baseName();
+				gdtdata[libname] = new GDTData(filename);
+		} else {
+			qDebug() << __FUNCTION__ << ": File " << filename << " doesn't exist";
 		}
 	}
 }
@@ -878,16 +931,14 @@ void Project::loadScriptFiles()
 
 void Project::loadSchematicsLibraryFiles()
 {
-	QTemporaryDir temporaryDir;
-	QString filedest;
 	QString libname;
 
 	foreach(QString filename, getSchematicsLibraryFiles()) {
-		filedest = QDir(temporaryDir.path()).filePath("cells.slib");
-		QFile::copy(filename, filedest);
-		if(QFile(filedest).exists()) {
+		if(QFile(filename).exists()) {
 			libname = QFileInfo(filename).baseName();
-			slibdata[libname] = new symbol::SymbolData(filedest);
+			slibdata[libname] = new symbol::SymbolData(filename);
+		} else {
+			qDebug() << __FUNCTION__ << ": File " << filename << " doesn't exist";
 		}
 	}
 }
