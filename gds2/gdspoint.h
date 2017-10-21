@@ -7,7 +7,7 @@ class GDSPoint
 {
 public:
 	GDSPoint();
-	int x,y;
+	int x, y;
 };
 
 #endif // GDSPOINT_H

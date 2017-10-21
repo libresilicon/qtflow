@@ -2,6 +2,8 @@
 #define GDSBOUNDARY_H
 
 #include <QGraphicsPolygonItem>
+#include <QGraphicsRectItem>
+#include <QDebug>
 
 #include "gdspoint.h"
 
@@ -14,6 +16,8 @@ public:
 	void fillInPoints(QGraphicsPolygonItem* o);
 
 private:
+	QVector<QPointF> sortPoints();
+
 	QVector<GDSPoint*> m_points;
 	int m_layer;
 };

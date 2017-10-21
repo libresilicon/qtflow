@@ -65,6 +65,7 @@ public:
 
 	QColor colorMat(QString material);
 	QColor colorMaterialTypeMapping(QString material);
+	QColor colorFromCode(int i);
 	bool hasMaterialTypeMapping(QString material);
 	QIcon materialIcon(QString material);
 	qreal posMat(QString material);

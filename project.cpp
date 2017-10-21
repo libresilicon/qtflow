@@ -641,7 +641,12 @@ QColor Project::colorMaterialTypeMapping(QString material)
 			}
 		}
 	}
-	return QColor(Qt::white);
+	return QColor(Qt::green);
+}
+
+QColor Project::colorFromCode(int i)
+{
+	return colorMap->colorFromCode(i);
 }
 
 QColor Project::colorMat(QString material)

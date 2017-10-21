@@ -447,9 +447,12 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 			//qDebug() << "Contains cell " << macro_name;
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
 				polygon = new QGraphicsPolygonItem(mi);
-				polygon->setBrush(QBrush(Qt::black));
+				color = project->colorFromCode(b->getLayerIndex());
+				polygon->setBrush(QBrush(color));
+				polygon->setOpacity(0.25);
 				b->fillInPoints(polygon);
-				qDebug() << "Is closed: " << polygon->polygon().isClosed();
+				polygon->setPos(mi->pos());
+				//qDebug() << "Is closed: " << polygon->polygon().isClosed();
 			}
 		}
 	}
