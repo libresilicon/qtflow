@@ -1,7 +1,11 @@
 #include "schematicssymbol.h"
 
 namespace symbol {
-	SchematicsSymbol::SchematicsSymbol(QString n, QString p)
+	SchematicsSymbol::SchematicsSymbol(QString n, QString p) :
+		m_box_x1(0),
+		m_box_x2(0),
+		m_box_y1(0),
+		m_box_y2(0)
 	{
 		m_name = n;
 		m_prefix = p;
@@ -30,9 +34,9 @@ namespace symbol {
 		m_pins.append(new SymbolPin(name, index, x, y, length, orient, tw, th, a, b, mode));
 	}
 
-	QGraphicsRectItem* SchematicsSymbol::createRect(QGraphicsItem* p)
+	QRectF SchematicsSymbol::createRect()
 	{
-		return new QGraphicsRectItem(m_box_x1, m_box_y1, m_box_x2-m_box_x1, m_box_y2-m_box_y1, p);
+		return QRectF(m_box_x1, m_box_y1, m_box_x2-m_box_x1, m_box_y2-m_box_y1);
 	}
 
 	QVector<QSchematicsPin*> SchematicsSymbol::createPins(QGraphicsItem* p)

@@ -67,6 +67,8 @@ namespace symbol {
 
 	void SymbolData::addRect(int x1, int y1, int x2, int y2)
 	{
-		recentSymbol->addRect(x1,y1,x2,y2);
+		if(recentSymbol) {
+			recentSymbol->addRect(x1,y1,x2,y2);
+		}
 	}
 }

@@ -21,6 +21,18 @@ QSchematicsPin::QSchematicsPin(QString name, int index, int x, int y, int length
 	m_pinContact = new QGraphicsRectItem(x-4,-4-y,8,8,p);
 	m_pinContact->setBrush(QBrush(Qt::black));
 
+	m_x = x;
+	m_y = y;
+}
+
+int QSchematicsPin::getX()
+{
+	return m_x;
+}
+
+int QSchematicsPin::getY()
+{
+	return m_y;
 }
 
 void QSchematicsPin::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

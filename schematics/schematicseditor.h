@@ -14,6 +14,7 @@
 
 #include "schematicspartselection.h"
 #include "schematicslibraryeditor.h"
+#include "schematicsparametricpartdialog.h"
 
 class SchematicsEditor : public QGraphicsView, public IEditor
 {
@@ -30,10 +31,13 @@ public:
 
 	void setProject(Project *p);
 
+	void setDrawingOperation(schematics_operations o);
+
 public slots:
 	void zoomIn();
 	void zoomOut();
 	void showPartSelection();
+	void showParametricPartSelection();
 	void showLibraryEditor();
 
 	void onInsertPart(QString name);
@@ -52,6 +56,7 @@ private:
 
 	SchematicsPartSelection *partSelection;
 	SchematicsLibraryEditor *libraryEditor;
+	SchematicsParametricPartDialog *parametricPartSelection;
 };
 
 #endif // SCHEMATICSEDITOR_H

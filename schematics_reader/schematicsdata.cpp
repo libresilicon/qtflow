@@ -67,11 +67,15 @@ namespace schematics {
 
 	qreal SchematicsData::getPaperWidth()
 	{
+		if(paperWidth<1)
+			return 11693;
 		return paperWidth;
 	}
 
 	qreal SchematicsData::getPaperHeigth()
 	{
+		if(paperHeigth<1)
+			return 8268;
 		return paperHeigth;
 	}
 }

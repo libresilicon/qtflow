@@ -129,7 +129,8 @@ FORMS    += \
 	layoutvisibles.ui \
 	partselection.ui \
 	librarysettings.ui \
-    buildflow.ui
+    buildflow.ui \
+    parametricpart.ui
 
 RESOURCES += icons/icons.qrc
 

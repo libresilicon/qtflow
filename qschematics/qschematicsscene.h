@@ -15,6 +15,12 @@
 #include "qschematicswire.h"
 #include "qschematicspart.h"
 
+enum schematics_operations {
+	SCHEMATICS_OPERATION_NONE,
+	SCHEMATICS_OPERATION_SELECT,
+	SCHEMATICS_OPERATION_DRAG
+};
+
 class QSchematicsScene : public QGraphicsScene
 {
 public:
@@ -25,8 +31,11 @@ public:
 	void addWire(QString type, qreal x1, qreal y1, qreal x2, qreal y2);
 	void addPart(QString type, QString id, int x, int y);
 	void addPart(QString type, int x, int y);
+	QGraphicsRectItem *setSheet(int w, int h);
 
 	void setProject(Project *p);
+
+	void setDrawingOperation(schematics_operations o);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -36,11 +45,13 @@ protected:
 private:
 	QVector<QSchematicsWire*> m_wires;
 	QVector<QSchematicsPart*> m_parts;
+	QGraphicsRectItem *m_sheet;
 
 	Project *m_project;
 
 	QPointF m_lastOrig;
 	bool m_dragging;
+	schematics_operations m_recentOperation;
 };
 
 #endif // QSCHEMATICSSCENE_H

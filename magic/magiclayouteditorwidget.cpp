@@ -97,7 +97,7 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	drawingOperations[DRAWING_OPERATION_CUT_OUT] = button;
 	toolbar->addAction(button);
 
-	addToolBar(toolbar);
+	addToolBar(Qt::RightToolBarArea,toolbar);
 }
 
 void MagicLayoutEditorWidget::drawingOperation()

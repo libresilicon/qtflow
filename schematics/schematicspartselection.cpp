@@ -37,6 +37,7 @@ void SchematicsPartSelection::updatePartList()
 	QTreeWidgetItem *part;
 	QSchematicsPart* partWidget;
 	symbol::SchematicsSymbol* partsymbol;
+	int w,h;
 
 	ui->partList->header()->close();
 	ui->partList->clear();
@@ -44,6 +45,8 @@ void SchematicsPartSelection::updatePartList()
 	m_libraryParts.clear();
 	m_libraryPartWidgets.clear();
 
+	w = 0;
+	h = 0;
 	foreach(QString libname, project->getSchematicsLibraryNames()) {
 		lib = new QTreeWidgetItem(ui->partList);
 		lib->setText(0,libname);
@@ -59,6 +62,7 @@ void SchematicsPartSelection::updatePartList()
 			partWidget = new QSchematicsPart(partsymbol, 0, 0);
 			m_libraryPartWidgets[partname] = partWidget;
 			partPreview->addItem(partWidget);
+			ui->partPreview->fitInView(partWidget,Qt::KeepAspectRatio);
 		}
 	}
 }
@@ -78,7 +82,7 @@ void SchematicsPartSelection::on_partList_currentItemChanged(QTreeWidgetItem *cu
 	}
 
 	if(m_libraryPartWidgets.contains(currentItem)) {
-		ui->partPreview->fitInView(m_libraryPartWidgets[currentItem]);
+		ui->partPreview->fitInView(m_libraryPartWidgets[currentItem],Qt::KeepAspectRatio);
 		m_libraryPartWidgets[currentItem]->setVisible(true);
 	}
 

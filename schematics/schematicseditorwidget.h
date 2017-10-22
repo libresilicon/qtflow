@@ -21,12 +21,18 @@ public:
 	void setProject(Project *p);
 
 public slots:
+	void drawingOperation();
+
 	void onContentChanged();
 	void saveFile();
 
 private:
+	void addDrawingOperations();
+
 	SchematicsEditor *editArea;
 	Project *project;
+
+	QMap<schematics_operations,QAction*> drawingOperations;
 };
 
 #endif // EDITORWIDGET_H

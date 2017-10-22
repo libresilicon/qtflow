@@ -7,7 +7,7 @@
 class QSchematicsWire : public QGraphicsLineItem
 {
 public:
-	QSchematicsWire(QString type, qreal x1, qreal y1, qreal x2, qreal y2);
+	QSchematicsWire(QString type, qreal x1, qreal y1, qreal x2, qreal y2, QGraphicsItem *parent);
 };
 
 #endif // QSCHEMATICSWIRE_H

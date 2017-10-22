@@ -22,6 +22,9 @@ public:
 	bool setDragMode(bool m);
 	void updateMovingOffset(qreal dx, qreal dy);
 
+	qreal width();
+	qreal height();
+
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent *event);
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -33,7 +36,9 @@ private:
 	QVector<QSchematicsPin*> m_pins;
 	QGraphicsSimpleTextItem *m_partLabel;
 	QGraphicsSimpleTextItem *m_typeLabel;
-	QGraphicsRectItem* m_externalRect;
+	QGraphicsRectItem *m_partFrame;
+	QRectF m_externalRect;
+	QRectF m_boundingRect;
 
 	QPointF m_lastOrig;
 	bool m_dragMode;

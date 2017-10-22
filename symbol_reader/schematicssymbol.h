@@ -17,7 +17,7 @@ namespace symbol {
 		void addRect(int x1, int y1, int x2, int y2);
 		void addPin(std::string name, int index, int x, int y, int length, std::string orient, int tw, int th, int a, int b, std::string mode);
 
-		QGraphicsRectItem* createRect(QGraphicsItem*p);
+		QRectF createRect();
 		QVector<QSchematicsPin*> createPins(QGraphicsItem*p);
 
 		QString getName();

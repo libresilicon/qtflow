@@ -373,9 +373,6 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 
 	double w, h;
 
-	//x*=m_scaleFactor;
-	//y*=m_scaleFactor;
-
 	// fill in library content:
 	if(project) if(project->isDefinedMacro(macro_name)) {
 		macro = project->getMacro(macro_name);

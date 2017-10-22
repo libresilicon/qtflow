@@ -192,4 +192,3 @@ void MagicLayoutEditor::setDrawingOperation(drawing_operations o)
 {
 	editScene->setDrawingOperation(o);
 }
-

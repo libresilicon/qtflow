@@ -7,7 +7,8 @@ SchematicsEditor::SchematicsEditor(QWidget *parent):
 	editScene(NULL),
 	project(NULL),
 	partSelection(new SchematicsPartSelection(this)),
-	libraryEditor(new SchematicsLibraryEditor(this))
+	libraryEditor(new SchematicsLibraryEditor(this)),
+	parametricPartSelection(new SchematicsParametricPartDialog(this))
 {
 	editScene = new QSchematicsScene(this);
 	setScene(editScene);
@@ -27,20 +28,39 @@ void SchematicsEditor::onInsertPart(QString name)
 	editScene->addPart(name,0,0);
 }
 
+void SchematicsEditor::setDrawingOperation(schematics_operations o)
+{
+	editScene->setDrawingOperation(o);
+}
+
 void SchematicsEditor::loadFile(QString file)
 {
+	qreal scalef = 0.1;
+	QGraphicsRectItem *sheet;
 	filePath = file;
 	if(schematicsdata) delete schematicsdata;
 	schematicsdata = new schematics::SchematicsData(file);
 
 	//editScene->setGridSize(10);
 
+	//editScene->setSceneRect(0,0,schematicsdata->getPaperWidth(),schematicsdata->getPaperHeigth());
+	//editScene->setSceneRect(0,0,width(),height());
+
+	sheet = editScene->setSheet(schematicsdata->getPaperWidth(),schematicsdata->getPaperHeigth());
+
 	addWires();
 	addParts();
 
-	// add frame:
-	editScene->addRect(0,0,schematicsdata->getPaperWidth(),schematicsdata->getPaperHeigth());
-	scale(0.1,0.1);
+	/*if(schematicsdata->getPaperWidth()>schematicsdata->getPaperHeigth()) {
+		qDebug() << editScene->width();
+		qDebug() << schematicsdata->getPaperWidth();
+		qDebug() << width()/schematicsdata->getPaperWidth();
+	}*/
+
+	//sheet->setScale(scalef);
+
+	//fitInView(sheet,Qt::KeepAspectRatio);
+	//fitInView(sheet);
 
 	editScene->update();
 }
@@ -101,6 +121,11 @@ void SchematicsEditor::zoomOut()
 void SchematicsEditor::showPartSelection()
 {
 	partSelection->show();
+}
+
+void SchematicsEditor::showParametricPartSelection()
+{
+	parametricPartSelection->show();
 }
 
 void SchematicsEditor::showLibraryEditor()

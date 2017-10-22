@@ -13,6 +13,9 @@ public:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 	QRectF boundingRect() const;
 
+	int getX();
+	int getY();
+
 private:
 	QLineF drawLine(int x, int y, int length, QString orient);
 
@@ -20,6 +23,9 @@ private:
 	QGraphicsLineItem *m_pinLine;
 	QGraphicsSimpleTextItem *m_pinLabel;
 	QGraphicsRectItem *m_pinContact;
+
+	int m_x;
+	int m_y;
 };
 
 #endif // QSCHEMATICSPIN_H

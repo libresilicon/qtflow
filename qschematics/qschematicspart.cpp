@@ -6,7 +6,8 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, QString name, in
 {
 	m_name = name;
 
-	m_externalRect = obj->createRect(this);
+	m_externalRect = obj->createRect();
+	m_partFrame = new QGraphicsRectItem(m_externalRect,this);
 
 	setPos(x,y);
 
@@ -31,7 +32,8 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, int x, int y, QG
 {
 	m_name = obj->getPrefix();
 
-	m_externalRect = obj->createRect(this);
+	m_externalRect = obj->createRect();
+	m_partFrame = new QGraphicsRectItem(m_externalRect,this);
 
 	setPos(x,y);
 
@@ -45,6 +47,7 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, int x, int y, QG
 	m_typeLabel->setPos(0,-20);
 	m_typeLabel->setScale(2);
 
+	qDebug() << obj->getName();
 	setBoundingRect();
 
 	setFlags(QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable);
@@ -52,26 +55,34 @@ QSchematicsPart::QSchematicsPart(symbol::SchematicsSymbol* obj, int x, int y, QG
 
 void QSchematicsPart::setBoundingRect()
 {
-	m_xmax = 0;
-	m_ymax = 0;
+	m_xmin = m_externalRect.x();
+	m_ymin = m_externalRect.y();
+	m_xmax = m_xmin+m_externalRect.width();
+	m_ymax = m_ymin+m_externalRect.height();
 
 	foreach(QSchematicsPin* p, m_pins) {
-		if(p->x()>m_xmax) m_xmax = p->x();
-		if(p->y()>m_ymax) m_ymax = p->y();
+		if(p->getX()>m_xmax) m_xmax = p->getX();
+		if(p->getY()>m_ymax) m_ymax = p->getY();
+		if(p->getX()<m_xmin) m_xmin = p->getX();
+		if(p->getY()<m_ymin) m_ymin = p->getY();
 	}
 
-	m_xmin = m_xmax;
-	m_ymin = m_ymax;
-
-	foreach(QSchematicsPin* p, m_pins) {
-		if(p->x()<m_xmin) m_xmin = p->x();
-		if(p->y()<m_ymin) m_ymin = p->y();
-	}
+	m_boundingRect = QRect(m_xmin,m_ymin,width(),height());
 }
 
 QRectF QSchematicsPart::boundingRect() const
 {
-	return m_externalRect->rect();
+	return m_boundingRect;
+}
+
+qreal QSchematicsPart::width()
+{
+	return m_xmax-m_xmin;
+}
+
+qreal QSchematicsPart::height()
+{
+	return m_ymax-m_ymin;
 }
 
 void QSchematicsPart::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -92,7 +103,7 @@ bool QSchematicsPart::contains(const QPointF &point) const
 	offsetOrig.setX(point.x()-x());
 	offsetOrig.setY(point.y()-y());
 
-	return m_externalRect->contains(offsetOrig);
+	return m_externalRect.contains(offsetOrig);
 }
 
 void QSchematicsPart::updateMovingOffset(qreal dx, qreal dy)
