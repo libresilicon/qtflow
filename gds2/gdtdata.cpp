@@ -63,13 +63,13 @@ void GDTData::buildDataStructure()
 		} else if (rectyp == STRING) {
 			qDebug() << QString(m_file->record());
 		} else if (rectyp == ENDEL) {
+			if(m_recentCell && m_recentBoundary) m_recentCell->addBoundary(m_recentBoundary);
 			m_recentBoundary = NULL;
 			qDebug() << "\t End entry";
 		} else if (rectyp == BOUNDARY) {
 			if(m_recentCell) {
 				qDebug() << "Boundary:";
 				m_recentBoundary = new GDSBoundary(layer);
-				m_recentCell->addBoundary(m_recentBoundary);
 			}
 		} else if (rectyp == ENDSTR) {
 			qDebug() << "End Str";

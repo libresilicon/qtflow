@@ -406,10 +406,12 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
 	QGraphicsPolygonItem *polygon;
+	QGraphicsRectItem *gdsbox;
 
 
 	mi = new QLayoutMacroItem(x,y,w,h);
 	mi->setVisible(true);
+	mi->setOpacity(0.25);
 
 	// fill in library content from LEF:
 	if(project) if(project->isDefinedMacro(macro_name)) {
@@ -444,16 +446,16 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	if(project) if(project->isDefinedGDSMacro(macro_name)) {
 		cell = project->getGDSMacro(macro_name);
 		if(cell) {
-			//qDebug() << "Contains cell " << macro_name;
+			cell->setRectangle(x,y,w,h);
+			gdsbox = new QGraphicsRectItem(x,y,w,h,mi);
+
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
-				polygon = new QGraphicsPolygonItem(mi);
+				polygon = new QGraphicsPolygonItem(gdsbox);
 				color = project->colorFromCode(b->getLayerIndex());
 				polygon->setBrush(QBrush(color));
-				polygon->setOpacity(0.25);
 				b->fillInPoints(polygon);
-				polygon->setPos(mi->pos());
-				//qDebug() << "Is closed: " << polygon->polygon().isClosed();
 			}
+
 		}
 	}
 
