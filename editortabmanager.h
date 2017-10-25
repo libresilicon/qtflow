@@ -11,7 +11,6 @@
 #include "magic/magiclayouteditorwidget.h"
 #include "def/deflayouteditorwidget.h"
 #include "project.h"
-#include "layoutvisibles.h"
 
 class EditorTabManager : public QTabWidget
 {
@@ -20,7 +19,6 @@ public:
 	explicit EditorTabManager(QWidget *parent = nullptr);
 
 	void setProject(Project *p);
-	void setVisibles(LayoutVisibles *v);
 
 signals:
 	void fileSaved();
@@ -38,7 +36,6 @@ private:
 	bool isLayout(QString suffix);
 
 	Project *project;
-	LayoutVisibles *visibles;
 };
 
 #endif // EDITORTABMANAGER_H

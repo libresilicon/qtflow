@@ -66,6 +66,8 @@ public:
 	QColor colorMat(QString material);
 	QColor colorMaterialTypeMapping(QString material);
 	QColor colorFromCode(int i);
+	QString layerNameFromCIF(int i);
+	QString layerNameFromDStyle(int i);
 	bool hasMaterialTypeMapping(QString material);
 	QIcon materialIcon(QString material);
 	qreal posMat(QString material);
@@ -104,13 +106,14 @@ public:
 
 	QStringList getPlanes();
 	QStringList getTypeNames();
-	QStringList getType(QString s);
+	QStringList getTypes(QString s);
 	QStringList getAlternativeNames(QString s);
 
 	// python script paths:
 	QString getSimulationScript();
 	QString getSynthesisScript();
 	QString getBLIF2CELScript();
+	QString getBLIF2SymbolScript();
 	QString getPlace2DEFScript();
 	QString getPlacementScript();
 	QString getRoutingScript();

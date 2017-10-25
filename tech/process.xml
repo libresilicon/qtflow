@@ -12,6 +12,7 @@
 				<file>osu018_stdcells.lef</file>
 			</lef>
 			<tech>SCN6M_SUBM.10.tech</tech>
+			<techdisplay>SCN6M_SUBM.10.tech</techdisplay>
 			<liberty>osu018_stdcells.lib</liberty>
 			<parameter>osu018.par</parameter>
 			<symbols>

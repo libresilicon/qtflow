@@ -288,39 +288,50 @@ void QLayoutScene::setActiveLayer(QString layer)
 	activeLayer = layer;
 }
 
-void QLayoutScene::setVisibleLayers(QStringList l)
+void QLayoutScene::onVisibleLayersChanged(QStringList l)
 {
-	visibleLayers = l;
+	m_visibleLayers = l;
 	redraw();
 }
 
 void QLayoutScene::redraw()
 {
+	QString layerName;
+	QString altName;
 	QGraphicsRectItem *m;
 	QLayoutRectItem *w;
 	QGraphicsTextItem *t;
+	QGraphicsPolygonItem *p;
 	bool visible;
 
 	visible = true;
-	foreach(QString layerN, macro_wires.keys()) {
-		visible = visibleLayers.contains(layerN);
-		foreach(m, macro_wires[layerN]) {
+	foreach(layerName, macro_wires.keys()) {
+		visible = m_visibleLayers.contains(layerName);
+		foreach(m, macro_wires[layerName]) {
 			m->setVisible(visible);
 		}
 	}
 
 	visible = true;
-	foreach(QString layerN, layer_rects.keys()) {
-		visible = visibleLayers.contains(layerN);
-		foreach(w, layer_rects[layerN]) {
+	foreach(layerName, layer_gds.keys()) {
+		visible = m_visibleLayers.contains(layerName);
+		foreach(p, layer_gds[layerName]) {
+			p->setVisible(visible);
+		}
+	}
+
+	visible = true;
+	foreach(layerName, layer_rects.keys()) {
+		visible = m_visibleLayers.contains(layerName);
+		foreach(w, layer_rects[layerName]) {
 			w->setVisible(visible);
 		}
 	}
 
-	visible = visibleLayers.contains("comment");
-	foreach(t, macro_texts) {
-		t->setVisible(visible);
-	}
+	//visible = visibleLayers.contains("comment");
+	//foreach(t, macro_texts) {
+	//	t->setVisible(visible);
+	//}
 
 	update();
 }
@@ -365,6 +376,7 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 	update();
 
 	layer_rects[layer].append(r);
+	emit(registerLayer(layer));
 }
 
 void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y)
@@ -426,6 +438,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 					mw->setVisible(true);
 					macro_wires[layer_name].append(mw);
 				}
+				emit(registerLayer(layer_name));
 			}
 		}
 		foreach (layer, macro->getObstruction()->getLayers()) {
@@ -437,6 +450,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 				mw->setVisible(true);
 				macro_wires[layer_name].append(mw);
 			}
+			emit(registerLayer(layer_name));
 		}
 	}
 
@@ -444,15 +458,23 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 		cell = project->getGDSMacro(macro_name);
 		if(cell) {
 			cell->setRectangle(x,y,w,h);
-			gdsbox = new QGraphicsRectItem(x,y,w,h,mi);
-
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
-				polygon = new QGraphicsPolygonItem(gdsbox);
-				color = project->colorFromCode(b->getLayerIndex());
-				polygon->setBrush(QBrush(color));
-				b->fillInPoints(polygon);
+				layer_name = project->layerNameFromCIF(b->getLayerIndex());
+				if(layer_name==QString()) {
+					layer_name = project->layerNameFromDStyle(b->getLayerIndex());
+				}
+				if(layer_name==QString()) {
+					qDebug() << "Couldn't map layer " << b->getLayerIndex();
+				} else {
+					gdsbox = new QGraphicsRectItem(x,y,w,h,mi);
+					polygon = new QGraphicsPolygonItem(gdsbox);
+					color = project->colorMat(layer_name);
+					polygon->setBrush(QBrush(color));
+					b->fillInPoints(polygon);
+					layer_gds[layer_name].append(polygon);
+					emit(registerLayer(layer_name));
+				}
 			}
-
 		}
 	}
 

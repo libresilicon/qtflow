@@ -24,6 +24,9 @@ void GDSCell::setRectangle(int x, int y, int w, int h)
 	if(w<0) x+=w;
 	if(h<0) y+=h;
 
+	x-=(m_x/m_scale_x);
+	y-=(m_y/m_scale_y);
+
 	foreach(GDSBoundary *b, m_boundaries) {
 		b->setScale(m_scale_x,m_scale_y);
 		b->setOffset(x,y);
@@ -52,5 +55,6 @@ void GDSCell::addBoundary(GDSBoundary* b)
 		m_width = b->width();
 		m_height = b->height();
 	}
+
 	m_boundaries.append(b);
 }

@@ -70,7 +70,6 @@ SOURCES += \
 	pysettings.cpp \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
-	layoutvisibles.cpp \
 	projectsitem.cpp \
     generictexteditorwidget.cpp \
     buildflow.cpp \
@@ -103,7 +102,6 @@ HEADERS  += \
 	pysettings.h \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
-	layoutvisibles.h \
 	projectsitem.h \
     generictexteditorwidget.h \
     buildflow.h \
@@ -126,7 +124,6 @@ FORMS    += \
 	wave.ui \
 	projectsettings.ui \
 	console.ui \
-	layoutvisibles.ui \
 	partselection.ui \
 	librarysettings.ui \
     buildflow.ui \
@@ -215,5 +212,6 @@ DISTFILES += \
 	tech/gencmap.py \
 	tech/mos.cmap \
     scripts/place2def.py \
-    scripts/placement.py
+    scripts/placement.py \
+    scripts/blif2sym.py
 

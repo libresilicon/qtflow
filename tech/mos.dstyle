@@ -220,7 +220,7 @@ layout_styles
 #
 43      0x07    2	0x00    stipple 5       -	nselect2
 44      0x07    3	0x00    stipple 7       -	pselect2
-45      0x07    35	0x00    solid   0       -	comment
+45      0x07    35	0x00    solid   0       -	glass
 46      0x07    42	0x00    stipple 7       -	silicide_block
 47      0x07    1	0x00    solid   0       -	poly_resist
 48      0x07    3	0x00    stipple 7       -	poly_resist_stripes    
@@ -345,7 +345,7 @@ pale_styles
 #
 43	0x07    2	0x00    stipple 5       -       nselect2
 44	0x07    3	0x00    stipple 7       -       pselect2
-45	0x07    15	0x00    solid   0       -       comment
+45	0x07    15	0x00    solid   0       -       glass
 46	0x07    42	0x00    stipple 7       -       silicide_block
 47	0x07    1	0x00    solid   0       -       poly_resist
 48	0x07    3	0x00    stipple 7       -       poly_resist_stripes

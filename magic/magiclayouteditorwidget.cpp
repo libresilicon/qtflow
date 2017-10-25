@@ -50,11 +50,11 @@ void MagicLayoutEditorWidget::addDrawingLayerSelection()
 	toolbar = new QToolBar(this);
 	activeLayer = new QComboBox(toolbar);
 
-	foreach(QString layern, project->getPlanes()) {
-		foreach(QString vname, project->getType(layern)) {
+	/*foreach(QString layern, project->getPlanes()) {
+		foreach(QString vname, project->getTypes(layern)) {
 			activeLayer->addItem(project->materialIcon(vname),vname);
 		}
-	}
+	}*/
 
 	toolbar->addWidget(activeLayer);
 	addToolBar(toolbar);

@@ -2,7 +2,7 @@
 
 GDTData::GDTData(QString fileName)
 {
-	qDebug() << __FUNCTION__ << " Loading file: " << fileName;
+	//qDebug() << __FUNCTION__ << " Loading file: " << fileName;
 	m_fileName = fileName;
 	m_file = new GDSFile(fileName.toStdString().c_str(), READ);
 
@@ -31,65 +31,66 @@ void GDTData::buildDataStructure()
 {
 	GDSCell* m_recentCell = NULL;
 	GDSBoundary* m_recentBoundary = NULL;
-	int layer;
-	int rectyp;
-	int xcoord,ycoord;
+	int layer = 0;
+	int rectyp = 0;
+	int xcoord = 0;
+	int ycoord = 0;
 
 	while (! m_file->eof())
 	{
 		m_file->rdstrm();
 		rectyp = m_file->rectyp();
 		if (rectyp == BGNSTR) {
-			qDebug() << "BGNSTR:";
+			//qDebug() << "BGNSTR:";
 		} else if (rectyp == STRNAME) {
 			QString cellname(m_file->record());
 			m_recentCell = new GDSCell(cellname);
 			m_cells.append(m_recentCell);
-			qDebug() << "STRNAME: " << cellname;
+			//qDebug() << "STRNAME: " << cellname;
 		} else if (rectyp == LAYER) {
 			layer = m_file->getI16();
-			qDebug() << "\t Layer : " << layer;
+			//qDebug() << "\t Layer : " << layer;
 		} else if (rectyp == BOX) {
-			qDebug() << "Box:";
+			//qDebug() << "Box:";
 		} else if (rectyp == PATH) {
-			qDebug() << "Path:";
+			//qDebug() << "Path:";
 		} else if (rectyp == DATATYPE) {
-			qDebug() << "\t Data type:";
+			//qDebug() << "\t Data type:";
 		} else if (rectyp == TEXT) {
-			qDebug() << "\t Text";
+			//qDebug() << "\t Text";
 		} else if (rectyp == TEXTTYPE) {
-			qDebug() << "\t TEXTTYPE";
-			qDebug() << m_file->getI16();
+			//qDebug() << "\t TEXTTYPE";
+			//qDebug() << m_file->getI16();
 		} else if (rectyp == STRING) {
-			qDebug() << QString(m_file->record());
+			//qDebug() << QString(m_file->record());
 		} else if (rectyp == ENDEL) {
 			if(m_recentCell && m_recentBoundary) m_recentCell->addBoundary(m_recentBoundary);
 			m_recentBoundary = NULL;
-			qDebug() << "\t End entry";
+			//qDebug() << "\t End entry";
 		} else if (rectyp == BOUNDARY) {
 			if(m_recentCell) {
-				qDebug() << "Boundary:";
+				//qDebug() << "Boundary:";
 				m_recentBoundary = new GDSBoundary(layer);
 			}
 		} else if (rectyp == ENDSTR) {
-			qDebug() << "End Str";
+			//qDebug() << "End Str";
 		} else if (rectyp == BOXTYPE) {
-			qDebug() << "Box type:";
+			//qDebug() << "Box type:";
 		} else if (rectyp == XY) {
 			for(int i=0; i< m_file->length(); i+=8) {
 				xcoord = m_file->getI32(i);
 				ycoord = m_file->getI32(i+4);
-				qDebug() << "\t\t x : " << xcoord << " y : " << ycoord;
+				//qDebug() << "\t\t x : " << xcoord << " y : " << ycoord;
 				if(m_recentBoundary) m_recentBoundary->addPoint(xcoord,ycoord);
 			}
 		} else if (rectyp == SREF) {
-			qDebug() << "SREF";
+			//qDebug() << "SREF";
 		} else if (rectyp == SNAME) {
-			qDebug() << "SNAME: " << QString(m_file->record());
+			//qDebug() << "SNAME: " << QString(m_file->record());
 		} else if (rectyp == STRANS) {
-			qDebug() << "STRANS: " << m_file->getI16();
+			//qDebug() << "STRANS: " << m_file->getI16();
 		} else {
-			qDebug() << "entry type: " << rectyp;
+			//qDebug() << "entry type: " << rectyp;
 		}
 	}
 }
@@ -423,7 +424,7 @@ void GDTData::goThroughFile()
 				//}
 				//if (! skip) printf("%s%s %s",(i?" ":""),sRemoveTrailingZeros(xstring,tmpString1),sRemoveTrailingZeros(ystring,tmpString2));
 			}
-			qDebug() << "(" << xstring << "," << ystring << ")";
+			//qDebug() << "(" << xstring << "," << ystring << ")";
 
 			//if (debug) cerr << "DEBUG line:" << __LINE__ << " LAST XY i=" << i << " xstring=" << xstring << " ystring=" << ystring << endl;
 			inBoundary = 0; //done

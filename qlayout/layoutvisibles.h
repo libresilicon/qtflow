@@ -17,23 +17,26 @@ public:
 
 	bool typeIsEnabled(QString s);
 
-	QStringList getEnabledTypes();
-
-signals:
-	void refreshLayout(QString);
-
 public slots:
 	void changeColor();
 	void on_layerList_customContextMenuRequested(const QPoint &pos);
-	void handleClick(const QModelIndex &index);
+	void handleClick(QTreeWidgetItem *item, int column);
 	void handleSearch(QString);
 
+	void onRegisterLayer(QString s);
+
+signals:
+	void enabledTypesChanged(QStringList);
+
 private:
+	QStringList getEnabledTypes();
+
 	void refreshLists();
 	Ui::LayoutVisibles *ui;
 	Project *project;
 
 	QVector<QTreeWidgetItem*> typeEntries;
+	QVector<QTreeWidgetItem*> typeRootEntries;
 };
 
 #endif // LAYOUTVISIBLES_H

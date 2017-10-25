@@ -7,8 +7,9 @@
 #include "magiclayouteditor.h"
 #include "editorwidget.h"
 #include "magic3d/magic3d.h"
-#include "layoutvisibles.h"
 #include "project.h"
+
+#include "qlayout/layoutvisibles.h"
 
 class MagicLayoutEditorWidget : public EditorWidget
 {

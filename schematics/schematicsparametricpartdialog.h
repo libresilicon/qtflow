@@ -3,6 +3,8 @@
 
 #include <QDialog>
 
+#include "ui_parametricpart.h"
+
 class SchematicsParametricPartDialog : public QDialog
 {
 	Q_OBJECT
@@ -12,6 +14,9 @@ public:
 signals:
 
 public slots:
+
+private:
+	Ui::ParametricPartDialog *ui;
 };
 
 #endif // SCHEMATICSPARAMETRICPARTDIALOG_H

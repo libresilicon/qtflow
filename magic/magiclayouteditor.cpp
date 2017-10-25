@@ -124,13 +124,6 @@ void MagicLayoutEditor::setProject(Project *p)
 	editScene->setProject(p);
 }
 
-void MagicLayoutEditor::visibles_action(QString s)
-{
-	QStringList l;
-	setRecentVisible(s);
-	editScene->setVisibleLayers(visibles->getEnabledTypes());
-}
-
 void MagicLayoutEditor::setRecentVisible(QString s)
 {
 	int index;
@@ -148,7 +141,8 @@ void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 {
 	visibles = v;
 	if(visibles) {
-		connect(visibles, SIGNAL(refreshLayout(QString)), this, SLOT(visibles_action(QString)));
+		connect(visibles, SIGNAL(enabledTypesChanged(QStringList)), editScene, SLOT(onVisibleLayersChanged(QStringList)));
+		connect(editScene, SIGNAL(registerLayer(QString)), visibles, SLOT(onRegisterLayer(QString)));
 	}
 }
 

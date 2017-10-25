@@ -26,16 +26,26 @@
       <item>
        <widget class="QListWidget" name="listWidget">
         <property name="currentRow">
-         <number>0</number>
+         <number>-1</number>
         </property>
         <item>
          <property name="text">
-          <string>Verilog module</string>
+          <string>Verilog file</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Verilog testbench</string>
+          <string>Schematics diagram</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Schematics symbol</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Magic layout</string>
          </property>
         </item>
        </widget>

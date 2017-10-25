@@ -4,8 +4,6 @@
 #define __kvstypes__
 #include <stdio.h>
 
-static const char* kvstypes_hwhat = "@(#) $Id: kvstypes.h 79 2010-09-24 20:14:31Z schumack $ $Revision: 79 $ $Date: 2010-09-24 15:14:31 -0500 (Fri, 24 Sep 2010) $";
-
 #define TRUE    1
 #define FALSE   0
 #define YES     1

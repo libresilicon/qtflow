@@ -153,7 +153,53 @@ QColor ColorMap::colorFromCode(int i)
 			return QColor(color.r,color.g,color.b);
 		}
 	}
-	return QColor(Qt::white);
+	qDebug() << "Unable to map " << i;
+	return QColor(Qt::black);
+}
+
+QString ColorMap::colorNameFromCode(int i)
+{
+	foreach(CMColor color, colorMap) {
+		if(color.index==i) {
+			return color.name;
+		}
+	}
+	return QString();
+}
+
+QString ColorMap::materialNameFromCode(int i)
+{
+	QString ret = QString();
+	LayoutStyleSpec spec;
+
+	foreach(spec, layoutStyleMap) {
+		if(spec.num==i) {
+			ret = spec.long_name;
+			if(ret==QString())
+				ret = spec.short_name;
+			return ret;
+		}
+	}
+
+	foreach(spec, paleStyleMap) {
+		if(spec.num==i) {
+			ret = spec.long_name;
+			if(ret==QString())
+				ret = spec.short_name;
+			return ret;
+		}
+	}
+
+	foreach(spec, displayStyleMap) {
+		if(spec.num==i) {
+			ret = spec.long_name;
+			if(ret==QString())
+				ret = spec.short_name;
+			return ret;
+		}
+	}
+
+	return ret;
 }
 
 bool ColorMap::colorNameExists(QString s)
@@ -190,7 +236,8 @@ QColor ColorMap::colorFromName(QString s)
 			return colorFromCode(spec.color);
 		}
 	}
-	return QColor(Qt::white);
+	qDebug() << "Unable to map " << s;
+	return QColor(Qt::black);
 }
 
 bool ColorMap::isStipple(QString s)

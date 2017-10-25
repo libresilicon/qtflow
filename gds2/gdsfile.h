@@ -31,8 +31,6 @@ using namespace std;
 //G_epsilon: to take care of floating point representation problems
 #define G_epsilon 0.00005
 
-static const char* gdsStream_hwhat = "@(#) $Id: gdsStream.h 95 2014-12-08 17:16:36Z schumack $ $Revision: 95 $ $Date: 2014-12-08 11:16:36 -0600 (Mon, 08 Dec 2014) $";
-
 class GDSFile
 {
 protected:

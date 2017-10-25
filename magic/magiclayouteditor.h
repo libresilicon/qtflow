@@ -4,8 +4,8 @@
 #include "ieditor.h"
 #include "magic/magicdata.h"
 #include "project.h"
-#include "layoutvisibles.h"
 
+#include "qlayout/layoutvisibles.h"
 #include "qlayout/qlayoutscene.h"
 
 #include <QGridLayout>
@@ -46,8 +46,6 @@ signals:
 	void contentSaved();
 
 public slots:
-	void visibles_action(QString s);
-
 	void setActiveLayer(QString);
 
 	void zoomIn();

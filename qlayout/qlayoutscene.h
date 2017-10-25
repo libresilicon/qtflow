@@ -23,11 +23,14 @@ enum drawing_operations {
 	DRAWING_OPERATION_DRAG
 };
 
+typedef QVector<QGraphicsPolygonItem*> layer_gds_wires_t;
 typedef QVector<QGraphicsRectItem*> layer_macro_wires_t;
 typedef QVector<QLayoutRectItem*> rects_layer_t;
 
 class QLayoutScene : public QGraphicsScene
 {
+	Q_OBJECT
+
 public:
 	QLayoutScene(QObject *parent = Q_NULLPTR);
 	QLayoutScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
@@ -37,7 +40,6 @@ public:
 
 	void setDrawingOperation(drawing_operations o);
 	void setActiveLayer(QString layer);
-	void setVisibleLayers(QStringList l);
 	void redraw();
 
 	int getScaleFactor();
@@ -60,9 +62,14 @@ protected:
 
 	//void drawBackground(QPainter *painter, const QRectF &rect);
 
+public slots:
+	void onVisibleLayersChanged(QStringList l);
+
 signals:
 	void contentChanged();
 	void contentSaved();
+
+	void registerLayer(QString);
 
 private:
 	QPointF snapGrid(QPointF pt);
@@ -75,7 +82,7 @@ private:
 	QGraphicsRectItem *recentSelectRectangle;
 	drawing_operations recentOperation;
 	QPointF lastOrig;
-	QStringList visibleLayers;
+	QStringList m_visibleLayers;
 	bool m_dragging;
 	int m_gridSize;
 	int m_scaleFactor;
@@ -84,6 +91,7 @@ private:
 	QVector<QGraphicsTextItem*> macro_texts;
 	QMap<QString,layer_macro_wires_t> macro_wires;
 	QMap<QString,rects_layer_t> layer_rects;
+	QMap<QString,layer_gds_wires_t> layer_gds;
 	QVector<QGraphicsLineItem*> gridLines;
 };
 

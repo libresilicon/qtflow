@@ -141,7 +141,6 @@ void GDSBoundary::fillInPoints(QGraphicsPolygonItem *o)
 	QPolygonF polygon;
 	foreach(QPointF p, sortPoints()) {
 		polygon << p;
-		qDebug() << p;
 	}
 	o->setPolygon(polygon);
 }

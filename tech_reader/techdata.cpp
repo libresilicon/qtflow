@@ -58,6 +58,17 @@ namespace tech {
 		typeList[typeName].append(value);
 	}
 
+	void TechData::addCIFMapping(int i, std::string layer)
+	{
+		cifLayerNames[i] = QString::fromStdString(layer);
+	}
+
+	QString TechData::layerNameFromCIF(int i)
+	{
+		if(cifLayerNames.contains(i)) return cifLayerNames[i];
+		return QString();
+	}
+
 	QStringList TechData::getType(QString s)
 	{
 		return typeList[s];

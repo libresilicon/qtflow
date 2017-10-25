@@ -41,6 +41,8 @@ types
   implant  p_field_implant,pfi
   select  nselect,ns
   select  pselect,ps
+  select  nselect2,ns2
+  select  pselect2,ps2
   active  ntransistor,nfet
   active  ptransistor,pfet
   active  diffusion,diff
@@ -73,6 +75,9 @@ types
   metal2  fillm2,fm2
   via1  gv1
   metal2  m3contact,m3cut,m3c,via2,v2
+  metal1  metal1tight
+  metal2  metal2tight
+  metal3  metal3tight
   metal3  metal3,m3,cyan
   metal3  pseudo_rmetal3,prm3
   metal3  rmetal3,rm3
@@ -104,6 +109,7 @@ types
   viai    gvi
   oxide  glass
   active  silicide_block,sb
+  active  poly_resist_stripes
   active  poly_resist,pres
   active  pseudo_rpoly,prp
   active  rpoly,rp

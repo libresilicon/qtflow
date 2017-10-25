@@ -5,11 +5,16 @@ SOURCES += \
 	$$PWD/qlayoutwireitem.cpp \
 	$$PWD/qlayoutmacroitem.cpp \
 	$$PWD/qlayoutrectitem.cpp \
-	$$PWD/qlayoutscene.cpp
+	$$PWD/qlayoutscene.cpp \
+	$$PWD/layoutvisibles.cpp
 
 HEADERS += \
 	$$PWD/qlayoutwireitem.h \
 	$$PWD/qlayoutmacroitem.h \
 	$$PWD/qlayoutrectitem.h \
-	$$PWD/qlayoutscene.h
+	$$PWD/qlayoutscene.h \
+	$$PWD/layoutvisibles.h
+
+FORMS    += \
+	$$PWD/layoutvisibles.ui
 

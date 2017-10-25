@@ -50,6 +50,8 @@ public:
 	QColor colorFromName(QString s);
 	bool colorNameExists(QString s);
 	QColor colorFromCode(int i);
+	QString colorNameFromCode(int i);
+	QString materialNameFromCode(int i);
 	bool isStipple(QString s);
 	int getStippleID(QString s);
 	QPixmap getStipplePixMap(QString s);

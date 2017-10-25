@@ -2,8 +2,7 @@
 
 EditorTabManager::EditorTabManager(QWidget *parent) :
 	QTabWidget(parent),
-	project(NULL),
-	visibles(NULL)
+	project(NULL)
 {
 	setTabsClosable(true);
 	parent->layout()->addWidget(this);
@@ -122,9 +121,4 @@ void EditorTabManager::closeFile(int idx)
 void EditorTabManager::setProject(Project *p)
 {
 	project = p;
-}
-
-void EditorTabManager::setVisibles(LayoutVisibles *v)
-{
-	visibles = v;
 }

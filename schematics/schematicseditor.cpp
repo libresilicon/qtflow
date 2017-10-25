@@ -51,12 +51,6 @@ void SchematicsEditor::loadFile(QString file)
 	addWires();
 	addParts();
 
-	/*if(schematicsdata->getPaperWidth()>schematicsdata->getPaperHeigth()) {
-		qDebug() << editScene->width();
-		qDebug() << schematicsdata->getPaperWidth();
-		qDebug() << width()/schematicsdata->getPaperWidth();
-	}*/
-
 	//sheet->setScale(scalef);
 
 	//fitInView(sheet,Qt::KeepAspectRatio);

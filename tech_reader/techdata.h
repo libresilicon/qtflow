@@ -9,6 +9,7 @@
 #include <QVector>
 #include <QMap>
 #include <QRect>
+#include <QDebug>
 #include <QTextStream>
 #include <QString>
 #include <QTextStream>
@@ -26,6 +27,8 @@ namespace tech {
 
 		void addPlane(std::string);
 		void addType(std::string s1, std::string s2);
+		void addCIFMapping(int i, std::string layer);
+		QString layerNameFromCIF(int i);
 
 		QStringList getType(QString s);
 
@@ -49,6 +52,7 @@ namespace tech {
 		QStringList planeList;
 		QMap<QString,QStringList> typeList;
 		QMap<QString,QMap<QString,QVector<int>>> styleList;
+		QMap<int,QString> cifLayerNames;
 
 		QString recentStyle;
 		QString recentStyleMember;

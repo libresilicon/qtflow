@@ -610,6 +610,7 @@ void Project::buildAll()
 {
 	mainContext.evalScript("synth()");
 	mainContext.evalScript("blif2cel()");
+	mainContext.evalScript("blif2sym()");
 	mainContext.evalScript("place()");
 	mainContext.evalScript("place2def()");
 }
@@ -641,12 +642,23 @@ QColor Project::colorMaterialTypeMapping(QString material)
 			}
 		}
 	}
-	return QColor(Qt::green);
+	qDebug() << "Unable to map color to " << material;
+	return QColor(Qt::black);
 }
 
 QColor Project::colorFromCode(int i)
 {
 	return colorMap->colorFromCode(i);
+}
+
+QString Project::layerNameFromDStyle(int i)
+{
+	return colorMap->materialNameFromCode(i);
+}
+
+QString Project::layerNameFromCIF(int i)
+{
+	return techDisplayData->layerNameFromCIF(i);
 }
 
 QColor Project::colorMat(QString material)
@@ -658,15 +670,16 @@ QColor Project::colorMat(QString material)
 		} else {
 			foreach(QString altname, getAlternativeNames(material)) {
 				if(colorMap->colorNameExists(altname)) {
+					//qDebug() << "Found material " << material << " as " << altname;
 					return colorMap->colorFromName(altname);
 				} else if(hasMaterialTypeMapping(altname)) {
+					//qDebug() << "Found material " << material << " as " << altname;
 					return colorMaterialTypeMapping(altname);
 				}
 			}
 		}
 	}
-	qDebug() << "Can't find material: " << material;
-	return QColor(Qt::green);
+	return QColor(Qt::black);
 }
 
 QIcon Project::materialIcon(QString material)
@@ -743,7 +756,7 @@ QStringList Project::getTypeNames()
 	return techDisplayData->getTypeNames();
 }
 
-QStringList Project::getType(QString s)
+QStringList Project::getTypes(QString s)
 {
 	QStringList typeList;
 	if(!techDisplayData) return typeList;
@@ -929,24 +942,36 @@ QStringList Project::getListOfSchematicParts()
 
 void Project::loadScriptFiles()
 {
-
-	mainContext.evalScript("def sim():\n\tprint \"not defined\"");
-	mainContext.evalScript("def blif2cel():\n\tprint \"not defined\"");
-
 	if(QFile(getSynthesisScript()).exists()) {
 		mainContext.evalFile(getSynthesisScript());
 	} else {
 		mainContext.evalScript("def synth():\n\tprint \"not defined\"");
 	}
+
 	if(QFile(getSimulationScript()).exists()) {
 		mainContext.evalFile(getSimulationScript());
+	} else {
+		mainContext.evalScript("def sim():\n\tprint \"not defined\"");
 	}
+
 	if(QFile(getBLIF2CELScript()).exists()) {
 		mainContext.evalFile(getBLIF2CELScript());
+	} else {
+		mainContext.evalScript("def blif2cel():\n\tprint \"not defined\"");
 	}
+
+	if(QFile(getBLIF2SymbolScript()).exists()) {
+		mainContext.evalFile(getBLIF2SymbolScript());
+	} else {
+		mainContext.evalScript("def blif2sym():\n\tprint \"not defined\"");
+	}
+
 	if(QFile(getPlacementScript()).exists()) {
 		mainContext.evalFile(getPlacementScript());
+	} else {
+		mainContext.evalScript("def place():\n\tprint \"not defined\"");
 	}
+
 	if(QFile(getPlace2DEFScript()).exists()) {
 		mainContext.evalFile(getPlace2DEFScript());
 	} else {
@@ -982,6 +1007,11 @@ QString Project::getSynthesisScript()
 QString  Project::getBLIF2CELScript()
 {
 	return project_settings->value("blif2cel_script").toString();
+}
+
+QString  Project::getBLIF2SymbolScript()
+{
+	return project_settings->value("blif2sym_script").toString();
 }
 
 QString  Project::getPlace2DEFScript()
