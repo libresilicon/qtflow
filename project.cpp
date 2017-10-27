@@ -71,6 +71,16 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 	loadGDSFiles();
 }
 
+QStringList Project::getDesignRules()
+{
+	return techDisplayData->getDesignRules();
+}
+
+TechDesignRule Project::getDesignRule(QString n)
+{
+	return techDisplayData->getDesignRule(n);
+}
+
 Project::~Project()
 {
 	delete colorMap;
@@ -756,12 +766,17 @@ QString Project::material2Plane(QString m)
 qreal Project::posMat(QString material)
 {
 	qreal ret = 0;
+	qreal order;
+	qreal planes;
 	QString plane;
 
 	plane = material2Plane(material);
 
-	if(techDisplayData) ret = techDisplayData->getPlaneOrder(plane);
-	ret *= 0.1;
+	if(techDisplayData) {
+		order = techDisplayData->getPlaneOrder(plane);
+		planes = techDisplayData->getNumPlanes();
+		ret = (1/planes)*order;
+	}
 
 	return ret;
 }

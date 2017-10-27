@@ -6,15 +6,18 @@ SOURCES += \
 	$$PWD/qlayoutmacroitem.cpp \
 	$$PWD/qlayoutrectitem.cpp \
 	$$PWD/qlayoutscene.cpp \
-	$$PWD/layoutvisibles.cpp
+	$$PWD/layoutvisibles.cpp \
+    $$PWD/drcsettings.cpp
 
 HEADERS += \
 	$$PWD/qlayoutwireitem.h \
 	$$PWD/qlayoutmacroitem.h \
 	$$PWD/qlayoutrectitem.h \
 	$$PWD/qlayoutscene.h \
-	$$PWD/layoutvisibles.h
+	$$PWD/layoutvisibles.h \
+    $$PWD/drcsettings.h
 
 FORMS    += \
-	$$PWD/layoutvisibles.ui
+	$$PWD/layoutvisibles.ui \
+    $$PWD/drcsettings.ui
 

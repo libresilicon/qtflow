@@ -15,6 +15,8 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
+#include "techdesignrule.h"
+
 namespace tech {
 	class TechScanner;
 	class TechData
@@ -30,15 +32,21 @@ namespace tech {
 		void addCIFMapping(int i, std::string layer);
 		void addPlaneOrder(int i, std::string plane);
 
+		void addDesignRuleWidth(std::string, int, std::string m);
+		void addDesignRuleSpacing(std::string n1, std::string n2, int d, std::string s, std::string m);
+
 		QString layerNameFromCIF(int i);
 
 		QStringList getType(QString s);
+		QStringList getDesignRules();
+		TechDesignRule getDesignRule(QString n);
 
 		QStringList getPlanes();
 
 		QStringList getTypeNames();
 
 		int getPlaneOrder(QString n);
+		int getNumPlanes();
 
 		QStringList getStyleNames();
 		QMap<QString,QVector<int>> getStyle(QString s);
@@ -58,6 +66,7 @@ namespace tech {
 		QMap<QString,QMap<QString,QVector<int>>> styleList;
 		QMap<int,QString> cifLayerNames;
 		QMap<QString,int> planeOrder;
+		QMap<QString,TechDesignRule> designRules;
 
 		QString recentStyle;
 		QString recentStyleMember;

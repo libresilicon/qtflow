@@ -10,6 +10,7 @@
 #include "schematics/schematicseditorwidget.h"
 #include "magic/magiclayouteditorwidget.h"
 #include "def/deflayouteditorwidget.h"
+#include "symbols/symboleditorwidget.h"
 #include "project.h"
 
 class EditorTabManager : public QTabWidget

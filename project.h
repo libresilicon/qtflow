@@ -92,6 +92,10 @@ public:
 
 	void setSearchDirectories(QStringList l);
 
+	// DRC:
+	QStringList getDesignRules();
+	TechDesignRule getDesignRule(QString n);
+
 	// module names:
 	QString getTopLevel();
 	QString getTestBench();

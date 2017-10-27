@@ -62,6 +62,8 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 
 	connect(createWidget, SIGNAL(fileCreated(QString)), editArea, SLOT(openFile(QString)));
 
+	dialogDRCSettings = new DRCSettings(this);
+
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
 
@@ -172,6 +174,7 @@ void MainWindow::openProject(QString path)
 		editArea->setProject(project);
 		buildFlowConfig->setProject(project);
 		createWidget->setProject(project);
+		dialogDRCSettings->setProject(project);
 		mainContext.addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
@@ -229,6 +232,11 @@ void MainWindow::on_setSynthesisMode_triggered()
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
 	pythonConsoleWidget->setVisible(true);
+}
+
+void MainWindow::on_actionDRC_triggered()
+{
+	dialogDRCSettings->show();
 }
 
 void MainWindow::on_setLayoutMode_triggered()
@@ -364,6 +372,10 @@ void MainWindow::enableProject()
 	filesWidget->setVisible(true);
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
+
+	filesWidget->refresh();
+	projectsWidget->refresh();
+	modulesWidget->refresh();
 }
 
 void MainWindow::disableProject()

@@ -167,6 +167,7 @@ include(qlayout/qlayout.pri)
 include(qschematics/qschematics.pri)
 include(symbol_reader/symbol_reader.pri)
 include(gds2/gds2.pri)
+include(symbols/symbols.pri)
 
 DISTFILES += \
 	scripts/blif2cel.py \

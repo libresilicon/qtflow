@@ -39,6 +39,8 @@
 
 #include "pythonconsoledockwidget.h"
 
+#include "qlayout/drcsettings.h"
+
 namespace Ui {
 	class MainWindow;
 }
@@ -99,6 +101,7 @@ private slots:
 	void on_setAnalogSimulationMode_triggered();
 	void on_setSynthesisMode_triggered();
 	void on_setLayoutMode_triggered();
+	void on_actionDRC_triggered();
 
 	void on_synthesisSettings_triggered(bool);
 	void on_librarySettings_triggered(bool);
@@ -132,6 +135,7 @@ private:
 	ModuleSelector *modulesWidget;
 	PythonConsoleDockWidget *pythonConsoleWidget;
 	Templates *newProjectDialog;
+	DRCSettings *dialogDRCSettings;
 
 	EditorTabManager *editArea;
 

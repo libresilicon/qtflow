@@ -73,7 +73,7 @@ void GLWidget::loadFile(QString file)
 void GLWidget::paintGL()
 {
 	glPushMatrix();
-	//glLoadIdentity();
+	glLoadIdentity();
 	glRotatef( m_angle1, 1.0f, 0.0f, 0.0f );
 	glRotatef( m_angle2, 0.0f, 1.0f, 0.0f );
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -168,14 +168,13 @@ void GLWidget::initializeGL()
 	qglClearColor(QColor(Qt::white));
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glShadeModel(GL_SMOOTH);
-	glDepthFunc(GL_LESS);
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	//glEnable(GL_CULL_FACE);
+	glEnable(GL_FRONT_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	//glShadeModel(GL_SMOOTH);
+	//glDepthFunc(GL_LESS);
 	glEnable(GL_MULTISAMPLE);
-	//static GLfloat lightPosition[4] = { 0.5, 5.0, 7.0, 1.0 };
-	//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 }
 
 
@@ -218,7 +217,7 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	y2+=m_offsetY;
 
 	glBegin(GL_QUAD_STRIP);
-	glColor3f(color.redF(), color.greenF(), color.blueF());
+	glColor4f(color.redF(), color.greenF(), color.blueF(), 0.75);
 
 	// bottom
 	glVertex3f( x1, y1, z );
@@ -240,7 +239,7 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glFlush();
 
 	glBegin(GL_QUAD_STRIP);
-	glColor3f(color.redF(), color.greenF(), color.blueF());
+	glColor4f(color.redF(), color.greenF(), color.blueF(), 0.75);
 
 	// bottom
 	glVertex3f( x1, y1, z );

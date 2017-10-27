@@ -58,6 +58,7 @@ void MagicLayoutEditorWidget::addDrawingLayerSelection()
 
 	connect(activeLayer,SIGNAL(currentTextChanged(QString)),editArea,SLOT(setActiveLayer(QString)));
 	connect(layoutVisibles,SIGNAL(setCurrentLayer(QString)),activeLayer,SLOT(setCurrentText(QString)));
+	connect(layoutVisibles,SIGNAL(setCurrentLayer(QString)),editArea,SLOT(setActiveLayer(QString)));
 
 	toolbar->addWidget(activeLayer);
 	addToolBar(toolbar);
@@ -154,4 +155,5 @@ void MagicLayoutEditorWidget::saveFile()
 	editArea->saveFile();
 	setStatusChanged(false);
 	emit(contentSaved());
+	view3D->loadFile(editArea->getFilePath());
 }

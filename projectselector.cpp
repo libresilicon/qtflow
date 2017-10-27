@@ -15,6 +15,14 @@ ProjectSelector::ProjectSelector(QWidget *parent) :
 	connect(ui->treeView, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(onOpen(const QModelIndex&)));
 }
 
+void ProjectSelector::refresh()
+{
+	delete projectMembers;
+	projectMembers = new ProjectsTreeModel();
+	projectMembers->setProject(project);
+	ui->treeView->setModel(projectMembers);
+}
+
 void ProjectSelector::onOpen(const QModelIndex &i)
 {
 	if(project) {

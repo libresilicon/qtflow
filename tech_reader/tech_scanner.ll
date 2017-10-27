@@ -5,6 +5,8 @@
 #include "tech_parser/tech_parser.h"
 #include "tech_reader/techscanner.h"
 
+std::string multiline_buf;
+
 #define YY_DECL int tech::TechScanner::techlex(\
 	tech::TechParser::semantic_type* techlval,\
 	tech::TechData *techdata)
@@ -245,7 +247,7 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 
 [\\]+					{
 	BEGIN(multiline);
-	return tech::TechParser::token::Multiline;
+	multiline_buf = "";
 }
 
 <multiline>.*			{
@@ -255,12 +257,15 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 			if(*end) {
 				if(*end=='\\') {
 					BEGIN(multiline);
+					multiline_buf += std::string(yytext, yyleng);
+					techlval->v_str = new std::string(multiline_buf);
 					return tech::TechParser::token::Multiline;
 				} else {
 					BEGIN(INITIAL);
+					multiline_buf += std::string(yytext, yyleng);
+					techlval->v_str = new std::string(multiline_buf);
 					return tech::TechParser::token::Multiline;
 				}
-				return tech::TechParser::token::Multiline;
 			}
 		}
 }

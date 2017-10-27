@@ -22,7 +22,6 @@ enum WidgetType {
 class EditorWidget : public QMainWindow
 {
 	Q_OBJECT
-
 public:
 	explicit EditorWidget(QWidget *parent = nullptr);
 	virtual void loadFile(QString);

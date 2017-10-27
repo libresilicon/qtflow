@@ -31,12 +31,21 @@ void EditorTabManager::openFile(QString filepath)
 		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
 		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
 	} else if(isSchematic(info.suffix())) {
-		SchematicsEditorWidget *editorWidget = new SchematicsEditorWidget(this);
-		editorWidget->setProject(project);
-		editorWidget->loadFile(filepath);
-		addTab(editorWidget,info.fileName());
-		connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
-		connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+		if(info.suffix()=="mag") {
+			SchematicsEditorWidget *editorWidget = new SchematicsEditorWidget(this);
+			editorWidget->setProject(project);
+			editorWidget->loadFile(filepath);
+			addTab(editorWidget,info.fileName());
+			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+		} else if(info.suffix()=="sym") {
+			SymbolEditorWidget *editorWidget = new SymbolEditorWidget(this);
+			editorWidget->setProject(project);
+			editorWidget->loadFile(filepath);
+			addTab(editorWidget,info.fileName());
+			connect(editorWidget, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+			connect(editorWidget, SIGNAL(contentSaved()), this, SLOT(onContentSaved()));
+		}
 	} else if(isLayout(info.suffix())) {
 		if(info.suffix()=="mag") {
 			MagicLayoutEditorWidget *editorWidget = new MagicLayoutEditorWidget(this);

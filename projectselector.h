@@ -23,6 +23,7 @@ signals:
 	void openFile(QString);
 
 public slots:
+	void refresh();
 	void onContextMenu(const QPoint&);
 	void onOpen(const QModelIndex&);
 

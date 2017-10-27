@@ -74,10 +74,58 @@ namespace tech {
 		return typeList[s];
 	}
 
+	QStringList TechData::getDesignRules()
+	{
+		return designRules.keys();
+	}
+
+	TechDesignRule TechData::getDesignRule(QString n) {
+		if(designRules.contains(n))
+			return designRules[n];
+		return TechDesignRule();
+	}
+
+	void TechData::addDesignRuleSpacing(std::string n1, std::string n2, int d, std::string s, std::string m)
+	{
+		QString material1 = QString::fromStdString(n1);
+		QString material2 = QString::fromStdString(n2);
+		QString severity = QString::fromStdString(s);
+
+		TechDesignRule rule;
+		if(designRules.contains(material1))
+			rule = designRules[material1];
+
+		rule.setName(material1);
+		//rule.setMinimumWidth(w);
+		//rule.setWidthMessage(QString::fromStdString(m));
+
+		designRules[material1]=rule;
+	}
+
+	void TechData::addDesignRuleWidth(std::string n, int w, std::string m)
+	{
+		QString name = QString::fromStdString(n);
+		TechDesignRule rule;
+
+		if(designRules.contains(name))
+			rule = designRules[name];
+
+		rule.setName(name);
+		rule.setMinimumWidth(w);
+		rule.setWidthMessage(QString::fromStdString(m));
+
+		designRules[name]=rule;
+	}
+
 	void TechData::addPlaneOrder(int i, std::string plane)
 	{
 		QString n = QString::fromStdString(plane);
 		planeOrder[n] = i;
+	}
+
+	int TechData::getNumPlanes()
+	{
+		return planeOrder.count();
 	}
 
 	int TechData::getPlaneOrder(QString n)
