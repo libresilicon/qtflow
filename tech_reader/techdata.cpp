@@ -74,6 +74,21 @@ namespace tech {
 		return typeList[s];
 	}
 
+	void TechData::addPlaneOrder(int i, std::string plane)
+	{
+		QString n = QString::fromStdString(plane);
+		planeOrder[n] = i;
+	}
+
+	int TechData::getPlaneOrder(QString n)
+	{
+		int ret = 0;
+		if(planeOrder.contains(n)) {
+			ret = planeOrder[n];
+		}
+		return ret;
+	}
+
 	QMap<QString,QVector<int>> TechData::getStyle(QString s)
 	{
 		return styleList[s];

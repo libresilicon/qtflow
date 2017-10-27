@@ -28,6 +28,8 @@ namespace tech {
 		void addPlane(std::string);
 		void addType(std::string s1, std::string s2);
 		void addCIFMapping(int i, std::string layer);
+		void addPlaneOrder(int i, std::string plane);
+
 		QString layerNameFromCIF(int i);
 
 		QStringList getType(QString s);
@@ -35,6 +37,8 @@ namespace tech {
 		QStringList getPlanes();
 
 		QStringList getTypeNames();
+
+		int getPlaneOrder(QString n);
 
 		QStringList getStyleNames();
 		QMap<QString,QVector<int>> getStyle(QString s);
@@ -53,6 +57,7 @@ namespace tech {
 		QMap<QString,QStringList> typeList;
 		QMap<QString,QMap<QString,QVector<int>>> styleList;
 		QMap<int,QString> cifLayerNames;
+		QMap<QString,int> planeOrder;
 
 		QString recentStyle;
 		QString recentStyleMember;
