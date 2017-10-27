@@ -50,4 +50,13 @@ void DRCSettings::refreshRuleList()
 	ui->tableSpacings->clear();
 	ui->tableSpacings->setColumnCount(header.count());
 	ui->tableSpacings->setHorizontalHeaderLabels(header);
+
+	i=0;
+	if(project) foreach(designRuleName, project->getDesignRules()) {
+		rule = project->getDesignRule(designRuleName);
+		ui->tableSpacings->setRowCount(i+1);
+		ui->tableSpacings->setItem(i, 0, new QTableWidgetItem(designRuleName));
+		i++;
+	}
+
 }

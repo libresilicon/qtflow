@@ -20,3 +20,10 @@ void TechDesignRule::setWidthMessage(QString m)
 {
 	m_widthMessage = m;
 }
+
+void TechDesignRule::setSpacing(QString name, int d, QString message, bool touching_ok)
+{
+	TechDesignRuleSpacing spacing;
+	spacing.setTouchingOK(touching_ok);
+	m_spacingList[name]=spacing;
+}

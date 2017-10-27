@@ -90,16 +90,17 @@ namespace tech {
 		QString material1 = QString::fromStdString(n1);
 		QString material2 = QString::fromStdString(n2);
 		QString severity = QString::fromStdString(s);
+		bool touching_ok;
 
 		TechDesignRule rule;
 		if(designRules.contains(material1))
 			rule = designRules[material1];
 
+		touching_ok = (severity=="touching_ok");
 		rule.setName(material1);
-		//rule.setMinimumWidth(w);
-		//rule.setWidthMessage(QString::fromStdString(m));
+		rule.setSpacing(material2, d, QString::fromStdString(m), touching_ok);
 
-		designRules[material1]=rule;
+		designRules[material1] = rule;
 	}
 
 	void TechData::addDesignRuleWidth(std::string n, int w, std::string m)

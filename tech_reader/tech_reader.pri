@@ -7,10 +7,12 @@ BISONSOURCES += $$PWD/tech_parser.yy
 SOURCES += \
 	$$PWD/techdata.cpp \
 	$$PWD/techscanner.cpp \
-    $$PWD/techdesignrule.cpp
+    $$PWD/techdesignrule.cpp \
+    $$PWD/techdesignrulespacing.cpp
  
 HEADERS += \
 	$$PWD/techdata.h \
 	$$PWD/techscanner.h \
-    $$PWD/techdesignrule.h
+    $$PWD/techdesignrule.h \
+    $$PWD/techdesignrulespacing.h
 
