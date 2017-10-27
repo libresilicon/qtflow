@@ -13,7 +13,7 @@ public:
 	GDSBoundary(int i);
 	void addPoint(int x, int y);
 	int getLayerIndex();
-	void fillInPoints(QGraphicsPolygonItem* o);
+	QPolygonF getPolygon();
 
 	void setScale(int x, int y);
 	void setOffset(int x, int y);

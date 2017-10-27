@@ -136,11 +136,11 @@ void GDSBoundary::setOffset(int x, int y)
 	m_offset_y = y;
 }
 
-void GDSBoundary::fillInPoints(QGraphicsPolygonItem *o)
+QPolygonF GDSBoundary::getPolygon()
 {
 	QPolygonF polygon;
 	foreach(QPointF p, sortPoints()) {
 		polygon << p;
 	}
-	o->setPolygon(polygon);
+	return polygon;
 }

@@ -85,18 +85,26 @@ void GLWidget::paintGL()
 
 void GLWidget::addModules()
 {
-	lef::LEFMacro *macro;
-	lef::LEFPin *pin;
-	lef::LEFPort *port;
-	lef::LEFLayer *layer;
-
+	int x,y,w,h;
+	QString macro_name;
 	mods_t mods = magicdata->getModules();
 	foreach (module_info e, mods)
 	{
-		// fill in library content:
-		if(project) if(project->isDefinedMacro(e.module_name)) {
-			macro = project->getMacro(e.module_name);
-			macro->scaleMacro(e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
+		// fill in LEF library content:
+		lef::LEFMacro *macro;
+		lef::LEFPin *pin;
+		lef::LEFPort *port;
+		lef::LEFLayer *layer;
+
+		macro_name = e.module_name;
+		x = e.x1;
+		y = e.y1;
+		w = e.a*(e.x2-e.x1);
+		h = e.e*(e.y2-e.y1);
+
+		if(project) if(project->isDefinedMacro(macro_name)) {
+			macro = project->getMacro(macro_name);
+			macro->scaleMacro(w,h);
 
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
@@ -113,6 +121,32 @@ void GLWidget::addModules()
 				}
 			}
 
+		}
+
+		// fill in GDS data:
+		QString layer_name;
+		QPolygonF polygon;
+		QRectF rect;
+		GDSCell *cell;
+
+		if(project) if(project->isDefinedGDSMacro(macro_name)) {
+			cell = project->getGDSMacro(macro_name);
+			if(cell) {
+				cell->setRectangle(x,y,w,h);
+				foreach(GDSBoundary *b, cell->getBoundaries()) {
+					layer_name = project->layerNameFromCIF(b->getLayerIndex());
+					if(layer_name==QString()) {
+						layer_name = project->layerNameFromDStyle(b->getLayerIndex());
+					}
+					if(layer_name==QString()) {
+						qDebug() << "Couldn't map layer " << b->getLayerIndex();
+					} else {
+						polygon = b->getPolygon();
+						rect = polygon.boundingRect();
+						addBox(layer_name, rect.x()+e.c, rect.y()+e.f, rect.x()+rect.width()+e.c, rect.y()+rect.height()+e.f);
+					}
+				}
+			}
 		}
 	}
 }

@@ -404,11 +404,6 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 
 void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y, int w, int h)
 {
-	lef::LEFPort *port;
-	lef::LEFLayer *layer;
-	lef::LEFMacro *macro;
-	GDSCell* cell;
-	lef::LEFPin *pin;
 	QColor color;
 	QString layer_name;
 
@@ -423,6 +418,11 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	mi->setOpacity(0.25);
 
 	// fill in library content from LEF:
+	lef::LEFPort *port;
+	lef::LEFLayer *layer;
+	lef::LEFMacro *macro;
+	lef::LEFPin *pin;
+
 	if(project) if(project->isDefinedMacro(macro_name)) {
 		macro = project->getMacro(macro_name);
 		macro->scaleMacro(w, h);
@@ -454,6 +454,9 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 		}
 	}
 
+	// fill in GDS data:
+	GDSCell* cell;
+
 	if(project) if(project->isDefinedGDSMacro(macro_name)) {
 		cell = project->getGDSMacro(macro_name);
 		if(cell) {
@@ -470,7 +473,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 					polygon = new QGraphicsPolygonItem(gdsbox);
 					color = project->colorMat(layer_name);
 					polygon->setBrush(QBrush(color));
-					b->fillInPoints(polygon);
+					polygon->setPolygon(b->getPolygon());
 					layer_gds[layer_name].append(polygon);
 					emit(registerLayer(layer_name));
 				}
