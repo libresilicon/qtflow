@@ -37,7 +37,8 @@ private slots:
 
 private:
 	QFileInfo createMagicFile();
-	QString fileExtension(new_element_t e);
+	QFileInfo createVerilogFile();
+	QFileInfo createSymbolFile();
 
 	Ui::New *ui;
 	Project *project;

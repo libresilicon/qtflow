@@ -50,11 +50,14 @@ void MagicLayoutEditorWidget::addDrawingLayerSelection()
 	toolbar = new QToolBar(this);
 	activeLayer = new QComboBox(toolbar);
 
-	/*foreach(QString layern, project->getPlanes()) {
+	foreach(QString layern, project->getPlanes()) {
 		foreach(QString vname, project->getTypes(layern)) {
 			activeLayer->addItem(project->materialIcon(vname),vname);
 		}
-	}*/
+	}
+
+	connect(activeLayer,SIGNAL(currentTextChanged(QString)),editArea,SLOT(setActiveLayer(QString)));
+	connect(layoutVisibles,SIGNAL(setCurrentLayer(QString)),activeLayer,SLOT(setCurrentText(QString)));
 
 	toolbar->addWidget(activeLayer);
 	addToolBar(toolbar);
@@ -120,7 +123,6 @@ void MagicLayoutEditorWidget::drawingOperation()
 void MagicLayoutEditorWidget::loadFile(QString path)
 {
 	editArea->setVisibles(layoutVisibles);
-	editArea->setActiveLayerSelection(activeLayer);
 
 	editArea->loadFile(path);
 

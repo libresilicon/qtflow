@@ -32,7 +32,6 @@ public:
 	void loadFile(QString);
 	void setProject(Project *p);
 	void setVisibles(LayoutVisibles *v);
-	void setActiveLayerSelection(QComboBox *s);
 	void saveFile();
 
 	QString getFilePath();

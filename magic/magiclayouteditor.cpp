@@ -163,15 +163,6 @@ void MagicLayoutEditor::zoomOut()
 	editScene->update();
 }
 
-void MagicLayoutEditor::setActiveLayerSelection(QComboBox *s)
-{
-	activeLayerSelection = s;
-	if(activeLayerSelection) {
-		editScene->setActiveLayer(activeLayerSelection->currentText());
-		connect(activeLayerSelection,SIGNAL(currentTextChanged(QString)),this,SLOT(setActiveLayer(QString)));
-	}
-}
-
 QString MagicLayoutEditor::getFilePath()
 {
 	return filePath;

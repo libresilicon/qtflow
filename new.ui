@@ -28,26 +28,6 @@
         <property name="currentRow">
          <number>-1</number>
         </property>
-        <item>
-         <property name="text">
-          <string>Verilog file</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Schematics diagram</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Schematics symbol</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Magic layout</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item>

@@ -27,6 +27,7 @@ public slots:
 
 signals:
 	void enabledTypesChanged(QStringList);
+	void setCurrentLayer(QString);
 
 private:
 	QStringList getEnabledTypes();

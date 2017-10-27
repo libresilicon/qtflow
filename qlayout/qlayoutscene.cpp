@@ -90,7 +90,7 @@ QPointF QLayoutScene::snapGrid(QPointF pt) {
 	return QPointF(x,y);
 }
 
-/*void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
+void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
 	QVector<QLineF> lines;
 	qreal left, top;
@@ -106,7 +106,7 @@ QPointF QLayoutScene::snapGrid(QPointF pt) {
 
 	painter->setPen(QPen(QColor(200, 200, 255, 125)));
 	painter->drawLines(lines.data(), lines.size());
-}*/
+}
 
 void QLayoutScene::setProject(Project *p)
 {
