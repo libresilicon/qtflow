@@ -57,6 +57,11 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	connect(editArea,SIGNAL(fileSaved()),modulesWidget,SLOT(refresh()));
 	connect(editArea,SIGNAL(currentChanged(int)),this,SLOT(onCurrentChanged(int)));
 
+	newProjectDialog = new Templates(this, settings, mainContext);
+	connect(newProjectDialog,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
+
+	connect(createWidget, SIGNAL(fileCreated(QString)), editArea, SLOT(openFile(QString)));
+
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
 
@@ -166,6 +171,7 @@ void MainWindow::openProject(QString path)
 		projectSettingsDialog->setProject(project);
 		editArea->setProject(project);
 		buildFlowConfig->setProject(project);
+		createWidget->setProject(project);
 		mainContext.addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
@@ -235,9 +241,7 @@ void MainWindow::on_setLayoutMode_triggered()
 
 void MainWindow::on_newProject_triggered()
 {
-	Templates *t = new Templates(this, settings, mainContext);
-	connect(t,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
-	t->show();
+	newProjectDialog->show();
 }
 
 void MainWindow::on_actionPythonShell_triggered()
@@ -271,7 +275,6 @@ void MainWindow::on_openProject_triggered()
 
 void MainWindow::on_newFile_triggered()
 {
-	createWidget->suggest(Verilog, "new");
 	createWidget->show();
 }
 

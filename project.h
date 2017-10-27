@@ -61,6 +61,15 @@ public:
 	void setTopLevel(QString mod);
 	void setTestBench(QString mod);
 	void setProjectType(QString proc);
+
+	bool isMacroCellProject();
+	void setSyncLiberty(QString s);
+	void setSyncLEF(QString s);
+	void setSyncSymbols(QString s);
+	QString getSyncLiberty();
+	QString getSyncLEF();
+	QString getSyncSymbols();
+
 	void createFiles();
 
 	QColor colorMat(QString material);
@@ -68,6 +77,7 @@ public:
 	QColor colorFromCode(int i);
 	QString layerNameFromCIF(int i);
 	QString layerNameFromDStyle(int i);
+	QString getLongName(QString m);
 	bool hasMaterialTypeMapping(QString material);
 	QIcon materialIcon(QString material);
 	qreal posMat(QString material);
@@ -107,6 +117,7 @@ public:
 	QStringList getPlanes();
 	QStringList getTypeNames();
 	QStringList getTypes(QString s);
+	QList<QStringList> getTypesMap(QString s);
 	QStringList getAlternativeNames(QString s);
 
 	// python script paths:
@@ -150,6 +161,8 @@ signals:
 	void simulationDone();
 
 private:
+	QString material2Plane(QString material);
+
 	// LEF operations:
 	QStringList getLibraryFiles();
 	void loadLibraryFiles();

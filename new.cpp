@@ -8,7 +8,8 @@
 
 New::New(QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::New)
+	ui(new Ui::New),
+	project(NULL)
 {
 	ui->setupUi(this);
 }
@@ -22,6 +23,8 @@ QString New::fileExtension(new_element_t e)
 {
 	switch (e)
 	{
+		case Magic:
+			return "mag";
 		case Verilog:
 			return "v";
 		case VerilogTestbench:
@@ -31,47 +34,43 @@ QString New::fileExtension(new_element_t e)
 	}
 }
 
-void New::suggest(new_element_t e, QString name)
+QFileInfo New::createMagicFile()
 {
-	ui->editModule->setText(name);
-	ui->listWidget->setCurrentRow(e);
+	QString name = ui->fileBase->text();
+	QString path = QDir(project->getLayoutDir()).filePath(name+".mag");
+	QFile file(path);
+
+	if (file.exists())
+		return QFileInfo(path);
+
+	if (!file.open(QIODevice::ReadWrite))
+		return QFileInfo(path);
+
+	QFile magicFile(path);
+	if(magicFile.open(QIODevice::WriteOnly)) {
+		QTextStream outputStream(&magicFile);
+		outputStream << "magic" << endl;
+		outputStream << "tech " << project->getTechnology() << endl;
+		outputStream << "magscale 1 2" << endl;
+		outputStream << "timestamp " << QDateTime::currentMSecsSinceEpoch() << endl;
+		outputStream << "<< end >>" << endl;
+		magicFile.close();
+	}
+
+	return QFileInfo(path);
 }
 
-void New::on_listWidget_currentRowChanged(int row)
+void New::setProject(Project *p)
 {
-	auto e = static_cast<new_element_t>(row);
-	ui->editFilename->setText(ui->editModule->text() + "." + fileExtension(e));
-}
-
-void New::on_editModule_textChanged(const QString &content)
-{
-	auto e = static_cast<new_element_t>(ui->listWidget->currentRow());
-	ui->editFilename->setText(content + "." + fileExtension(e));
+	project = p;
 }
 
 void New::on_buttonBox_accepted()
 {
-	/*QString path = qflow.value("sourcedir") + "/" + ui->editFilename->text();
-	QFile file(path);
-	QFileInfo info(path);
+	QFileInfo info;
+	if(!project) return;
 
-	if (file.exists())
-		return;
+	info = createMagicFile();
 
-	if (!file.open(QIODevice::ReadWrite))
-		return;
-
-	auto e = static_cast<new_element_t>(ui->listWidget->currentRow());
-	QString name = ui->editModule->text();
-	if (e == VerilogTestbench)
-		name += "_testbench";
-
-	QTextStream out(&file);
-	out
-			<< "module " << name << "();" << endl
-			<< "endmodule" << endl;
-
-	file.close();
-
-	emit fileCreated(info);*/
+	emit fileCreated(info.absoluteFilePath());
 }

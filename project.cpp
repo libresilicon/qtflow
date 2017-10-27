@@ -81,8 +81,11 @@ Project::~Project()
 QStringList Project::getSearchDirectories()
 {
 	QStringList ret = project_settings->value("search_dirs").toStringList();
-	if(ret.count()==0)
+	if(ret.count()==0) {
 		ret << getSourceDir();
+		ret << getLayoutDir();
+		ret << getSynthesisDir();
+	}
 	return ret;
 }
 
@@ -542,7 +545,6 @@ void Project::setProcess(QString proc)
 void Project::createFiles()
 {
 	QStringList folders;
-	QString magicLayout;
 
 	folders << getSourceDir();
 	folders << getLayoutDir();
@@ -553,25 +555,51 @@ void Project::createFiles()
 		folder = QDir(f);
 		if(!folder.exists()) folder.mkdir(f);
 	}
-
-	magicLayout = QDir(getLayoutDir()).filePath(getTopLevel()+".mag");
-
-	QFile magicFile(magicLayout);
-	if(magicFile.open(QIODevice::WriteOnly)) {
-		QTextStream outputStream(&magicFile);
-		outputStream << "magic" << endl;
-		outputStream << "tech " << getTechnology() << endl;
-		outputStream << "magscale 1 2" << endl;
-		outputStream << "timestamp " << QDateTime::currentMSecsSinceEpoch() << endl;
-		outputStream << "<< end >>" << endl;
-		magicFile.close();
-	}
 }
 
 void Project::setProjectType(QString proc)
 {
 	project_settings->setValue("projectType",proc);
 	project_settings->sync();
+}
+
+bool Project::isMacroCellProject()
+{
+	QString v = project_settings->value("projectType").toString();
+	return (v=="macro_cell");
+}
+
+void Project::setSyncLiberty(QString s)
+{
+	project_settings->setValue("syncLiberty",s);
+	project_settings->sync();
+}
+
+void Project::setSyncLEF(QString s)
+{
+	project_settings->setValue("syncLEF",s);
+	project_settings->sync();
+}
+
+void Project::setSyncSymbols(QString s)
+{
+	project_settings->setValue("syncSymbols",s);
+	project_settings->sync();
+}
+
+QString Project::getSyncLiberty()
+{
+	return project_settings->value("syncLiberty").toString();
+}
+
+QString Project::getSyncLEF()
+{
+	return project_settings->value("syncLEF").toString();
+}
+
+QString Project::getSyncSymbols()
+{
+	return project_settings->value("syncSymbols").toString();
 }
 
 void Project::create(QString path)
@@ -581,9 +609,9 @@ void Project::create(QString path)
 
 	project_settings->setValue("technology", "osu035");
 	project_settings->sync();
-	project_settings->setValue("sourcedir", QDir(rootdir).filePath("source"));
-	project_settings->setValue("synthesis", QDir(rootdir).filePath("synthesis"));
-	project_settings->setValue("layout", QDir(rootdir).filePath("layout"));
+	project_settings->setValue("sourcedir", "source");
+	project_settings->setValue("synthesis", "synthesis");
+	project_settings->setValue("layout", "layout");
 	project_settings->sync();
 }
 
@@ -651,14 +679,28 @@ QColor Project::colorFromCode(int i)
 	return colorMap->colorFromCode(i);
 }
 
+QString Project::getLongName(QString m)
+{
+	QString typeName;
+	QStringList typeList;
+	foreach(typeName, getTypeNames()) {
+		foreach(typeList, getTypesMap(typeName)) {
+			if(typeList.contains(m)) {
+				return typeList[0];
+			}
+		}
+	}
+	return m;
+}
+
 QString Project::layerNameFromDStyle(int i)
 {
-	return colorMap->materialNameFromCode(i);
+	return getLongName(colorMap->materialNameFromCode(i));
 }
 
 QString Project::layerNameFromCIF(int i)
 {
-	return techDisplayData->layerNameFromCIF(i);
+	return getLongName(techDisplayData->layerNameFromCIF(i));
 }
 
 QColor Project::colorMat(QString material)
@@ -698,29 +740,28 @@ QIcon Project::materialIcon(QString material)
 	return ico;
 }
 
+QString Project::material2Plane(QString m)
+{
+	QString plane;
+	QString material;
+	foreach(plane, getPlanes()) {
+		foreach(material, getTypes(plane)) {
+			if(material==m)
+				return plane;
+		}
+	}
+	return QString();
+}
+
 qreal Project::posMat(QString material)
 {
-	// TODO:
-	// make this configuration based!
-	// don't hardcode this!
 	qreal ret = 0;
+	QString plane;
 
-	if (material == "metal1")
-		ret = 0.0;
-	if (material == "metal2")
-		ret = 0.1;
-	if (material == "metal3")
-		ret = 0.2;
-	if (material == "metal4")
-		ret = 0.3;
-	if (material == "m1contact")
-		ret = 0.4;
-	if (material == "m2contact")
-		ret = 0.5;
-	if (material == "m3contact")
-		ret = 0.6;
-	if (material == "m4contact")
-		ret = 0.7;
+	plane = material2Plane(material);
+
+	if(techDisplayData) ret = techDisplayData->getPlaneOrder(plane);
+	ret *= 0.1;
 
 	return ret;
 }
@@ -739,10 +780,9 @@ qreal Project::thicknessMat(QString material)
 QStringList Project::getPlanes()
 {
 	QStringList planeList;
-	if(!techDisplayData) return planeList;
-
 	QStringList tmpstrarr;
-	foreach(QString s, techDisplayData->getPlanes()) {
+
+	if(techDisplayData) foreach(QString s, techDisplayData->getPlanes()) {
 		tmpstrarr = s.split(',');
 		planeList.append(tmpstrarr.at(0));
 	}
@@ -752,18 +792,32 @@ QStringList Project::getPlanes()
 
 QStringList Project::getTypeNames()
 {
-	if(!techDisplayData) return QStringList();
-	return techDisplayData->getTypeNames();
+	if(techDisplayData)
+		return techDisplayData->getTypeNames();
+	else
+		return QStringList();
+}
+
+QList<QStringList> Project::getTypesMap(QString s)
+{
+	QList<QStringList> ret;
+	QStringList typeList;
+
+	if(techDisplayData) foreach(QString t, techDisplayData->getType(s)) {
+		typeList = t.split(',');
+		ret.append(typeList);
+	}
+
+	return ret;
 }
 
 QStringList Project::getTypes(QString s)
 {
 	QStringList typeList;
-	if(!techDisplayData) return typeList;
-
 	QStringList tmpstrarr;
 	QString name;
-	foreach(QString t, techDisplayData->getType(s)) {
+
+	if(techDisplayData) foreach(QString t, techDisplayData->getType(s)) {
 		tmpstrarr = t.split(',');
 		name = tmpstrarr.at(0);
 		if(!typeList.contains(name))
@@ -775,12 +829,10 @@ QStringList Project::getTypes(QString s)
 
 QStringList Project::getAlternativeNames(QString s)
 {
-	if(!techDisplayData) return QStringList();
-
 	QStringList tmpstrarr;
-
 	QStringList type;
-	foreach(QString tn, techDisplayData->getTypeNames()) {
+
+	if(techDisplayData) foreach(QString tn, techDisplayData->getTypeNames()) {
 		type = techDisplayData->getType(tn);
 		foreach(QString t, type) {
 			tmpstrarr = t.split(',');

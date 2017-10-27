@@ -23,14 +23,10 @@ Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr main) :
 	connect(ui->buttonBox,SIGNAL(rejected()),this,SLOT(close()));
 
 	// bonded chips
-	ptypes["asic_mixed"] = "Mixed signal ASIC";
-	ptypes["asic_digital"] = "Pure digital ASIC";
-	ptypes["asic_analog"] = "Analog signal ASIC";
+	ptypes["asic"] = "ASIC (with bond-out)";
 
 	// cells:
-	ptypes["cell_mixed"] = "Mixed signal macro cell";
-	ptypes["cell_digital"] = "Pure digital macro cell";
-	ptypes["cell_analog"] = "Analog signal macro cell";
+	ptypes["macro_cell"] = "Macro cell (without bond-out/ESD)";
 
 	foreach(QString key, ptypes.keys()) {
 		w = new QListWidgetItem;
@@ -41,7 +37,7 @@ Templates::Templates(QWidget *parent, QSettings *s, PythonQtObjectPtr main) :
 
 	/* reading process and technology info */
 	settingsFileProcess = new QDomDocument();
-	QFile file(":/process.xml");
+	QFile file(QDir(settings->value("tech_path").toString()).filePath("process.xml"));
 	if(file.open(QIODevice::ReadOnly)) {
 		settingsFileProcess->setContent(&file);
 		file.close();
@@ -75,9 +71,8 @@ void Templates::on_listWidget_currentItemChanged(QListWidgetItem *current, QList
 	QStringList filter;
 	QVariant d;
 	QString s;
-	filter << "cell_mixed";
-	filter << "cell_digital";
-	filter << "cell_analog";
+
+	filter << "macro_cell";
 
 	if(current != 0) {
 		d = current->data(Qt::UserRole);
@@ -98,6 +93,9 @@ void Templates::on_buttonBox_accepted()
 	QString process;
 	QString ptype;
 	QString name;
+	QString liberty;
+	QString lef;
+	QString symbols;
 	QVariant data;
 
 	path = ui->projectPath->text();
@@ -114,7 +112,7 @@ void Templates::on_buttonBox_accepted()
 	if(project) delete project;
 	project = new Project(settings, ppath, mainContext);
 
-	ptype = "asic_mixed";
+	ptype = "asic";
 	foreach(QListWidgetItem *w, ui->listWidget->selectedItems()) {
 		if (w != 0) {
 			data = w->data(Qt::UserRole);
@@ -128,10 +126,21 @@ void Templates::on_buttonBox_accepted()
 	data = ui->comboProcess->currentData();
 	process = data.toString();
 
+	liberty = ui->libertyPath->text();
+	lef = ui->libraryPath->text();
+	symbols = ui->schematicsPath->text();
+
 	project->setProjectType(ptype);
 	project->setTopLevel(name);
 	project->setTechnology(technology);
 	project->setProcess(process);
+
+	if(ptype=="macro_cell") {
+		project->setSyncLEF(lef);
+		project->setSyncLiberty(liberty);
+		project->setSyncSymbols(symbols);
+	}
+
 	project->createFiles();
 
 	emit(projectCreated(ppath));

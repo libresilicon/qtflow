@@ -162,10 +162,18 @@ void  ProjectSettings::setSettings(QSettings* s)
 
 void ProjectSettings::setProject(Project* p)
 {
+	bool isMacro;
 	project = p;
 	if(project) {
 		ui->comboBoxTechnology->setCurrentIndex(ui->comboBoxTechnology->findData(project->getTechnology()));
 		technologyActivated();
 		setSearchPathList();
+		isMacro = project->isMacroCellProject();
+		ui->groupBoxOutput->setVisible(isMacro);
+		if(isMacro) {
+			ui->libertyPath->setText(project->getSyncLiberty());
+			ui->libraryPath->setText(project->getSyncLEF());
+			ui->symbolsPath->setText(project->getSyncSymbols());
+		}
 	}
 }

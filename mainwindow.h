@@ -131,6 +131,7 @@ private:
 	ProjectSelector *projectsWidget;
 	ModuleSelector *modulesWidget;
 	PythonConsoleDockWidget *pythonConsoleWidget;
+	Templates *newProjectDialog;
 
 	EditorTabManager *editArea;
 

@@ -4,9 +4,15 @@
 #include <QDialog>
 #include <QFileInfo>
 
+#include "project.h"
+
 enum new_element_t
 {
-	Verilog, VerilogTestbench
+	Verilog,
+	VerilogTestbench,
+	Schematics,
+	Symbol,
+	Magic
 };
 
 namespace Ui {
@@ -21,21 +27,20 @@ public:
 	explicit New(QWidget *parent = 0);
 	~New();
 
-	void suggest(new_element_t = Verilog, QString = QString());
+	void setProject(Project *p);
 
 signals:
-	void fileCreated(QFileInfo&);
+	void fileCreated(QString);
 
 private slots:
-	void on_listWidget_currentRowChanged(int currentRow);
-
-	void on_editModule_textChanged(const QString &arg1);
-
 	void on_buttonBox_accepted();
 
 private:
+	QFileInfo createMagicFile();
+	QString fileExtension(new_element_t e);
+
 	Ui::New *ui;
-	QString fileExtension(new_element_t);
+	Project *project;
 };
 
 #endif // NEW_H
