@@ -18,8 +18,8 @@ void DRCSettings::setProject(Project *p)
 void DRCSettings::refreshRuleList()
 {
 	TechDesignRule rule;
+	TechDesignRuleSpacing spacing;
 	QString designRuleName;
-	QString longName;
 	QStringList header;
 	int i;
 
@@ -37,15 +37,19 @@ void DRCSettings::refreshRuleList()
 	i=0;
 	if(project) foreach(designRuleName, project->getDesignRules()) {
 		rule = project->getDesignRule(designRuleName);
-		ui->tableWidths->setRowCount(i+1);
-		ui->tableWidths->setItem(i, 0, new QTableWidgetItem(designRuleName));
-		i++;
+		if(rule.getMinimumWidth()) {
+			ui->tableWidths->setRowCount(i+1);
+			ui->tableWidths->setItem(i, 0, new QTableWidgetItem(project->getLongName(rule.getName())));
+			ui->tableWidths->setItem(i, 1, new QTableWidgetItem(QString::number(rule.getMinimumWidth())));
+			i++; // next line
+		}
 	}
 
 	header.clear();
 	header << "Layer name";
 	header << "to material";
 	header << "spacing";
+	header << "touching ok";
 
 	ui->tableSpacings->clear();
 	ui->tableSpacings->setColumnCount(header.count());
@@ -54,9 +58,15 @@ void DRCSettings::refreshRuleList()
 	i=0;
 	if(project) foreach(designRuleName, project->getDesignRules()) {
 		rule = project->getDesignRule(designRuleName);
-		ui->tableSpacings->setRowCount(i+1);
-		ui->tableSpacings->setItem(i, 0, new QTableWidgetItem(designRuleName));
-		i++;
+		foreach(QString sprn, rule.getSpacingRules()) {
+			spacing = rule.getSpacingRule(sprn);
+			ui->tableSpacings->setRowCount(i+1);
+			ui->tableSpacings->setItem(i, 0, new QTableWidgetItem(project->getLongName(designRuleName)));
+			ui->tableSpacings->setItem(i, 1, new QTableWidgetItem(project->getLongName(spacing.getMaterial())));
+			ui->tableSpacings->setItem(i, 2, new QTableWidgetItem(QString::number(spacing.getSpacing())));
+			ui->tableSpacings->setItem(i, 3, new QTableWidgetItem(spacing.getTouchingOK()?"Yes":"No"));
+			i++; // next line
+		}
 	}
 
 }

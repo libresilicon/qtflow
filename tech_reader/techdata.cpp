@@ -87,35 +87,51 @@ namespace tech {
 
 	void TechData::addDesignRuleSpacing(std::string n1, std::string n2, int d, std::string s, std::string m)
 	{
-		QString material1 = QString::fromStdString(n1);
-		QString material2 = QString::fromStdString(n2);
-		QString severity = QString::fromStdString(s);
+		QStringList nl;
+		QString material1;
+		QString material2;
+		QString material;
+		QString severity;
 		bool touching_ok;
-
 		TechDesignRule rule;
-		if(designRules.contains(material1))
-			rule = designRules[material1];
 
-		touching_ok = (severity=="touching_ok");
-		rule.setName(material1);
-		rule.setSpacing(material2, d, QString::fromStdString(m), touching_ok);
+		material1 = QString::fromStdString(n1);
+		material2 = QString::fromStdString(n2);
+		severity = QString::fromStdString(s);
+		nl = material1.split(',');
 
-		designRules[material1] = rule;
+		foreach(material, nl) {
+			if(designRules.contains(material))
+				rule = designRules[material];
+
+			touching_ok = (severity=="touching_ok");
+			rule.setName(material);
+			rule.setSpacing(material2, d, QString::fromStdString(m), touching_ok);
+
+			designRules[material] = rule;
+		}
 	}
 
 	void TechData::addDesignRuleWidth(std::string n, int w, std::string m)
 	{
-		QString name = QString::fromStdString(n);
+		QStringList nl;
+		QString name;
+		QString material;
 		TechDesignRule rule;
 
-		if(designRules.contains(name))
-			rule = designRules[name];
+		name = QString::fromStdString(n);
+		nl = name.split(',');
 
-		rule.setName(name);
-		rule.setMinimumWidth(w);
-		rule.setWidthMessage(QString::fromStdString(m));
+		foreach(material,nl) {
+			if(designRules.contains(material))
+				rule = designRules[material];
 
-		designRules[name]=rule;
+			rule.setName(material);
+			rule.setMinimumWidth(w);
+			rule.setWidthMessage(QString::fromStdString(m));
+
+			designRules[material]=rule;
+		}
 	}
 
 	void TechData::addPlaneOrder(int i, std::string plane)

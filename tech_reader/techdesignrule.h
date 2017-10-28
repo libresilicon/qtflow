@@ -12,9 +12,13 @@ class TechDesignRule
 public:
 	TechDesignRule();
 	void setName(QString);
+	QString getName();
 	void setMinimumWidth(int i);
 	void setWidthMessage(QString m);
 	void setSpacing(QString name, int d, QString message, bool touching_ok);
+	QStringList getSpacingRules();
+	TechDesignRuleSpacing getSpacingRule(QString k);
+	int getMinimumWidth();
 
 private:
 	int m_minWidth;
