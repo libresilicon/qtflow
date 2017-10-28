@@ -101,6 +101,13 @@ void MagicLayoutEditorWidget::addDrawingOperations()
 	drawingOperations[DRAWING_OPERATION_CUT_OUT] = button;
 	toolbar->addAction(button);
 
+	button = new QAction(QPixmap(":/show_all_layers.svg"), "Select layers", toolbar);
+	button->setCheckable(true);
+	button->setData(DRAWING_OPERATION_SELECT_LAYER);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
+	drawingOperations[DRAWING_OPERATION_SELECT_LAYER] = button;
+	toolbar->addAction(button);
+
 	addToolBar(Qt::RightToolBarArea,toolbar);
 }
 

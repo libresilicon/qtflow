@@ -115,6 +115,8 @@ void QLayoutScene::setProject(Project *p)
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+	QMenu  menu;
+	QAction *layerAction;
 	lastOrig = snapGrid(event->scenePos());
 
 	switch(recentOperation) {
@@ -168,6 +170,19 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 					}
 				}
 			}
+			break;
+
+		case DRAWING_OPERATION_SELECT_LAYER:
+			menu.clear();
+			foreach(QString k, layer_rects.keys()) {
+				foreach(QLayoutRectItem *m, layer_rects[k]) {
+					if(m->contains(lastOrig)) {
+						layerAction = menu.addAction(k);
+						break;
+					}
+				}
+			}
+			menu.exec(event->screenPos());
 			break;
 
 		default:
