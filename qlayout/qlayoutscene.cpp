@@ -18,9 +18,7 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false),
-	m_gridSize(40),
-	m_scaleFactor(1)
+	m_dragging(false)
 {
 	basicInit();
 }
@@ -32,9 +30,7 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false),
-	m_gridSize(2),
-	m_scaleFactor(1)
+	m_dragging(false)
 {
 	basicInit();
 }
@@ -46,9 +42,7 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false),
-	m_gridSize(40),
-	m_scaleFactor(1)
+	m_dragging(false)
 {
 	basicInit();
 }
@@ -85,14 +79,14 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 	}
 }
 
-QPointF QLayoutScene::snapGrid(QPointF pt) {
+/*QPointF QLayoutScene::snapGrid(QPointF pt) {
 	qreal x, y;
 	x = round(pt.x()/m_gridSize)*m_gridSize;
 	y = round(pt.y()/m_gridSize)*m_gridSize;
 	return QPointF(x,y);
-}
+}*/
 
-void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
+/*void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
 	QVector<QLineF> lines;
 	qreal left, top;
@@ -108,7 +102,7 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 
 	painter->setPen(QPen(QColor(200, 200, 255, 125)));
 	painter->drawLines(lines.data(), lines.size());
-}
+}*/
 
 void QLayoutScene::setProject(Project *p)
 {
@@ -125,7 +119,9 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QMenu  menu;
 	QAction *layerAction;
-	lastOrig = snapGrid(event->scenePos());
+
+	//lastOrig = snapGrid(event->scenePos());
+	lastOrig = event->scenePos();
 
 	switch(recentOperation) {
 
@@ -189,7 +185,25 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 						break;
 					}
 				}
+
 			}
+			foreach(QString k, layer_gds.keys()) {
+				foreach(QGraphicsPolygonItem *m, layer_gds[k]) {
+					if(m->contains(lastOrig)) {
+						layerAction = menu.addAction(k);
+						break;
+					}
+				}
+			}
+			foreach(QString k, macro_wires.keys()) {
+				foreach(QGraphicsRectItem *m, macro_wires[k]) {
+					if(m->contains(lastOrig)) {
+						layerAction = menu.addAction(k);
+						break;
+					}
+				}
+			}
+
 			menu.exec(event->screenPos());
 			break;
 
@@ -204,7 +218,8 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 	QPointF pt;
 	QRectF srect;
 
-	pt = snapGrid(event->scenePos());
+	//pt = snapGrid(event->scenePos());
+	pt = event->scenePos();
 
 	switch(recentOperation) {
 
@@ -263,7 +278,8 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	QPointF pt;
 
-	pt = snapGrid(event->scenePos());
+	//pt = snapGrid(event->scenePos());
+	pt = event->scenePos();
 
 	switch(recentOperation) {
 
@@ -364,38 +380,10 @@ void QLayoutScene::redraw()
 	update();
 }
 
-void QLayoutScene::setGridSize(int s) {
-	m_gridSize = s;
-	update();
-}
-
-int QLayoutScene::getScaleFactor()
-{
-	return m_scaleFactor;
-}
-
-void QLayoutScene::setScaleFactor(int s)
-{
-	QMatrix m;
-	if(s > 0) {
-		m_scaleFactor = s;
-		m.scale(s, s);
-		//setMatrix(m);
-	}
-}
-
-void QLayoutScene::addWire(QString layer, int x, int y, int w, int h)
-{
-}
-
 void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 {
 	QLayoutRectItem *r;
 
-	x*=m_scaleFactor;
-	y*=m_scaleFactor;
-	w*=m_scaleFactor;
-	h*=m_scaleFactor;
 	r = new QLayoutRectItem(x, y, w, h);
 
 	r->setVisible(true);
@@ -418,8 +406,6 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 		macro = project->getMacro(macro_name);
 		w = macro->getWidth();
 		h = macro->getHeight();
-		w*=m_gridSize;
-		h*=m_gridSize;
 
 		addMacro(macro_name, instance_name, x, y, w, h);
 
@@ -441,7 +427,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	QGraphicsRectItem *gdsbox;
 
 
-	mi = new QLayoutMacroItem(x,y,w,h);
+	mi = new QLayoutMacroItem(x, y, w, h);
 	mi->setVisible(true);
 	mi->setOpacity(0.25);
 
@@ -461,7 +447,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 				layer_name = layer->getName();
 				color = project->colorMat(layer_name);
 				foreach(lef::rect_t rect, layer->getRects()) {
-					mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
+					mw = new QGraphicsRectItem((rect.x+x), (rect.y+y), (rect.w), (rect.h), mi);
 					mw->setBrush(QBrush(color));
 					mw->setVisible(true);
 					macro_wires[layer_name].append(mw);
@@ -473,7 +459,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 			layer_name = layer->getName();
 			color = project->colorMat(layer_name);
 			foreach(lef::rect_t rect, layer->getRects()) {
-				mw = new QGraphicsRectItem(rect.x+x, rect.y+y, rect.w, rect.h, mi);
+				mw = new QGraphicsRectItem((rect.x+x), (rect.y+y), (rect.w), (rect.h), mi);
 				mw->setBrush(QBrush(color));
 				mw->setVisible(true);
 				macro_wires[layer_name].append(mw);
@@ -488,7 +474,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 	if(project) if(project->isDefinedGDSMacro(macro_name)) {
 		cell = project->getGDSMacro(macro_name);
 		if(cell) {
-			cell->setRectangle(x,y,w,h);
+			cell->setRectangle(x, y, w, h);
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
 				layer_name = project->layerNameFromCIF(b->getLayerIndex());
 				if(layer_name==QString()) {
@@ -497,7 +483,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, in
 				if(layer_name==QString()) {
 					qDebug() << "Couldn't map layer " << b->getLayerIndex();
 				} else {
-					gdsbox = new QGraphicsRectItem(x,y,w,h,mi);
+					gdsbox = new QGraphicsRectItem(x, y, w, h, mi);
 					polygon = new QGraphicsPolygonItem(gdsbox);
 					color = project->colorMat(layer_name);
 					polygon->setBrush(QBrush(color));

@@ -933,7 +933,7 @@ int Project::getBaseUnits(QString macro_name)
 
 int Project::getSmallestUnit()
 {
-	int ret = 0;
+	int ret = 1;
 	int u;
 
 	foreach(QString key, lefdata.keys()) { // get biggest value

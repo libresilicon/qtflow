@@ -43,7 +43,7 @@ void MagicLayoutEditor::addMacroInstances()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
-	int x, y, w, h;
+	int x, y, w, h, gridsize;
 
 	filePath = file;
 	if(magicdata) delete magicdata;
@@ -57,8 +57,8 @@ void MagicLayoutEditor::loadFile(QString file)
 	if(w<this->width()) w = this->width();
 	if(h<this->height()) h = this->height();
 
-	editScene->setGridSize(10);
-	editScene->setSceneRect(x,y,w,h);
+	//editScene->setGridSize(gridsize);
+	//editScene->setSceneRect(x*gridsize, y*gridsize, w*gridsize, h*gridsize);
 
 	addMacroInstances();
 	addRectangles();

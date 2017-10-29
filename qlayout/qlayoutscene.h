@@ -46,10 +46,6 @@ public:
 	void setActiveLayer(QString layer);
 	void redraw();
 
-	int getScaleFactor();
-	void setScaleFactor(int);
-	void setGridSize(int);
-	void addWire(QString layer, int x, int y, int w, int h);
 	void addRectangle(QString layer, int x, int y, int w, int h);
 	void addMacro(QString module_name, QString instance_name, int x, int y, int w, int h);
 	void addMacro(QString macro_name, QString instance_name, int x, int y);
@@ -64,7 +60,7 @@ protected:
 
 	void keyPressEvent(QKeyEvent *event);
 
-	void drawBackground(QPainter *painter, const QRectF &rect);
+	//void drawBackground(QPainter *painter, const QRectF &rect);
 
 public slots:
 	void onVisibleLayersChanged(QStringList l);
@@ -77,7 +73,7 @@ signals:
 	void registerLayer(QString);
 
 private:
-	QPointF snapGrid(QPointF pt);
+	//QPointF snapGrid(QPointF pt);
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
 	Project *project;
@@ -89,8 +85,6 @@ private:
 	QPointF lastOrig;
 	QStringList m_visibleLayers;
 	bool m_dragging;
-	int m_gridSize;
-	int m_scaleFactor;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;

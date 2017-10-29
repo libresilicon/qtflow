@@ -33,7 +33,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	//if(w<this->width()) w = this->width();
 	//if(h<this->height()) h = this->height();
 
-	editScene->setGridSize(defdata->getDistanceUnit());
+	//editScene->setGridSize(defdata->getDistanceUnit());
 	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
 	//editScene->addRect(x,y,w,h);
 
@@ -86,7 +86,6 @@ bool DEFLayoutEditor::changes()
 void DEFLayoutEditor::setProject(Project *p)
 {
 	project = p;
-	editScene->setGridSize(4000);
 	editScene->setProject(p);
 }
 
