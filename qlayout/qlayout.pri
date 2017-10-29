@@ -7,7 +7,8 @@ SOURCES += \
 	$$PWD/qlayoutrectitem.cpp \
 	$$PWD/qlayoutscene.cpp \
 	$$PWD/layoutvisibles.cpp \
-    $$PWD/drcsettings.cpp
+    $$PWD/drcsettings.cpp \
+    $$PWD/qlayoutdistancemeasure.cpp
 
 HEADERS += \
 	$$PWD/qlayoutwireitem.h \
@@ -15,7 +16,8 @@ HEADERS += \
 	$$PWD/qlayoutrectitem.h \
 	$$PWD/qlayoutscene.h \
 	$$PWD/layoutvisibles.h \
-    $$PWD/drcsettings.h
+    $$PWD/drcsettings.h \
+    $$PWD/qlayoutdistancemeasure.h
 
 FORMS    += \
 	$$PWD/layoutvisibles.ui \

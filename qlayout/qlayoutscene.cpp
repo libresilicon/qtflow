@@ -333,13 +333,14 @@ void QLayoutScene::onVisibleLayersChanged(QStringList l)
 	redraw();
 }
 
-void  QLayoutScene::runDRC(QString n, QRectF rect)
+void QLayoutScene::runDRC(QString n, QRectF rect)
 {
 	TechDesignRule rule;
 	QString layerName;
 	QGraphicsRectItem *m;
 	QLayoutRectItem *w;
 	QGraphicsPolygonItem *p;
+	QLayoutDistanceMeasure *error_line;
 
 	rule = project->getDesignRule(n);
 
@@ -350,11 +351,17 @@ void  QLayoutScene::runDRC(QString n, QRectF rect)
 		qDebug() << __FUNCTION__ << "DRC error!";
 		qDebug() << __FUNCTION__ << rule.getName();
 		qDebug() << __FUNCTION__ << rule.getWidthMessage();
+		error_line = new QLayoutDistanceMeasure(rule.getWidthMessage(),rect.bottomLeft(),rect.bottomRight());
+		distance_errors.append(error_line);
+		addItem(error_line);
 	}
 	if(rect.height() < rule.getMinimumWidth()) {
 		qDebug() << __FUNCTION__ << "DRC error!";
 		qDebug() << __FUNCTION__ << rule.getName();
 		qDebug() << __FUNCTION__ << rule.getWidthMessage();
+		error_line = new QLayoutDistanceMeasure(rule.getWidthMessage(),rect.bottomLeft(),rect.topLeft());
+		distance_errors.append(error_line);
+		addItem(error_line);
 	}
 
 	foreach(layerName, rule.getSpacingRules()) {
@@ -380,6 +387,10 @@ void  QLayoutScene::runDRC()
 	QLayoutRectItem *w;
 	QGraphicsPolygonItem *p;
 	QRectF rect;
+
+	foreach(QLayoutDistanceMeasure *t, distance_errors) {
+		removeItem(t);
+	}
 
 	foreach(layerName, macro_wires.keys()) {
 		foreach(m, macro_wires[layerName]) {

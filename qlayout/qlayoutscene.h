@@ -9,6 +9,7 @@
 #include <QGraphicsProxyWidget>
 #include <QShortcut>
 
+#include "qlayoutdistancemeasure.h"
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
 #include "drcsettings.h"
@@ -94,6 +95,7 @@ private:
 	QMap<QString,rects_layer_t> layer_rects;
 	QMap<QString,layer_gds_wires_t> layer_gds;
 	QVector<QGraphicsLineItem*> gridLines;
+	QVector<QLayoutDistanceMeasure*> distance_errors;
 
 	DRCSettings *drcDialog;
 };
