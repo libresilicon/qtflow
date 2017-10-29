@@ -8,12 +8,21 @@ DRCSettings::DRCSettings(QWidget *parent):
 	ui->setupUi(this);
 }
 
+void DRCSettings::on_buttonBox_accepted()
+{
+	qDebug() << ui->checkBoxRealTimeCheck->isChecked();
+}
+
+void DRCSettings::on_runDRC_pressed()
+{
+	emit(runDRC());
+}
+
 void DRCSettings::setProject(Project *p)
 {
 	project = p;
 	refreshRuleList();
 }
-
 
 void DRCSettings::refreshRuleList()
 {

@@ -62,14 +62,14 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 
 	connect(createWidget, SIGNAL(fileCreated(QString)), editArea, SLOT(openFile(QString)));
 
-	dialogDRCSettings = new DRCSettings(this);
-
 	QMenu *recent = ui->menuRecentProjects;
 	QAction *recent_action;
 
 	settings->beginGroup("history");
 	QStringList reverseProjectsList = settings->value("recentProjects").toStringList();
 	settings->endGroup();
+
+	projectSettingsDialog->setSettings(settings);
 
 	QStringList recentProjectsList;
 	QStringList::const_reverse_iterator rev;
@@ -169,12 +169,10 @@ void MainWindow::openProject(QString path)
 		modulesWidget->setProject(project);
 		filesWidget->setProject(project);
 		projectsWidget->setProject(project);
-		projectSettingsDialog->setSettings(settings);
 		projectSettingsDialog->setProject(project);
 		editArea->setProject(project);
 		buildFlowConfig->setProject(project);
 		createWidget->setProject(project);
-		dialogDRCSettings->setProject(project);
 		mainContext.addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
@@ -232,11 +230,6 @@ void MainWindow::on_setSynthesisMode_triggered()
 	projectsWidget->setVisible(true);
 	modulesWidget->setVisible(true);
 	pythonConsoleWidget->setVisible(true);
-}
-
-void MainWindow::on_actionDRC_triggered()
-{
-	dialogDRCSettings->show();
 }
 
 void MainWindow::on_setLayoutMode_triggered()

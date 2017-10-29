@@ -23,6 +23,10 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(zoomOut()));
 	toolbar->addAction(button);
 
+	button = new QAction(QPixmap(":/drc.svg"), "DRC settings", toolbar);
+	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showDRC()));
+	toolbar->addAction(button);
+
 	addToolBar(toolbar);
 
 	setCentralWidget(editArea);

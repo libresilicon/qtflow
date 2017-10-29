@@ -11,6 +11,7 @@
 
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
+#include "drcsettings.h"
 
 #include "project.h"
 
@@ -36,8 +37,10 @@ public:
 	QLayoutScene(QObject *parent = Q_NULLPTR);
 	QLayoutScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
+	void basicInit();
 
 	void setProject(Project *p);
+	void showDRC();
 
 	void setDrawingOperation(drawing_operations o);
 	void setActiveLayer(QString layer);
@@ -65,6 +68,7 @@ protected:
 
 public slots:
 	void onVisibleLayersChanged(QStringList l);
+	void runDRC();
 
 signals:
 	void contentChanged();
@@ -94,6 +98,8 @@ private:
 	QMap<QString,rects_layer_t> layer_rects;
 	QMap<QString,layer_gds_wires_t> layer_gds;
 	QVector<QGraphicsLineItem*> gridLines;
+
+	DRCSettings *drcDialog;
 };
 
 #endif // QLAYOUTSCENE_H

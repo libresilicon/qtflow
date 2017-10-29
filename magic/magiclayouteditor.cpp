@@ -157,6 +157,11 @@ void MagicLayoutEditor::zoomIn()
 	editScene->update();
 }
 
+void MagicLayoutEditor::showDRC()
+{
+	editScene->showDRC();
+}
+
 void MagicLayoutEditor::zoomOut()
 {
 	scale(0.9, 0.9);

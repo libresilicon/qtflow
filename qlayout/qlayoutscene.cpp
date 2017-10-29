@@ -1,7 +1,19 @@
 #include "qlayoutscene.h"
 
+void QLayoutScene::basicInit()
+{
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
+
+	connect(drcDialog,SIGNAL(runDRC()),this,SLOT(runDRC()));
+}
+
 QLayoutScene::QLayoutScene(QObject *parent) :
 	QGraphicsScene(parent),
+	drcDialog(new DRCSettings()),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	recentRectangle(NULL),
@@ -10,15 +22,12 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	m_gridSize(40),
 	m_scaleFactor(1)
 {
-	recentSelectRectangle->setZValue(1000);
-	recentSelectRectangle->hide();
-	recentSelectRectangle->setOpacity(0.25);
-	recentSelectRectangle->setBrush(Qt::gray);
-	addItem(recentSelectRectangle);
+	basicInit();
 }
 
 QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
+	drcDialog(new DRCSettings()),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	recentRectangle(NULL),
@@ -27,15 +36,12 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	m_gridSize(2),
 	m_scaleFactor(1)
 {
-	recentSelectRectangle->setZValue(1000);
-	recentSelectRectangle->hide();
-	recentSelectRectangle->setOpacity(0.25);
-	recentSelectRectangle->setBrush(Qt::gray);
-	addItem(recentSelectRectangle);
+	basicInit();
 }
 
 QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
+	drcDialog(new DRCSettings()),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	recentRectangle(NULL),
@@ -44,11 +50,7 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	m_gridSize(40),
 	m_scaleFactor(1)
 {
-	recentSelectRectangle->setZValue(1000);
-	recentSelectRectangle->hide();
-	recentSelectRectangle->setOpacity(0.25);
-	recentSelectRectangle->setBrush(Qt::gray);
-	addItem(recentSelectRectangle);
+	basicInit();
 }
 
 
@@ -111,6 +113,12 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 void QLayoutScene::setProject(Project *p)
 {
 	project = p;
+	drcDialog->setProject(project);
+}
+
+void QLayoutScene::showDRC()
+{
+	drcDialog->show();
 }
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -307,6 +315,11 @@ void QLayoutScene::onVisibleLayersChanged(QStringList l)
 {
 	m_visibleLayers = l;
 	redraw();
+}
+
+void  QLayoutScene::runDRC()
+{
+	qDebug() << "Running DRC";
 }
 
 void QLayoutScene::redraw()
