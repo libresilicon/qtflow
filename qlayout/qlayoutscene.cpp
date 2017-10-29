@@ -333,16 +333,44 @@ void QLayoutScene::onVisibleLayersChanged(QStringList l)
 	redraw();
 }
 
-void  QLayoutScene::runDRC(QGraphicsRectItem *m)
+void  QLayoutScene::runDRC(QString n, QRectF rect)
 {
-}
+	TechDesignRule rule;
+	QString layerName;
+	QGraphicsRectItem *m;
+	QLayoutRectItem *w;
+	QGraphicsPolygonItem *p;
 
-void  QLayoutScene::runDRC(QLayoutRectItem *w)
-{
-}
+	rule = project->getDesignRule(n);
 
-void  QLayoutScene::runDRC(QGraphicsPolygonItem *p)
-{
+	if(rule.getName()==QString())
+		return;
+
+	if(rect.width() < rule.getMinimumWidth()) {
+		qDebug() << __FUNCTION__ << "DRC error!";
+		qDebug() << __FUNCTION__ << rule.getName();
+		qDebug() << __FUNCTION__ << rule.getWidthMessage();
+	}
+	if(rect.height() < rule.getMinimumWidth()) {
+		qDebug() << __FUNCTION__ << "DRC error!";
+		qDebug() << __FUNCTION__ << rule.getName();
+		qDebug() << __FUNCTION__ << rule.getWidthMessage();
+	}
+
+	foreach(layerName, rule.getSpacingRules()) {
+		if(macro_wires.contains(layerName)) {
+			foreach(m, macro_wires[layerName]) {
+			}
+		}
+		if(layer_gds.contains(layerName)) {
+			foreach(p, layer_gds[layerName]) {
+			}
+		}
+		if(layer_rects.contains(layerName)) {
+			foreach(w, layer_rects[layerName]) {
+			}
+		}
+	}
 }
 
 void  QLayoutScene::runDRC()
@@ -351,22 +379,26 @@ void  QLayoutScene::runDRC()
 	QGraphicsRectItem *m;
 	QLayoutRectItem *w;
 	QGraphicsPolygonItem *p;
+	QRectF rect;
 
 	foreach(layerName, macro_wires.keys()) {
 		foreach(m, macro_wires[layerName]) {
-			runDRC(m);
+			rect = m->rect();
+			runDRC(layerName, rect);
 		}
 	}
 
 	foreach(layerName, layer_gds.keys()) {
 		foreach(p, layer_gds[layerName]) {
-			runDRC(p);
+			rect = p->boundingRect();
+			runDRC(layerName, rect);
 		}
 	}
 
 	foreach(layerName, layer_rects.keys()) {
 		foreach(w, layer_rects[layerName]) {
-			runDRC(w);
+			rect = w->boundingRect();
+			runDRC(layerName, rect);
 		}
 	}
 }

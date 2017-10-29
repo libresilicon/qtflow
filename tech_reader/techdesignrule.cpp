@@ -31,6 +31,11 @@ void TechDesignRule::setWidthMessage(QString m)
 	m_widthMessage = m;
 }
 
+QString TechDesignRule::getWidthMessage()
+{
+	return m_widthMessage;
+}
+
 void TechDesignRule::setSpacing(QString name, int d, QString message, bool touching_ok)
 {
 	TechDesignRuleSpacing spacing;

@@ -15,6 +15,7 @@ public:
 	QString getName();
 	void setMinimumWidth(int i);
 	void setWidthMessage(QString m);
+	QString getWidthMessage();
 	void setSpacing(QString name, int d, QString message, bool touching_ok);
 	QStringList getSpacingRules();
 	TechDesignRuleSpacing getSpacingRule(QString k);
