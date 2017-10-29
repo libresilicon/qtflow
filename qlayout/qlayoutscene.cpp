@@ -333,9 +333,42 @@ void QLayoutScene::onVisibleLayersChanged(QStringList l)
 	redraw();
 }
 
+void  QLayoutScene::runDRC(QGraphicsRectItem *m)
+{
+}
+
+void  QLayoutScene::runDRC(QLayoutRectItem *w)
+{
+}
+
+void  QLayoutScene::runDRC(QGraphicsPolygonItem *p)
+{
+}
+
 void  QLayoutScene::runDRC()
 {
-	qDebug() << "Running DRC";
+	QString layerName;
+	QGraphicsRectItem *m;
+	QLayoutRectItem *w;
+	QGraphicsPolygonItem *p;
+
+	foreach(layerName, macro_wires.keys()) {
+		foreach(m, macro_wires[layerName]) {
+			runDRC(m);
+		}
+	}
+
+	foreach(layerName, layer_gds.keys()) {
+		foreach(p, layer_gds[layerName]) {
+			runDRC(p);
+		}
+	}
+
+	foreach(layerName, layer_rects.keys()) {
+		foreach(w, layer_rects[layerName]) {
+			runDRC(w);
+		}
+	}
 }
 
 void QLayoutScene::redraw()

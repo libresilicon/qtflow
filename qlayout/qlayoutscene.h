@@ -73,6 +73,10 @@ signals:
 	void registerLayer(QString);
 
 private:
+	void runDRC(QGraphicsRectItem *m);
+	void runDRC(QLayoutRectItem *w);
+	void runDRC(QGraphicsPolygonItem *p);
+
 	//QPointF snapGrid(QPointF pt);
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
