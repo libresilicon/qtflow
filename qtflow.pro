@@ -73,7 +73,8 @@ SOURCES += \
 	projectsitem.cpp \
     generictexteditorwidget.cpp \
     buildflow.cpp \
-    mainapplication.cpp
+    mainapplication.cpp \
+    project_conv_functions.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -168,6 +169,7 @@ include(qschematics/qschematics.pri)
 include(symbol_reader/symbol_reader.pri)
 include(gds2/gds2.pri)
 include(symbols/symbols.pri)
+include(blif/blif.pri)
 
 DISTFILES += \
 	scripts/blif2cel.py \

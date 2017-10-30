@@ -51,16 +51,22 @@ public:
 	Project(QSettings *settings, QString path, PythonQtObjectPtr main);
 	~Project();
 	void create(QString);
-	void synthesis();
-	void simulation();
-	void placement();
-	void routing();
-	void buildAll();
 	void setTechnology(QString tech);
 	void setProcess(QString proc);
 	void setTopLevel(QString mod);
 	void setTestBench(QString mod);
 	void setProjectType(QString proc);
+
+	// synthesis flow:
+	void synthesis();
+	void simulation();
+	void placement();
+	void routing();
+	void buildAll();
+
+	// synthesis flow glue (conversion between file formats):
+	void schematics2blif(QString schematicspath, QString blifpath);
+	void blif2cel(QString blifpath, QString celpath);
 
 	bool isMacroCellProject();
 	void setSyncLiberty(QString s);
