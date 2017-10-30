@@ -251,23 +251,22 @@ DEFAULTSIDEOVERLAP	"defaultsideoverlap"
 }
 
 <multiline>.*			{
-		const char* end;
-		for(int i = YYLeng();i>0;i--) {
-			end = YYText() + i;
-			if(*end) {
-				if(*end=='\\') {
-					BEGIN(multiline);
-					multiline_buf += std::string(yytext, yyleng);
-					techlval->v_str = new std::string(multiline_buf);
-					return tech::TechParser::token::Multiline;
-				} else {
-					BEGIN(INITIAL);
-					multiline_buf += std::string(yytext, yyleng);
-					techlval->v_str = new std::string(multiline_buf);
-					return tech::TechParser::token::Multiline;
-				}
+	const char* end;
+	for(int i = YYLeng();i>0;i--) {
+		end = YYText() + i;
+		if(*end) {
+			if(*end=='\\') {
+				BEGIN(multiline);
+				multiline_buf += std::string(yytext, yyleng);
+				return tech::TechParser::token::Multiline;
+			} else {
+				BEGIN(INITIAL);
+				multiline_buf += std::string(yytext, yyleng);
+				techlval->v_str = new std::string(multiline_buf);
+				return tech::TechParser::token::Multiline;
 			}
 		}
+	}
 }
 
 -[0-9]+|[0-9]+			{
