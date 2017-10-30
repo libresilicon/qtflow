@@ -647,10 +647,11 @@ void Project::routing()
 void Project::buildAll()
 {
 	mainContext.evalScript("synth()");
-	mainContext.evalScript("blif2cel()");
-	mainContext.evalScript("blif2sym()");
-	mainContext.evalScript("place()");
-	mainContext.evalScript("place2def()");
+	blif2cel(getTopLevel());
+	//mainContext.evalScript("blif2cel()");
+	//mainContext.evalScript("blif2sym()");
+	//mainContext.evalScript("place()");
+	//mainContext.evalScript("place2def()");
 }
 
 bool Project::hasMaterialTypeMapping(QString material)

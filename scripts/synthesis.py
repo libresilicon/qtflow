@@ -35,20 +35,27 @@ def synth():
 	command+=project_settings.getTopLevelFile()+"\n"
 
 	command+="synth -top "+project_settings.getTopLevel()+"\n"
-	command+="hierarchy -check -top "+project_settings.getTopLevel()+"\n"
-	command+="proc ; opt; fsm; opt; memory; opt\n"
-	command+="techmap; opt\n"
+	#command+="hierarchy -check -top "+project_settings.getTopLevel()+"\n"
+	command+="proc;\n"
+	command+="flatten;\n"
+
+	#command+="opt;\n"
+	#command+="fsm;\n"
+	#command+="opt;\n"
+	#command+="memory;\n"
+	#command+="opt\n"
+	#command+="techmap;\n"
+	#command+="opt\n"
 
 	command+="dfflibmap -liberty "+project_settings.getLibertyFile()+"\n"
 
-	if(project_settings.hasSettingABC()):
-		command+="abc -exe "+settings.getYosysABC()+" -liberty "+project_settings.getLibertyFile()+" -script +strash;scorr;ifraig;retime,{D};strash;dch,-f;map,-M,1,{D}\n"
+	#if(project_settings.hasSettingABC()):
+	command+="abc -exe "+settings.getYosysABC()+" -liberty "+project_settings.getLibertyFile()+" -script +strash;scorr;ifraig;retime,{D};strash;dch,-f;map,-M,1,{D}\n"
 
-	command+="flatten\n"
-	command+="clean -purge\n"
-	command+="opt\n"
-	command+="clean\n"
-	command+="rename -enumerate\n"
+	#command+="clean -purge\n"
+	#command+="opt\n"
+	#command+="clean\n"
+	#command+="rename -enumerate\n"
 
 	command+="write_blif "+project_settings.getTopLevel()+".blif\n"
 	command+="exit\n"

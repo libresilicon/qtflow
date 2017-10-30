@@ -4,7 +4,9 @@ PARSE_OUT_PWD = $$OUT_PWD/blif
 win32:QMAKE_CXXFLAGS += /bigobj
 
 SOURCES += \
-	$$PWD/blifdata.cpp
+	$$PWD/blifdata.cpp \
+    $$PWD/blifdatacomponentinfo.cpp
 
 HEADERS += \
-	$$PWD/blifdata.h
+	$$PWD/blifdata.h \
+    $$PWD/blifdatacomponentinfo.h

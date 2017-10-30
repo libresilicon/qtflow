@@ -11,27 +11,46 @@
 #include <QString>
 #include <QTextStream>
 #include <QGraphicsTextItem>
+#include <QDebug>
+#include <QFile>
+
+#include "blifdatacomponentinfo.h"
 
 namespace blif {
-	class BLIFScanner;
+	enum blif_keyword {
+		MODEL,
+		INPUTS,
+		OUTPUTS,
+		NAMES,
+		GATE,
+		SUB_COMPONENT,
+		END,
+		UNKNOWN
+	};
+
 	class BLIFData
 	{
 	public:
 		BLIFData(QString file);
 
-		BLIFScanner* getLexer();
+		QVector<BLIFDataComponentInfo> getComponents();
 
-		// build data:
-		void setModelName(std::string s);
+	protected:
+		blif_keyword tokenize(QString s);
+
+		void registerInputPins(QStringList lineList);
+		void registerOutputPins(QStringList lineList);
+		void registerComponent(QStringList lineList);
 
 	private:
-		class BLIFScanner* lexer;
-		class BLIFParser* parser;
-		bool trace_parsing;
-		bool trace_scanning;
 		QString streamname;
 
 		QString m_modelName;
+
+		QStringList m_inputList;
+		QStringList m_outputList;
+
+		QVector<BLIFDataComponentInfo> m_components;
 
 	};
 }

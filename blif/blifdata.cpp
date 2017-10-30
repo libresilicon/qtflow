@@ -1,38 +1,82 @@
 #include "blifdata.h"
-#include "blifscanner.h"
-
-#include <QDebug>
 
 namespace blif {
-	BLIFData::BLIFData(QString filename) :
-		lexer(NULL),
-		parser(NULL),
-		trace_scanning(false),
-		trace_parsing(false)
+	BLIFData::BLIFData(QString filename)
 	{
-		std::ifstream input;
-		std::string stdfilename = filename.toStdString();
-
-		streamname = filename;
-		input.open(stdfilename, std::ios::in);
-
-		lexer = new BLIFScanner(&input, &std::cout);
-		lexer->set_debug(trace_scanning);
-
-		parser = new BLIFParser(this);
-		parser->set_debug_level(trace_parsing);
-		parser->parse();
-		input.close();
+		QStringList lineList;
+		QString line;
+		QFile inputFile(filename);
+		if (inputFile.open(QIODevice::ReadOnly)) {
+			QTextStream in(&inputFile);
+			while (!in.atEnd()) {
+				line = in.readLine();
+				lineList = line.split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+				if(lineList.count()>1) {
+					// keywords
+					switch(tokenize(lineList[0])) {
+						case MODEL:
+							m_modelName = lineList[1];
+							break;
+						case INPUTS:
+							registerInputPins(lineList);
+						break;
+						case OUTPUTS:
+							registerOutputPins(lineList);
+						break;
+						case NAMES:
+						break;
+						case GATE:
+						case SUB_COMPONENT:
+							registerComponent(lineList);
+						break;
+						case END:
+						break;
+					}
+				}
+			}
+			inputFile.close();
+		}
 	}
 
-	BLIFScanner* BLIFData::getLexer()
+	blif_keyword BLIFData::tokenize(QString s)
 	{
-		return lexer;
+		if(s==".model") return MODEL;
+		if(s==".inputs") return INPUTS;
+		if(s==".outputs") return OUTPUTS;
+		if(s==".names") return NAMES;
+		if(s==".gate") return GATE;
+		if(s==".subckt") return SUB_COMPONENT;
+		if(s==".end") return END;
+		return UNKNOWN;
 	}
 
-	void BLIFData::setModelName(std::string s)
+	void BLIFData::registerInputPins(QStringList lineList)
 	{
-		m_modelName = QString::fromStdString(s);
+		for(int i=1;i<lineList.count();i++) {
+			m_inputList.append(lineList.at(i));
+		}
+	}
+
+	void BLIFData::registerOutputPins(QStringList lineList)
+	{
+		for(int i=1;i<lineList.count();i++) {
+			m_outputList.append(lineList.at(i));
+		}
+	}
+
+	void BLIFData::registerComponent(QStringList lineList)
+	{
+		BLIFDataComponentInfo component;
+		component.setName(lineList[1]);
+		for(int i=2; i<lineList.count(); i++) {
+			component.setSignalMapping(lineList[i]);
+		}
+		m_components.append(component);
+	}
+
+	QVector<BLIFDataComponentInfo> BLIFData::getComponents()
+	{
+		return m_components;
 	}
 
 }

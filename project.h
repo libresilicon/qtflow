@@ -27,6 +27,7 @@
 #include "cmap_reader/colormap.h"
 #include "tech_reader/techdata.h"
 #include "symbol_reader/symboldata.h"
+#include "blif/blifdata.h"
 
 class IProject: public QObject
 {
@@ -65,8 +66,8 @@ public:
 	void buildAll();
 
 	// synthesis flow glue (conversion between file formats):
-	void schematics2blif(QString schematicspath, QString blifpath);
-	void blif2cel(QString blifpath, QString celpath);
+	void schematics2blif(QString top);
+	void blif2cel(QString top);
 
 	bool isMacroCellProject();
 	void setSyncLiberty(QString s);
