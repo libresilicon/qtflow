@@ -12,7 +12,9 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	setScene(editScene);
 	//setRenderHint(QPainter::Antialiasing);
 	//setCacheMode(QGraphicsView::CacheBackground);
-	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	//setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DirectRendering)));
+	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 }
 
 void DEFLayoutEditor::loadFile(QString file)
@@ -24,6 +26,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	filePath = file;
 	if(defdata) delete defdata;
 	defdata = new def::DEFData(file);
+	qDebug() << "Done reading";
 
 	x = defdata->getLowerX()*defdata->getDistanceUnit();
 	y = defdata->getLowerY()*defdata->getDistanceUnit();
@@ -59,13 +62,19 @@ void DEFLayoutEditor::addRectangles()
 
 void DEFLayoutEditor::addMacroInstances()
 {
-	double x, y;
+	qreal count = 0;
+	qreal scale;
+	qreal x, y;
+	scale = defdata->getDistanceUnit();
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
 		x = e.x;
 		y = e.y;
-		editScene->addMacro(e.macro_name, e.instance_name, x, y);
+		editScene->addMacro(e.macro_name, e.instance_name, x, y, scale);
+
+		count++;
+		qDebug() << "Added " << count << " of " << mods.count() << " (" << 100*(count/mods.count()) << "%)";
 	}
 }
 

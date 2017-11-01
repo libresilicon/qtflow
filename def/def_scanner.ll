@@ -25,7 +25,7 @@ INTEGER			-{NUMBER}+|{NUMBER}+
 EXPONENT		[eE][+-]?{INTEGER}
 DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 
-STRING			[A-Za-z]|[A-Za-z0-9_,.-<>'"'\[\]\/$]
+STRING			[A-Za-z]|[A-Za-z0-9_,.-<>\"\[\]\/\(\)]
 
 ASTERISK			"*"
 PLUS				"+"
@@ -89,17 +89,17 @@ SPECIALNETS			"SPECIALNETS"
 {NEW}+							{ return def::DEFParser::token::NEW; }
 {SPECIALNETS}+					{ return def::DEFParser::token::SPECIALNETS; }
 
-{INTEGER}* {
+{INTEGER}+ {
 	deflval->v_int = atoi(yytext);
 	return def::DEFParser::token::INTEGER;
 }
 
-{DOUBLE}* {
+{DOUBLE}+ {
 	deflval->v_double = atof(yytext);
 	return def::DEFParser::token::DOUBLE;
 }
 
-{STRING}* {
+{STRING}+ {
 	deflval->v_str = new std::string(yytext, yyleng);
 	return def::DEFParser::token::STRING;
 }

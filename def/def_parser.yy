@@ -1,8 +1,6 @@
 %define api.prefix {def}
-%error-verbose
 %language "c++"
 %glr-parser
-%debug
 %token-table
 %define "parser_class_name" {DEFParser}
 
@@ -72,7 +70,12 @@
 %%
 
 def_file: def_file_options END DESIGN;
-def_file_options: def_file_option | def_file_options def_file_option;
+
+def_file_options:
+	  def_file_option
+	| def_file_options def_file_option
+;
+
 def_file_option:
 	  version
 	| cases
@@ -86,14 +89,15 @@ def_file_option:
 	| pins
 	| nets
 	| special_nets
-	;
+;
 
 design: DESIGN STRING;
 version: VERSION DOUBLE;
 cases: NAMESCASESENSITIVE STRING;
 bitchars: BUSBITCHARS STRING;
 dividechar: DIVIDERCHAR STRING;
-units: UNITS DISTANCE MICRONS INTEGER
+units:
+UNITS DISTANCE MICRONS INTEGER
 {
 	defdata->setDistanceUnitMicrons($4);
 }
@@ -102,6 +106,7 @@ units: UNITS DISTANCE MICRONS INTEGER
 diearea:
 DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE
 {
+	defdata->setDieArea($3,$4,$7,$8);
 }
 |
 DIEAREA BRACKETOPEN INTEGER INTEGER BRACKETCLOSE BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
@@ -122,8 +127,8 @@ components_amount: COMPONENTS INTEGER
 
 component_list:
 	  component_list_element
-	| component_list_element component_list
-	;
+	| component_list component_list_element
+;
 
 component_list_element: component_name component_placement
 {
@@ -154,12 +159,12 @@ component_placement: PLUS PLACED BRACKETOPEN placement_value placement_value BRA
 pins: PINS INTEGER pin_list END PINS;
 pin_list:
 	  pin_list_element
-	| pin_list_element pin_list
+	| pin_list pin_list_element
 	;
 pin_list_element: MINUS STRING PLUS NET STRING pin_settings;
 pin_settings:
 	  PLUS pin_setting
-	| PLUS pin_setting pin_settings
+	| PLUS pin_settings pin_setting
 	;
 pin_setting:
 	  pin_setting_layer
@@ -172,7 +177,7 @@ pin_setting_position: PLACED BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE STRING;
 nets: NETS INTEGER net_list END NETS;
 net_list:
 	  net_list_element
-	| net_list_element net_list
+	| net_list net_list_element
 ;
 
 net_list_element:
@@ -186,8 +191,8 @@ net_info: net_name net_connections;
 
 net_connections:
 	  net_connection
-	| net_connection net_connections
-	;
+	| net_connections net_connection
+;
 
 net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE;
 
@@ -199,8 +204,8 @@ routed_info_layer: PLUS ROUTED STRING;
 
 routed_info_tupels:
 	  routed_info_tupel
-	| routed_info_tupel routed_info_tupels
-	;
+	| routed_info_tupels routed_info_tupel
+;
 
 routed_info_tupel:
 	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
@@ -210,8 +215,8 @@ routed_info_tupel:
 
 new_metal_tupels:
 	  new_metal_tupel
-	| new_metal_tupel new_metal_tupels
-	;
+	| new_metal_tupels new_metal_tupel
+;
 
 new_metal_tupel:
 	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
@@ -261,5 +266,5 @@ special_new_metal:
 %%
 
 void def::DEFParser::error(const std::string &s) {
-	std::cout << "Error message: " << s << " on line " << deflineno << ", yytext: " << deftext <<std::endl;
+	std::cout << "DEFParser::" << __FUNCTION__ << " Error message: " << s << " on line " << deflineno << ", yytext: " << deftext << std::endl;
 }

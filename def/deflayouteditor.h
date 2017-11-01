@@ -8,6 +8,8 @@
 #include <QGridLayout>
 #include <QTemporaryDir>
 #include <QAbstractScrollArea>
+#include <QGLWidget>
+#include <QGLFormat>
 
 #include "qlayout/qlayoutscene.h"
 #include "ieditor.h"

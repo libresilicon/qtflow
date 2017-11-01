@@ -24,10 +24,10 @@ namespace def {
 		input.open(stdfilename, std::ios::in);
 
 		lexer = new DEFScanner(&input, &std::cout);
-		lexer->set_debug(trace_scanning);
+		//lexer->set_debug(trace_scanning);
 
 		parser = new DEFParser(this);
-		parser->set_debug_level(trace_parsing);
+		//parser->set_debug_level(trace_parsing);
 		parser->parse();
 		input.close();
 	}
@@ -91,7 +91,7 @@ namespace def {
 		return m_BBUpperY;
 	}
 
-	void DEFData::setDieArea(int x1, int x2, int y1, int y2)
+	void DEFData::setDieArea(double x1, double x2, double y1, double y2)
 	{
 		m_BBLowerX = x1;
 		m_BBUpperX = x2;

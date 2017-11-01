@@ -50,7 +50,7 @@ namespace def {
 		int getUpperX();
 		int getUpperY();
 
-		void setDieArea(int x1, int x2, int y1, int y2);
+		void setDieArea(double x1, double x2, double y1, double y2);
 
 	private:
 		mods_t parsedModules;
