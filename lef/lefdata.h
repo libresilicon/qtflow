@@ -12,104 +12,10 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
+#include "lefmacro.h"
+#include "leflayerinfo.h"
+
 namespace lef {
-	typedef struct {
-		double x;
-		double y;
-		double w;
-		double h;
-	} rect_t;
-
-	class LEFLayer {
-	public:
-		LEFLayer(QString);
-		void addRectangle(double, double, double, double);
-		void scaleLayer(double w, double h);
-		QVector<rect_t> getRects();
-		
-		QString getName();
-	private:
-		QString name;
-		QVector<rect_t> rects;
-		QVector<rect_t> rectsExport;
-		double scaleX;
-		double scaleY;
-		
-		void generateExportLayers();
-	};
-
-	class LEFObstruction {
-	public:
-		LEFObstruction();
-		void addLayer(QString);
-		QVector<LEFLayer*> getLayers();
-		bool layerExists(QString n);
-		LEFLayer *getLayer(QString);
-		void scaleObstruction(double,double);
-
-	private:
-		QVector<LEFLayer*> layers;
-	};
-
-	class LEFPort {
-	public:
-		LEFPort();
-		QVector<QString> getLayerNames();
-		QVector<LEFLayer*> getLayers();
-		void scalePort(double,double);
-		LEFLayer *getLayer(QString);
-		bool layerExists(QString n);
-
-		void addLayer(QString);
-	private:
-		QVector<LEFLayer*> layers;
-	};
-
-	class LEFPin {
-	public:
-		LEFPin(QString);
-		void scalePin(double,double);
-		void setBoundingBox(double x, double y, double w, double h);
-
-		QString getName();
-		LEFPort *getPort();
-		QVector<LEFLayer*> getPortLayers();
-		QPointF getCenter();
-	private:
-		QString name;
-		LEFPort *port;
-
-		// bounding box:
-		double m_x;
-		double m_y;
-		double m_w;
-		double m_h;
-	};
-
-	class LEFMacro {
-	public:
-		LEFMacro(QString);
-		void addPin(QString);
-
-		void setSize(double w, double h);
-		void scaleMacro(int w, int h);
-		double getWidth();
-		double getHeight();
-
-		QVector<QString> getPinNames();
-		QVector<LEFPin*> getPins();
-		LEFPin *getPin(QString name);
-		QString getName();
-		LEFObstruction *getObstruction();
-		bool pinExists(QString n);
-	private:
-		QString name;
-		QVector<LEFPin*> pins;
-		LEFObstruction* obstructions;
-		
-		double sizeW;
-		double sizeH;
-	};
 
 	class LEFScanner;
 	class LEFParser;
@@ -121,13 +27,12 @@ namespace lef {
 		LEFScanner *getLexer();
 
 		bool isDefinedMacro(QString name);
-		LEFMacro *getMacro(QString);
+		lef::LEFMacro *getMacro(QString);
 		QVector<LEFMacro*> getMacros();
 
 		void setBaseUnitMicrons(int);
 		int getBaseUnits();
 
-		void storeMacro();
 		void setMacroSize(double w, double h);
 		void addMacroName(std::string *s);
 		void addMacroPinName(std::string *s);
@@ -135,6 +40,15 @@ namespace lef {
 		void addMacroPinPortRectangle(double x1, double y1, double x2, double y2);
 		void addMacroPinObstructionLayer(std::string *s);
 		void addMacroPinObstructionRectangle(double, double, double, double);
+		void setSubBitChar(std::string s);
+		void setDivideChar(std::string s);
+		QString getSubBitChar();
+		QString getDivideChar();
+
+		void addLayer(std::string s);
+		void setLayerType(std::string s);
+		void setLayerPitch(double);
+		QVector<LEFLayerInfo*> getLayers();
 
 	private:
 		LEFScanner *lexer;
@@ -144,12 +58,16 @@ namespace lef {
 		QString streamname;
 
 		// work variables:
-		QVector<LEFMacro*> macros;
-		LEFMacro *recentMacro;
+		QVector<LEFMacro*> m_macros;
+		LEFMacro *m_recentMacro;
+		LEFLayerInfo *m_recentLayer;
+		QVector<LEFLayerInfo*> m_layers;
 
 		QString recentMacroName;
 		QString recentMacroPinName;
 		QString recentMacroPinPortLayer;
+		QString m_subBitChar;
+		QString m_divideChar;
 
 		QString recentMacroPinObstructionLayer;
 

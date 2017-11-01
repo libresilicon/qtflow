@@ -2,221 +2,6 @@
 #include "lefscanner.h"
 
 namespace lef {
-	LEFObstruction::LEFObstruction()
-	{
-	}
-
-	bool LEFObstruction::layerExists(QString n)
-	{
-		foreach(lef::LEFLayer *layer, layers)
-			if(layer->getName()==n)
-				return true;
-		return false;
-	}
-
-	QVector<LEFLayer*> LEFObstruction::getLayers()
-	{
-		return layers;
-	}
-
-	void LEFObstruction::addLayer(QString n)
-	{
-		layers.append(new LEFLayer(n));
-	}
-
-	LEFLayer *LEFObstruction::getLayer(QString n)
-	{
-		LEFLayer *ret = NULL;
-		foreach(LEFLayer *l, layers)
-			if(l->getName()==n)
-				ret=l;
-		return ret;
-	}
-
-	QString LEFLayer::getName()
-	{
-		return name;
-	}
-
-	QVector<rect_t> LEFLayer::getRects()
-	{
-		return rectsExport;
-	}
-	
-	LEFLayer::LEFLayer(QString n) :
-		scaleX(1),
-		scaleY(1),
-		name(n)
-	{
-	}
-	
-	void LEFLayer::addRectangle(double x, double y, double w, double h)
-	{
-		rect_t obj;
-		obj.x = x;
-		obj.y = y;
-		obj.w = w;
-		obj.h = h;
-		rects.append(obj);
-	}
-
-	void LEFLayer::generateExportLayers()
-	{
-		rectsExport.clear();
-		foreach(rect_t obj, rects) {
-			rect_t nobj;
-			nobj.x = obj.x*scaleX;
-			nobj.y = obj.y*scaleY;
-			nobj.w = obj.w*scaleX;
-			nobj.h = obj.h*scaleY;
-			rectsExport.append(nobj);
-		}
-	}
-
-	void LEFLayer::scaleLayer(double w, double h)
-	{
-		scaleX=w;
-		scaleY=h;
-		generateExportLayers();
-	}
-
-	LEFPort::LEFPort()
-	{
-	}
-	
-	LEFLayer* LEFPort::getLayer(QString n)
-	{
-		LEFLayer *ret = NULL;
-		foreach(LEFLayer *l, layers)
-			if(l->getName()==n)
-				ret=l;
-		return ret;
-	}
-	
-	void LEFPort::addLayer(QString n)
-	{
-		layers.append(new LEFLayer(n));
-	}
-
-	bool LEFPort::layerExists(QString n)
-	{
-		foreach(lef::LEFLayer *layer, layers)
-			if(layer->getName()==n)
-				return true;
-		return false;
-	}
-
-	void LEFPort::scalePort(double w, double h)
-	{
-		foreach(LEFLayer* layer, layers) {
-		    layer->scaleLayer(w,h);
-		}
-	}
-
-	QVector<QString> LEFPort::getLayerNames()
-	{
-		QVector<QString> ret;
-		foreach(LEFLayer *l, layers) ret.append(l->getName());
-		return ret;
-	}
-
-	QVector<LEFLayer*> LEFPort::getLayers()
-	{
-		return layers;
-	}
-
-	LEFPort* LEFPin::getPort()
-	{
-		return port;
-	}
-
-	LEFPin::LEFPin(QString n) :
-		port(new LEFPort()),
-		m_x(INT_MAX),
-		m_y(INT_MAX),
-		m_w(0),
-		m_h(0)
-	{
-		name = n;
-	}
-
-	void LEFPin::setBoundingBox(double x, double y, double w, double h)
-	{
-		if(x<m_x) m_x = x;
-		if(y<m_y) m_y = y;
-		if(w>m_w) m_w = w;
-		if(h>m_h) m_h = h;
-	}
-
-	QPointF LEFPin::getCenter()
-	{
-		qreal xp, yp;
-		xp = m_x+m_w/2;
-		yp = m_y+m_h/2;
-		return QPointF(xp,yp);
-	}
-
-	void LEFPin::scalePin(double w, double h)
-	{
-		port->scalePort(w,h);
-	}
-
-	QString LEFPin::getName()
-	{
-		return name;
-	}
-
-	QVector<LEFLayer*> LEFPin::getPortLayers()
-	{
-		return port->getLayers();
-	}
-
-	LEFMacro::LEFMacro(QString n) :
-		sizeW(0),
-		sizeH(0),
-		name(n),
-		obstructions(new LEFObstruction)
-	{
-	}
-
-	QString LEFMacro::getName()
-	{
-		return name;
-	}
-
-	void LEFMacro::addPin(QString n)
-	{
-		pins.append(new LEFPin(n));
-	}
-
-	bool LEFMacro::pinExists(QString n)
-	{
-		foreach(lef::LEFPin *pin, pins)
-			if(pin->getName()==n)
-				return true;
-		return false;
-	}
-
-	QVector<LEFPin*> LEFMacro::getPins()
-	{
-		return pins;
-	}
-
-	LEFPin* LEFMacro::getPin(QString name)
-	{
-		LEFPin *p = NULL;
-		foreach(p, pins)
-			if(p->getName()==name)
-				return p;
-		return p;
-	}
-
-	QVector<QString> LEFMacro::getPinNames()
-	{
-		QVector<QString> ret;
-		foreach(LEFPin *m, pins) ret.append(m->getName());
-		return ret;
-	}
 
 	LEFData::LEFData(QString filename) :
 		lexer(NULL),
@@ -224,7 +9,8 @@ namespace lef {
 		trace_scanning(false),
 		trace_parsing(false),
 		baseUnitMicrons(false),
-		baseUnitMicronsValue(1)
+		baseUnitMicronsValue(1),
+		m_recentLayer(NULL)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -252,7 +38,7 @@ namespace lef {
 
 	bool LEFData::isDefinedMacro(QString name)
 	{
-		foreach(LEFMacro *m, macros)
+		foreach(LEFMacro *m, m_macros)
 			if(m->getName()==name)
 				return true;
 		return false;
@@ -260,13 +46,13 @@ namespace lef {
 
 	QVector<LEFMacro*> LEFData::getMacros()
 	{
-		return macros;
+		return m_macros;
 	}
 
 	LEFMacro* LEFData::getMacro(QString n)
 	{
 		LEFMacro *ret = NULL;
-		foreach(LEFMacro *m, macros)
+		foreach(LEFMacro *m, m_macros)
 			if(m->getName()==n)
 				ret = m;
 		return ret;
@@ -277,58 +63,21 @@ namespace lef {
 		return lexer;
 	}
 
-	void LEFData::storeMacro()
-	{
-		macros.append(recentMacro);
-	}
-
-	void LEFMacro::setSize(double w, double h)
-	{
-		sizeW = w;
-		sizeH = h;
-	}
-
-	double LEFMacro::getWidth()
-	{
-		return sizeW;
-	}
-
-	double LEFMacro::getHeight()
-	{
-		return sizeH;
-	}
-
-	void LEFMacro::scaleMacro(int w, int h)
-	{
-		double scaleW = (1000*w/sizeW)/1000;
-		double scaleH = (1000*h/sizeH)/1000;
-		foreach(LEFPin *pin, pins) {
-			pin->scalePin(scaleW,scaleH);
-		}
-		foreach(LEFLayer *layer, obstructions->getLayers()) {
-			layer->scaleLayer(scaleW,scaleH);
-		}
-	}
-
-	LEFObstruction *LEFMacro::getObstruction()
-	{
-		return obstructions;
-	}
-
 	void LEFData::setMacroSize(double w, double h)
 	{
-		recentMacro->setSize(w,h);
+		m_recentMacro->setSize(w,h);
 	}
 
 	void LEFData::addMacroName(std::string *s)
 	{
-		recentMacro = new LEFMacro(QString::fromStdString(*s));
+		m_recentMacro = new LEFMacro(QString::fromStdString(*s));
+		m_macros.append(m_recentMacro);
 	}
 
 	void LEFData::addMacroPinName(std::string *s)
 	{
 		recentMacroPinName = QString::fromStdString(*s);
-		recentMacro->addPin(recentMacroPinName);
+		m_recentMacro->addPin(recentMacroPinName);
 	}
 
 	void LEFData::addMacroPinPortRectangle(double x1, double y1, double x2, double y2)
@@ -342,10 +91,10 @@ namespace lef {
 		lef::LEFPort *port;
 		lef::LEFLayer *layer;
 
-		if(!recentMacro->pinExists(recentMacroPinName))
-			recentMacro->addPin(recentMacroPinName);
+		if(!m_recentMacro->pinExists(recentMacroPinName))
+			m_recentMacro->addPin(recentMacroPinName);
 
-		pin = recentMacro->getPin(recentMacroPinName);
+		pin = m_recentMacro->getPin(recentMacroPinName);
 		port = pin->getPort();
 
 		if(!port->layerExists(recentMacroPinPortLayer))
@@ -362,10 +111,10 @@ namespace lef {
 		lef::LEFPort *port;
 
 		recentMacroPinPortLayer = QString::fromStdString(*s);
-		if(!recentMacro->pinExists(recentMacroPinName))
-			recentMacro->addPin(recentMacroPinName);
+		if(!m_recentMacro->pinExists(recentMacroPinName))
+			m_recentMacro->addPin(recentMacroPinName);
 
-		pin = recentMacro->getPin(recentMacroPinName);
+		pin = m_recentMacro->getPin(recentMacroPinName);
 		port = pin->getPort();
 		if(!port->layerExists(recentMacroPinPortLayer))
 			port->addLayer(recentMacroPinPortLayer);
@@ -379,6 +128,26 @@ namespace lef {
 		recentMacroPinObstructionLayer = QString::fromStdString(*s);
 	}
 
+	void LEFData::setSubBitChar(std::string s)
+	{
+		m_subBitChar = QString::fromStdString(s);
+	}
+
+	void LEFData::setDivideChar(std::string s)
+	{
+		m_divideChar = QString::fromStdString(s);
+	}
+
+	QString LEFData::getSubBitChar()
+	{
+		return m_subBitChar;
+	}
+
+	QString LEFData::getDivideChar()
+	{
+		return m_divideChar;
+	}
+
 	void LEFData::addMacroPinObstructionRectangle(double x1, double y1, double x2, double y2)
 	{
 		double x = x1;
@@ -388,7 +157,7 @@ namespace lef {
 
 		lef::LEFObstruction *obstruction;
 		lef::LEFLayer *layer;
-		obstruction = recentMacro->getObstruction();
+		obstruction = m_recentMacro->getObstruction();
 		if(!obstruction->layerExists(recentMacroPinPortLayer))
 			obstruction->addLayer(recentMacroPinPortLayer);
 
@@ -405,6 +174,30 @@ namespace lef {
 	int LEFData::getBaseUnits()
 	{
 		return baseUnitMicronsValue;
+	}
+
+	void LEFData::setLayerType(std::string s)
+	{
+		if(m_recentLayer)
+			m_recentLayer->setType(QString::fromStdString(s));
+	}
+
+	void LEFData::addLayer(std::string s)
+	{
+		m_recentLayer = new LEFLayerInfo();
+		m_layers.append(m_recentLayer);
+		m_recentLayer->setName(QString::fromStdString(s));
+	}
+
+	void LEFData::setLayerPitch(double i)
+	{
+		if(m_recentLayer)
+			m_recentLayer->setPitch(i);
+	}
+
+	QVector<LEFLayerInfo*> LEFData::getLayers()
+	{
+		return m_layers;
 	}
 
 }

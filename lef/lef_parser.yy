@@ -110,8 +110,14 @@ option:
 
 version: VERSION DOUBLE;
 cases: NAMESCASESENSITIVE STRING;
-bitchars: BUSBITCHARS STRING;
-dividechar: DIVIDERCHAR STRING;
+bitchars: BUSBITCHARS STRING
+{
+	lefdata->setSubBitChar(*$2);
+};
+dividechar: DIVIDERCHAR STRING
+{
+	lefdata->setDivideChar(*$2);
+};
 units: UNITS database_list END UNITS;
 database_list:
 DATABASE MICRONS INTEGER
@@ -129,24 +135,37 @@ layers:
 ;
 
 layer: layer_name layer_options END STRING;
-layer_name: LAYER STRING;
+layer_name:
+LAYER STRING
+{
+	lefdata->addLayer(*$2);
+}
 
 layer_options: layer_option | layer_options layer_option;
 layer_option:
-	  TYPE STRING
-	| SPACING DOUBLE;
-	| DIRECTION STRING
-	| PITCH DOUBLE
-	| PITCH INTEGER
-	| OFFSET DOUBLE
-	| OFFSET INTEGER
-	| WIDTH DOUBLE
-	| WIDTH INTEGER
-	| RESISTANCE STRING DOUBLE
-	| RESISTANCE STRING INTEGER
-	| CAPACITANCE STRING DOUBLE
-	| CAPACITANCE STRING INTEGER
-	| EDGECAPACITANCE DOUBLE
+  TYPE STRING
+{
+	lefdata->setLayerType(*$2);
+}
+| SPACING DOUBLE;
+| DIRECTION STRING
+| PITCH DOUBLE
+{
+	lefdata->setLayerPitch($2);
+}
+| PITCH INTEGER
+{
+	lefdata->setLayerPitch($2);
+}
+| OFFSET DOUBLE
+| OFFSET INTEGER
+| WIDTH DOUBLE
+| WIDTH INTEGER
+| RESISTANCE STRING DOUBLE
+| RESISTANCE STRING INTEGER
+| CAPACITANCE STRING DOUBLE
+| CAPACITANCE STRING INTEGER
+| EDGECAPACITANCE DOUBLE
 ;
 
 vias:
@@ -212,10 +231,7 @@ macros:
 	| macro macros
 	;
 
-macro: macro_name macro_options END STRING
-	{
-		lefdata->storeMacro();
-	};
+macro: macro_name macro_options END STRING;
 
 macro_name: MACRO STRING
 	{
