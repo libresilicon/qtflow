@@ -93,7 +93,7 @@ void Project::blif2cel(QString top)
 		outStream << endl;
 		outStream << "pad " << QString::number(pad_counter) << " name twpin_" << padPin;
 		outStream << endl;
-		outStream << "corners 4 -80 -100 -80 100 80 100 80 -100";
+		outStream << "corners 4 -800 -1000 -800 1000 800 1000 800 -1000";
 		outStream << endl;
 		outStream << "pin name " << padPin << " signal " << padPin << " layer 1 0 0";
 		outStream << endl;
@@ -106,6 +106,7 @@ void Project::place2def(QString top)
 {
 	QString defpath;
 	QString pl1path;
+	QString pl2path;
 	QString pinpath;
 	QString infopath;
 	QString mcelpath;
@@ -117,6 +118,7 @@ void Project::place2def(QString top)
 
 	defpath = QDir(getLayoutDir()).filePath(top+".def");
 	pl1path = QDir(getLayoutDir()).filePath(top+".pl1");
+	pl2path = QDir(getLayoutDir()).filePath(top+".pl2");
 	pinpath = QDir(getLayoutDir()).filePath(top+".pin");
 	infopath = QDir(getLayoutDir()).filePath(top+".info");
 	mcelpath = QDir(getLayoutDir()).filePath(top+".mcel");
@@ -136,12 +138,22 @@ void Project::place2def(QString top)
 		return;
 	}
 
+	QFile pl2File(pl2path);
+	pl2File.open(QIODevice::ReadOnly | QIODevice::Text);
+	if(!pl2File.isOpen()){
+		qDebug() << "- Error, unable to open " << pl2path << " for output";
+		defFile.close();
+		pl1File.close();
+		return;
+	}
+
 	QFile pinFile(pinpath);
 	pinFile.open(QIODevice::ReadOnly | QIODevice::Text);
 	if(!pl1File.isOpen()){
 		qDebug() << "- Error, unable to open " << pinpath << " for output";
 		defFile.close();
 		pl1File.close();
+		pl2File.close();
 		return;
 	}
 
@@ -151,6 +163,7 @@ void Project::place2def(QString top)
 		qDebug() << "- Error, unable to open " << infopath << " for output";
 		defFile.close();
 		pl1File.close();
+		pl2File.close();
 		pinFile.close();
 		return;
 	}
@@ -174,6 +187,7 @@ void Project::place2def(QString top)
 	}
 
 	QTextStream pl1Stream(&pl1File);
+	QTextStream pl2Stream(&pl2File);
 	QTextStream pinStream(&pinFile);
 	QTextStream infoStream(&infoFile);
 	QTextStream outStream(&defFile);
@@ -230,9 +244,9 @@ void Project::place2def(QString top)
 			outStream << "TRACKS ";
 			outStream << ((layer_count%2)?"X":"Y");
 			outStream << " 0.0 DO ";
-			outStream << QString::number(2*layerPitch);
+			outStream << QString::number(layerPitch/2);
 			outStream << " STEP ";
-			outStream << QString::number(layerPitch);
+			outStream << QString::number(layerPitch/4);
 			outStream << " LAYER ";
 			outStream << layerName;
 			outStream << " ;";
@@ -318,14 +332,60 @@ void Project::place2def(QString top)
 	outStream << endl;
 	outStream << endl;
 
-	outStream << "PINS 0 ;";
+	QStringList pinLine;
+	QString pinName;
+	QString pinString = "\n";
+	QString specialNetString = "\n";
+	QRegExp twfilter("twpin\_(.+)+");
+	int pin_count = 0;
+	int pinx, piny;
+	while (!pl2Stream.atEnd()) {
+		pinLine = pl2Stream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+		if(pinLine.count()>1) {
+			twfilter.indexIn(pinLine.at(0));
+			pinName = twfilter.cap(1);
+			if(pinName!=QString()) {
+				pinx = pinLine.at(1).toInt();
+				piny = pinLine.at(2).toInt();
+				pinString += "- " + pinName + " + NET " + pinName;
+				pinString += "\n";
+				pinString += "  + LAYER metal2 ( 0 0 ) ( 1 1 )";
+				pinString += "\n";
+				pinString += "  + PLACED ( ";
+				pinString += QString::number(pinx);
+				pinString += " ";
+				pinString += QString::number(piny);
+				pinString += " ) N ;";
+				pinString += "\n";
+
+				specialNetString += "- " + pinName + " ;\n";
+
+				pin_count++;
+			}
+		}
+	}
+	pl2File.close();
+
+	outStream << "PINS ";
+	outStream << QString::number(pin_count);
+	outStream << " ;";
 	outStream << endl;
+	outStream << pinString;
 	outStream << "END PINS";
 	outStream << endl;
 	outStream << endl;
 
+	outStream << "SPECIALNETS ";
+	outStream << QString::number(pin_count);
+	outStream << " ;";
+	outStream << endl;
+	outStream << specialNetString;
+	outStream << endl;
+	outStream << "END SPECIALNETS";
+	outStream << endl;
+	outStream << endl;
+
 	int nets_counter;
-	QStringList pinLine;
 	QMap<QString,QStringList> mapping;
 
 	nets_counter = 0;
@@ -362,12 +422,6 @@ void Project::place2def(QString top)
 	outStream << "END NETS";
 	outStream << endl;
 	outStream << endl;
-
-	//outStream << "SPECIALNETS 0 ;";
-	//outStream << endl;
-	//outStream << "END SPECIALNETS";
-	//outStream << endl;
-	//outStream << endl;
 
 	outStream << "END DESIGN";
 	outStream << endl;
