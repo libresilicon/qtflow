@@ -47,7 +47,7 @@ ENDRULES
 *vertical_wire_weight : 1.0
 *vertical_path_weight : 1.0
 *padspacing           : variable
-*rowSep		      : 0.0   0
+*rowSep		      : 1.0	1
 *track.pitch	      : 80
 *minimum_pad_space    : 120
 *gridX		      : 80
