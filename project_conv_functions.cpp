@@ -108,8 +108,10 @@ void Project::place2def(QString top)
 	QString pl1path;
 	QString pl2path;
 	QString pinpath;
-	QString infopath;
 	QString mcelpath;
+
+	QString layerName;
+	qreal layerPitch;
 
 	qreal dieHeight = getSmallestUnit()*100;
 	qreal dieWidth = getSmallestUnit()*100;
@@ -120,7 +122,6 @@ void Project::place2def(QString top)
 	pl1path = QDir(getLayoutDir()).filePath(top+".pl1");
 	pl2path = QDir(getLayoutDir()).filePath(top+".pl2");
 	pinpath = QDir(getLayoutDir()).filePath(top+".pin");
-	infopath = QDir(getLayoutDir()).filePath(top+".info");
 	mcelpath = QDir(getLayoutDir()).filePath(top+".mcel");
 
 	QFile defFile(defpath);
@@ -157,17 +158,6 @@ void Project::place2def(QString top)
 		return;
 	}
 
-	QFile infoFile(infopath);
-	infoFile.open(QIODevice::ReadOnly | QIODevice::Text);
-	if(!infoFile.isOpen()){
-		qDebug() << "- Error, unable to open " << infopath << " for output";
-		defFile.close();
-		pl1File.close();
-		pl2File.close();
-		pinFile.close();
-		return;
-	}
-
 	QFile mcelFile(mcelpath);
 	mcelFile.open(QIODevice::ReadOnly | QIODevice::Text);
 	if(mcelFile.isOpen()){
@@ -189,7 +179,6 @@ void Project::place2def(QString top)
 	QTextStream pl1Stream(&pl1File);
 	QTextStream pl2Stream(&pl2File);
 	QTextStream pinStream(&pinFile);
-	QTextStream infoStream(&infoFile);
 	QTextStream outStream(&defFile);
 
 	outStream << "VERSION 5.6 ;";
@@ -213,6 +202,61 @@ void Project::place2def(QString top)
 	outStream << " ;";
 	outStream << endl;
 
+	QString netName;
+	QString pinName;
+	QString pinString = "\n";
+	QString specialNetString = "\n";
+	int pin_count = 0;
+
+	QStringList pinLine;
+	while(!pl2Stream.atEnd()) {
+		pinLine = pl2Stream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+		if(pinLine.count()>2) {
+			dieOrigX = ( dieOrigX < pinLine.at(1).toDouble() ) ? dieOrigX : pinLine.at(1).toDouble();
+			dieOrigY = ( dieOrigY < pinLine.at(2).toDouble() ) ? dieOrigY : pinLine.at(2).toDouble();
+		}
+	}
+
+	int nets_counter;
+	QMap<QString,QStringList> mapping;
+	int pinx;
+	int piny;
+
+	nets_counter = 0;
+	while (!pinStream.atEnd()) {
+		pinLine = pinStream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+		if(pinLine.count()>3) {
+			if(pinLine.at(2)=="twfeed")
+				continue;
+			if(pinLine.at(2)=="PSEUDO_CELL")
+				continue;
+
+			netName = pinLine.at(0);
+			pinName = pinLine.at(2)+'/'+pinLine.at(3);
+			pinx = pinLine.at(4).toInt();
+			piny = pinLine.at(5).toInt();
+			layerName = "metal"+QString::number((pinLine.at(8).toInt()+1));
+
+			mapping[pinLine.at(0)].append(pinLine.at(2)+" "+pinLine.at(3));
+			nets_counter++;
+
+			pinString += "- " + pinName + " + NET " + netName;
+			pinString += "\n";
+			pinString += "  + LAYER ";
+			pinString += layerName;
+			pinString += " ( 0 0 ) ( 1 1 )";
+			pinString += "\n";
+			pinString += "  + PLACED ( ";
+			pinString += QString::number(pinx);
+			pinString += " ";
+			pinString += QString::number(piny);
+			pinString += " ) N ;";
+			pinString += "\n";
+
+			pin_count++;
+		}
+	}
+
 	outStream << "UNITS DISTANCE MICRONS ";
 	outStream << QString::number(getSmallestUnit());
 	outStream << " ;";
@@ -221,7 +265,8 @@ void Project::place2def(QString top)
 	outStream << "DIEAREA ( ";
 	outStream << QString::number(dieOrigX);
 	outStream << " ";
-	outStream << QString::number(dieOrigY);
+	//outStream << QString::number(dieOrigY);
+	outStream << QString::number(dieOrigX);
 	outStream << " ) ( ";
 	outStream << QString::number(dieWidth);
 	outStream << " ";
@@ -230,32 +275,29 @@ void Project::place2def(QString top)
 	outStream << endl;
 	outStream << endl;
 
-	QStringList infoLine;
-	QString layerName;
-	qreal layerPitch;
 	int layer_count = 0;
-	while (!infoStream.atEnd()) {
-		infoLine = infoStream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
-		if(infoLine.count()>4) {
-			layerName = infoLine[0];
-			layerPitch = infoLine[1].toDouble();
-			layerPitch *= getSmallestUnit();
+	foreach(layerName, getRoutingLayers()) {
+		layerPitch = 1000;
+		//layerPitch = infoLine[1].toDouble();
+		//layerPitch *= getSmallestUnit();
 
-			outStream << "TRACKS ";
-			outStream << ((layer_count%2)?"X":"Y");
-			outStream << " 0.0 DO ";
-			outStream << QString::number(layerPitch/2);
-			outStream << " STEP ";
-			outStream << QString::number(layerPitch/4);
-			outStream << " LAYER ";
-			outStream << layerName;
-			outStream << " ;";
-			outStream << endl;
+		outStream << "TRACKS ";
+		outStream << ((layer_count%2)?"X":"Y");
+		outStream << " ";
+		outStream << ((dieOrigX<dieOrigY)?QString::number(dieOrigX):QString::number(dieOrigY));
+		//outStream << "0";
+		outStream << " ";
+		outStream << " DO ";
+		outStream << QString::number(layerPitch/4);
+		outStream << " STEP ";
+		outStream << QString::number(layerPitch/6);
+		outStream << " LAYER ";
+		outStream << layerName;
+		outStream << " ;";
+		outStream << endl;
 
-			layer_count++;
-		}
+		layer_count++;
 	}
-	infoFile.close();
 
 	outStream << endl;
 	outStream << endl;
@@ -332,40 +374,6 @@ void Project::place2def(QString top)
 	outStream << endl;
 	outStream << endl;
 
-	QStringList pinLine;
-	QString pinName;
-	QString pinString = "\n";
-	QString specialNetString = "\n";
-	QRegExp twfilter("twpin\_(.+)+");
-	int pin_count = 0;
-	int pinx, piny;
-	while (!pl2Stream.atEnd()) {
-		pinLine = pl2Stream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
-		if(pinLine.count()>1) {
-			twfilter.indexIn(pinLine.at(0));
-			pinName = twfilter.cap(1);
-			if(pinName!=QString()) {
-				pinx = pinLine.at(1).toInt();
-				piny = pinLine.at(2).toInt();
-				pinString += "- " + pinName + " + NET " + pinName;
-				pinString += "\n";
-				pinString += "  + LAYER metal2 ( 0 0 ) ( 1 1 )";
-				pinString += "\n";
-				pinString += "  + PLACED ( ";
-				pinString += QString::number(pinx);
-				pinString += " ";
-				pinString += QString::number(piny);
-				pinString += " ) N ;";
-				pinString += "\n";
-
-				specialNetString += "- " + pinName + " ;\n";
-
-				pin_count++;
-			}
-		}
-	}
-	pl2File.close();
-
 	outStream << "PINS ";
 	outStream << QString::number(pin_count);
 	outStream << " ;";
@@ -384,21 +392,6 @@ void Project::place2def(QString top)
 	outStream << "END SPECIALNETS";
 	outStream << endl;
 	outStream << endl;
-
-	int nets_counter;
-	QMap<QString,QStringList> mapping;
-
-	nets_counter = 0;
-	while (!pinStream.atEnd()) {
-		pinLine = pinStream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
-		if(pinLine.count()>3) {
-			if(pinLine.at(2)=="twfeed")
-				continue;
-			mapping[pinLine.at(0)].append(pinLine.at(2)+" "+pinLine.at(3));
-			nets_counter++;
-		}
-	}
-	pinFile.close();
 
 	outString = "";
 	foreach(QString sig, mapping.keys()) {
@@ -426,6 +419,8 @@ void Project::place2def(QString top)
 	outStream << "END DESIGN";
 	outStream << endl;
 
+	pinFile.close();
 	pl1File.close();
+	pl2File.close();
 	defFile.close();
 }

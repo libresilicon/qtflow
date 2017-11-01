@@ -39,23 +39,23 @@ def synth():
 	command+="proc;\n"
 	command+="flatten;\n"
 
-	#command+="opt;\n"
-	#command+="fsm;\n"
-	#command+="opt;\n"
-	#command+="memory;\n"
-	#command+="opt\n"
-	#command+="techmap;\n"
-	#command+="opt\n"
+	command+="opt;\n"
+	command+="fsm;\n"
+	command+="opt;\n"
+	command+="memory;\n"
+	command+="opt\n"
+	command+="techmap;\n"
+	command+="opt\n"
 
 	command+="dfflibmap -liberty "+project_settings.getLibertyFile()+"\n"
 
 	#if(project_settings.hasSettingABC()):
 	command+="abc -exe "+settings.getYosysABC()+" -liberty "+project_settings.getLibertyFile()+" -script +strash;scorr;ifraig;retime,{D};strash;dch,-f;map,-M,1,{D}\n"
 
-	#command+="clean -purge\n"
-	#command+="opt\n"
-	#command+="clean\n"
-	#command+="rename -enumerate\n"
+	command+="clean -purge\n"
+	command+="opt\n"
+	command+="clean\n"
+	command+="rename -enumerate\n"
 
 	command+="write_blif "+project_settings.getTopLevel()+".blif\n"
 	command+="exit\n"
