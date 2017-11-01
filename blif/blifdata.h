@@ -34,6 +34,7 @@ namespace blif {
 		BLIFData(QString file);
 
 		QVector<BLIFDataComponentInfo> getComponents();
+		QStringList getPadPins();
 
 	protected:
 		blif_keyword tokenize(QString s);
