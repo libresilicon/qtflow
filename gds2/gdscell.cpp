@@ -16,6 +16,16 @@ QVector<GDSBoundary*> GDSCell::getBoundaries()
 	return m_boundaries;
 }
 
+qreal GDSCell::getWidth()
+{
+	return m_width;
+}
+
+qreal GDSCell::getHeight()
+{
+	return m_height;
+}
+
 void GDSCell::setRectangle(int x, int y, int w, int h)
 {
 	m_scale_x = abs(m_width/w);

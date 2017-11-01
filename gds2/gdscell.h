@@ -19,6 +19,9 @@ public:
 	QString getName();
 	QVector<GDSBoundary*> getBoundaries();
 
+	qreal getWidth();
+	qreal getHeight();
+
 	void setRectangle(int x, int y, int w, int h);
 
 private:
