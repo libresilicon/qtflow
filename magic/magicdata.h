@@ -12,24 +12,23 @@
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-
-typedef struct {
-	int x1,y1,x2,y2;
-} rect_t;
-
-typedef QVector<rect_t> rects_t;
-typedef QMap<QString,rects_t> layer_rects_t;
-
-typedef struct {
-	QString module_name;
-	QString instance_name;
-	int x1,y1,x2,y2;
-	int a,b,c,d,e,f;
-} module_info;
-
-typedef QVector<module_info> mods_t;
-
 namespace magic {
+	typedef struct {
+		int x1,y1,x2,y2;
+	} rect_t;
+
+	typedef QVector<rect_t> rects_t;
+	typedef QMap<QString,rects_t> layer_rects_t;
+
+	typedef struct {
+		QString module_name;
+		QString instance_name;
+		int x1,y1,x2,y2;
+		int a,b,c,d,e,f;
+	} module_info;
+
+	typedef QVector<module_info> mods_t;
+
 	class MagicScanner;
 	class MagicData
 	{

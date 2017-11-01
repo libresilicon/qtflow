@@ -648,10 +648,8 @@ void Project::buildAll()
 {
 	mainContext.evalScript("synth()");
 	blif2cel(getTopLevel());
-	//mainContext.evalScript("blif2cel()");
-	//mainContext.evalScript("blif2sym()");
-	//mainContext.evalScript("place()");
-	//mainContext.evalScript("place2def()");
+	mainContext.evalScript("place()");
+	place2def(getTopLevel());
 }
 
 bool Project::hasMaterialTypeMapping(QString material)
@@ -806,6 +804,31 @@ QStringList Project::getPlanes()
 	return planeList;
 }
 
+QStringList Project::getRoutingLayers()
+{
+	QStringList planeList;
+	foreach(QString key, lefdata.keys()) {
+		foreach(LEFLayerInfo* l, lefdata[key]->getLayers()) {
+			if(l->getType()=="ROUTING")
+				planeList.append(l->getName());
+		}
+	}
+
+	return planeList;
+}
+
+qreal Project::getRoutingLayerPitch(QString s)
+{
+	qreal ret = 1000;
+	foreach(QString key, lefdata.keys()) {
+		foreach(LEFLayerInfo* l, lefdata[key]->getLayers()) {
+			if(l->getName()==s)
+				ret = l->getPitch();
+		}
+	}
+	return ret;
+}
+
 QStringList Project::getTypeNames()
 {
 	if(techDisplayData)
@@ -920,6 +943,16 @@ lef::LEFMacro* Project::getMacro(QString s)
 	return NULL;
 }
 
+QStringList Project::getMacroList()
+{
+	QStringList ret;
+	foreach(QString key, lefdata.keys()) {
+		foreach(lef::LEFMacro *m, lefdata[key]->getMacros())
+			ret << m->getName();
+	}
+	return ret;
+}
+
 int Project::getBaseUnits(QString macro_name)
 {
 	int ret = 1;
@@ -930,6 +963,28 @@ int Project::getBaseUnits(QString macro_name)
 		}
 	}
 	return ret;
+}
+
+QString Project::getSubBitChar()
+{
+	QString ret;
+	foreach(QString key, lefdata.keys()) {
+		ret = lefdata[key]->getSubBitChar();
+		if(ret==QString()) continue;
+		return ret;
+	}
+	return "[]";
+}
+
+QString Project::getDivideChar()
+{
+	QString ret;
+	foreach(QString key, lefdata.keys()) {
+		ret = lefdata[key]->getDivideChar();
+		if(ret==QString()) continue;
+		return ret;
+	}
+	return "/";
 }
 
 int Project::getSmallestUnit()
@@ -1094,7 +1149,7 @@ QString Project::getPlacementScript()
 
 QString Project::getRoutingScript()
 {
-
+	return project_settings->value("routing_script").toString();
 }
 
 void Project::setSimulationScript(QString s)
@@ -1109,14 +1164,16 @@ void Project::setSynthesisScript(QString s)
 	project_settings->sync();
 }
 
-void Project::setPlacementScript(QString)
+void Project::setPlacementScript(QString s)
 {
-
+	project_settings->setValue("placement_script", s);
+	project_settings->sync();
 }
 
-void Project::setRoutingScript(QString)
+void Project::setRoutingScript(QString s)
 {
-
+	project_settings->setValue("routing_script", s);
+	project_settings->sync();
 }
 
 QString Project::getLibertyFile()

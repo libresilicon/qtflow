@@ -18,7 +18,8 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false)
+	m_dragging(false),
+	m_baseUnit(1)
 {
 	basicInit();
 }
@@ -30,7 +31,8 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false)
+	m_dragging(false),
+	m_baseUnit(1)
 {
 	basicInit();
 }
@@ -42,7 +44,8 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false)
+	m_dragging(false),
+	m_baseUnit(1)
 {
 	basicInit();
 }
@@ -104,10 +107,111 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 	painter->drawLines(lines.data(), lines.size());
 }*/
 
+
+void QLayoutScene::refreshMacroTable()
+{
+	if(!project) {
+		qDebug() << "No project set!";
+		return;
+	}
+
+	QString layer_name;
+	QColor color;
+	QLayoutMacroItem *mi;
+	qreal x,y,w,h;
+	qreal scale;
+
+	// fill in library content from LEF:
+	lef::LEFPort *port;
+	lef::LEFLayer *layer;
+	lef::LEFMacro *macro;
+	lef::LEFPin *pin;
+
+	// fill in GDS data:
+	GDSCell* cell;
+
+	m_macroTemplateMap.clear();
+	foreach(QString macroName, project->getMacroList()) {
+		x = 0;
+		y = 0;
+		w = 1;
+		h = 1;
+		scale = 1;
+		if(project) {
+			scale = project->getSmallestUnit();
+			w = scale;
+			h = scale;
+			macro = project->getMacro(macroName);
+			cell = project->getGDSMacro(macroName);
+			if(macro) {
+				w = macro->getWidth();
+				h = macro->getHeight();
+			} else if(cell) {
+				w = cell->getWidth();
+				h = cell->getHeight();
+			}
+			w *= scale;
+			h *= scale;
+		}
+
+		mi = new QLayoutMacroItem(x, y, w, h);
+		mi->setVisible(true);
+		mi->setOpacity(0.25);
+		mi->setMacroName(macroName);
+
+		// fill in library content from LEF:
+		if(project && macro) {
+			macro->scaleMacro(w, h);
+
+			foreach(pin, macro->getPins()) {
+				port = pin->getPort();
+				foreach(layer, port->getLayers()) {
+					layer_name = layer->getName();
+					color = project->colorMat(layer_name);
+					foreach(lef::rect_t rect, layer->getRects()) {
+						mi->addRectangle(layer_name, QBrush(color), QRectF(rect.x, rect.y, rect.w, rect.h));
+					}
+					emit(registerLayer(layer_name));
+				}
+			}
+			foreach (layer, macro->getObstruction()->getLayers()) {
+				layer_name = layer->getName();
+				color = project->colorMat(layer_name);
+				foreach(lef::rect_t rect, layer->getRects()) {
+					mi->addRectangle(layer_name, QBrush(color), QRectF(rect.x, rect.y, rect.w, rect.h));
+				}
+				emit(registerLayer(layer_name));
+			}
+		}
+
+		// fill in GDS data:
+		/*if(project && cell) {
+			cell->setRectangle(x,y,w,h);
+			foreach(GDSBoundary *b, cell->getBoundaries()) {
+				layer_name = project->layerNameFromCIF(b->getLayerIndex());
+				if(layer_name==QString()) {
+					layer_name = project->layerNameFromDStyle(b->getLayerIndex());
+				}
+				if(layer_name==QString()) {
+					qDebug() << "Couldn't map layer " << b->getLayerIndex();
+				} else {
+					color = project->colorMat(layer_name);
+					mi->addPolygon(layer_name, QBrush(color), b->getPolygon());
+
+					emit(registerLayer(layer_name));
+				}
+			}
+		}*/
+
+		m_macroTemplateMap[macroName]=mi;
+	}
+}
+
 void QLayoutScene::setProject(Project *p)
 {
 	project = p;
 	drcDialog->setProject(project);
+	refreshMacroTable();
 }
 
 void QLayoutScene::showDRC()
@@ -186,22 +290,6 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 					}
 				}
 
-			}
-			foreach(QString k, layer_gds.keys()) {
-				foreach(QGraphicsPolygonItem *m, layer_gds[k]) {
-					if(m->contains(lastOrig)) {
-						layerAction = menu.addAction(k);
-						break;
-					}
-				}
-			}
-			foreach(QString k, macro_wires.keys()) {
-				foreach(QGraphicsRectItem *m, macro_wires[k]) {
-					if(m->contains(lastOrig)) {
-						layerAction = menu.addAction(k);
-						break;
-					}
-				}
 			}
 
 			menu.exec(event->screenPos());
@@ -363,21 +451,6 @@ void QLayoutScene::runDRC(QString n, QRectF rect)
 		distance_errors.append(error_line);
 		addItem(error_line);
 	}
-
-	foreach(layerName, rule.getSpacingRules()) {
-		if(macro_wires.contains(layerName)) {
-			foreach(m, macro_wires[layerName]) {
-			}
-		}
-		if(layer_gds.contains(layerName)) {
-			foreach(p, layer_gds[layerName]) {
-			}
-		}
-		if(layer_rects.contains(layerName)) {
-			foreach(w, layer_rects[layerName]) {
-			}
-		}
-	}
 }
 
 void  QLayoutScene::runDRC()
@@ -390,20 +463,6 @@ void  QLayoutScene::runDRC()
 
 	foreach(QLayoutDistanceMeasure *t, distance_errors) {
 		removeItem(t);
-	}
-
-	foreach(layerName, macro_wires.keys()) {
-		foreach(m, macro_wires[layerName]) {
-			rect = m->rect();
-			runDRC(layerName, rect);
-		}
-	}
-
-	foreach(layerName, layer_gds.keys()) {
-		foreach(p, layer_gds[layerName]) {
-			rect = p->boundingRect();
-			runDRC(layerName, rect);
-		}
 	}
 
 	foreach(layerName, layer_rects.keys()) {
@@ -425,22 +484,6 @@ void QLayoutScene::redraw()
 	bool visible;
 
 	visible = true;
-	foreach(layerName, macro_wires.keys()) {
-		visible = m_visibleLayers.contains(layerName);
-		foreach(m, macro_wires[layerName]) {
-			m->setVisible(visible);
-		}
-	}
-
-	visible = true;
-	foreach(layerName, layer_gds.keys()) {
-		visible = m_visibleLayers.contains(layerName);
-		foreach(p, layer_gds[layerName]) {
-			p->setVisible(visible);
-		}
-	}
-
-	visible = true;
 	foreach(layerName, layer_rects.keys()) {
 		visible = m_visibleLayers.contains(layerName);
 		foreach(w, layer_rects[layerName]) {
@@ -456,7 +499,7 @@ void QLayoutScene::redraw()
 	update();
 }
 
-void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
+void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h)
 {
 	QLayoutRectItem *r;
 
@@ -471,110 +514,37 @@ void QLayoutScene::addRectangle(QString layer, int x, int y, int w, int h)
 	emit(registerLayer(layer));
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal scaleFactor)
 {
-	lef::LEFMacro *macro;
-
-	double w, h;
-
-	// fill in library content:
-	if(project) if(project->isDefinedMacro(macro_name)) {
-		macro = project->getMacro(macro_name);
-		w = macro->getWidth();
-		h = macro->getHeight();
-
-		addMacro(macro_name, instance_name, x, y, w, h);
-
+	QLayoutMacroItem *mi;
+	if(m_macroTemplateMap.contains(macro_name)) {
+		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
+		mi->setInstanceName(instance_name);
+		mi->setPos(x,y);
+		//mi->setScale(scaleFactor);
+		macros.append(mi);
+		addItem(mi);
+		update();
 	} else {
 		qDebug() << macro_name << "Macro not defined";
 	}
-
-	update();
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, int x, int y, int w, int h)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal w, qreal h)
 {
-	QColor color;
-	QString layer_name;
-
-	QGraphicsRectItem *mw;
 	QLayoutMacroItem *mi;
-	QGraphicsPolygonItem *polygon;
-	QGraphicsRectItem *gdsbox;
-
-
-	mi = new QLayoutMacroItem(x, y, w, h);
-	mi->setVisible(true);
-	mi->setOpacity(0.25);
-
-	// fill in library content from LEF:
-	lef::LEFPort *port;
-	lef::LEFLayer *layer;
-	lef::LEFMacro *macro;
-	lef::LEFPin *pin;
-
-	if(project) if(project->isDefinedMacro(macro_name)) {
-		macro = project->getMacro(macro_name);
-		macro->scaleMacro(w, h);
-
-		foreach(pin, macro->getPins()) {
-			port = pin->getPort();
-			foreach(layer, port->getLayers()) {
-				layer_name = layer->getName();
-				color = project->colorMat(layer_name);
-				foreach(lef::rect_t rect, layer->getRects()) {
-					mw = new QGraphicsRectItem((rect.x+x), (rect.y+y), (rect.w), (rect.h), mi);
-					mw->setBrush(QBrush(color));
-					mw->setVisible(true);
-					macro_wires[layer_name].append(mw);
-				}
-				emit(registerLayer(layer_name));
-			}
-		}
-		foreach (layer, macro->getObstruction()->getLayers()) {
-			layer_name = layer->getName();
-			color = project->colorMat(layer_name);
-			foreach(lef::rect_t rect, layer->getRects()) {
-				mw = new QGraphicsRectItem((rect.x+x), (rect.y+y), (rect.w), (rect.h), mi);
-				mw->setBrush(QBrush(color));
-				mw->setVisible(true);
-				macro_wires[layer_name].append(mw);
-			}
-			emit(registerLayer(layer_name));
-		}
+	if(m_macroTemplateMap.contains(macro_name)) {
+		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
+		mi->setInstanceName(instance_name);
+		mi->setPos(x,y);
+		mi->setWidth(w);
+		mi->setHeight(h);
+		macros.append(mi);
+		addItem(mi);
+		update();
+	} else {
+		qDebug() << macro_name << "Macro not defined";
 	}
-
-	// fill in GDS data:
-	GDSCell* cell;
-
-	if(project) if(project->isDefinedGDSMacro(macro_name)) {
-		cell = project->getGDSMacro(macro_name);
-		if(cell) {
-			cell->setRectangle(x, y, w, h);
-			foreach(GDSBoundary *b, cell->getBoundaries()) {
-				layer_name = project->layerNameFromCIF(b->getLayerIndex());
-				if(layer_name==QString()) {
-					layer_name = project->layerNameFromDStyle(b->getLayerIndex());
-				}
-				if(layer_name==QString()) {
-					qDebug() << "Couldn't map layer " << b->getLayerIndex();
-				} else {
-					gdsbox = new QGraphicsRectItem(x, y, w, h, mi);
-					polygon = new QGraphicsPolygonItem(gdsbox);
-					color = project->colorMat(layer_name);
-					polygon->setBrush(QBrush(color));
-					polygon->setPolygon(b->getPolygon());
-					layer_gds[layer_name].append(polygon);
-					emit(registerLayer(layer_name));
-				}
-			}
-		}
-	}
-
-	addItem(mi);
-	macros.append(mi);
-
-	update();
 }
 
 QStringList QLayoutScene::getLayers()

@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QGraphicsScene>
+#include <QGLWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
 #include <QRubberBand>
@@ -26,8 +27,6 @@ enum drawing_operations {
 	DRAWING_OPERATION_DRAG
 };
 
-typedef QVector<QGraphicsPolygonItem*> layer_gds_wires_t;
-typedef QVector<QGraphicsRectItem*> layer_macro_wires_t;
 typedef QVector<QLayoutRectItem*> rects_layer_t;
 
 class QLayoutScene : public QGraphicsScene
@@ -47,9 +46,9 @@ public:
 	void setActiveLayer(QString layer);
 	void redraw();
 
-	void addRectangle(QString layer, int x, int y, int w, int h);
-	void addMacro(QString module_name, QString instance_name, int x, int y, int w, int h);
-	void addMacro(QString macro_name, QString instance_name, int x, int y);
+	void addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h);
+	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h);
+	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal scaleFactor);
 
 	QStringList getLayers();
 	QVector<QLayoutRectItem*> getRectangles(QString n);
@@ -74,6 +73,7 @@ signals:
 	void registerLayer(QString);
 
 private:
+	void refreshMacroTable();
 	void runDRC(QString n, QRectF rect);
 
 	//QPointF snapGrid(QPointF pt);
@@ -88,14 +88,15 @@ private:
 	QPointF lastOrig;
 	QStringList m_visibleLayers;
 	bool m_dragging;
+	qreal m_baseUnit;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
-	QMap<QString,layer_macro_wires_t> macro_wires;
+	//QMap<QString,layer_macro_wires_t> macro_wires;
 	QMap<QString,rects_layer_t> layer_rects;
-	QMap<QString,layer_gds_wires_t> layer_gds;
 	QVector<QGraphicsLineItem*> gridLines;
 	QVector<QLayoutDistanceMeasure*> distance_errors;
+	QMap<QString,QLayoutMacroItem*> m_macroTemplateMap;
 
 	DRCSettings *drcDialog;
 };

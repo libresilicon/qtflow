@@ -17,8 +17,8 @@ GLWidget::GLWidget(QWidget *parent):
 
 void GLWidget::loadFile(QString file)
 {
-	layer_rects_t layers;
-	rects_t layer;
+	magic::layer_rects_t layers;
+	magic::rects_t layer;
 
 	filePath = file;
 	if(magicdata) delete magicdata;
@@ -30,7 +30,7 @@ void GLWidget::loadFile(QString file)
 	m_highestY = 0;
 	foreach(QString layerN, layers.keys()) {
 		layer = layers[layerN];
-		foreach (rect_t e, layer)
+		foreach (magic::rect_t e, layer)
 		{
 			if(e.x1 > m_highestX) {
 				m_highestX = e.x1;
@@ -51,7 +51,7 @@ void GLWidget::loadFile(QString file)
 	m_lowestY = m_highestY;
 	foreach(QString layerN, layers.keys()) {
 		layer = layers[layerN];
-		foreach (rect_t e, layer)
+		foreach (magic::rect_t e, layer)
 		{
 			if(e.x1 < m_lowestX) {
 				m_lowestX = e.x1;
@@ -87,8 +87,8 @@ void GLWidget::addModules()
 {
 	int x,y,w,h;
 	QString macro_name;
-	mods_t mods = magicdata->getModules();
-	foreach (module_info e, mods)
+	magic::mods_t mods = magicdata->getModules();
+	foreach (magic::module_info e, mods)
 	{
 		// fill in LEF library content:
 		lef::LEFMacro *macro;
@@ -120,7 +120,6 @@ void GLWidget::addModules()
 					addBox(layer->getName(), rect.x+e.c, rect.y+e.f, rect.x+rect.w+e.c, rect.y+rect.h+e.f);
 				}
 			}
-
 		}
 
 		// fill in GDS data:
@@ -153,11 +152,11 @@ void GLWidget::addModules()
 
 void GLWidget::addWires()
 {
-	layer_rects_t layers = magicdata->getRectangles();
-	rects_t layer;
+	magic::layer_rects_t layers = magicdata->getRectangles();
+	magic::rects_t layer;
 	foreach(QString layerN, layers.keys()) {
 		layer = layers[layerN];
-		foreach (rect_t e, layer) {
+		foreach (magic::rect_t e, layer) {
 			addBox(layerN, e.x1, e.y1, e.x2, e.y2);
 		}
 	}

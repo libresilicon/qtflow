@@ -216,5 +216,6 @@ DISTFILES += \
 	tech/mos.cmap \
     scripts/place2def.py \
     scripts/placement.py \
-    scripts/blif2sym.py
+    scripts/blif2sym.py \
+    scripts/router.py
 

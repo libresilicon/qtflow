@@ -68,6 +68,7 @@ public:
 	// synthesis flow glue (conversion between file formats):
 	void schematics2blif(QString top);
 	void blif2cel(QString top);
+	void place2def(QString top);
 
 	bool isMacroCellProject();
 	void setSyncLiberty(QString s);
@@ -126,6 +127,8 @@ public:
 	QString getParametersFile();
 
 	QStringList getPlanes();
+	QStringList getRoutingLayers();
+	qreal getRoutingLayerPitch(QString s);
 	QStringList getTypeNames();
 	QStringList getTypes(QString s);
 	QList<QStringList> getTypesMap(QString s);
@@ -142,8 +145,8 @@ public:
 
 	void setSimulationScript(QString s);
 	void setSynthesisScript(QString);
-	void setPlacementScript(QString);
-	void setRoutingScript(QString);
+	void setPlacementScript(QString s);
+	void setRoutingScript(QString s);
 
 	// synthesis options:
 	bool hasSettingABC();
@@ -156,8 +159,11 @@ public:
 	// LEF operations:
 	bool isDefinedMacro(QString s);
 	lef::LEFMacro* getMacro(QString s);
+	QStringList getMacroList();
 	int getBaseUnits(QString macro_name);
 	int getSmallestUnit();
+	QString getSubBitChar();
+	QString getDivideChar();
 
 	// Schematics operations:
 	bool isDefinedPart(QString s);

@@ -21,11 +21,11 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 
 void MagicLayoutEditor::addRectangles()
 {
-	rects_t layer;
-	layer_rects_t rects = magicdata->getRectangles();
+	magic::rects_t layer;
+	magic::layer_rects_t rects = magicdata->getRectangles();
 	foreach(QString layerN, rects.keys()) {
 		layer = rects[layerN];
-		foreach (rect_t e, layer) {
+		foreach (magic::rect_t e, layer) {
 			editScene->addRectangle(layerN, e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
 		}
 	}
@@ -33,9 +33,9 @@ void MagicLayoutEditor::addRectangles()
 
 void MagicLayoutEditor::addMacroInstances()
 {
-	mods_t mods;
+	magic::mods_t mods;
 	mods = magicdata->getModules();
-	foreach (module_info e, mods) {
+	foreach (magic::module_info e, mods) {
 		// adding boxes for macros
 		editScene->addMacro(e.module_name, e.instance_name, e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
 	}
