@@ -24,8 +24,7 @@ public:
 	void setInstanceName(QString);
 	QString getInstanceName();
 
-	void setWidth(qreal w);
-	void setHeight(qreal h);
+	void setSize(qreal w, qreal h);
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

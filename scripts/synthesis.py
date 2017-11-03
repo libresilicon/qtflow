@@ -35,7 +35,7 @@ def synth():
 	command+=project_settings.getTopLevelFile()+"\n"
 
 	command+="synth -top "+project_settings.getTopLevel()+"\n"
-	#command+="hierarchy -check -top "+project_settings.getTopLevel()+"\n"
+	command+="hierarchy -check -top "+project_settings.getTopLevel()+"\n"
 	command+="proc;\n"
 	command+="flatten;\n"
 

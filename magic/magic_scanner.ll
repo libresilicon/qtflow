@@ -61,7 +61,7 @@ TRANSFORM	"transform"
 	return magic::MagicParser::token::DOUBLE;
 }
 
-[A-Za-z][A-Za-z0-9_,.-<>]* {
+[A-Za-z][A-Za-z0-9_,.-<>\[\]]* {
 	magiclval->v_str = new std::string(yytext, yyleng);
 	return magic::MagicParser::token::STRING;
 }

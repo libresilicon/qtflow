@@ -16,7 +16,9 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	//setRenderHint(QPainter::Antialiasing);
 	//setCacheMode(QGraphicsView::CacheBackground);
 	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-	setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	//setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DirectRendering)));
+	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 }
 
 void MagicLayoutEditor::addRectangles()

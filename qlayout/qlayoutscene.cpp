@@ -537,8 +537,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
 		mi->setPos(x,y);
-		mi->setWidth(w);
-		mi->setHeight(h);
+		mi->setSize(w,h);
 		macros.append(mi);
 		addItem(mi);
 		update();

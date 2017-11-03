@@ -3,7 +3,9 @@
 QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) :
 	QGraphicsRectItem(0),
 	m_dragged(false),
-	m_instanceNameLabel(NULL)
+	m_instanceNameLabel(NULL),
+	m_width(1),
+	m_height(1)
 {
 	QGraphicsRectItem* r;
 	QRectF rect;
@@ -14,6 +16,8 @@ QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) :
 	if(parent) {
 		rect = parent->rect();
 		setRect(rect);
+		m_width = rect.width();
+		m_height = rect.height();
 	}
 
 	setInstanceName(parent->m_instanceName);
@@ -84,14 +88,18 @@ void QLayoutMacroItem::setMacroName(QString n)
 	m_macroNameLabel->setVisible(true);
 }
 
-void QLayoutMacroItem::setWidth(qreal w)
+void QLayoutMacroItem::setSize(qreal w, qreal h)
 {
-	m_width = w;
-}
+	qreal scaleFactor;
 
-void QLayoutMacroItem::setHeight(qreal h)
-{
-	m_height = h;
+	scaleFactor = (m_width>m_height)?(abs(w)/m_width):(abs(h)/m_height);
+	m_width *= scaleFactor;
+	m_height *= scaleFactor;
+
+	setScale(scaleFactor);
+
+	if(w<0) setPos(pos().x()+w,pos().y());
+	if(h<0) setPos(pos().x(),pos().y()+h);
 }
 
 QString QLayoutMacroItem::getInstanceName()

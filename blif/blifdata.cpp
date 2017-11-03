@@ -79,12 +79,14 @@ namespace blif {
 		return m_components;
 	}
 
-	QStringList BLIFData::getPadPins()
+	QStringList BLIFData::getPadPinsInput()
 	{
-		QStringList ret;
-		ret += m_inputList;
-		ret += m_outputList;
-		return ret;
+		return m_inputList;
+	}
+
+	QStringList BLIFData::getPadPinsOutput()
+	{
+		return m_outputList;
 	}
 
 }
