@@ -142,7 +142,7 @@ component_list_element: component_name component_placement
 
 component_name: MINUS STRING STRING
 {
-	defdata->addUsedModuleNames($2,$3);
+	defdata->addUsedModuleNames(*$2,*$3);
 };
 
 placement_value:
@@ -166,18 +166,42 @@ pin_list:
 	  pin_list_element
 	| pin_list pin_list_element
 	;
-pin_list_element: MINUS STRING PLUS NET STRING pin_settings;
+
+pin_list_element: pin_name PLUS pin_net pin_settings
+{
+	defdata->addUsedPin();
+};
+pin_name: MINUS STRING;
+pin_net:
+NET STRING
+{
+	defdata->addPin(*$2);
+};
 pin_settings:
-	  PLUS pin_setting
-	| PLUS pin_settings pin_setting
+	  pin_setting
+	| pin_settings pin_setting
 	;
 pin_setting:
-	  pin_setting_layer
-	| pin_setting_position
+	  PLUS pin_setting_layer
+	| PLUS pin_setting_position
 	;
 
-pin_setting_layer: LAYER STRING BRACKETOPEN INTEGER INTEGER BRACKETCLOSE BRACKETOPEN INTEGER INTEGER BRACKETCLOSE;
-pin_setting_position: PLACED BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE STRING;
+pin_setting_layer:
+LAYER STRING BRACKETOPEN INTEGER INTEGER BRACKETCLOSE BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+{
+	defdata->setPinLayer(*$2);
+	defdata->setPinArea($4,$5,$8,$9);
+};
+pin_setting_position:
+PLACED BRACKETOPEN INTEGER INTEGER BRACKETCLOSE STRING
+{
+	defdata->setPinPosition($3,$4);
+}
+|
+PLACED BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE STRING
+{
+	defdata->setPinPosition($3,$4);
+};
 
 nets: NETS INTEGER net_list END NETS;
 net_list:

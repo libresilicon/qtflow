@@ -650,6 +650,8 @@ void Project::buildAll()
 	blif2cel(getTopLevel());
 	mainContext.evalScript("place()");
 	place2def(getTopLevel());
+	generatecfg(getTopLevel());
+	mainContext.evalScript("route()");
 }
 
 bool Project::hasMaterialTypeMapping(QString material)
@@ -1099,6 +1101,12 @@ void Project::loadScriptFiles()
 		mainContext.evalFile(getPlace2DEFScript());
 	} else {
 		mainContext.evalScript("def place2def():\n\tprint \"not defined\"");
+	}
+
+	if(QFile(getRoutingScript()).exists()) {
+		mainContext.evalFile(getRoutingScript());
+	} else {
+		mainContext.evalScript("def route():\n\tprint \"not defined\"");
 	}
 }
 

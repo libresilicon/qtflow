@@ -68,6 +68,7 @@ public:
 	// synthesis flow glue (conversion between file formats):
 	void schematics2blif(QString top);
 	void blif2cel(QString top);
+	void generatecfg(QString top);
 	void place2def(QString top);
 
 	bool isMacroCellProject();

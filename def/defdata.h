@@ -6,22 +6,19 @@
 
 #include <QString>
 #include <QVector>
+#include <QDebug>
 #include <QRect>
 #include <QTextStream>
 #include <QString>
 #include <QTextStream>
 #include <QGraphicsTextItem>
 
-namespace def {
-	class DEFModuleInfo {
-	public:
-		DEFModuleInfo();
-		QString macro_name;
-		QString instance_name;
-		double x, y;
-	};
+#include "defmoduleinfo.h"
+#include "defdatapin.h"
 
+namespace def {
 	typedef QVector<DEFModuleInfo> mods_t;
+	typedef QVector<DEFDataPin> pins_t;
 
 	class DEFScanner;
 	class DEFData
@@ -31,16 +28,22 @@ namespace def {
 
 		// extraction functions
 		mods_t getModules();
+		pins_t getPins();
 
 		class DEFScanner *getLexer();
 
 		// building the info
 		void setDistanceUnitMicrons(int t);
 		void setAmountComponents(int i);
-		void addUsedModuleNames(std::string *instance_name, std::string *macro_name);
+		void addUsedModuleNames(std::string instance_name, std::string macro_name);
 		void addUsedModulePlacement(double x, double y);
 		void addUsedModule();
 
+		void addUsedPin();
+		void addPin(std::string s);
+		void setPinLayer(std::string s);
+		void setPinPosition(qreal x, qreal y);
+		void setPinArea(qreal x1, qreal y1, qreal x2, qreal y2);
 
 		int getDistanceUnit();
 
@@ -50,11 +53,14 @@ namespace def {
 		int getUpperX();
 		int getUpperY();
 
-		void setDieArea(double x1, double x2, double y1, double y2);
+		void setDieArea(qreal x1, qreal y1, qreal x2, qreal y2);
 
 	private:
-		mods_t parsedModules;
-		DEFModuleInfo recent_module;
+		mods_t m_parsedModules;
+		DEFModuleInfo m_recentModule;
+
+		pins_t m_parsedPins;
+		DEFDataPin m_recentPin;
 
 		class DEFScanner* lexer;
 		class DEFParser* parser;

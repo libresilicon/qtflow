@@ -11,12 +11,16 @@ SOURCES += \
 	$$PWD/defdata.cpp \
 	$$PWD/deflayouteditor.cpp \
 	$$PWD/deflayouteditorwidget.cpp \
-	$$PWD/defscanner.cpp
+	$$PWD/defscanner.cpp \
+    $$PWD/defmoduleinfo.cpp \
+    $$PWD/defdatapin.cpp
  
 HEADERS += \
 	$$PWD/defdata.h \
 	$$PWD/deflayouteditor.h \
 	$$PWD/deflayouteditorwidget.h \
-	$$PWD/defscanner.h
+	$$PWD/defscanner.h \
+    $$PWD/defmoduleinfo.h \
+    $$PWD/defdatapin.h
 
 

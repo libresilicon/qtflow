@@ -39,6 +39,7 @@ public slots:
 
 private:
 	void addMacroInstances();
+	void addContactPins();
 	void addRectangles();
 
 	QString filePath;

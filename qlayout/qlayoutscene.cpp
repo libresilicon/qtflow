@@ -514,14 +514,13 @@ void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal 
 	emit(registerLayer(layer));
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal scaleFactor)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y)
 {
 	QLayoutMacroItem *mi;
 	if(m_macroTemplateMap.contains(macro_name)) {
 		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
 		mi->setPos(x,y);
-		//mi->setScale(scaleFactor);
 		macros.append(mi);
 		addItem(mi);
 		update();

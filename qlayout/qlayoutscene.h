@@ -48,7 +48,7 @@ public:
 
 	void addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h);
-	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal scaleFactor);
+	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y);
 
 	QStringList getLayers();
 	QVector<QLayoutRectItem*> getRectangles(QString n);

@@ -94,8 +94,8 @@ void Project::blif2cel(QString top)
 		defStream << endl;
 		defStream << "pad " << QString::number(pad_counter) << " name twpin_" << padPin;
 		defStream << endl;
-		defStream << "corners 4 -1000 -1000 -1000 1000 1000 1000 1000 -1000";
-		defStream << " restrict side L";
+		defStream << "corners 4 -500 -500 -500 500 500 500 500 -500";
+		defStream << " restrict side B";
 		defStream << endl;
 		defStream << "pin name " << padPin << " signal " << padPin << " layer 1 0 0";
 		defStream << endl;
@@ -105,14 +105,42 @@ void Project::blif2cel(QString top)
 		defStream << endl;
 		defStream << "pad " << QString::number(pad_counter) << " name twpin_" << padPin;
 		defStream << endl;
-		defStream << "corners 4 -1000 -1000 -1000 1000 1000 1000 1000 -1000";
-		defStream << " restrict side R";
+		defStream << "corners 4 -500 -500 -500 500 500 500 500 -500";
+		defStream << " restrict side T";
 		defStream << endl;
 		defStream << "pin name " << padPin << " signal " << padPin << " layer 1 0 0";
 		defStream << endl;
 	}
 
 	celFile.close();
+}
+
+void Project::generatecfg(QString top)
+{
+	QString outpath = QDir(getLayoutDir()).filePath(top+".cfg");
+	QFile outFile(outpath);
+	outFile.open(QIODevice::WriteOnly | QIODevice::Text);
+	if(!outFile.isOpen()){
+		qDebug() << "- Error, unable to open " << outpath << " for output";
+		return;
+	}
+	QTextStream outStream(&outFile);
+	outStream << "verbose 1" << endl;
+	foreach(QString lefn, getLibraryFiles()) {
+		outStream << "read_lef " << lefn << endl;
+	}
+
+	outStream << "read_def " << top << ".def" << endl;
+
+	outStream << "vdd " << "vdd" << endl;
+	outStream << "gnd " << "gnd" << endl;
+
+	outStream << "read_def " << top << ".def" << endl;
+	outStream << "qrouter::standard_route " << top << "_route.def true" << endl;
+	outStream << "qrouter::write_delays " << top << ".rc" << endl;
+	outStream << "quit" << endl;
+
+	outFile.close();
 }
 
 void Project::place2def(QString top)
@@ -128,14 +156,18 @@ void Project::place2def(QString top)
 	QString layerName;
 	qreal layerPitch;
 
-	qreal dieHeight = getSmallestUnit()*100;
-	qreal dieWidth = getSmallestUnit()*100;
-	qreal gridHeight = getSmallestUnit()*100;
-	qreal gridWidth = getSmallestUnit()*100;
-	qreal dieOrigX = 0.1;
-	qreal dieOrigY = 0.1;
+	qreal gridy = getSmallestUnit()*100;
+	qreal gridx = getSmallestUnit()*100;
+	qreal die_x1, die_x2;
+	qreal die_y1, die_y2;
+	qreal pinx, piny, pinw, pinh;
 	qreal pitch = 200;
 	QMap<QString,QStringList> mapping;
+
+	qreal xbot = getSmallestUnit();
+	qreal ybot = getSmallestUnit();
+	qreal cellxbot = getSmallestUnit();
+	qreal cellybot = getSmallestUnit();
 
 	QStringList lineString;
 	QString instance_name;
@@ -190,16 +222,39 @@ void Project::place2def(QString top)
 		while (!mverStream.atEnd()) {
 			lineString = mverStream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
 			if(lineString[0]=="core") {
-				dieOrigX=lineString[1].toDouble();
-				dieOrigY=lineString[2].toDouble();
-				dieHeight=lineString[3].toDouble();
-				dieWidth=lineString[4].toDouble();
+				die_x1=lineString[1].toDouble();
+				die_y1=lineString[2].toDouble();
+				die_x2=lineString[3].toDouble();
+				die_y2=lineString[4].toDouble();
 			} else if(lineString[0]=="grid") {
-				gridWidth = lineString[1].toDouble();
-				gridHeight = lineString[2].toDouble();
+				gridx = lineString[1].toDouble();
+				gridy = lineString[2].toDouble();
 			}
 		}
 		mverFile.close();
+	}
+
+	int corner_count = 0;
+	int dx, dy;
+	QFile mcelFile(mcelpath);
+	mcelFile.open(QIODevice::ReadOnly | QIODevice::Text);
+	if(mcelFile.isOpen()){
+		QTextStream mcelStream(&mcelFile);
+		while (!mcelStream.atEnd()) {
+			lineString = mcelStream.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+			if(lineString.count()) {
+				if(lineString[0]=="pad") // pad section reached
+					break;
+				if(lineString[0]=="corners") {
+					corner_count = lineString[1].toInt();
+					for(int i=0; i<corner_count; i++) {
+						pinx = lineString[2+i*2].toInt();
+						piny = lineString[3+i*2].toInt();
+					}
+				}
+			}
+		}
+		mcelFile.close();
 	}
 
 	QFile outFile(outpath);
@@ -225,7 +280,6 @@ void Project::place2def(QString top)
 	QString netName;
 	QString pinName;
 	QString componentName;
-	qreal pinx, piny, pinw, pinh;
 
 	QString pinString;
 	QString netString;
@@ -337,18 +391,16 @@ void Project::place2def(QString top)
 				pinh = lineString.at(4).toDouble() - lineString.at(2).toDouble();
 
 				pinx = lineString.at(1).toDouble();
-				pinx += pinw/2;
+				//pinx += pinw/2;
 
 				piny = lineString.at(2).toDouble();
-				piny += pinh/2;
-
-				//if( pinx < 0 ) pinx = 0;
-				//if( piny < 0 ) piny = 0;
+				//piny += pinh/2;
 
 				pinString += "- "+pinName+" + NET "+netName+"\n";
 				pinString += "  + LAYER ";
 				pinString += pinLayerMapping[pinName];
-				pinString += " ( "+QString::number(-pinw/2)+" "+QString::number(-pinh/2)+" ) ( "+QString::number(pinw/2)+" "+QString::number(pinh/2)+" )\n";
+				//pinString += " ( 0 0 ) ( "+QString::number(pinw)+" "+QString::number(pinh)+" )\n";
+				pinString += " ( 0 0 ) ( 1 1 )\n";
 				pinString += "  + PLACED ( ";
 				pinString += QString::number(pinx);
 				pinString += " ";
@@ -366,9 +418,9 @@ void Project::place2def(QString top)
 	foreach(layerName, getRoutingLayers()) {
 		layerPitch = 1000;
 		tracksString += "TRACKS "+QString((layer_count%2)?"X":"Y")+" ";
-		tracksString += ((layer_count%2)?QString::number(dieOrigX):QString::number(dieOrigY));
-		tracksString += " DO "+QString::number(gridWidth);
-		tracksString += " STEP "+QString::number(gridHeight);
+		tracksString += ((layer_count%2)?QString::number(die_x1):QString::number(die_y1));
+		tracksString += " DO "+QString::number(gridx);
+		tracksString += " STEP "+QString::number(gridy);
 		tracksString += " LAYER "+layerName+" ;\n";
 		layer_count++;
 	}
@@ -383,8 +435,8 @@ void Project::place2def(QString top)
 	defStream << "BUSBITCHARS " << getSubBitChar() << " ;" << endl;
 	defStream << "DESIGN " << top << " ;" << endl;
 	defStream << "UNITS DISTANCE MICRONS " << QString::number(getSmallestUnit()) << " ;" << endl;
-	defStream	<< "DIEAREA ( " << QString::number(dieOrigX) << " " << QString::number(dieOrigY) << " )"
-				<< " ( " << QString::number(dieWidth) << " " << QString::number(dieHeight) << " ) ;" << endl;
+	defStream	<< "DIEAREA ( " << QString::number(die_x1) << " " << QString::number(die_y1) << " )"
+				<< " ( " << QString::number(die_x2) << " " << QString::number(die_y2) << " ) ;" << endl;
 
 	defStream << endl << tracksString << endl;
 
