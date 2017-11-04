@@ -86,40 +86,44 @@ TechDesignRule Project::getDesignRule(QString n)
 // special nets
 QStringList Project::getPowerNets()
 {
-	QStringList ret = getPowerNetsFromTech();
+	QStringList ret = twoLevelListFilter("specialnets","power");
+	foreach (QString net, project_settings->value("power_nets").toStringList()) {
+		if(ret.contains(net)) continue;
+		ret.append(net);
+	}
 	return ret;
 }
 
 QStringList Project::getGroundNets()
 {
-	QStringList ret = getGroundNetsFromTech();
+	QStringList ret = twoLevelListFilter("specialnets","ground");
+	foreach (QString net, project_settings->value("ground_nets").toStringList()) {
+		if(ret.contains(net)) continue;
+		ret.append(net);
+	}
 	return ret;
 }
 
 QStringList Project::getClockNets()
 {
-	QStringList ret = getClockNetsFromTech();
+	QStringList ret = twoLevelListFilter("specialnets","clock");
+	foreach (QString net, project_settings->value("clock_nets").toStringList()) {
+		if(ret.contains(net)) continue;
+		ret.append(net);
+	}
 	return ret;
 }
 
-// special nets from technology
-QStringList Project::getPowerNetsFromTech()
+QString Project::getSpecialNetLayer(QString s)
 {
-	QStringList ret;
-	return ret;
+	QString l = project_settings->value("special_net_"+s+"_layer").toString();
+	if(l==QString())
+		l = getRoutingLayers().at(0);
+
+	return l;
 }
 
-QStringList Project::getGroundNetsFromTech()
-{
-	QStringList ret;
-	return ret;
-}
-
-QStringList Project::getClockNetsFromTech()
-{
-	QStringList ret;
-	return ret;
-}
+// ---------------
 
 Project::~Project()
 {
@@ -205,7 +209,7 @@ QString Project::getProcess()
 	return project_settings->value("process").toString();
 }
 
-QStringList Project::oneLevelListFilter(QString filter)
+QStringList Project::twoLevelListFilter(QString filter1, QString filter2)
 {
 	QStringList ret;
 
@@ -228,12 +232,12 @@ QStringList Project::oneLevelListFilter(QString filter)
 						nl3 = e2.childNodes();
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
-							if(e3.tagName()==filter) {
+							if(e3.tagName()==filter1) {
 								nl4 = e3.childNodes();
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
-									if(e4.tagName()=="file") {
-										ret.append(QDir(getProcessPath()).filePath(e4.text()));
+									if(e4.tagName()==filter2) {
+										ret.append(e4.text());
 									}
 								}
 							}
@@ -245,11 +249,6 @@ QStringList Project::oneLevelListFilter(QString filter)
 	}
 
 	return ret;
-}
-
-QStringList Project::twoLevelListFilter(QString filter1, QString filter2)
-{
-
 }
 
 QString Project::oneLevelFilter(QString filter)
@@ -286,19 +285,22 @@ QString Project::oneLevelFilter(QString filter)
 	return QString();
 }
 
-QString Project::twoLevelFilter(QString filter1, QString filter2)
-{
-
-}
-
 QStringList Project::getLibraryFiles()
 {
-	return oneLevelListFilter("lef");
+	QStringList ret;
+	foreach(QString s, twoLevelListFilter("lef","file")) {
+		ret.append(QDir(getProcessPath()).filePath(s));
+	}
+	return ret;
 }
 
 QStringList Project::getGDSFiles()
 {
-	return oneLevelListFilter("gds");
+	QStringList ret;
+	foreach(QString s, twoLevelListFilter("gds","file")) {
+		ret.append(QDir(getProcessPath()).filePath(s));
+	}
+	return ret;
 }
 
 QStringList Project::getSchematicsLibraryNames()
@@ -320,7 +322,11 @@ QStringList Project::getSchematicsLibraryParts(QString s)
 
 QStringList Project::getSchematicsLibraryFiles()
 {
-	return oneLevelListFilter("symbols");
+	QStringList ret;
+	foreach(QString s, twoLevelListFilter("symbols","file")) {
+		ret.append(QDir(getProcessPath()).filePath(s));
+	}
+	return ret;
 }
 
 QString Project::getTechnologyDisplayFile()

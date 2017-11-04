@@ -109,11 +109,7 @@ public:
 	QStringList getPowerNets();
 	QStringList getGroundNets();
 	QStringList getClockNets();
-
-	// special nets from technology
-	QStringList getPowerNetsFromTech();
-	QStringList getGroundNetsFromTech();
-	QStringList getClockNetsFromTech();
+	QString getSpecialNetLayer(QString);
 
 	// module names:
 	QString getTopLevel();
@@ -191,11 +187,9 @@ signals:
 private:
 	QString material2Plane(QString material);
 
-	QStringList oneLevelListFilter(QString filter);
 	QStringList twoLevelListFilter(QString filter1, QString filter2);
 
 	QString oneLevelFilter(QString filter);
-	QString twoLevelFilter(QString filter1, QString filter2);
 
 	// LEF operations:
 	QStringList getLibraryFiles();
