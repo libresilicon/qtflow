@@ -76,9 +76,49 @@ QStringList Project::getDesignRules()
 	return techDisplayData->getDesignRules();
 }
 
+
 TechDesignRule Project::getDesignRule(QString n)
 {
 	return techDisplayData->getDesignRule(n);
+}
+
+
+// special nets
+QStringList Project::getPowerNets()
+{
+	QStringList ret = getPowerNetsFromTech();
+	return ret;
+}
+
+QStringList Project::getGroundNets()
+{
+	QStringList ret = getGroundNetsFromTech();
+	return ret;
+}
+
+QStringList Project::getClockNets()
+{
+	QStringList ret = getClockNetsFromTech();
+	return ret;
+}
+
+// special nets from technology
+QStringList Project::getPowerNetsFromTech()
+{
+	QStringList ret;
+	return ret;
+}
+
+QStringList Project::getGroundNetsFromTech()
+{
+	QStringList ret;
+	return ret;
+}
+
+QStringList Project::getClockNetsFromTech()
+{
+	QStringList ret;
+	return ret;
 }
 
 Project::~Project()
@@ -165,10 +205,10 @@ QString Project::getProcess()
 	return project_settings->value("process").toString();
 }
 
-QStringList Project::getLibraryFiles()
+QStringList Project::oneLevelListFilter(QString filter)
 {
 	QStringList ret;
-	
+
 	QString technology = getTechnology();
 	QString process = getProcess();
 
@@ -188,7 +228,7 @@ QStringList Project::getLibraryFiles()
 						nl3 = e2.childNodes();
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="lef") {
+							if(e3.tagName()==filter) {
 								nl4 = e3.childNodes();
 								for(int l = 0; l < nl4.count(); l++) {
 									e4 = nl4.at(l).toElement();
@@ -207,16 +247,19 @@ QStringList Project::getLibraryFiles()
 	return ret;
 }
 
-QStringList Project::getGDSFiles()
+QStringList Project::twoLevelListFilter(QString filter1, QString filter2)
 {
-	QStringList ret;
 
+}
+
+QString Project::oneLevelFilter(QString filter)
+{
 	QString technology = getTechnology();
 	QString process = getProcess();
 
-	QDomElement e1, e2, e3, e4;
+	QDomElement e1, e2, e3;
 
-	QDomNodeList nl1, nl2, nl3, nl4;
+	QDomNodeList nl1, nl2, nl3;
 
 	nl1 = settingsFileProcess->elementsByTagName("technology");
 	for(int i = 0; i< nl1.count(); i++) {
@@ -230,14 +273,8 @@ QStringList Project::getGDSFiles()
 						nl3 = e2.childNodes();
 						for(int k = 0; k < nl3.count(); k++) {
 							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="gds") {
-								nl4 = e3.childNodes();
-								for(int l = 0; l < nl4.count(); l++) {
-									e4 = nl4.at(l).toElement();
-									if(e4.tagName()=="file") {
-										ret.append(QDir(getProcessPath()).filePath(e4.text()));
-									}
-								}
+							if(e3.tagName()==filter) {
+								return e3.text();
 							}
 						}
 					}
@@ -246,7 +283,22 @@ QStringList Project::getGDSFiles()
 		}
 	}
 
-	return ret;
+	return QString();
+}
+
+QString Project::twoLevelFilter(QString filter1, QString filter2)
+{
+
+}
+
+QStringList Project::getLibraryFiles()
+{
+	return oneLevelListFilter("lef");
+}
+
+QStringList Project::getGDSFiles()
+{
+	return oneLevelListFilter("gds");
 }
 
 QStringList Project::getSchematicsLibraryNames()
@@ -268,78 +320,15 @@ QStringList Project::getSchematicsLibraryParts(QString s)
 
 QStringList Project::getSchematicsLibraryFiles()
 {
-	QStringList ret;
-
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3, e4;
-
-	QDomNodeList nl1, nl2, nl3, nl4;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="symbols") {
-								nl4 = e3.childNodes();
-								for(int l = 0; l < nl4.count(); l++) {
-									e4 = nl4.at(l).toElement();
-									if(e4.tagName()=="file") {
-										ret.append(QDir(getProcessPath()).filePath(e4.text()));
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return ret;
+	return oneLevelListFilter("symbols");
 }
 
 QString Project::getTechnologyDisplayFile()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="techdisplay") {
-								return QDir(getProcessPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(getTechPath()).filePath("scmos.tech");
+	QString ret = oneLevelFilter("techdisplay");
+	if(ret==QString())
+		return QDir(getTechPath()).filePath("scmos.tech");
+	return QDir(getProcessPath()).filePath(ret);
 }
 
 QString Project::getTechPath()
@@ -355,172 +344,42 @@ QString Project::getTechPath()
 
 QString Project::getProcessPath()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="folder") {
-								return QDir(getTechPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(getTechPath()).filePath("osu035"); // default technology
+	QString ret = oneLevelFilter("folder");
+	if(ret==QString())
+		return QDir(getTechPath()).filePath("osu035"); // default technology
+	return QDir(getTechPath()).filePath(ret);
 }
 
 QString Project::getParametersFile()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="parameter") {
-								return QDir(getProcessPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(getTechPath()).filePath("scmos.par"); // default technology;
+	QString ret = oneLevelFilter("parameter");
+	if(ret==QString())
+		return QDir(getTechPath()).filePath("scmos.par"); // default technology;
+	return QDir(getProcessPath()).filePath(ret);
 }
 
 QString Project::getTechnologyFile()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="tech") {
-								return QDir(getProcessPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(getTechPath()).filePath("scmos.tech"); // default technology;
+	QString ret = oneLevelFilter("tech");
+	if(ret==QString())
+		return QDir(getTechPath()).filePath("scmos.tech"); // default technology;
+	return QDir(getProcessPath()).filePath(ret);
 }
 
 QString Project::getDesignStyleFile()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="design") {
-								return QDir(getProcessPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(getTechPath()).filePath("mos.dstyle");
+	QString ret = oneLevelFilter("design");
+	if(ret==QString())
+		return QDir(getTechPath()).filePath("mos.dstyle");
+	return QDir(getProcessPath()).filePath(ret);
 }
 
 QString Project::getColorMapFile()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="colors") {
-								return QDir(getProcessPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(getTechPath()).filePath("mos.cmap");
+	QString ret = oneLevelFilter("colors");
+	if(ret==QString())
+		return QDir(getTechPath()).filePath("mos.cmap");
+	return QDir(getProcessPath()).filePath(ret);
 }
 
 QString Project::getProjectType()
@@ -1186,34 +1045,8 @@ void Project::setRoutingScript(QString s)
 
 QString Project::getLibertyFile()
 {
-	QString technology = getTechnology();
-	QString process = getProcess();
-
-	QDomElement e1, e2, e3;
-
-	QDomNodeList nl1, nl2, nl3;
-
-	nl1 = settingsFileProcess->elementsByTagName("technology");
-	for(int i = 0; i< nl1.count(); i++) {
-		e1 = nl1.at(i).toElement();
-		if(e1.attribute("xml:id")==technology) {
-			nl2 = e1.childNodes();
-			for(int j = 0; j < nl2.count(); j++) {
-				e2 = nl2.at(j).toElement();
-				if(e2.tagName()=="process") {
-					if(e2.attribute("xml:id")==process) {
-						nl3 = e2.childNodes();
-						for(int k = 0; k < nl3.count(); k++) {
-							e3 = nl3.at(k).toElement();
-							if(e3.tagName()=="liberty") {
-								return QDir(getProcessPath()).filePath(e3.text());
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	return QDir(QDir(getTechnology()).filePath("osu035")).filePath("osu035_stdcells.lib");
+	QString ret = oneLevelFilter("liberty");
+	if(ret==QString())
+		return QDir(QDir(getTechPath()).filePath("osu035")).filePath("osu035_stdcells.lib");
+	return QDir(getProcessPath()).filePath(ret);
 }

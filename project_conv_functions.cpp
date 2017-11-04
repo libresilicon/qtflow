@@ -87,8 +87,11 @@ void Project::blif2cel(QString top)
 	}
 
 	// side restrictions: T,B,L,R
-	int pad_counter = 0;
 	QString padPin;
+	QStringList sides;
+	sides << "T" << "B" << "L" << "R";
+	int pad_counter = 0;
+
 	foreach(padPin, blifdata->getPadPinsInput()) {
 		pad_counter++;
 		defStream << endl;
@@ -110,6 +113,32 @@ void Project::blif2cel(QString top)
 		defStream << endl;
 		defStream << "pin name " << padPin << " signal " << padPin << " layer 1 0 0";
 		defStream << endl;
+	}
+	foreach(padPin, blifdata->getPadPinsPower()) {
+		foreach(QString side, sides) {
+			pad_counter++;
+			defStream << endl;
+			defStream << "pad " << QString::number(pad_counter) << " name twpin_" << side << "." << padPin;
+			defStream << endl;
+			defStream << "corners 4 -500 -500 -500 500 500 500 500 -500";
+			defStream << " restrict side " << side;
+			defStream << endl;
+			defStream << "pin name " << padPin << " signal " << padPin << " layer 1 0 0";
+			defStream << endl;
+		}
+	}
+	foreach(padPin, blifdata->getPadPinsGround()) {
+		foreach(QString side, sides) {
+			pad_counter++;
+			defStream << endl;
+			defStream << "pad " << QString::number(pad_counter) << " name twpin_" << side << "." << padPin;
+			defStream << endl;
+			defStream << "corners 4 -500 -500 -500 500 500 500 500 -500";
+			defStream << " restrict side " << side;
+			defStream << endl;
+			defStream << "pin name " << padPin << " signal " << padPin << " layer 1 0 0";
+			defStream << endl;
+		}
 	}
 
 	celFile.close();
@@ -334,7 +363,9 @@ void Project::place2def(QString top)
 
 			pl1RXB.indexIn(instance_name);
 			instance_type = pl1RXB.cap(1);
-			if(instance_type!=QString()) continue;
+
+			if(instance_type!=QString())
+				continue;
 
 			pl1RX.indexIn(instance_name);
 			instance_type = pl1RX.cap(1);
@@ -390,6 +421,13 @@ void Project::place2def(QString top)
 				pinw = lineString.at(3).toDouble() - lineString.at(1).toDouble();
 				pinh = lineString.at(4).toDouble() - lineString.at(2).toDouble();
 
+				layerName = pinLayerMapping[pinName];
+				if(layerName==QString())
+					layerName = getRoutingLayers().at(0);
+
+				if(netName==QString())
+					netName = pinName;
+
 				pinx = lineString.at(1).toDouble();
 				//pinx += pinw/2;
 
@@ -398,9 +436,9 @@ void Project::place2def(QString top)
 
 				pinString += "- "+pinName+" + NET "+netName+"\n";
 				pinString += "  + LAYER ";
-				pinString += pinLayerMapping[pinName];
-				//pinString += " ( 0 0 ) ( "+QString::number(pinw)+" "+QString::number(pinh)+" )\n";
-				pinString += " ( 0 0 ) ( 1 1 )\n";
+				pinString += layerName;
+				pinString += " ( 0 0 ) ( "+QString::number(pinw)+" "+QString::number(pinh)+" )\n";
+				//pinString += " ( 0 0 ) ( 1 1 )\n";
 				pinString += "  + PLACED ( ";
 				pinString += QString::number(pinx);
 				pinString += " ";
@@ -416,7 +454,6 @@ void Project::place2def(QString top)
 
 	tracksString = "";
 	foreach(layerName, getRoutingLayers()) {
-		layerPitch = 1000;
 		tracksString += "TRACKS "+QString((layer_count%2)?"X":"Y")+" ";
 		tracksString += ((layer_count%2)?QString::number(die_x1):QString::number(die_y1));
 		tracksString += " DO "+QString::number(gridx);

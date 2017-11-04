@@ -89,4 +89,18 @@ namespace blif {
 		return m_outputList;
 	}
 
+	QStringList BLIFData::getPadPinsPower()
+	{
+		QStringList ret;
+		ret << "vdd";
+		return ret;
+	}
+
+	QStringList BLIFData::getPadPinsGround()
+	{
+		QStringList ret;
+		ret << "gnd";
+		return ret;
+	}
+
 }

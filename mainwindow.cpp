@@ -71,6 +71,8 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 
 	projectSettingsDialog->setSettings(settings);
 
+	specialNetDialog = new SpecialNets(this);
+
 	QStringList recentProjectsList;
 	QStringList::const_reverse_iterator rev;
 	for(rev = reverseProjectsList.rbegin(); rev != reverseProjectsList.rend(); ++rev)
@@ -173,6 +175,7 @@ void MainWindow::openProject(QString path)
 		editArea->setProject(project);
 		buildFlowConfig->setProject(project);
 		createWidget->setProject(project);
+		specialNetDialog->setProject(project);
 		mainContext.addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
@@ -255,6 +258,11 @@ void MainWindow::on_actionWaveViewer_triggered()
 	qDebug() << "Loading " << project->getVCDPath();
 	timingWidget->setVisible(!timingWidget->isVisible());
 	timingWidget->loadVcd(project->getVCDPath());
+}
+
+void MainWindow::on_actionSpecialNets_triggered()
+{
+	specialNetDialog->show();
 }
 
 void MainWindow::onProjectCreated(QString s)

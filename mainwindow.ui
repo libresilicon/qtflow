@@ -105,6 +105,7 @@
     </property>
     <addaction name="actionDesignRules"/>
     <addaction name="actionLayerSetup"/>
+    <addaction name="actionSpecialNets"/>
    </widget>
    <widget class="QMenu" name="menuTools_2">
     <property name="title">
@@ -405,6 +406,11 @@
   <action name="buildFlowSettings">
    <property name="text">
     <string>&amp;Flow config</string>
+   </property>
+  </action>
+  <action name="actionSpecialNets">
+   <property name="text">
+    <string>Special nets</string>
    </property>
   </action>
  </widget>

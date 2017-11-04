@@ -73,7 +73,7 @@ void DEFLayoutEditor::addContactPins()
 	QVector<def::DEFDataPin> pins = defdata->getPins();
 	foreach (def::DEFDataPin p, pins) {
 		qDebug() << "Added pin " << p.m_name;
-		editScene->addRectangle(p.m_layer, p.m_x, p.m_y, p.m_w, p.m_h);
+		editScene->addPad(p.m_name,p.m_signal,p.m_layer, p.m_x, p.m_y, p.m_w, p.m_h);
 	}
 }
 

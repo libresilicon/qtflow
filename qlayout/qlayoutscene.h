@@ -47,6 +47,7 @@ public:
 	void redraw();
 
 	void addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h);
+	void addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h);
 	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y);
 

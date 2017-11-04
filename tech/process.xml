@@ -21,6 +21,17 @@
 			<gds>
 				<file>osu018_stdcells.gds</file>
 			</gds>
+			<specialnets>
+				<power>
+					<net>vdd</net>
+				</power>
+				<ground>
+					<net>gnd</net>
+				</ground>
+				<clock>
+					<net>CLK</net>
+				</clock>
+			</specialnets>
 		</process>
 
 		<process xml:id="osu035">

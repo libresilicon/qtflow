@@ -27,6 +27,7 @@
 
 #include "projectsettings.h"
 #include "pyprojectsettings.h"
+#include "specialnets.h"
 
 #include "templates.h"
 #include "welcome.h"
@@ -85,6 +86,7 @@ private slots:
 	void on_menuRouting_triggered();
 	void on_actionPythonShell_triggered();
 	void on_actionWaveViewer_triggered();
+	void on_actionSpecialNets_triggered();
 
 	void on_menuIOPads_triggered();
 	void on_menuSettings_triggered();
@@ -132,6 +134,7 @@ private:
 	ModuleSelector *modulesWidget;
 	PythonConsoleDockWidget *pythonConsoleWidget;
 	Templates *newProjectDialog;
+	SpecialNets *specialNetDialog;
 
 	EditorTabManager *editArea;
 

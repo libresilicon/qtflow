@@ -499,6 +499,25 @@ void QLayoutScene::redraw()
 	update();
 }
 
+void QLayoutScene::addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h)
+{
+	QLayoutRectItem *r;
+	QGraphicsSimpleTextItem *t;
+
+	r = new QLayoutRectItem(x, y, w, h);
+	t = new QGraphicsSimpleTextItem(name,r);
+	t->setPos(x,y);
+	t->setScale(w/t->boundingRect().width());
+
+	r->setVisible(true);
+	if(project) r->setColor(project->colorMat(layer));
+	addItem(r);
+	update();
+
+	layer_rects[layer].append(r);
+	emit(registerLayer(layer));
+}
+
 void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h)
 {
 	QLayoutRectItem *r;

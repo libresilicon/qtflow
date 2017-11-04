@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SpecialNets</class>
+ <widget class="QWidget" name="SpecialNets">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>856</width>
+    <height>553</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Power rails</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QTableWidget" name="powerTable"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_2">
+     <property name="title">
+      <string>Ground planes</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QTableWidget" name="groundTable"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Clock domains</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QTableWidget" name="clockTable"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

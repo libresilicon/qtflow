@@ -74,7 +74,8 @@ SOURCES += \
     generictexteditorwidget.cpp \
     buildflow.cpp \
     mainapplication.cpp \
-    project_conv_functions.cpp
+    project_conv_functions.cpp \
+    specialnets.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -106,7 +107,8 @@ HEADERS  += \
 	projectsitem.h \
     generictexteditorwidget.h \
     buildflow.h \
-    mainapplication.h
+    mainapplication.h \
+    specialnets.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -128,7 +130,8 @@ FORMS    += \
 	partselection.ui \
 	librarysettings.ui \
     buildflow.ui \
-    parametricpart.ui
+    parametricpart.ui \
+    specialnets.ui
 
 RESOURCES += icons/icons.qrc
 
