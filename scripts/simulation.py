@@ -3,7 +3,7 @@
 
 import io
 import time
-import sys
+#import sys
 
 from os import path
 from os import popen

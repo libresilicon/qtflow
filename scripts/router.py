@@ -3,7 +3,9 @@
 
 import io
 import time
-import sys
+#import sys
+
+import Tkinter
 
 from os import path
 from os import popen
@@ -27,16 +29,17 @@ import commands
 from threading import Thread
 from Queue import Queue
 
-def route():
-	chdir(project_settings.getLayoutDir())
-	command = []
-	command.append(settings.getQRouter())
-	command.append("-c")
-	command.append(project_settings.getTopLevel()+".cfg")
-	command.append(project_settings.getTopLevel()+".def")
+chdir(project_settings.getLayoutDir())
+command = []
+command.append(settings.getQRouter())
+#command.append("-f")
+command.append("-c")
+command.append(project_settings.getTopLevel()+".cfg")
+command.append(project_settings.getTopLevel()+".def")
 
-	qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
-	for line in iter(qrouter.stdout.readline, ''):
-		print line
-	qrouter.stdout.close()
+for line in iter(qrouter.stdout.readline, ''):
+	print line
+
+qrouter.stdout.close()
