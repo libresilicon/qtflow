@@ -5,7 +5,8 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	defdata(NULL),
 	project(NULL),
 	filePath(QString()),
-	editScene(new QLayoutScene(this))
+	editScene(new QLayoutScene(this)),
+	m_scale(1)
 {
 	editScene->setBackgroundBrush(Qt::white);
 
@@ -25,6 +26,8 @@ void DEFLayoutEditor::loadFile(QString file)
 	filePath = file;
 	if(defdata) delete defdata;
 	defdata = new def::DEFData(file);
+	m_scale = project->getSmallestUnit();
+	m_scale /= defdata->getDistanceUnit();
 
 	x = defdata->getLowerX();
 	y = defdata->getLowerY();
@@ -42,7 +45,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	//editScene->setGridSize(defdata->getDistanceUnit());
 	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
 
-	r = editScene->addRect(x,y,w,h);
+	r = editScene->addRect(x*m_scale,y*m_scale,w*m_scale,h*m_scale);
 	pen = r->pen();
 	pen.setWidth(100);
 	r->setPen(pen);
@@ -72,23 +75,20 @@ void DEFLayoutEditor::addContactPins()
 	QVector<def::DEFDataPin> pins = defdata->getPins();
 	foreach (def::DEFDataPin p, pins) {
 		qDebug() << "Added pin " << p.m_name;
-		editScene->addPad(p.m_name,p.m_signal,p.m_layer, p.m_x, p.m_y, p.m_w, p.m_h);
+		editScene->addPad(p.m_name,p.m_signal,p.m_layer, p.m_x*m_scale, p.m_y*m_scale, p.m_w*m_scale, p.m_h*m_scale);
 	}
 }
 
 void DEFLayoutEditor::addMacroInstances()
 {
 	qreal count = 0;
-	qreal scale;
 	qreal x, y;
-	//scale = defdata->getDistanceUnit();
-	scale = 1;
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
 		x = e.x;
 		y = e.y;
-		editScene->addMacro(e.macro_name, e.instance_name, x, y);
+		editScene->addMacro(e.macro_name, e.instance_name, x*m_scale, y*m_scale);
 
 		count++;
 		qDebug() << "Added " << count << " of " << mods.count() << " (" << 100*(count/mods.count()) << "%)";

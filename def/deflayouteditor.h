@@ -46,6 +46,7 @@ private:
 	QLayoutScene *editScene;
 	def::DEFData *defdata;
 	Project *project;
+	qreal m_scale;
 };
 
 #endif // DEFLAYOUTEDITOR_H
