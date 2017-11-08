@@ -116,8 +116,10 @@ void QLayoutScene::refreshMacroTable()
 	}
 
 	QString layer_name;
+	QString pin_name;
 	QColor color;
-	QLayoutMacroItem *mi;
+	QLayoutMacroItem* mi;
+	QLayoutMacroPinItem* pi;
 	qreal x,y,w,h;
 	qreal scale;
 
@@ -164,12 +166,14 @@ void QLayoutScene::refreshMacroTable()
 			macro->scaleMacro(w, h);
 
 			foreach(pin, macro->getPins()) {
+				pin_name = pin->getName();
+				pi = mi->addPin(pin_name);
 				port = pin->getPort();
 				foreach(layer, port->getLayers()) {
 					layer_name = layer->getName();
 					color = project->colorMat(layer_name);
 					foreach(lef::rect_t rect, layer->getRects()) {
-						mi->addRectangle(layer_name, QBrush(color), QRectF(rect.x, rect.y, rect.w, rect.h));
+						pi->addRectangle(layer_name, QBrush(color), QRectF(rect.x, rect.y, rect.w, rect.h));
 					}
 					emit(registerLayer(layer_name));
 				}

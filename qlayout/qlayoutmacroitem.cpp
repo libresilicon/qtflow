@@ -1,6 +1,6 @@
 #include "qlayoutmacroitem.h"
 
-QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) :
+QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) : // cloning the template object and it's children
 	QGraphicsRectItem(0),
 	m_dragged(false),
 	m_instanceNameLabel(NULL),
@@ -29,6 +29,10 @@ QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) :
 				addRectangle(layer,m->brush(),m->rect());
 			}
 		}
+	}
+
+	foreach(QLayoutMacroPinItem* pi, parent->m_pinList) {
+		m_pinList.append(new QLayoutMacroPinItem(pi,this));
 	}
 }
 
@@ -70,6 +74,15 @@ void QLayoutMacroItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 QString QLayoutMacroItem::getMacroName()
 {
 	return m_macroName;
+}
+
+QLayoutMacroPinItem* QLayoutMacroItem::addPin(QString name)
+{
+	QLayoutMacroPinItem* pi;
+	pi = new QLayoutMacroPinItem(this);
+	pi->setName(name);
+	m_pinList.append(pi);
+	return pi;
 }
 
 void QLayoutMacroItem::setInstanceName(QString n)

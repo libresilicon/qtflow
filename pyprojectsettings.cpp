@@ -82,6 +82,21 @@ bool PyProjectSettings::hasSettingABC()
 	return project->hasSettingABC();
 }
 
+QStringList PyProjectSettings::getLibraryFiles()
+{
+	return project->getLibraryFiles();
+}
+
+QStringList PyProjectSettings::getRoutingLayers()
+{
+	return project->getRoutingLayers();
+}
+
+qreal PyProjectSettings::getScaleUnit()
+{
+	return project->getSmallestUnit();
+}
+
 // for building CEL data:
 int PyProjectSettings::getMacroValue(QString macro_name, QString value_name)
 {

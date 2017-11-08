@@ -38,6 +38,9 @@ public Q_SLOTS:
 
 	QString getParametersFile();
 
+	QStringList getRoutingLayers();
+	qreal getScaleUnit();
+
 	// synthesis files:
 	QString getLibertyFile();
 
@@ -46,6 +49,8 @@ public Q_SLOTS:
 
 	// synthesis options:
 	bool hasSettingABC();
+
+	QStringList getLibraryFiles(); // LEF file
 
 	int getMacroValue(QString macro_name, QString value_name);
 	int getMacroPinValue(QString macro_name, QString pin_name, QString value_name);

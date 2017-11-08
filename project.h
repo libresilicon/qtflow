@@ -4,18 +4,15 @@
 #include <QString>
 #include <QSettings>
 #include <QProcess>
-#include <QFileDevice>
-#include <QCommandLineParser>
+#include <QtCore>
 #include <QString>
 #include <QTextStream>
 #include <QDir>
 #include <QProcess>
 #include <QSettings>
-#include <QCommandLineParser>
 #include <QDomDocument>
 #include <QDateTime>
 #include <QColor>
-#include <QTemporaryDir>
 #include <QIcon>
 #include <QPixmap>
 
@@ -65,12 +62,7 @@ public:
 	void routing();
 	void buildAll();
 
-	// synthesis flow glue (conversion between file formats):
-	void schematics2blif(QString top);
-	void blif2cel(QString top);
-	void generatecfg(QString top);
-	void place2def(QString top);
-
+	QString getFillCell();
 	bool isMacroCellProject();
 	void setSyncLiberty(QString s);
 	void setSyncLEF(QString s);
@@ -110,6 +102,11 @@ public:
 	QStringList getGroundNets();
 	QStringList getClockNets();
 	QString getSpecialNetLayer(QString);
+
+	void setPowerNets(QStringList l);
+	void setGroundNets(QStringList l);
+	void setClockNets(QStringList l);
+	void setSpecialNetLayer(QString s, QString l);
 
 	// module names:
 	QString getTopLevel();
@@ -181,6 +178,10 @@ public:
 
 	QString getLibertyFile();
 
+	// LEF operations:
+	QStringList getLibraryFiles();
+	void loadLibraryFiles();
+
 signals:
 	void simulationDone();
 
@@ -192,17 +193,12 @@ private:
 	QString oneLevelFilter(QString filter);
 
 	// LEF operations:
-	QStringList getLibraryFiles();
-	void loadLibraryFiles();
-
-	// LEF operations:
 	QStringList getGDSFiles();
 	void loadGDSFiles();
 
 	// Schematics operations:
 	QStringList getSchematicsLibraryFiles();
 	void loadSchematicsLibraryFiles();
-	void loadScriptFiles();
 
 	QSettings *settings;
 	QSettings *project_settings;

@@ -2,7 +2,7 @@
 #define MAINAPPLICATION_H
 
 #include <QApplication>
-#include <QCommandLineParser>
+#include <QtCore>
 
 #include "mainwindow.h"
 

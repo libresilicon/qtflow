@@ -13,9 +13,49 @@ void SpecialNets::setProject(Project *p)
 	refreshTables();
 }
 
+void SpecialNets::on_buttonBox_accepted()
+{
+	QStringList netList;
+	QTableWidgetItem *item;
+	QString layer;
+	QString signal;
+
+	netList.clear();
+	for(int i=0; i<ui->clockTable->rowCount(); i++) {
+		item = ui->clockTable->item(i, 0);
+		signal = item->text();
+		netList << signal;
+		item = ui->clockTable->item(i, 1);
+		layer = item->text();
+		project->setSpecialNetLayer(signal,layer);
+	}
+	project->setClockNets(netList);
+
+	netList.clear();
+	for(int i=0; i<ui->powerTable->rowCount(); i++) {
+		item = ui->powerTable->item(i, 0);
+		signal = item->text();
+		netList << signal;
+		item = ui->powerTable->item(i, 1);
+		layer = item->text();
+		project->setSpecialNetLayer(signal,layer);
+	}
+	project->setPowerNets(netList);
+
+	netList.clear();
+	for(int i=0; i<ui->groundTable->rowCount(); i++) {
+		item = ui->groundTable->item(i, 0);
+		signal = item->text();
+		netList << signal;
+		item = ui->groundTable->item(i, 1);
+		layer = item->text();
+		project->setSpecialNetLayer(signal,layer);
+	}
+	project->setGroundNets(netList);
+}
+
 void SpecialNets::refreshTables()
 {
-	int i;
 	QStringList m_TableHeader;
 	QStringList data;
 

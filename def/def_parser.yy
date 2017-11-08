@@ -64,6 +64,7 @@
 %token <v_double> DOUBLE
 
 %type <v_double> placement_value
+%type <v_double> diearea_value
 
 %start def_file
 
@@ -97,19 +98,25 @@ cases: NAMESCASESENSITIVE STRING;
 bitchars: BUSBITCHARS STRING;
 dividechar: DIVIDERCHAR STRING;
 units:
-UNITS DISTANCE MICRONS INTEGER
+UNITS DISTANCE MICRONS diearea_value
 {
 	defdata->setDistanceUnitMicrons($4);
 }
 ;
 
-diearea:
-DIEAREA BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE BRACKETOPEN DOUBLE DOUBLE BRACKETCLOSE
+diearea_value:
+INTEGER
 {
-	defdata->setDieArea($3,$4,$7,$8);
+	$$=$1;
 }
 |
-DIEAREA BRACKETOPEN INTEGER INTEGER BRACKETCLOSE BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+DOUBLE
+{
+	$$=$1;
+};
+
+diearea:
+DIEAREA BRACKETOPEN diearea_value diearea_value BRACKETCLOSE BRACKETOPEN diearea_value diearea_value BRACKETCLOSE
 {
 	defdata->setDieArea($3,$4,$7,$8);
 }

@@ -7,7 +7,8 @@
 #include <QMenu>
 #include <QPen>
 
-#include "qlayout/qlayoutwireitem.h"
+#include "qlayoutwireitem.h"
+#include "qlayoutmacropinitem.h"
 
 class QLayoutMacroItem : public QGraphicsRectItem
 {
@@ -17,6 +18,8 @@ public:
 
 	void addRectangle(QString layer, QBrush brush, QRectF rect);
 	void addPolygon(QString layer, QBrush brush, QPolygonF poly);
+
+	QLayoutMacroPinItem* addPin(QString name);
 
 	void setMacroName(QString);
 	QString getMacroName();
@@ -46,6 +49,7 @@ private:
 	QGraphicsSimpleTextItem *m_instanceNameLabel;
 
 	QMap<QString,QVector<QGraphicsRectItem*>> m_layerList;
+	QVector<QLayoutMacroPinItem*> m_pinList;
 };
 
 #endif // QLAYOUTMACROITEM_H

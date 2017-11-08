@@ -67,7 +67,6 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 
 	loadLibraryFiles();
 	loadSchematicsLibraryFiles();
-	loadScriptFiles();
 	loadGDSFiles();
 }
 
@@ -86,31 +85,31 @@ TechDesignRule Project::getDesignRule(QString n)
 // special nets
 QStringList Project::getPowerNets()
 {
+	QStringList pars = project_settings->value("power_nets").toStringList();
 	QStringList ret = twoLevelListFilter("specialnets","power");
-	foreach (QString net, project_settings->value("power_nets").toStringList()) {
-		if(ret.contains(net)) continue;
-		ret.append(net);
-	}
+
+	if(pars.count())
+		return pars;
 	return ret;
 }
 
 QStringList Project::getGroundNets()
 {
+	QStringList pars = project_settings->value("ground_nets").toStringList();
 	QStringList ret = twoLevelListFilter("specialnets","ground");
-	foreach (QString net, project_settings->value("ground_nets").toStringList()) {
-		if(ret.contains(net)) continue;
-		ret.append(net);
-	}
+
+	if(pars.count())
+		return pars;
 	return ret;
 }
 
 QStringList Project::getClockNets()
 {
+	QStringList pars = project_settings->value("clock_nets").toStringList();
 	QStringList ret = twoLevelListFilter("specialnets","clock");
-	foreach (QString net, project_settings->value("clock_nets").toStringList()) {
-		if(ret.contains(net)) continue;
-		ret.append(net);
-	}
+
+	if(pars.count())
+		return pars;
 	return ret;
 }
 
@@ -121,6 +120,26 @@ QString Project::getSpecialNetLayer(QString s)
 		l = getRoutingLayers().at(0);
 
 	return l;
+}
+
+void Project::setPowerNets(QStringList l)
+{
+	project_settings->setValue("power_nets", l);
+}
+
+void Project::setGroundNets(QStringList l)
+{
+	project_settings->setValue("ground_nets", l);
+}
+
+void Project::setClockNets(QStringList l)
+{
+	project_settings->setValue("clock_nets", l);
+}
+
+void Project::setSpecialNetLayer(QString s,QString l)
+{
+	project_settings->setValue("special_net_"+s+"_layer",l);
 }
 
 // ---------------
@@ -492,31 +511,46 @@ void Project::create(QString path)
 
 void Project::synthesis()
 {
-	mainContext.evalScript("synth()");
+	if(QFile(getSynthesisScript()).exists()) {
+		mainContext.evalFile(getSynthesisScript());
+	} else {
+		mainContext.evalScript("print \"not defined\"");
+	}
 }
 
 void Project::simulation()
 {
-	mainContext.evalScript("sim()");
+	if(QFile(getSimulationScript()).exists()) {
+		mainContext.evalFile(getSimulationScript());
+	} else {
+		mainContext.evalScript("print \"not defined\"");
+	}
 	emit(simulationDone());
 }
 
 void Project::placement()
 {
+	if(QFile(getPlacementScript()).exists()) {
+		mainContext.evalFile(getPlacementScript());
+	} else {
+		mainContext.evalScript("print \"not defined\"");
+	}
 }
 
 void Project::routing()
 {
+	if(QFile(getRoutingScript()).exists()) {
+		mainContext.evalFile(getRoutingScript());
+	} else {
+		mainContext.evalScript("print \"not defined\"");
+	}
 }
 
 void Project::buildAll()
 {
-	mainContext.evalScript("synth()");
-	blif2cel(getTopLevel());
-	mainContext.evalScript("place()");
-	place2def(getTopLevel());
-	generatecfg(getTopLevel());
-	mainContext.evalScript("route()");
+	synthesis();
+	placement();
+	routing();
 }
 
 bool Project::hasMaterialTypeMapping(QString material)
@@ -928,51 +962,6 @@ QStringList Project::getListOfSchematicParts()
 		ret+=slibdata[key]->getSymbolNames();
 	}
 	return ret;
-}
-
-void Project::loadScriptFiles()
-{
-	if(QFile(getSynthesisScript()).exists()) {
-		mainContext.evalFile(getSynthesisScript());
-	} else {
-		mainContext.evalScript("def synth():\n\tprint \"not defined\"");
-	}
-
-	if(QFile(getSimulationScript()).exists()) {
-		mainContext.evalFile(getSimulationScript());
-	} else {
-		mainContext.evalScript("def sim():\n\tprint \"not defined\"");
-	}
-
-	if(QFile(getBLIF2CELScript()).exists()) {
-		mainContext.evalFile(getBLIF2CELScript());
-	} else {
-		mainContext.evalScript("def blif2cel():\n\tprint \"not defined\"");
-	}
-
-	if(QFile(getBLIF2SymbolScript()).exists()) {
-		mainContext.evalFile(getBLIF2SymbolScript());
-	} else {
-		mainContext.evalScript("def blif2sym():\n\tprint \"not defined\"");
-	}
-
-	if(QFile(getPlacementScript()).exists()) {
-		mainContext.evalFile(getPlacementScript());
-	} else {
-		mainContext.evalScript("def place():\n\tprint \"not defined\"");
-	}
-
-	if(QFile(getPlace2DEFScript()).exists()) {
-		mainContext.evalFile(getPlace2DEFScript());
-	} else {
-		mainContext.evalScript("def place2def():\n\tprint \"not defined\"");
-	}
-
-	if(QFile(getRoutingScript()).exists()) {
-		mainContext.evalFile(getRoutingScript());
-	} else {
-		mainContext.evalScript("def route():\n\tprint \"not defined\"");
-	}
 }
 
 void Project::loadSchematicsLibraryFiles()

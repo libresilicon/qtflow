@@ -2,6 +2,7 @@
 #define SPECIALNETS_H
 
 #include <QDialog>
+#include <QDebug>
 
 #include "project.h"
 
@@ -20,6 +21,8 @@ protected:
 signals:
 
 public slots:
+	void on_buttonBox_accepted();
+
 private:
 	Project *project;
 	Ui::SpecialNets *ui;

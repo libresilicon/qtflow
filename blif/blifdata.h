@@ -36,8 +36,6 @@ namespace blif {
 		QVector<BLIFDataComponentInfo> getComponents();
 		QStringList getPadPinsInput();
 		QStringList getPadPinsOutput();
-		QStringList getPadPinsPower();
-		QStringList getPadPinsGround();
 
 	protected:
 		blif_keyword tokenize(QString s);

@@ -60,5 +60,38 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>SpecialNets</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>427</x>
+     <y>529</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>427</x>
+     <y>276</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SpecialNets</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>427</x>
+     <y>529</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>427</x>
+     <y>276</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -28,8 +28,8 @@ void DEFLayoutEditor::loadFile(QString file)
 
 	x = defdata->getLowerX();
 	y = defdata->getLowerY();
-	w = defdata->getUpperX();
-	h = defdata->getUpperY();
+	w = defdata->getUpperX()-x;
+	h = defdata->getUpperY()-y;
 
 	//x *= 10;
 	//y *= 10;
@@ -50,8 +50,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	addMacroInstances();
 	addContactPins();
 	//addRectangles();
-
-	//scale(0.1,0.1);
+	//fitInView(r);
 
 	editScene->update();
 }

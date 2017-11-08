@@ -16,6 +16,9 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = qtflow
 TEMPLATE = app
 
+SUBDIRS += helpers
+SUBDIRS += PythonQt
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -175,7 +178,6 @@ include(symbols/symbols.pri)
 include(blif/blif.pri)
 
 DISTFILES += \
-	scripts/blif2cel.py \
 	scripts/synthesis.py \
 	scripts/simulation.py \
 	tech/osu018/osu018.prm \
@@ -217,7 +219,6 @@ DISTFILES += \
 	tech/tech.qrc \
 	tech/gencmap.py \
 	tech/mos.cmap \
-    scripts/place2def.py \
     scripts/placement.py \
     scripts/blif2sym.py \
     scripts/router.py

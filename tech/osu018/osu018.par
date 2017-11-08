@@ -68,7 +68,7 @@ TWSC*call_row_evener	: true
 TWSC*even_rows_maximally : true
 # TWSC*no.graphics    : on
 
-#GENR*row_to_tile_spacing: 1
-GENR*row_to_tile_spacing: 2
+GENR*row_to_tile_spacing: 1
+#GENR*row_to_tile_spacing: 10
 # GENR*numrows		: 6
 GENR*flip_alternate_rows : 1
