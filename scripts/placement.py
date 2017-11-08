@@ -30,6 +30,44 @@ from Queue import Queue
 chdir(project_settings.getLayoutDir())
 
 command = ["/usr/bin/tclsh"]
+command.append("/home/leviathan/qtflow/scripts/blif2cel.tcl")
+command.append("--lef")
+command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append("--blif")
+command.append(project_settings.getTopLevel()+".blif")
+command.append("--cel")
+command.append(path.join(project_settings.getLayoutDir(),project_settings.getTopLevel()+".cel"))
+command.append("--units")
+#command.append(str(project_settings.getScaleUnit()))
+command.append(str(100))
+command.append("--pad-width")
+command.append("100")
+command.append("--pad-height")
+command.append("100")
+
+p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+
+for line in iter(p.stdout.readline, ''):
+	print line
+
+p.stdout.close()
+
+command = ["/usr/bin/tclsh"]
+command.append("/home/leviathan/qtflow/scripts/decongest.tcl")
+command.append(project_settings.getTopLevel())
+command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append("FILL")
+command.append(str(0.1))
+
+p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+
+for line in iter(p.stdout.readline, ''):
+	print line
+
+p.stdout.close()
+
+
+command = ["/usr/bin/tclsh"]
 command.append("/home/leviathan/qtflow/scripts/powerbus.tcl")
 command.append(project_settings.getTopLevel())
 command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
@@ -98,3 +136,18 @@ for line in iter(p.stdout.readline, ''):
 	print line
 
 p.stdout.close()
+
+
+command = ["/usr/bin/tclsh"]
+command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
+command.append(project_settings.getTopLevel())
+command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append("FILL")
+
+p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+
+for line in iter(p.stdout.readline, ''):
+	print line
+
+p.stdout.close()
+
