@@ -9,7 +9,7 @@ namespace lef {
 		trace_scanning(false),
 		trace_parsing(false),
 		baseUnitMicrons(false),
-		baseUnitMicronsValue(1),
+		m_baseUnitMicronsValue(1),
 		m_recentLayer(NULL),
 		m_recentVia(NULL),
 		m_recentMacro(NULL)
@@ -118,6 +118,11 @@ namespace lef {
 		double w = x2-x1;
 		double h = y2-y1;
 
+		x *= m_baseUnitMicronsValue;
+		y *= m_baseUnitMicronsValue;
+		w *= m_baseUnitMicronsValue;
+		h *= m_baseUnitMicronsValue;
+
 		lef::LEFPin *pin;
 		lef::LEFPort *port;
 		lef::LEFLayer *layer;
@@ -186,6 +191,11 @@ namespace lef {
 		double w = x2-x1;
 		double h = y2-y1;
 
+		x *= m_baseUnitMicronsValue;
+		y *= m_baseUnitMicronsValue;
+		w *= m_baseUnitMicronsValue;
+		h *= m_baseUnitMicronsValue;
+
 		lef::LEFObstruction *obstruction;
 		lef::LEFLayer *layer;
 		obstruction = m_recentMacro->getObstruction();
@@ -199,12 +209,12 @@ namespace lef {
 	void LEFData::setBaseUnitMicrons(int i)
 	{
 		baseUnitMicrons = true;
-		baseUnitMicronsValue = i;
+		m_baseUnitMicronsValue = i;
 	}
 
 	int LEFData::getBaseUnits()
 	{
-		return baseUnitMicronsValue;
+		return m_baseUnitMicronsValue;
 	}
 
 	void LEFData::setLayerType(std::string s)

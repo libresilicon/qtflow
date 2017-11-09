@@ -3,18 +3,16 @@
 namespace lef {
 	QString LEFLayer::getName()
 	{
-		return name;
+		return m_name;
 	}
 
 	QVector<rect_t> LEFLayer::getRects()
 	{
-		return rectsExport;
+		return m_rects;
 	}
 
 	LEFLayer::LEFLayer(QString n) :
-		scaleX(1),
-		scaleY(1),
-		name(n)
+		m_name(n)
 	{
 	}
 
@@ -25,26 +23,6 @@ namespace lef {
 		obj.y = y;
 		obj.w = w;
 		obj.h = h;
-		rects.append(obj);
-	}
-
-	void LEFLayer::generateExportLayers()
-	{
-		rectsExport.clear();
-		foreach(rect_t obj, rects) {
-			rect_t nobj;
-			nobj.x = obj.x*scaleX;
-			nobj.y = obj.y*scaleY;
-			nobj.w = obj.w*scaleX;
-			nobj.h = obj.h*scaleY;
-			rectsExport.append(nobj);
-		}
-	}
-
-	void LEFLayer::scaleLayer(qreal w, qreal h)
-	{
-		scaleX=w;
-		scaleY=h;
-		generateExportLayers();
+		m_rects.append(obj);
 	}
 }

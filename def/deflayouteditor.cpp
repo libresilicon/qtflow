@@ -82,11 +82,9 @@ void DEFLayoutEditor::addContactPins()
 
 void DEFLayoutEditor::addSignalWires()
 {
-	qreal unit = project->getSmallestUnit()/defdata->getDistanceUnit();
 	DEFRouteInfo route;
 	QVector<QPointF> points;
 	QMap<QString,DEFRouteInfo> routes;
-	QVector<DEFRouteInfo> sroutes;
 	QMap<QString,QVector<DEFRouteInfo>> sroutl;
 	QPointF p1, p2;
 
@@ -98,12 +96,12 @@ void DEFLayoutEditor::addSignalWires()
 		p1 = points.at(0);
 		foreach(p2, points) {
 			if(p1!=p2) {
-				editScene->addWire(net,route.getLayer(),p1*unit,p2*unit);
+				editScene->addWire(net,route.getLayer(),p1*m_scale,p2*m_scale);
 			}
 			p1 = p2;
 		}
 		if(route.getViaName()!=QString()) {
-			editScene->addVia(net,route.getViaName(),p1*unit);
+			editScene->addVia(net,route.getViaName(),p1*m_scale);
 		}
 	}
 
@@ -115,12 +113,12 @@ void DEFLayoutEditor::addSignalWires()
 			p1 = points.at(0);
 			foreach(p2, points) {
 				if(p1!=p2) {
-					editScene->addWire(net,route.getLayer(),p1*unit,p2*unit);
+					editScene->addWire(net,route.getLayer(),p1*m_scale,p2*m_scale);
 				}
 				p1 = p2;
 			}
 			if(route.getViaName()!=QString()) {
-				editScene->addVia(net,route.getViaName(),p1*unit);
+				editScene->addVia(net,route.getViaName(),p1*m_scale);
 			}
 		}
 	}

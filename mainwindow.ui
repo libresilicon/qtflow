@@ -112,6 +112,7 @@
      <string>&amp;Tools</string>
     </property>
     <addaction name="actionNetlist"/>
+    <addaction name="actionContactPlacement"/>
     <addaction name="actionPythonShell"/>
     <addaction name="actionWaveViewer"/>
     <addaction name="separator"/>
@@ -410,7 +411,12 @@
   </action>
   <action name="actionSpecialNets">
    <property name="text">
-    <string>Special nets</string>
+    <string>&amp;Special nets</string>
+   </property>
+  </action>
+  <action name="actionContactPlacement">
+   <property name="text">
+    <string>Contact placement</string>
    </property>
   </action>
  </widget>

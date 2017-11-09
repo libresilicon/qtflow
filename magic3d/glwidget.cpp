@@ -104,7 +104,6 @@ void GLWidget::addModules()
 
 		if(project) if(project->isDefinedMacro(macro_name)) {
 			macro = project->getMacro(macro_name);
-			macro->scaleMacro(w,h);
 
 			foreach(pin, macro->getPins()) {
 				port = pin->getPort();
@@ -128,7 +127,7 @@ void GLWidget::addModules()
 		QRectF rect;
 		GDSCell *cell;
 
-		if(project) if(project->isDefinedGDSMacro(macro_name)) {
+		/*if(project) if(project->isDefinedGDSMacro(macro_name)) {
 			cell = project->getGDSMacro(macro_name);
 			if(cell) {
 				cell->setRectangle(x,y,w,h);
@@ -146,7 +145,7 @@ void GLWidget::addModules()
 					}
 				}
 			}
-		}
+		}*/
 	}
 }
 

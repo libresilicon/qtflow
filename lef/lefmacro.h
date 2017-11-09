@@ -11,7 +11,6 @@ namespace lef {
 		void addPin(QString);
 
 		void setSize(qreal w, qreal h);
-		void scaleMacro(qreal w, qreal h);
 		double getWidth();
 		double getHeight();
 
@@ -23,12 +22,12 @@ namespace lef {
 		bool pinExists(QString n);
 
 	private:
-		QString name;
-		QVector<LEFPin*> pins;
-		LEFObstruction* obstructions;
+		QString m_name;
+		QVector<LEFPin*> m_pins;
+		LEFObstruction* m_obstructions;
 
-		qreal sizeW;
-		qreal sizeH;
+		qreal m_sizeW;
+		qreal m_sizeH;
 	};
 }
 

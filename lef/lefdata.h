@@ -81,7 +81,7 @@ namespace lef {
 		QString recentMacroPinObstructionLayer;
 
 		bool baseUnitMicrons;
-		int baseUnitMicronsValue;
+		int m_baseUnitMicronsValue;
 	};
 }
 

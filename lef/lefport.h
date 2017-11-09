@@ -11,13 +11,12 @@ namespace lef {
 		LEFPort();
 		QVector<QString> getLayerNames();
 		QVector<LEFLayer*> getLayers();
-		void scalePort(double,double);
 		LEFLayer *getLayer(QString);
 		bool layerExists(QString n);
 
 		void addLayer(QString);
 	private:
-		QVector<LEFLayer*> layers;
+		QVector<LEFLayer*> m_layers;
 
 	};
 }

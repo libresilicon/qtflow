@@ -20,10 +20,6 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	projectSettingsDialog = new ProjectSettings(this);
 	connect(ui->projectSettings, SIGNAL(triggered(bool)), projectSettingsDialog, SLOT(open()));
 
-	iopadsWidget = new IOPads(this);
-	iopadsWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
-	addDockWidget(Qt::RightDockWidgetArea, iopadsWidget);
-
 	filesWidget = new FileSelector(this);
 	filesWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::TopDockWidgetArea | Qt::RightDockWidgetArea | Qt::BottomDockWidgetArea );
 	addDockWidget(Qt::LeftDockWidgetArea, filesWidget);
@@ -157,7 +153,6 @@ void MainWindow::hideAllDockerWidgets()
 	projectsWidget->setVisible(false);
 	modulesWidget->setVisible(false);
 	timingWidget->setVisible(false);
-	iopadsWidget->setVisible(false);
 	pythonConsoleWidget->setVisible(false);
 }
 
@@ -176,6 +171,7 @@ void MainWindow::openProject(QString path)
 		buildFlowConfig->setProject(project);
 		createWidget->setProject(project);
 		specialNetDialog->setProject(project);
+		contactPlacementDialog->setProject(project);
 		mainContext.addObject("project_settings", new PyProjectSettings(project));
 		enableProject();
 	}
@@ -200,7 +196,6 @@ MainWindow::~MainWindow()
 	delete createWidget;
 	delete welcomeWidget;
 	delete timingWidget;
-	delete iopadsWidget;
 }
 
 void MainWindow::on_MainWindow_destroyed()
@@ -340,11 +335,6 @@ void MainWindow::on_menuModules_triggered()
 {
 	//modules->show();
 	//modules->refresh();
-}
-
-void MainWindow::on_menuIOPads_triggered()
-{
-	iopadsWidget->show();
 }
 
 void MainWindow::on_toolRefresh_triggered()

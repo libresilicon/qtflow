@@ -20,6 +20,7 @@
 			</symbols>
 			<gds>
 				<file>osu018_stdcells.gds</file>
+				<file>osu035_pads.gds2</file>
 			</gds>
 			<specialnets>
 				<power>vdd</power>
@@ -39,6 +40,11 @@
 			<symbols>
 				<file>osu035_stdcells.slib</file>
 			</symbols>
+			<gds>
+				<file>osu035_stdcells.gds2</file>
+				<file>osu035_pads.gds2</file>
+			</gds>
+
 			<liberty>osu035_stdcells.lib</liberty>
 			<parameter>osu035.par</parameter>
 		</process>

@@ -10,7 +10,6 @@ namespace lef {
 class LEFPin {
 public:
 	LEFPin(QString);
-	void scalePin(qreal, qreal);
 	void setBoundingBox(double x, double y, double w, double h);
 
 	QString getName();

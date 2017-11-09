@@ -54,7 +54,6 @@ SOURCES += \
 	project.cpp \
 	savechanges.cpp \
 	welcome.cpp \
-	iopads.cpp \
 	projectstreemodel.cpp \
 	modulestreemodel.cpp \
 	moduleslistmodel.cpp \
@@ -78,7 +77,8 @@ SOURCES += \
     buildflow.cpp \
     mainapplication.cpp \
     project_conv_functions.cpp \
-    specialnets.cpp
+    specialnets.cpp \
+    contactplacement.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -87,7 +87,6 @@ HEADERS  += \
 	project.h \
 	savechanges.h \
 	welcome.h \
-	iopads.h \
 	projectstreemodel.h \
 	modulestreemodel.h \
 	moduleslistmodel.h \
@@ -111,7 +110,8 @@ HEADERS  += \
     generictexteditorwidget.h \
     buildflow.h \
     mainapplication.h \
-    specialnets.h
+    specialnets.h \
+    contactplacement.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -119,7 +119,6 @@ FORMS    += \
 	templates.ui \
 	savechanges.ui \
 	welcome.ui \
-	iopads.ui \
 	modules.ui \
 	new.ui \
 	mainwindow.ui \
@@ -134,7 +133,8 @@ FORMS    += \
 	librarysettings.ui \
     buildflow.ui \
     parametricpart.ui \
-    specialnets.ui
+    specialnets.ui \
+    contactplacement.ui
 
 RESOURCES += icons/icons.qrc
 

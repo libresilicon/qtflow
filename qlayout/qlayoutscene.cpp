@@ -126,7 +126,6 @@ void QLayoutScene::refreshViaTable()
 				vt = new QLayoutViaItem(0,0,w,h);
 				foreach(lef::LEFLayer* l, v->getLayers()) {
 					qDebug() << "Adding layer to via: " << l->getName();
-					l->scaleLayer(w,h);
 					color = project->colorMat(l->getName());
 					foreach(lef::rect_t r, l->getRects()) {
 						vt->addRectangle(l->getName(),QBrush(color),QRectF(r.x,r.y,r.w,r.h));
@@ -192,9 +191,7 @@ void QLayoutScene::refreshMacroTable()
 		mi->setMacroName(macroName);
 
 		// fill in library content from LEF:
-		/*if(project && macro) {
-			macro->scaleMacro(w, h);
-
+		if(project && macro) {
 			foreach(pin, macro->getPins()) {
 				pin_name = pin->getName();
 				pi = mi->addPin(pin_name);
@@ -203,6 +200,7 @@ void QLayoutScene::refreshMacroTable()
 					layer_name = layer->getName();
 					color = project->colorMat(layer_name);
 					foreach(lef::rect_t rect, layer->getRects()) {
+						qDebug() << "Adding layer " << layer_name << " rect " << QRectF(rect.x, rect.y, rect.w, rect.h);
 						pi->addRectangle(layer_name, QBrush(color), QRectF(rect.x, rect.y, rect.w, rect.h));
 					}
 					emit(registerLayer(layer_name));
@@ -216,7 +214,7 @@ void QLayoutScene::refreshMacroTable()
 				}
 				emit(registerLayer(layer_name));
 			}
-		}*/
+		}
 
 		// fill in GDS data:
 		/*if(project && cell) {

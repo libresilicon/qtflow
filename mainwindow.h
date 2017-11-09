@@ -28,13 +28,13 @@
 #include "projectsettings.h"
 #include "pyprojectsettings.h"
 #include "specialnets.h"
+#include "contactplacement.h"
 
 #include "templates.h"
 #include "welcome.h"
 #include "settings.h"
 #include "project.h"
 #include "new.h"
-#include "iopads.h"
 #include "wave.h"
 #include "pysettings.h"
 
@@ -88,7 +88,6 @@ private slots:
 	void on_actionWaveViewer_triggered();
 	void on_actionSpecialNets_triggered();
 
-	void on_menuIOPads_triggered();
 	void on_menuSettings_triggered();
 
 	void on_toolRefresh_triggered();
@@ -119,7 +118,6 @@ private:
 	New *createWidget;
 	Welcome *welcomeWidget;
 	Wave *timingWidget;
-	IOPads *iopadsWidget;
 
 	QSettings *settings;
 
@@ -135,6 +133,7 @@ private:
 	PythonConsoleDockWidget *pythonConsoleWidget;
 	Templates *newProjectDialog;
 	SpecialNets *specialNetDialog;
+	ContactPlacement *contactPlacementDialog;
 
 	EditorTabManager *editArea;
 

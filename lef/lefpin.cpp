@@ -32,11 +32,6 @@ namespace lef {
 		return QPointF(xp,yp);
 	}
 
-	void LEFPin::scalePin(qreal w, qreal h)
-	{
-		port->scalePort(w,h);
-	}
-
 	QString LEFPin::getName()
 	{
 		return name;

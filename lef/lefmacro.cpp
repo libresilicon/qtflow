@@ -2,26 +2,26 @@
 
 namespace lef {
 	LEFMacro::LEFMacro(QString n) :
-		sizeW(0),
-		sizeH(0),
-		name(n),
-		obstructions(new LEFObstruction)
+		m_sizeW(0),
+		m_sizeH(0),
+		m_name(n),
+		m_obstructions(new LEFObstruction)
 	{
 	}
 
 	QString LEFMacro::getName()
 	{
-		return name;
+		return m_name;
 	}
 
 	void LEFMacro::addPin(QString n)
 	{
-		pins.append(new LEFPin(n));
+		m_pins.append(new LEFPin(n));
 	}
 
 	bool LEFMacro::pinExists(QString n)
 	{
-		foreach(lef::LEFPin *pin, pins)
+		foreach(lef::LEFPin *pin, m_pins)
 			if(pin->getName()==n)
 				return true;
 		return false;
@@ -29,13 +29,13 @@ namespace lef {
 
 	QVector<LEFPin*> LEFMacro::getPins()
 	{
-		return pins;
+		return m_pins;
 	}
 
 	LEFPin* LEFMacro::getPin(QString name)
 	{
 		LEFPin *p = NULL;
-		foreach(p, pins)
+		foreach(p, m_pins)
 			if(p->getName()==name)
 				return p;
 		return p;
@@ -44,41 +44,29 @@ namespace lef {
 	QVector<QString> LEFMacro::getPinNames()
 	{
 		QVector<QString> ret;
-		foreach(LEFPin *m, pins) ret.append(m->getName());
+		foreach(LEFPin *m, m_pins) ret.append(m->getName());
 		return ret;
 	}
 
 	void LEFMacro::setSize(qreal w, qreal h)
 	{
-		sizeW = w;
-		sizeH = h;
+		m_sizeW = w;
+		m_sizeH = h;
 	}
 
 	double LEFMacro::getWidth()
 	{
-		return sizeW;
+		return m_sizeW;
 	}
 
 	double LEFMacro::getHeight()
 	{
-		return sizeH;
-	}
-
-	void LEFMacro::scaleMacro(qreal w, qreal h)
-	{
-		qreal scaleW = w/sizeW;
-		qreal scaleH = h/sizeH;
-		foreach(LEFPin *pin, pins) {
-			pin->scalePin(scaleW,scaleH);
-		}
-		foreach(LEFLayer *layer, obstructions->getLayers()) {
-			layer->scaleLayer(scaleW,scaleH);
-		}
+		return m_sizeH;
 	}
 
 	LEFObstruction *LEFMacro::getObstruction()
 	{
-		return obstructions;
+		return m_obstructions;
 	}
 
 }

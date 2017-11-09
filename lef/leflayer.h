@@ -16,16 +16,12 @@ namespace lef {
 	public:
 		LEFLayer(QString);
 		void addRectangle(double, double, double, double);
-		void scaleLayer(qreal w, qreal h);
 		QVector<rect_t> getRects();
 
 		QString getName();
 	private:
-		QString name;
-		QVector<rect_t> rects;
-		QVector<rect_t> rectsExport;
-		qreal scaleX;
-		qreal scaleY;
+		QString m_name;
+		QVector<rect_t> m_rects;
 
 		void generateExportLayers();
 	};
