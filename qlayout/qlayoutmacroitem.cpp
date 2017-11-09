@@ -1,6 +1,6 @@
 #include "qlayoutmacroitem.h"
 
-QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) : // cloning the template object and it's children
+QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *orig) : // cloning the template object and it's children
 	QGraphicsRectItem(0),
 	m_dragged(false),
 	m_instanceNameLabel(NULL),
@@ -13,27 +13,34 @@ QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *parent) : // cloning the te
 	setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
 	pen.setWidth(30);
 	setPen(pen);
-	if(parent) {
-		rect = parent->rect();
+
+	if(orig) {
+		rect = orig->rect();
 		setRect(rect);
 		m_width = rect.width();
 		m_height = rect.height();
-	}
 
-	setInstanceName(parent->m_instanceName);
-	setMacroName(parent->m_macroName);
+		setInstanceName(orig->m_instanceName);
+		setMacroName(orig->m_macroName);
 
-	foreach(QString layer, parent->m_layerList.keys()) {
-		foreach(QGraphicsRectItem* m, parent->m_layerList[layer]) {
-			if(m) {
-				addRectangle(layer,m->brush(),m->rect());
+		foreach(QString layer, orig->m_layerList.keys()) {
+			foreach(QGraphicsRectItem* m, orig->m_layerList[layer]) {
+				if(m) {
+					addRectangle(layer,m->brush(),m->rect());
+				}
 			}
 		}
-	}
 
-	foreach(QLayoutMacroPinItem* pi, parent->m_pinList) {
-		m_pinList.append(new QLayoutMacroPinItem(pi,this));
+		foreach(QLayoutMacroPinItem* pi, orig->m_pinList) {
+			m_pinList.append(new QLayoutMacroPinItem(pi,this));
+		}
 	}
+}
+
+QLayoutMacroItem::QLayoutMacroItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent) :
+	   QGraphicsRectItem(x,y,w,h,parent),
+	   m_dragged(false)
+{
 }
 
 void QLayoutMacroItem::addRectangle(QString layer, QBrush brush, QRectF rect)
@@ -53,12 +60,6 @@ void QLayoutMacroItem::addPolygon(QString layer, QBrush brush, QPolygonF poly)
 	addRectangle(layer, brush, poly.boundingRect());
 }
 
-QLayoutMacroItem::QLayoutMacroItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent) :
-	   QGraphicsRectItem(x,y,w,h,parent),
-	   m_dragged(false)
-{
-
-}
 
 void QLayoutMacroItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {

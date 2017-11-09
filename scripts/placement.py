@@ -137,7 +137,6 @@ for line in iter(p.stdout.readline, ''):
 
 p.stdout.close()
 
-
 command = ["/usr/bin/tclsh"]
 command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
 command.append(project_settings.getTopLevel())
@@ -151,3 +150,4 @@ for line in iter(p.stdout.readline, ''):
 
 p.stdout.close()
 
+move("counter_filled.def","counter.def")

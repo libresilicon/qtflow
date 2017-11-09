@@ -13,7 +13,7 @@
 class QLayoutMacroItem : public QGraphicsRectItem
 {
 public:
-	explicit QLayoutMacroItem(QLayoutMacroItem *parent = Q_NULLPTR);
+	explicit QLayoutMacroItem(QLayoutMacroItem *orig = Q_NULLPTR);
 	explicit QLayoutMacroItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
 
 	void addRectangle(QString layer, QBrush brush, QRectF rect);

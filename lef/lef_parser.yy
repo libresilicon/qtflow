@@ -174,11 +174,28 @@ vias:
 ;
 
 via: via_name via_layers END STRING;
-via_name: VIA STRING STRING;
+
+via_name:
+VIA STRING STRING
+{
+	lefdata->addViaName(*$2);
+};
+
 via_layers: via_layer | via_layers via_layer;
-via_layer: LAYER STRING via_rects;
+via_layer: via_layer_name via_rects;
+
+via_layer_name:
+LAYER STRING
+{
+	lefdata->addViaLayer(*$2);
+};
+
 via_rects: via_rect | via_rects via_rect;
-via_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE;
+via_rect:
+RECT DOUBLE DOUBLE DOUBLE DOUBLE
+{
+	lefdata->addViaLayerRectangle($2,$3,$4,$5);
+};
 
 viarules:
 	  viarule
@@ -235,7 +252,7 @@ macro: macro_name macro_options END STRING;
 
 macro_name: MACRO STRING
 	{
-		lefdata->addMacroName($2);
+		lefdata->addMacroName(*$2);
 	};
 
 macro_options:
@@ -258,11 +275,12 @@ macro_class: CLASS STRING | CLASS STRING STRING;
 macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
 macro_site: SITE STRING;
 macro_origin: ORIGIN DOUBLE DOUBLE;
-macro_size: SIZE DOUBLE BY DOUBLE
-	{
-		lefdata->setMacroSize($2,$4);
-	}
-	;
+macro_size:
+SIZE DOUBLE BY DOUBLE
+{
+	lefdata->setMacroSize($2,$4);
+};
+
 macro_symmetrie: SYMMETRY STRING | SYMMETRY STRING STRING | SYMMETRY STRING STRING STRING;
 
 macro_pin: macro_pin_options END STRING;
@@ -280,11 +298,12 @@ macro_pin_option:
 	| macro_pin_port
 	;
 
-macro_pin_name: PIN STRING
-	{
-		lefdata->addMacroPinName($2);
-	}
-	;
+macro_pin_name:
+PIN STRING
+{
+	lefdata->addMacroPinName(*$2);
+};
+
 macro_pin_use: USE STRING;
 macro_pin_direction: DIRECTION STRING | DIRECTION STRING STRING;
 macro_pin_shape: SHAPE STRING;
@@ -303,14 +322,18 @@ macro_pin_port_info:
 	| PATH DOUBLE DOUBLE DOUBLE DOUBLE
 ;
 
-macro_pin_port_layer: LAYER STRING
-	{
-		lefdata->addMacroPinPortLayer($2);
-	};
-macro_pin_port_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE
-	{
-		lefdata->addMacroPinPortRectangle($2,$3,$4,$5);
-	};
+macro_pin_port_layer:
+LAYER STRING
+{
+	lefdata->addMacroPinPortLayer(*$2);
+};
+
+macro_pin_port_rect:
+RECT DOUBLE DOUBLE DOUBLE DOUBLE
+{
+	lefdata->addMacroPinPortRectangle($2,$3,$4,$5);
+};
+
 macro_pin_port_class: CLASS STRING;
 
 macro_obs: OBS macro_obs_infos END;
@@ -322,14 +345,18 @@ macro_obs_info:
 	  macro_obs_layer
 	| macro_obs_rect
 	;
-macro_obs_layer: LAYER STRING
-	{
-		  lefdata->addMacroPinObstructionLayer($2);
-	};
-macro_obs_rect: RECT DOUBLE DOUBLE DOUBLE DOUBLE
-	{
-		lefdata->addMacroPinObstructionRectangle($2,$3,$4,$5);
-	};
+
+macro_obs_layer:
+LAYER STRING
+{
+	lefdata->addMacroPinObstructionLayer(*$2);
+};
+
+macro_obs_rect:
+RECT DOUBLE DOUBLE DOUBLE DOUBLE
+{
+	lefdata->addMacroPinObstructionRectangle($2,$3,$4,$5);
+};
 
 %%
 

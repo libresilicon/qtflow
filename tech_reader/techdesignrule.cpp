@@ -16,12 +16,12 @@ QString TechDesignRule::getName()
 	return m_name;
 }
 
-void TechDesignRule::setMinimumWidth(int i)
+void TechDesignRule::setMinimumWidth(double i)
 {
 	m_minWidth = i;
 }
 
-int TechDesignRule::getMinimumWidth()
+qreal TechDesignRule::getMinimumWidth()
 {
 	return m_minWidth;
 }

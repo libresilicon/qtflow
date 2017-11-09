@@ -166,6 +166,7 @@ INTEGER
 component_placement: PLUS PLACED BRACKETOPEN placement_value placement_value BRACKETCLOSE STRING
 {
 	defdata->addUsedModulePlacement($4,$5);
+	defdata->addUsedModuleOrientation(*$7);
 };
 
 pins: PINS INTEGER pin_list END PINS;
@@ -219,10 +220,13 @@ net_list:
 net_list_element:
 	  net_info
 	| routed_info
-	| new_metal
 ;
 
-net_name: MINUS STRING;
+net_name: MINUS STRING
+{
+	defdata->startNetConnection(*$2);
+};
+
 net_info: net_name net_connections;
 
 net_connections:
@@ -230,13 +234,28 @@ net_connections:
 	| net_connections net_connection
 ;
 
-net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE;
+net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE
+{
+	defdata->addToNetConnection(*$2,*$3);
+};
+
+routed_info_name: PLUS ROUTED STRING
+{
+	defdata->startRoutedInfo(*$3);
+};
 
 routed_info:
-	  routed_info_layer routed_info_tupels
-	| routed_info_layer routed_info_tupels STRING;
-
-routed_info_layer: PLUS ROUTED STRING;
+  routed_info_name routed_info_tupels STRING new_metals
+  {
+	  defdata->setRoutedInfoVia(*$3);
+  }
+| routed_info_name routed_info_tupels new_metals
+| routed_info_name routed_info_tupels STRING
+  {
+	  defdata->setRoutedInfoVia(*$3);
+  }
+| routed_info_name routed_info_tupels
+;
 
 routed_info_tupels:
 	  routed_info_tupel
@@ -244,10 +263,23 @@ routed_info_tupels:
 ;
 
 routed_info_tupel:
-	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
-	| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
-	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
-	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+  {
+	  defdata->addRoutedInfoPoint($2,$3);
+  }
+| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+  {
+	  defdata->shiftRoutedInfoPointY($3);
+  }
+| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+  {
+	  defdata->shiftRoutedInfoPointX($2);
+  }
+| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+
+new_metals:
+	  new_metal
+	| new_metals new_metal;
 
 new_metal_tupels:
 	  new_metal_tupel
@@ -255,25 +287,47 @@ new_metal_tupels:
 ;
 
 new_metal_tupel:
-	  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
-	| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
-	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
-	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+  {
+	  defdata->addNewMetalPoint($2,$3);
+  }
+| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+  {
+	  defdata->shiftNewMetalPointY($3);
+  }
+| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+  {
+	  defdata->shiftNewMetalPointX($2);
+  }
+| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
+
+new_metal_name:
+NEW STRING
+{
+	defdata->startNewMetalInfo(*$2);
+};
+;
 
 new_metal:
-	  NEW STRING new_metal_tupels STRING
-	| NEW STRING new_metal_tupels;
+  new_metal_name new_metal_tupels
+  {
+	  defdata->storeNewMetalInfo();
+  }
+| new_metal_name new_metal_tupels STRING
+  {
+	  defdata->setNewMetalInfoVia(*$3);
+	  defdata->storeNewMetalInfo();
+  };
 
 special_nets: SPECIALNETS INTEGER special_net_list END SPECIALNETS;
 
 special_net_list:
-		special_net_list special_net
-	  | special_net;
+	  special_net
+	| special_net_list special_net;
 
 special_net:
 	  special_net_name
 	| special_routed_info
-	| special_new_metal
 ;
 
 special_net_name: MINUS STRING;
@@ -294,10 +348,6 @@ special_routed_info_tupel:
 	| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
 	| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
 	| BRACKETOPEN ASTERISK ASTERISK BRACKETCLOSE;
-
-special_new_metal:
-	  NEW STRING INTEGER new_metal_tupels STRING
-	| NEW STRING INTEGER new_metal_tupels;
 
 %%
 

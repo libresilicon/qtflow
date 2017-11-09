@@ -9,6 +9,7 @@ namespace def {
 		DEFModuleInfo();
 		QString macro_name;
 		QString instance_name;
+		QString orient;
 		double x, y;
 	};
 }

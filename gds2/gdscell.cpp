@@ -37,6 +37,9 @@ void GDSCell::setRectangle(int x, int y, int w, int h)
 	x-=(m_x/m_scale_x);
 	y-=(m_y/m_scale_y);
 
+	//x-=m_x;
+	//y-=m_y;
+
 	foreach(GDSBoundary *b, m_boundaries) {
 		b->setScale(m_scale_x,m_scale_y);
 		b->setOffset(x,y);

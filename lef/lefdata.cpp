@@ -10,7 +10,9 @@ namespace lef {
 		trace_parsing(false),
 		baseUnitMicrons(false),
 		baseUnitMicronsValue(1),
-		m_recentLayer(NULL)
+		m_recentLayer(NULL),
+		m_recentVia(NULL),
+		m_recentMacro(NULL)
 	{
 		std::ifstream input;
 		std::string stdfilename = filename.toStdString();
@@ -44,9 +46,22 @@ namespace lef {
 		return false;
 	}
 
+	bool LEFData::isDefinedVia(QString name)
+	{
+		foreach(LEFVia *v, m_vias)
+			if(v->getName()==name)
+				return true;
+		return false;
+	}
+
 	QVector<LEFMacro*> LEFData::getMacros()
 	{
 		return m_macros;
+	}
+
+	QVector<LEFVia*> LEFData::getVias()
+	{
+		return m_vias;
 	}
 
 	LEFMacro* LEFData::getMacro(QString n)
@@ -63,20 +78,36 @@ namespace lef {
 		return lexer;
 	}
 
+	void LEFData::addViaName(std::string s)
+	{
+		m_recentVia = new LEFVia(QString::fromStdString(s));
+		m_vias.append(m_recentVia);
+	}
+
+	void LEFData::addViaLayer(std::string s)
+	{
+		if(m_recentVia) m_recentVia->addLayer(QString::fromStdString(s));
+	}
+
+	void LEFData::addViaLayerRectangle(double x1, double y1, double x2, double y2)
+	{
+		if(m_recentVia) m_recentVia->addRect(x1,y1,x2,y2);
+	}
+
 	void LEFData::setMacroSize(double w, double h)
 	{
 		m_recentMacro->setSize(w,h);
 	}
 
-	void LEFData::addMacroName(std::string *s)
+	void LEFData::addMacroName(std::string s)
 	{
-		m_recentMacro = new LEFMacro(QString::fromStdString(*s));
+		m_recentMacro = new LEFMacro(QString::fromStdString(s));
 		m_macros.append(m_recentMacro);
 	}
 
-	void LEFData::addMacroPinName(std::string *s)
+	void LEFData::addMacroPinName(std::string s)
 	{
-		recentMacroPinName = QString::fromStdString(*s);
+		recentMacroPinName = QString::fromStdString(s);
 		m_recentMacro->addPin(recentMacroPinName);
 	}
 
@@ -105,12 +136,12 @@ namespace lef {
 		pin->setBoundingBox(x, y, w, h);
 	}
 
-	void LEFData::addMacroPinPortLayer(std::string *s)
+	void LEFData::addMacroPinPortLayer(std::string s)
 	{
 		lef::LEFPin *pin;
 		lef::LEFPort *port;
 
-		recentMacroPinPortLayer = QString::fromStdString(*s);
+		recentMacroPinPortLayer = QString::fromStdString(s);
 		if(!m_recentMacro->pinExists(recentMacroPinName))
 			m_recentMacro->addPin(recentMacroPinName);
 
@@ -120,12 +151,12 @@ namespace lef {
 			port->addLayer(recentMacroPinPortLayer);
 	}
 
-	void LEFData::addMacroPinObstructionLayer(std::string *s)
+	void LEFData::addMacroPinObstructionLayer(std::string s)
 	{
 		lef::LEFPin *pin;
 		lef::LEFPort *port;
 
-		recentMacroPinObstructionLayer = QString::fromStdString(*s);
+		recentMacroPinObstructionLayer = QString::fromStdString(s);
 	}
 
 	void LEFData::setSubBitChar(std::string s)

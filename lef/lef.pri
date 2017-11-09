@@ -12,7 +12,8 @@ SOURCES += \
     $$PWD/leflayer.cpp \
     $$PWD/lefmacro.cpp \
     $$PWD/lefobstruction.cpp \
-    $$PWD/leflayerinfo.cpp
+    $$PWD/leflayerinfo.cpp \
+    $$PWD/lefvia.cpp
  
 HEADERS += \
 	$$PWD/lefdata.h \
@@ -22,4 +23,5 @@ HEADERS += \
     $$PWD/leflayer.h \
     $$PWD/lefmacro.h \
     $$PWD/lefobstruction.h \
-    $$PWD/leflayerinfo.h
+    $$PWD/leflayerinfo.h \
+    $$PWD/lefvia.h

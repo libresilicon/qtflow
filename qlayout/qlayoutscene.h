@@ -13,6 +13,7 @@
 #include "qlayoutdistancemeasure.h"
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
+#include "qlayoutviaitem.h"
 #include "drcsettings.h"
 
 #include "project.h"
@@ -46,10 +47,12 @@ public:
 	void setActiveLayer(QString layer);
 	void redraw();
 
+	void addVia(QString netname, QString vianame, QPointF p);
+	void addWire(QString netname, QString layer, QPointF p1, QPointF p2);
 	void addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h);
-	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y);
+	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient);
 
 	QStringList getLayers();
 	QVector<QLayoutRectItem*> getRectangles(QString n);
@@ -75,6 +78,7 @@ signals:
 
 private:
 	void refreshMacroTable();
+	void refreshViaTable();
 	void runDRC(QString n, QRectF rect);
 
 	//QPointF snapGrid(QPointF pt);
@@ -98,6 +102,7 @@ private:
 	QVector<QGraphicsLineItem*> gridLines;
 	QVector<QLayoutDistanceMeasure*> distance_errors;
 	QMap<QString,QLayoutMacroItem*> m_macroTemplateMap;
+	QMap<QString,QLayoutViaItem*> m_viaTemplateMap;
 
 	DRCSettings *drcDialog;
 };

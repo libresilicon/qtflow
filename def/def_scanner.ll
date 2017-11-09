@@ -25,7 +25,7 @@ INTEGER			-{NUMBER}+|{NUMBER}+
 EXPONENT		[eE][+-]?{INTEGER}
 DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
 
-STRING			[A-Za-z]|[A-Za-z0-9_,.-<>\"\[\]\/\(\)]
+STRING			[A-Za-z]|[A-Za-z0-9_,.-<>\"\[\]\/]
 
 ASTERISK			"*"
 PLUS				"+"

@@ -51,6 +51,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	r->setPen(pen);
 
 	addMacroInstances();
+	addSignalWires();
 	addContactPins();
 	//addRectangles();
 	//fitInView(r);
@@ -75,7 +76,53 @@ void DEFLayoutEditor::addContactPins()
 	QVector<def::DEFDataPin> pins = defdata->getPins();
 	foreach (def::DEFDataPin p, pins) {
 		qDebug() << "Added pin " << p.m_name;
-		editScene->addPad(p.m_name,p.m_signal,p.m_layer, p.m_x*m_scale, p.m_y*m_scale, p.m_w*m_scale, p.m_h*m_scale);
+		editScene->addPad(p.m_name, p.m_signal, p.m_layer, p.m_x*m_scale, p.m_y*m_scale, p.m_w*m_scale, p.m_h*m_scale);
+	}
+}
+
+void DEFLayoutEditor::addSignalWires()
+{
+	qreal unit = project->getSmallestUnit()/defdata->getDistanceUnit();
+	DEFRouteInfo route;
+	QVector<QPointF> points;
+	QMap<QString,DEFRouteInfo> routes;
+	QVector<DEFRouteInfo> sroutes;
+	QMap<QString,QVector<DEFRouteInfo>> sroutl;
+	QPointF p1, p2;
+
+	routes = defdata->getMainRoutes();
+	foreach(QString net, routes.keys()) {
+		route = routes[net];
+		points = route.getPoints();
+		if(points.count()<1) continue;
+		p1 = points.at(0);
+		foreach(p2, points) {
+			if(p1!=p2) {
+				editScene->addWire(net,route.getLayer(),p1*unit,p2*unit);
+			}
+			p1 = p2;
+		}
+		if(route.getViaName()!=QString()) {
+			editScene->addVia(net,route.getViaName(),p1*unit);
+		}
+	}
+
+	sroutl = defdata->getSecondaryRoutes();
+	foreach(QString net, sroutl.keys()) {
+		foreach (route, sroutl[net]) {
+			points = route.getPoints();
+			if(points.count()<1) continue;
+			p1 = points.at(0);
+			foreach(p2, points) {
+				if(p1!=p2) {
+					editScene->addWire(net,route.getLayer(),p1*unit,p2*unit);
+				}
+				p1 = p2;
+			}
+			if(route.getViaName()!=QString()) {
+				editScene->addVia(net,route.getViaName(),p1*unit);
+			}
+		}
 	}
 }
 
@@ -88,7 +135,7 @@ void DEFLayoutEditor::addMacroInstances()
 		// adding boxes for macros
 		x = e.x;
 		y = e.y;
-		editScene->addMacro(e.macro_name, e.instance_name, x*m_scale, y*m_scale);
+		editScene->addMacro(e.macro_name, e.instance_name, x*m_scale, y*m_scale, e.orient);
 
 		count++;
 		qDebug() << "Added " << count << " of " << mods.count() << " (" << 100*(count/mods.count()) << "%)";

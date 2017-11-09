@@ -43,3 +43,5 @@ for line in iter(qrouter.stdout.readline, ''):
 	print line
 
 qrouter.stdout.close()
+
+move("counter_route.def","counter.def")

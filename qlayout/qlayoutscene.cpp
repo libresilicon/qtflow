@@ -107,6 +107,36 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 	painter->drawLines(lines.data(), lines.size());
 }*/
 
+void QLayoutScene::refreshViaTable()
+{
+	QLayoutViaItem* vt;
+	qreal w,h;
+	QColor color;
+	lef::LEFVia* v;
+	m_viaTemplateMap.clear();
+	if(project) {
+		foreach(QString viaName, project->getViaList()) {
+			v = project->getVia(viaName);
+			if(v) {
+				w = v->width();
+				h = v->height();
+				w *= project->getViaScale(viaName);
+				h *= project->getViaScale(viaName);
+
+				vt = new QLayoutViaItem(0,0,w,h);
+				foreach(lef::LEFLayer* l, v->getLayers()) {
+					qDebug() << "Adding layer to via: " << l->getName();
+					l->scaleLayer(w,h);
+					color = project->colorMat(l->getName());
+					foreach(lef::rect_t r, l->getRects()) {
+						vt->addRectangle(l->getName(),QBrush(color),QRectF(r.x,r.y,r.w,r.h));
+					}
+				}
+				m_viaTemplateMap[viaName]=vt;
+			}
+		}
+	}
+}
 
 void QLayoutScene::refreshMacroTable()
 {
@@ -162,7 +192,7 @@ void QLayoutScene::refreshMacroTable()
 		mi->setMacroName(macroName);
 
 		// fill in library content from LEF:
-		if(project && macro) {
+		/*if(project && macro) {
 			macro->scaleMacro(w, h);
 
 			foreach(pin, macro->getPins()) {
@@ -186,7 +216,7 @@ void QLayoutScene::refreshMacroTable()
 				}
 				emit(registerLayer(layer_name));
 			}
-		}
+		}*/
 
 		// fill in GDS data:
 		/*if(project && cell) {
@@ -216,6 +246,7 @@ void QLayoutScene::setProject(Project *p)
 	project = p;
 	drcDialog->setProject(project);
 	refreshMacroTable();
+	refreshViaTable();
 }
 
 void QLayoutScene::showDRC()
@@ -522,6 +553,27 @@ void QLayoutScene::addPad(QString name, QString net, QString layer, qreal x, qre
 	emit(registerLayer(layer));
 }
 
+void QLayoutScene::addVia(QString netname, QString vianame, QPointF p)
+{
+	if(m_viaTemplateMap.contains(vianame)) {
+		QLayoutViaItem* via = new QLayoutViaItem(m_viaTemplateMap[vianame]);
+		via->setPos(p);
+		via->setVisible(true);
+		addItem(via);
+	}
+}
+
+void QLayoutScene::addWire(QString netname, QString layer, QPointF p1, QPointF p2)
+{
+	QPen pen;
+	QGraphicsLineItem* l = new QGraphicsLineItem(QLineF(p1,p2));
+	pen = l->pen();
+	pen.setWidth(20);
+	if(project) pen.setColor(project->colorMat(layer));
+	l->setPen(pen);
+	addItem(l);
+}
+
 void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h)
 {
 	QLayoutRectItem *r;
@@ -537,12 +589,17 @@ void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal 
 	emit(registerLayer(layer));
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient)
 {
 	QLayoutMacroItem *mi;
 	if(m_macroTemplateMap.contains(macro_name)) {
 		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
+		if(orient=="S") {
+			mi->setRotation(180);
+			x+=mi->rect().width();
+			y+=mi->rect().height();
+		}
 		mi->setPos(x,y);
 		macros.append(mi);
 		addItem(mi);

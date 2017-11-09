@@ -41,6 +41,7 @@ private:
 	void addMacroInstances();
 	void addContactPins();
 	void addRectangles();
+	void addSignalWires();
 
 	QString filePath;
 	QLayoutScene *editScene;

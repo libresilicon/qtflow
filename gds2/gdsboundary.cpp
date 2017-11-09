@@ -21,17 +21,13 @@ int GDSBoundary::x()
 {
 	GDSPoint* p;
 	int x;
-	int i = 0;
 
 	if(m_points.count()==0) return 0;
 
 	p = m_points.at(0);
 	x = p->x;
 	foreach(p, m_points) {
-		if(i) {
-			if(x > p->x) x = p->x;
-		}
-		i++;
+		if(x > p->x) x = p->x;
 	}
 	return x;
 }
@@ -40,17 +36,13 @@ int GDSBoundary::y()
 {
 	GDSPoint* p;
 	int y;
-	int i = 0;
 
 	if(m_points.count()==0) return 0;
 
 	p = m_points.at(0);
 	y = p->y;
 	foreach(p, m_points) {
-		if(i) {
-			if(y > p->y) y = p->y;
-		}
-		i++;
+		if(y > p->y) y = p->y;
 	}
 	return y;
 }
@@ -124,13 +116,13 @@ QVector<QPointF> GDSBoundary::sortPoints()
 	return pl;
 }
 
-void GDSBoundary::setScale(int x, int y)
+void GDSBoundary::setScale(qreal x, qreal y)
 {
 	m_scale_x = x;
 	m_scale_y = y;
 }
 
-void GDSBoundary::setOffset(int x, int y)
+void GDSBoundary::setOffset(qreal x, qreal y)
 {
 	m_offset_x = x;
 	m_offset_y = y;

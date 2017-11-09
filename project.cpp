@@ -844,12 +844,44 @@ lef::LEFMacro* Project::getMacro(QString s)
 	return NULL;
 }
 
+qreal Project::getViaScale(QString s)
+{
+	foreach(QString key, lefdata.keys()) {
+		foreach(lef::LEFVia* v, lefdata[key]->getVias()) {
+			if(v) if(v->getName()==s)
+				return lefdata[key]->getBaseUnits();
+		}
+	}
+	return 1;
+}
+
+lef::LEFVia* Project::getVia(QString s)
+{
+	foreach(QString key, lefdata.keys()) {
+		foreach(lef::LEFVia* v, lefdata[key]->getVias()) {
+			if(v) if(v->getName()==s)
+				return v;
+		}
+	}
+	return NULL;
+}
+
 QStringList Project::getMacroList()
 {
 	QStringList ret;
 	foreach(QString key, lefdata.keys()) {
 		foreach(lef::LEFMacro *m, lefdata[key]->getMacros())
 			ret << m->getName();
+	}
+	return ret;
+}
+
+QStringList Project::getViaList()
+{
+	QStringList ret;
+	foreach(QString key, lefdata.keys()) {
+		foreach(lef::LEFVia *v, lefdata[key]->getVias())
+			ret << v->getName();
 	}
 	return ret;
 }

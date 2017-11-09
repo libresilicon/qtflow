@@ -9,7 +9,8 @@ SOURCES += \
 	$$PWD/layoutvisibles.cpp \
     $$PWD/drcsettings.cpp \
     $$PWD/qlayoutdistancemeasure.cpp \
-    $$PWD/qlayoutmacropinitem.cpp
+    $$PWD/qlayoutmacropinitem.cpp \
+    $$PWD/qlayoutviaitem.cpp
 
 HEADERS += \
 	$$PWD/qlayoutwireitem.h \
@@ -19,7 +20,8 @@ HEADERS += \
 	$$PWD/layoutvisibles.h \
     $$PWD/drcsettings.h \
     $$PWD/qlayoutdistancemeasure.h \
-    $$PWD/qlayoutmacropinitem.h
+    $$PWD/qlayoutmacropinitem.h \
+    $$PWD/qlayoutviaitem.h
 
 FORMS    += \
 	$$PWD/layoutvisibles.ui \

@@ -2,6 +2,7 @@
 #define LEFLAYER_H
 
 #include <QVector>
+#include <QDebug>
 
 namespace lef {
 	typedef struct {

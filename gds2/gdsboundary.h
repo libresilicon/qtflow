@@ -15,8 +15,8 @@ public:
 	int getLayerIndex();
 	QPolygonF getPolygon();
 
-	void setScale(int x, int y);
-	void setOffset(int x, int y);
+	void setScale(qreal x, qreal y);
+	void setOffset(qreal x, qreal y);
 
 	int x();
 	int y();
@@ -32,8 +32,8 @@ private:
 	qreal m_scale_x;
 	qreal m_scale_y;
 
-	int m_offset_x;
-	int m_offset_y;
+	qreal m_offset_x;
+	qreal m_offset_y;
 };
 
 #endif // GDSBOUNDARY_H

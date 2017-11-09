@@ -13,7 +13,8 @@ SOURCES += \
 	$$PWD/deflayouteditorwidget.cpp \
 	$$PWD/defscanner.cpp \
     $$PWD/defmoduleinfo.cpp \
-    $$PWD/defdatapin.cpp
+    $$PWD/defdatapin.cpp \
+    $$PWD/defrouteinfo.cpp
  
 HEADERS += \
 	$$PWD/defdata.h \
@@ -21,6 +22,7 @@ HEADERS += \
 	$$PWD/deflayouteditorwidget.h \
 	$$PWD/defscanner.h \
     $$PWD/defmoduleinfo.h \
-    $$PWD/defdatapin.h
+    $$PWD/defdatapin.h \
+    $$PWD/defrouteinfo.h
 
 
