@@ -125,7 +125,7 @@ void QLayoutScene::refreshViaTable()
 
 				vt = new QLayoutViaItem(0,0,w,h);
 				foreach(lef::LEFLayer* l, v->getLayers()) {
-					qDebug() << "Adding layer to via: " << l->getName();
+					//qDebug() << "Adding layer to via: " << l->getName();
 					color = project->colorMat(l->getName());
 					foreach(lef::rect_t r, l->getRects()) {
 						vt->addRectangle(l->getName(),QBrush(color),QRectF(r.x,r.y,r.w,r.h));
@@ -144,6 +144,7 @@ void QLayoutScene::refreshMacroTable()
 		return;
 	}
 
+	QStringList macroList;
 	QString layer_name;
 	QString pin_name;
 	QColor color;
@@ -161,8 +162,11 @@ void QLayoutScene::refreshMacroTable()
 	// fill in GDS data:
 	GDSCell* cell;
 
+	macroList = project->getMacroList();
+	qreal macro_count = 0;
+
 	m_macroTemplateMap.clear();
-	foreach(QString macroName, project->getMacroList()) {
+	foreach(QString macroName, macroList) {
 		x = 0;
 		y = 0;
 		w = 1;
@@ -200,7 +204,7 @@ void QLayoutScene::refreshMacroTable()
 					layer_name = layer->getName();
 					color = project->colorMat(layer_name);
 					foreach(lef::rect_t rect, layer->getRects()) {
-						qDebug() << "Adding layer " << layer_name << " rect " << QRectF(rect.x, rect.y, rect.w, rect.h);
+						//qDebug() << "Adding layer " << layer_name << " rect " << QRectF(rect.x, rect.y, rect.w, rect.h);
 						pi->addRectangle(layer_name, QBrush(color), QRectF(rect.x, rect.y, rect.w, rect.h));
 					}
 					emit(registerLayer(layer_name));
@@ -217,7 +221,7 @@ void QLayoutScene::refreshMacroTable()
 		}
 
 		// fill in GDS data:
-		/*if(project && cell) {
+		if(project && cell) {
 			cell->setRectangle(x,y,w,h);
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
 				layer_name = project->layerNameFromCIF(b->getLayerIndex());
@@ -233,9 +237,12 @@ void QLayoutScene::refreshMacroTable()
 					emit(registerLayer(layer_name));
 				}
 			}
-		}*/
+		}
 
 		m_macroTemplateMap[macroName]=mi;
+
+		macro_count++;
+		qDebug() << "Loaded macro " << macroName << " (" << 100*(macro_count/macroList.count()) << "% of the macros)";
 	}
 }
 

@@ -170,3 +170,5 @@ def sim():
 	else:
 		print("Error: No simulator generated!\n")
 		return
+
+sim()

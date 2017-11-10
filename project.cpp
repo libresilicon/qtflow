@@ -122,73 +122,6 @@ QString Project::getGNDPadCell()
 	return "PADGND";
 }
 
-void Project::setPadSide(QString side, QStringList pads)
-{
-	QMap<QString,QStringList> sides;
-	QStringList line;
-	QString s;
-	QString padpath = QDir(getSourceDir()).filePath(getTopLevel()+".pads");
-	if(QFileInfo(padpath).exists()) {
-		QFile inputFile(padpath);
-		if (inputFile.open(QIODevice::ReadOnly)) {
-			QTextStream in(&inputFile);
-			while (!in.atEnd()) {
-				line = in.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
-				if(line.count()) {
-					if(line[0]=="side") {
-						s = line[1];
-						for(int i=2; i<line.count(); i++) {
-							sides[s].append(line[i]);
-						}
-					}
-				}
-			}
-			inputFile.close();
-		}
-	}
-	sides[side] = pads;
-	QFile outputFile(padpath);
-	if (outputFile.open(QIODevice::WriteOnly)) {
-		QTextStream out(&outputFile);
-		foreach(QString k, sides.keys()) {
-			out << "side " << k;
-			foreach(QString p, sides[k]) {
-				out << " " << p;
-			}
-			out << endl;
-			out << endl;
-		}
-		outputFile.close();
-	}
-}
-
-QStringList Project::getPadSide(QString side)
-{
-	QStringList ret;
-	QStringList line;
-	QString padpath = QDir(getSourceDir()).filePath(getTopLevel()+".pads");
-	if(QFileInfo(padpath).exists()) {
-		QFile inputFile(padpath);
-		if (inputFile.open(QIODevice::ReadOnly)) {
-			QTextStream in(&inputFile);
-			while (!in.atEnd()) {
-				line = in.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
-				if(line.count()) {
-					if(line[0]=="side") {
-						if(line[1]==side) {
-							for(int i=2; i<line.count(); i++) {
-								ret.append(line[i]);
-							}
-						}
-					}
-				}
-			}
-			inputFile.close();
-		}
-	}
-	return ret;
-}
-
 // special nets
 QStringList Project::getPowerNets()
 {
@@ -620,15 +553,6 @@ void Project::synthesis()
 {
 	if(QFile(getSynthesisScript()).exists()) {
 		mainContext.evalFile(getSynthesisScript());
-	} else {
-		mainContext.evalScript("print \"not defined\"");
-	}
-}
-
-void Project::buildPadFrame()
-{
-	if(QFile(getPadFrameScript()).exists()) {
-		mainContext.evalFile(getPadFrameScript());
 	} else {
 		mainContext.evalScript("print \"not defined\"");
 	}

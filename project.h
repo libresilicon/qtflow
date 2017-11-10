@@ -25,6 +25,7 @@
 #include "tech_reader/techdata.h"
 #include "symbol_reader/symboldata.h"
 #include "blif/blifdata.h"
+#include "contacts/padinfo.h"
 
 class IProject: public QObject
 {
@@ -64,6 +65,8 @@ public:
 
 	// pad frame:
 	void buildPadFrame();
+	QString getPadInfoFile();
+	QString getPadFrameFile();
 
 	// pad frame info:
 	QString getFillCell();
@@ -74,9 +77,6 @@ public:
 	QString getNCPadCell();
 	QString getVDDPadCell();
 	QString getGNDPadCell();
-
-	void setPadSide(QString side, QStringList pads);
-	QStringList getPadSide(QString side);
 
 	bool isMacroCellProject();
 	void setSyncLiberty(QString s);

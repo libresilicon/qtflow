@@ -3,11 +3,13 @@ win32:QMAKE_CXXFLAGS += /bigobj
 
 SOURCES += \
 	$$PWD/contactplacement.cpp \
-    $$PWD/contactsview.cpp
+    $$PWD/contactsview.cpp \
+    $$PWD/padinfo.cpp
  
 HEADERS += \
 	$$PWD/contactplacement.h \
-    $$PWD/contactsview.h
+    $$PWD/contactsview.h \
+    $$PWD/padinfo.h
 
 FORMS    += \
 	$$PWD/contactplacement.ui

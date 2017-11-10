@@ -5,6 +5,7 @@ ContactPlacement::ContactPlacement(QWidget *parent) :
 	ui(new Ui::ContactPlacement),
 	scene(NULL),
 	view(NULL),
+	m_padInfo(NULL),
 	m_tableComplete(false)
 {
 	ui->setupUi(this);
@@ -20,13 +21,18 @@ ContactPlacement::ContactPlacement(QWidget *parent) :
 void ContactPlacement::setProject(Project *p)
 {
 	project = p;
-	refreshTables();
+	if(project) {
+		if(m_padInfo) delete m_padInfo;
+		m_padInfo = new PadInfo(project->getPadInfoFile());
+		refreshTables();
+	}
 }
 
 void ContactPlacement::on_buttonBox_accepted()
 {
 	QTableWidgetItem* item;
 	QString pinName;
+	QString cellName;
 	QString side;
 	QComboBox* sideSelection;
 	QMap<QString,QStringList> sides;
@@ -42,13 +48,17 @@ void ContactPlacement::on_buttonBox_accepted()
 				side = sideSelection->currentData().toString();
 				sides[side].append(pinName);
 			}
+
+			item = ui->tablePins->item(i,2);
+			cellName = item->text();
+			m_padInfo->setPadCell(pinName,cellName);
 		}
 
 		foreach(QString k, sides.keys()) {
-			qDebug() << "Storing";
-			project->setPadSide(k,sides[k]);
+			m_padInfo->setPadSide(k,sides[k]);
 		}
 
+		m_padInfo->sync();
 		project->buildPadFrame();
 	}
 }
@@ -221,7 +231,7 @@ void ContactPlacement::refreshTables()
 
 	QMap<QString,QStringList> sidesMapping;
 	foreach(QString k, sides.keys())
-		sidesMapping[k] = project->getPadSide(k);
+		sidesMapping[k] = m_padInfo->getPadSide(k);
 
 	m_TableHeader << "Name";
 	m_TableHeader << "Direction";

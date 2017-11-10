@@ -11,6 +11,7 @@
 #include "project.h"
 
 #include "contactsview.h"
+#include "padinfo.h"
 
 #include "blif/blifdata.h"
 
@@ -36,6 +37,7 @@ private:
 	ContactsView* view;
 	QRectF m_baseRect;
 	bool m_tableComplete;
+	PadInfo* m_padInfo;
 };
 
 #endif // CONTACTPLACEMENT_H

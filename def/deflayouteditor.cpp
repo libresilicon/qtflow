@@ -140,6 +140,15 @@ void DEFLayoutEditor::addMacroInstances()
 	}
 }
 
+void DEFLayoutEditor::setVisibles(LayoutVisibles *v)
+{
+	visibles = v;
+	if(visibles) {
+		connect(visibles, SIGNAL(enabledTypesChanged(QStringList)), editScene, SLOT(onVisibleLayersChanged(QStringList)));
+		connect(editScene, SIGNAL(registerLayer(QString)), visibles, SLOT(onRegisterLayer(QString)));
+	}
+}
+
 void DEFLayoutEditor::saveFile()
 {
 }

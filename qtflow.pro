@@ -76,7 +76,8 @@ SOURCES += \
 	generictexteditorwidget.cpp \
 	buildflow.cpp \
 	mainapplication.cpp \
-	specialnets.cpp
+	specialnets.cpp \
+    project_padframe.cpp
 
 HEADERS  += \
 	mainwindow.h \

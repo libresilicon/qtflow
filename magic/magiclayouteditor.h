@@ -41,7 +41,6 @@ public:
 	bool changes();
 
 signals:
-	void contentChanged();
 	void contentSaved();
 
 public slots:

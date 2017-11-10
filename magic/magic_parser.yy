@@ -55,18 +55,28 @@
 
 %start magic_file
 %%
-magic_file: MAGIC technology magscale timestamp sections;
+magic_file: MAGIC magic_entries;
+
+magic_entries:
+	  magic_entry
+	| magic_entries magic_entry;
+
+magic_entry:
+	  technology
+	| magscale
+	| timestamp
+	| section
+	| use
+;
+
 technology: TECH STRING
 	{
 		magicdata->setTechnology($2);
 	}
 	;
+
 magscale: MAGSCALE INTEGER INTEGER;
 timestamp: TIMESTAMP INTEGER;
-sections:
-	  sections section
-	| section
-	;
 
 section:
 	  BEGINTITLE sectiontitle ENDTITLE items;
@@ -78,27 +88,28 @@ sectiontitle: STRING
 	}
 	;
 
-items: items item | item ;
+items:
+	  item
+	| items item;
 
 item:
 	  rect
 	| rlabel
 	| flabel
 	| port
-	| use
 	;
 
-use: use_start timestamp transform use_box
-	{
-		magicdata->addUsedModule();
-	}
-	;
+use:
+use_start timestamp transform use_box
+{
+	magicdata->addUsedModule();
+};
 
-use_start: USE STRING STRING
-	{
-		magicdata->addUsedModuleNames($2,$3);
-	}
-	;
+use_start:
+USE STRING STRING
+{
+	magicdata->addUsedModuleNames($2,$3);
+};
 
 transform:
 	TRANSFORM INTEGER INTEGER INTEGER INTEGER INTEGER INTEGER

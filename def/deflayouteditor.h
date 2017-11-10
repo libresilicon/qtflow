@@ -12,6 +12,8 @@
 #include <QGLFormat>
 
 #include "qlayout/qlayoutscene.h"
+#include "qlayout/layoutvisibles.h"
+
 #include "ieditor.h"
 #include "defdata.h"
 
@@ -30,12 +32,16 @@ public:
 	void saveFile();
 	QString getFilePath();
 	void setProject(Project *p);
+	void setVisibles(LayoutVisibles *v);
 
 	bool changes();
 
 public slots:
 	void zoomIn();
 	void zoomOut();
+
+signals:
+	void contentChanged();
 
 private:
 	void addMacroInstances();
@@ -48,6 +54,7 @@ private:
 	def::DEFData *defdata;
 	Project *project;
 	qreal m_scale;
+	LayoutVisibles *visibles;
 };
 
 #endif // DEFLAYOUTEDITOR_H
