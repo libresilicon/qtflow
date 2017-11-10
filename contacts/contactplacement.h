@@ -25,6 +25,7 @@ public:
 public slots:
 	void updatePreview();
 	void on_buttonBox_accepted();
+	void open();
 
 private:
 	void refreshTables();

@@ -264,7 +264,7 @@ void MainWindow::on_actionSpecialNets_triggered()
 
 void MainWindow::on_actionContactPlacement_triggered()
 {
-	contactPlacementDialog->show();
+	contactPlacementDialog->open();
 }
 
 void MainWindow::onProjectCreated(QString s)

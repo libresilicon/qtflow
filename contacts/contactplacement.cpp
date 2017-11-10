@@ -51,12 +51,24 @@ void ContactPlacement::on_buttonBox_accepted()
 	}
 }
 
+void ContactPlacement::open()
+{
+	updatePreview();
+	QDialog::open();
+}
+
 void ContactPlacement::updatePreview()
 {
+	QPen pen;
 	QGraphicsRectItem* rect;
+	QGraphicsLineItem* line;
 	QGraphicsRectItem* pad;
 	QGraphicsSimpleTextItem* padLabel;
 	qreal x,y,w,h;
+	qreal countT, countB, countL, countR;
+	qreal padBorder = 5;
+	qreal scale;
+	qreal rw,rh;
 
 	QTableWidgetItem* item;
 	QString pinName;
@@ -86,49 +98,91 @@ void ContactPlacement::updatePreview()
 		rect = new QGraphicsRectItem(m_baseRect);
 
 		w = m_baseRect.width();
-		w /= 2;
 		w /= longestSide;
 
-		h = m_baseRect.width();
-		h /= longestSide;
+		h = w*2;
+
+		countT = sides["T"].count();
+		countB = sides["B"].count();
+		countL = sides["L"].count();
+		countR = sides["R"].count();
+
+		countT = countT?countT:1;
+		countB = countB?countB:1;
+		countL = countL?countL:1;
+		countR = countR?countR:1;
 
 		foreach(QString k, sides.keys()) {
-			y=0;
-			x=0;
-
 			if(k=="T") {
-				x=(longestSide-sides["T"].count())/2;
+				x=0;
 				y=-h;
 			}
 			if(k=="B") {
-				x=(longestSide-sides["B"].count())/2;
+				x=0;
 				y=m_baseRect.width();
 			}
 			if(k=="L") {
 				x=-h;
-				y=(longestSide-sides["L"].count())/2;
+				y=0;
 			}
 			if(k=="R") {
 				x=m_baseRect.width();
-				y=(longestSide-sides["R"].count())/2;
+				y=0;
 			}
 			foreach(QString p, sides[k]) {
 				if((k=="T")||(k=="B")) {
-					pad = new QGraphicsRectItem(x*(w*2+(w/sides[k].count())),y,w,h,rect);
+					pad = new QGraphicsRectItem(x*w,y,w,h,rect);
 					padLabel = new QGraphicsSimpleTextItem(p,pad);
-					padLabel->setScale(2*h/padLabel->boundingRect().width());
+					rw = padLabel->boundingRect().width();
+					rh = padLabel->boundingRect().height();
+					scale = h/rw;
+					if(scale*rh>w) scale = w/rh;
+					padLabel->setScale(scale);
 					padLabel->setRotation(90);
-					padLabel->setPos(x*(w*2+(w/sides[k].count())),y);
+					padLabel->setPos(x*w+w,y);
 					x++;
 				}
 				if((k=="L")||(k=="R")) {
-					pad = new QGraphicsRectItem(x,y*(w*2+(w/sides[k].count())),h,w,rect);
+					pad = new QGraphicsRectItem(x,y*w,h,w,rect);
 					padLabel = new QGraphicsSimpleTextItem(p,pad);
-					padLabel->setScale(2*h/padLabel->boundingRect().width());
-					padLabel->setPos(x,y*(w*2+(w/sides[k].count())));
+					rw = padLabel->boundingRect().width();
+					rh = padLabel->boundingRect().height();
+					scale = h/rw;
+					if(scale*rh>w) scale = w/rh;
+					padLabel->setScale(scale);
+					padLabel->setPos(x,y*w);
+					padLabel->setPos(x,y*w);
 					y++;
 				}
+				pen = pad->pen();
+				pen.setWidth(padBorder);
+				pad->setPen(pen);
 			}
+
+			if((k=="T")||(k=="B")) {
+				for(;x<longestSide;x++) {
+					pad = new QGraphicsRectItem(x*w,y,w,h,rect);
+					pad->pen();
+					line = new QGraphicsLineItem(x*w,y,x*w+w,y+h,pad);
+					line = new QGraphicsLineItem(x*w+w,y,x*w,y+h,pad);
+
+					pen = pad->pen();
+					pen.setWidth(padBorder);
+					pad->setPen(pen);
+				}
+			}
+			if((k=="L")||(k=="R")) {
+				for(;y<longestSide;y++) {
+					pad = new QGraphicsRectItem(x,y*w,h,w,rect);
+					line = new QGraphicsLineItem(x,y*w,x+h,y*w+w,pad);
+					line = new QGraphicsLineItem(x+h,y*w,x,y*w+w,pad);
+
+					pen = pad->pen();
+					pen.setWidth(padBorder);
+					pad->setPen(pen);
+				}
+			}
+
 		}
 
 		// left clamps
