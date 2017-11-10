@@ -56,6 +56,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	newProjectDialog = new Templates(this, settings, mainContext);
 	connect(newProjectDialog,SIGNAL(projectCreated(QString)),this,SLOT(onProjectCreated(QString)));
 
+
 	connect(createWidget, SIGNAL(fileCreated(QString)), editArea, SLOT(openFile(QString)));
 
 	QMenu *recent = ui->menuRecentProjects;
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	projectSettingsDialog->setSettings(settings);
 
 	specialNetDialog = new SpecialNets(this);
+	contactPlacementDialog = new ContactPlacement(this);
 
 	QStringList recentProjectsList;
 	QStringList::const_reverse_iterator rev;
@@ -258,6 +260,11 @@ void MainWindow::on_actionWaveViewer_triggered()
 void MainWindow::on_actionSpecialNets_triggered()
 {
 	specialNetDialog->show();
+}
+
+void MainWindow::on_actionContactPlacement_triggered()
+{
+	contactPlacementDialog->show();
 }
 
 void MainWindow::onProjectCreated(QString s)

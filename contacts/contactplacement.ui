@@ -21,7 +21,19 @@
        <widget class="QTableWidget" name="tablePins"/>
       </item>
       <item>
-       <widget class="QGraphicsView" name="framePreview"/>
+       <widget class="QWidget" name="framePreview" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>50</width>
+          <height>0</height>
+         </size>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QWidget" name="widget_2" native="true"/>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </widget>

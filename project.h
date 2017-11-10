@@ -62,7 +62,19 @@ public:
 	void routing();
 	void buildAll();
 
+	// pad frame info:
 	QString getFillCell();
+	QString getClampPadCell();
+	QString getOutPutPadCell();
+	QString getInPutPadCell();
+	QString getInOutPadCell();
+	QString getNCPadCell();
+	QString getVDDPadCell();
+	QString getGNDPadCell();
+
+	void setPadSide(QString side, QStringList pads);
+	QStringList getPadSide(QString side);
+
 	bool isMacroCellProject();
 	void setSyncLiberty(QString s);
 	void setSyncLEF(QString s);

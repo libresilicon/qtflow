@@ -73,12 +73,10 @@ SOURCES += \
 	pyprojectsettings.cpp \
 	qtreeviewdragdrop.cpp \
 	projectsitem.cpp \
-    generictexteditorwidget.cpp \
-    buildflow.cpp \
-    mainapplication.cpp \
-    project_conv_functions.cpp \
-    specialnets.cpp \
-    contactplacement.cpp
+	generictexteditorwidget.cpp \
+	buildflow.cpp \
+	mainapplication.cpp \
+	specialnets.cpp
 
 HEADERS  += \
 	mainwindow.h \
@@ -107,11 +105,10 @@ HEADERS  += \
 	pyprojectsettings.h \
 	qtreeviewdragdrop.h \
 	projectsitem.h \
-    generictexteditorwidget.h \
-    buildflow.h \
-    mainapplication.h \
-    specialnets.h \
-    contactplacement.h
+	generictexteditorwidget.h \
+	buildflow.h \
+	mainapplication.h \
+	specialnets.h
 
 FORMS    += \
 	mainwindow.ui \
@@ -131,10 +128,9 @@ FORMS    += \
 	console.ui \
 	partselection.ui \
 	librarysettings.ui \
-    buildflow.ui \
-    parametricpart.ui \
-    specialnets.ui \
-    contactplacement.ui
+	buildflow.ui \
+	parametricpart.ui \
+	specialnets.ui
 
 RESOURCES += icons/icons.qrc
 
@@ -176,6 +172,7 @@ include(symbol_reader/symbol_reader.pri)
 include(gds2/gds2.pri)
 include(symbols/symbols.pri)
 include(blif/blif.pri)
+include(contacts/contacts.pri)
 
 DISTFILES += \
 	scripts/synthesis.py \

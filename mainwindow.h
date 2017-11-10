@@ -28,7 +28,8 @@
 #include "projectsettings.h"
 #include "pyprojectsettings.h"
 #include "specialnets.h"
-#include "contactplacement.h"
+
+#include "contacts/contactplacement.h"
 
 #include "templates.h"
 #include "welcome.h"
@@ -87,6 +88,7 @@ private slots:
 	void on_actionPythonShell_triggered();
 	void on_actionWaveViewer_triggered();
 	void on_actionSpecialNets_triggered();
+	void on_actionContactPlacement_triggered();
 
 	void on_menuSettings_triggered();
 
