@@ -62,6 +62,9 @@ public:
 	void routing();
 	void buildAll();
 
+	// pad frame:
+	void buildPadFrame();
+
 	// pad frame info:
 	QString getFillCell();
 	QString getClampPadCell();
@@ -153,6 +156,7 @@ public:
 	// python script paths:
 	QString getSimulationScript();
 	QString getSynthesisScript();
+	QString getPadFrameScript();
 	QString getBLIF2CELScript();
 	QString getBLIF2SymbolScript();
 	QString getPlace2DEFScript();

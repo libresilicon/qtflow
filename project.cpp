@@ -625,6 +625,15 @@ void Project::synthesis()
 	}
 }
 
+void Project::buildPadFrame()
+{
+	if(QFile(getPadFrameScript()).exists()) {
+		mainContext.evalFile(getPadFrameScript());
+	} else {
+		mainContext.evalScript("print \"not defined\"");
+	}
+}
+
 void Project::simulation()
 {
 	if(QFile(getSimulationScript()).exists()) {
@@ -1126,6 +1135,11 @@ QString Project::getSimulationScript()
 QString Project::getSynthesisScript()
 {
 	return project_settings->value("synthesis_script").toString();
+}
+
+QString Project::getPadFrameScript()
+{
+	return project_settings->value("padframe_script").toString();
 }
 
 QString  Project::getBLIF2CELScript()

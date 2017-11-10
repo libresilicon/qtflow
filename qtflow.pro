@@ -216,7 +216,31 @@ DISTFILES += \
 	tech/tech.qrc \
 	tech/gencmap.py \
 	tech/mos.cmap \
-    scripts/placement.py \
-    scripts/blif2sym.py \
-    scripts/router.py
-
+	scripts/addspacers.tcl \
+	scripts/blif2cel.tcl \
+	scripts/blif2sym.py \
+	scripts/blifanno.tcl \
+	scripts/checkdirs.sh \
+	scripts/cleanup.sh \
+	scripts/createGDS.sh \
+	scripts/decongest.tcl \
+	scripts/display.sh \
+	scripts/getfillcell.tcl \
+	scripts/place2def.tcl \
+	scripts/place2lef2.tcl \
+	scripts/place2net2.tcl \
+	scripts/placement.py \
+	scripts/placement.sh \
+	scripts/powerbus.tcl \
+	scripts/qflow.sh \
+	scripts/rc2vestaCleanse.py \
+	scripts/router.py \
+	scripts/router.sh \
+	scripts/simulation.py \
+	scripts/spi2xspice.py \
+	scripts/synthesis.py \
+	scripts/synthesize.sh \
+	scripts/vesta.sh \
+	scripts/ybuffer.tcl \
+	scripts/ypostproc.tcl \
+    scripts/padframe.py

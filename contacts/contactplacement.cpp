@@ -48,6 +48,8 @@ void ContactPlacement::on_buttonBox_accepted()
 			qDebug() << "Storing";
 			project->setPadSide(k,sides[k]);
 		}
+
+		project->buildPadFrame();
 	}
 }
 
@@ -66,7 +68,7 @@ void ContactPlacement::updatePreview()
 	QGraphicsSimpleTextItem* padLabel;
 	qreal x,y,w,h;
 	qreal countT, countB, countL, countR;
-	qreal padBorder = 5;
+	qreal padBorder = 1;
 	qreal scale;
 	qreal rw,rh;
 
@@ -232,6 +234,10 @@ void ContactPlacement::refreshTables()
 
 	if(project) {
 		blifPath = QDir(project->getSynthesisDir()).filePath(project->getTopLevel()+".blif");
+
+		if(!QFileInfo(blifPath).exists()) // generate BLIF file
+			project->synthesis();
+
 		if(QFileInfo(blifPath).exists()) {
 			blifdata = new blif::BLIFData(blifPath);
 			pins = blifdata->getPadPinsInput();
