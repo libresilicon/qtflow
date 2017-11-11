@@ -124,6 +124,7 @@ void MainWindow::disableAllFunctions()
 	ui->librarySettings->setEnabled(false);
 	ui->actionDRC->setEnabled(false);
 	ui->actionWaveViewer->setEnabled(false);
+	ui->actionContactPlacement->setEnabled(false);
 }
 
 void MainWindow::enableAllFunctions()
@@ -138,6 +139,7 @@ void MainWindow::enableAllFunctions()
 	ui->librarySettings->setEnabled(true);
 	ui->actionDRC->setEnabled(true);
 	ui->actionWaveViewer->setEnabled(true);
+	ui->actionContactPlacement->setEnabled(true);
 }
 
 void MainWindow::on_synthesisSettings_triggered(bool)

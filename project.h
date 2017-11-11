@@ -69,6 +69,8 @@ public:
 	QString getPadFrameFile();
 
 	// pad frame info:
+	QStringList getPadCells();
+
 	QString getFillCell();
 	QString getClampPadCell();
 	QString getOutPutPadCell();

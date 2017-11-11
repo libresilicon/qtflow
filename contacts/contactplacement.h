@@ -5,6 +5,12 @@
 #include <QDir>
 #include <QComboBox>
 #include <QGraphicsScene>
+#include <QGroupBox>
+#include <QToolBox>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QLineEdit>
+#include <QLabel>
 
 #include "ui_contactplacement.h"
 
@@ -26,10 +32,16 @@ public:
 public slots:
 	void updatePreview();
 	void on_buttonBox_accepted();
+	void sideLength_changed(QString);
+	void on_m_padNames_cellChanged(int i, int j);
 	void open();
 
 private:
+	void addTables();
 	void refreshTables();
+
+	void refreshNameTable();
+	void storeNameTable();
 
 	Project* project;
 	Ui::ContactPlacement* ui;
@@ -38,6 +50,9 @@ private:
 	QRectF m_baseRect;
 	bool m_tableComplete;
 	PadInfo* m_padInfo;
+	QMap<QString,QTableWidget*> m_tables;
+	QTableWidget* m_padNames;
+	QLineEdit* m_sideLength;
 };
 
 #endif // CONTACTPLACEMENT_H

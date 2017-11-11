@@ -271,7 +271,12 @@ macro_option:
 	| macro_obs
 	;
 
-macro_class: CLASS STRING | CLASS STRING STRING;
+macro_class:
+  CLASS STRING
+  {
+	  lefdata->setMacroClass(*$2);
+  }
+| CLASS STRING STRING;
 macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
 macro_site: SITE STRING;
 macro_origin: ORIGIN DOUBLE DOUBLE;

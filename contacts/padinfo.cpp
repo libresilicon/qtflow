@@ -1,7 +1,8 @@
 #include "padinfo.h"
 
 PadInfo::PadInfo(QString padpath) :
-	m_filePath(padpath)
+	m_filePath(padpath),
+	m_sideLength(0)
 {
 	QString s;
 	QString padName;
@@ -21,8 +22,19 @@ PadInfo::PadInfo(QString padpath) :
 						}
 					} else if(line[0]=="pad") {
 						padName = line[1];
-						cellName = line[3];
-						m_padCellMapping[padName]=cellName;
+						if(line.count()>2) {
+							if(line[2]=="cell") {
+								cellName = (line.count()>3)?line[3]:QString();
+								m_padCellMapping[padName]=cellName;
+							} else if(line[2]=="name") {
+								cellName = (line.count()>3)?line[3]:QString();
+								m_padNameMapping[padName]=cellName;
+							}
+						}
+					} else if(line[0]=="var") {
+						if(line[1]=="side_length") {
+							m_sideLength = line[2].toDouble();
+						}
 					}
 				}
 			}
@@ -36,31 +48,24 @@ void PadInfo::sync()
 	QFile outputFile(m_filePath);
 	if (outputFile.open(QIODevice::WriteOnly)) {
 		QTextStream out(&outputFile);
-		foreach(QString k, m_sides.keys()) {
-			out << "side " << k;
-			foreach(QString p, m_sides[k]) {
-				out << " " << p;
-			}
-			out << endl;
-			out << endl;
-		}
+
+		out << "var side_length " << m_sideLength;
+		out << endl;
+
 		foreach(QString k, m_padCellMapping.keys()) {
 			out << "pad " << k;
 			out << " cell " << m_padCellMapping[k];
 			out << endl;
 		}
+
+		foreach(QString k, m_padNameMapping.keys()) {
+			out << "pad " << k;
+			out << " name " << m_padNameMapping[k];
+			out << endl;
+		}
+
 		outputFile.close();
 	}
-}
-
-void PadInfo::setPadSide(QString side, QStringList pads)
-{
-	m_sides[side] = pads;
-}
-
-QStringList PadInfo::getPadSide(QString side)
-{
-	return m_sides[side];
 }
 
 void PadInfo::setPadCell(QString pad, QString cell)
@@ -68,7 +73,32 @@ void PadInfo::setPadCell(QString pad, QString cell)
 	m_padCellMapping[pad]=cell;
 }
 
+void PadInfo::setPadName(QString pad, QString name)
+{
+	m_padNameMapping[pad]=name;
+}
+
 QString PadInfo::getPadCell(QString pad)
 {
 	return m_padCellMapping[pad];
+}
+
+QStringList PadInfo::getPadList()
+{
+	return m_padCellMapping.keys();
+}
+
+QString PadInfo::getPadName(QString pad)
+{
+	return (m_padNameMapping[pad]==QString())?QString("n/c"):m_padNameMapping[pad];
+}
+
+void PadInfo::setSideLenth(qreal l)
+{
+	m_sideLength = l;
+}
+
+qreal PadInfo::getSideLenth()
+{
+	return m_sideLength;
 }

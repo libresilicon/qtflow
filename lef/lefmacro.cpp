@@ -69,4 +69,14 @@ namespace lef {
 		return m_obstructions;
 	}
 
+	QString LEFMacro::getClass()
+	{
+		return m_class;
+	}
+
+	void LEFMacro::setClass(QString s)
+	{
+		m_class = s;
+	}
+
 }

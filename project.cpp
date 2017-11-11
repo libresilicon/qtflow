@@ -87,6 +87,19 @@ QString Project::getFillCell()
 }
 
 // pad frame info
+QStringList Project::getPadCells()
+{
+	QStringList ret;
+	foreach(QString k, lefdata.keys()) {
+		foreach(lef::LEFMacro* m, lefdata[k]->getMacros()) {
+			if(m->getClass()=="PAD") {
+				ret << m->getName();
+			}
+		}
+	}
+	return ret;
+}
+
 QString Project::getClampPadCell()
 {
 	return "PADFC";

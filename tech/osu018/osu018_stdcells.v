@@ -1048,3 +1048,91 @@ primitive udp_mux2 (out, in0, in1, sel);
    endtable
 endprimitive // udp_mux2
 
+`timescale 1ns/10ps
+`celldefine
+module PADINC (YPAD, DI);
+input  YPAD ;
+output DI ;
+
+   buf (DI, YPAD);
+
+   specify
+     // delay parameters
+     specparam
+       tpllh$YPAD$DI = 0.15:0.15:0.15,
+       tphhl$YPAD$DI = 0.17:0.17:0.17;
+
+     // path delays
+     (YPAD *> DI) = (tpllh$YPAD$DI, tphhl$YPAD$DI);
+
+   endspecify
+
+endmodule
+`endcelldefine
+
+`timescale 1ns/10ps
+`celldefine
+module PADINOUT (DO, OEN, DI, YPAD);
+input  DO ;
+input  OEN ;
+output DI ;
+inout  YPAD ;
+
+   bufif1 (YPAD, DO, OEN);
+   buf (DI, YPAD);
+
+   specify
+     // delay parameters
+     specparam
+       tpllh$DO$YPAD = 0.59:0.59:0.59,
+       tphhl$DO$YPAD = 0.59:0.59:0.59,
+       tpzh$OEN$YPAD = 1.1:1.1:1.1,
+       tpzl$OEN$YPAD = 0.65:0.65:0.65,
+       tplz$OEN$YPAD = 0.82:0.82:0.82,
+       tphz$OEN$YPAD = 1.5:1.5:1.5,
+       tpllh$YPAD$DI = 0.15:0.15:0.15,
+       tphhl$YPAD$DI = 0.17:0.17:0.17;
+
+     // path delays
+     (DO *> YPAD) = (tpllh$DO$YPAD, tphhl$DO$YPAD);
+     (OEN *> YPAD) = (0, 0, tplz$OEN$YPAD, tpzh$OEN$YPAD, tphz$OEN$YPAD, tpzl$OEN$YPAD);
+     (YPAD *> DI) = (tpllh$YPAD$DI, tphhl$YPAD$DI);
+
+   endspecify
+
+endmodule
+`endcelldefine
+
+`timescale 1ns/10ps
+`celldefine
+module PADOUT (DO, YPAD);
+input  DO ;
+output YPAD ;
+
+   buf (YPAD, DO);
+
+   specify
+     // delay parameters
+     specparam
+       tpllh$DO$YPAD = 0.59:0.59:0.59,
+       tphhl$DO$YPAD = 0.59:0.59:0.59;
+
+     // path delays
+     (DO *> YPAD) = (tpllh$DO$YPAD, tphhl$DO$YPAD);
+
+   endspecify
+
+endmodule
+`endcelldefine
+
+module PADNC();
+endmodule
+
+module PADFC();
+endmodule
+
+module PADGND();
+endmodule
+
+module PADVDD();
+endmodule
