@@ -52,8 +52,10 @@ private:
 	bool m_tableComplete;
 	PadInfo* m_padInfo;
 	QMap<QString,QTableWidget*> m_tables;
+	QMap<QString,QMap<QString,int>> m_tablesPinMapping;
 	QTableWidget* m_padNames;
 	QLineEdit* m_sideLength;
+	blif::BLIFData *m_blifdata;
 };
 
 #endif // CONTACTPLACEMENT_H

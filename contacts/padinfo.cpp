@@ -80,6 +80,19 @@ void PadInfo::setPadName(QString pad, QString name)
 	m_padNameMapping[pad]=name;
 }
 
+void PadInfo::setPadPinSignal(QString pad, QString pin, QString signal)
+{
+	m_padPinSignalMapping[pad][pin]=signal;
+}
+
+QString PadInfo::getPadPinSignal(QString pad, QString pin)
+{
+	if(m_padPinSignalMapping.contains(pad)) {
+		return m_padPinSignalMapping[pad][pin];
+	}
+	return QString();
+}
+
 QString PadInfo::getPadCell(QString pad)
 {
 	return m_padCellMapping[pad];
@@ -95,12 +108,12 @@ QString PadInfo::getPadName(QString pad)
 	return (m_padNameMapping[pad]==QString())?QString("n/c"):m_padNameMapping[pad];
 }
 
-void PadInfo::setSideLenth(qreal l)
+void PadInfo::setSideLength(qreal l)
 {
 	m_sideLength = l;
 }
 
-qreal PadInfo::getSideLenth()
+qreal PadInfo::getSideLength()
 {
 	return m_sideLength;
 }

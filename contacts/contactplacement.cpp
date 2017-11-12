@@ -9,7 +9,8 @@ ContactPlacement::ContactPlacement(QWidget *parent) :
 	m_padInfo(NULL),
 	m_tableComplete(false),
 	m_padNames(NULL),
-	m_sideLength(NULL)
+	m_sideLength(NULL),
+	m_blifdata(NULL)
 {
 	ui->setupUi(this);
 	view = new ContactsView(ui->framePreview);
@@ -26,6 +27,8 @@ void ContactPlacement::setProject(Project *p)
 		m_tableComplete = false;
 		if(m_padInfo) delete m_padInfo;
 		m_padInfo = new PadInfo(project->getPadInfoFile());
+		if(m_blifdata) delete m_blifdata;
+		m_blifdata = new blif::BLIFData(QDir(project->getSynthesisDir()).filePath(project->getTopLevel()+".blif"));
 		addTables();
 		refreshNameTable();
 		refreshTables();
@@ -53,24 +56,18 @@ void ContactPlacement::sideLength_changed(QString s)
 	if(s==QString()) return;
 	if(!m_padInfo) return;
 	if(s.toDouble()>1) {
-		m_padInfo->setSideLenth(s.toDouble());
-		refreshTables();
+		m_padInfo->setSideLength(s.toDouble());
+		storeNameTable();
 		refreshNameTable();
+		refreshTables();
 		updatePreview();
 	}
 }
 
 void ContactPlacement::on_buttonBox_accepted()
 {
-	QTableWidgetItem* item;
-	QString pinName;
-	QString cellName;
-	QString side;
-	QComboBox* sideSelection;
-	QMap<QString,QStringList> sides;
-
 	if(project && m_tableComplete && m_padInfo) {
-		m_padInfo->setSideLenth(m_sideLength->text().toDouble());
+		m_padInfo->setSideLength(m_sideLength->text().toDouble());
 		storeNameTable();
 		m_padInfo->sync();
 		//project->buildPadFrame();
@@ -102,7 +99,7 @@ void ContactPlacement::updatePreview()
 	qreal longestSide;
 
 	if(scene && m_tableComplete && m_padInfo) {
-		longestSide = m_padInfo->getSideLenth();
+		longestSide = m_padInfo->getSideLength();
 		scene->clear();
 
 		// drawing the data:
@@ -238,7 +235,7 @@ void ContactPlacement::addTables()
 
 		fields = new QWidget(qgb);
 		m_sideLength = new QLineEdit(fields);
-		m_sideLength->setText(QString::number(m_padInfo->getSideLenth()));
+		m_sideLength->setText(QString::number(m_padInfo->getSideLength()));
 		connect(m_sideLength,SIGNAL(textChanged(QString)),this,SLOT(sideLength_changed(QString)));
 		lay2 = new QHBoxLayout(fields);
 		label = new QLabel("Side length");
@@ -316,13 +313,13 @@ void ContactPlacement::refreshNameTable()
 	m_TableHeader << "Type";
 
 	m_padNames->clear();
-	m_padNames->setRowCount(4*m_padInfo->getSideLenth());
+	m_padNames->setRowCount(4*m_padInfo->getSideLength());
 	m_padNames->setColumnCount(m_TableHeader.count());
 	m_padNames->setHorizontalHeaderLabels(m_TableHeader);
 
 	int i=0;
 	foreach(QString bank, sides.keys()) {
-		for(int j=0;j<m_padInfo->getSideLenth();j++) {
+		for(int j=0;j<m_padInfo->getSideLength();j++) {
 			w = new QTableWidgetItem(bank+QString::number(j+1));
 			w->setFlags(w->flags()&~Qt::ItemIsEditable);
 			m_padNames->setItem(i, 0, w); // signal pin
@@ -353,6 +350,7 @@ void ContactPlacement::refreshTables()
 	if(!m_padInfo) return;
 
 	lef::LEFMacro* m;
+	QComboBox* signalBox;
 	QTableWidgetItem* w;
 	QTableWidget* table;
 	QString cellType;
@@ -360,10 +358,15 @@ void ContactPlacement::refreshTables()
 	QStringList m_TableHeader;
 	int i;
 	QStringList cells;
+	QStringList sides;
+	sides << "T" << "B" << "L" << "R";
 	QMap<QString,QStringList> cellMapping;
 	if(m_padNames && m_padInfo) {
-		foreach(QString p, m_padInfo->getPadList()) {
-			cellMapping[m_padInfo->getPadCell(p)].append(p) ;
+		for(i=0; i<m_padInfo->getSideLength(); i++) {
+			foreach(QString p, sides) {
+				p+=QString::number(i+1);
+				cellMapping[m_padInfo->getPadCell(p)].append(p) ;
+			}
 		}
 
 		foreach(cellType, m_tables.keys()) {
@@ -371,13 +374,19 @@ void ContactPlacement::refreshTables()
 
 			table->clear();
 			m_TableHeader.clear();
+
+			i = 0;
 			m_TableHeader << "Pad";
+			i++;
 			m_TableHeader << "Name";
+			i++;
 
 			m = project->getMacro(cellType);
 			if(m) {
 				foreach(QString pin, m->getPinNames()) {
 					m_TableHeader << pin;
+					m_tablesPinMapping[cellType][pin]=i;
+					i++;
 				}
 			}
 
@@ -385,13 +394,23 @@ void ContactPlacement::refreshTables()
 			table->setColumnCount(m_TableHeader.count());
 			table->setHorizontalHeaderLabels(m_TableHeader);
 			table->setRowCount(cells.count());
-			//table->setRowCount(10);
 
 			i = 0;
+			int j = 0;
 			foreach(pad, cells) {
 				w = new QTableWidgetItem(pad);
 				w->setFlags(w->flags()&~Qt::ItemIsEditable);
-				table->setItem(i, 0, w); // signal pin
+				table->setItem(i, 0, w);
+				if(m_blifdata) {
+					foreach(QString pin, m_tablesPinMapping[cellType].keys()) {
+						signalBox = new QComboBox(table);
+						foreach(QString k, m_blifdata->getPadPinsInput())
+							signalBox->addItem(k);
+						foreach(QString k, m_blifdata->getPadPinsOutput())
+							signalBox->addItem(k);
+						table->setCellWidget(i, m_tablesPinMapping[cellType][pin], signalBox);
+					}
+				}
 				i++;
 			}
 		}
