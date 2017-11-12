@@ -48,6 +48,7 @@ namespace lef {
 		void addMacroPinObstructionLayer(std::string s);
 		void addMacroPinObstructionRectangle(double, double, double, double);
 		void setMacroClass(std::string s);
+		void setMacroSite(std::string s);
 		void setSubBitChar(std::string s);
 		void setDivideChar(std::string s);
 		QString getSubBitChar();

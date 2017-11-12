@@ -100,6 +100,32 @@ QStringList Project::getPadCells()
 	return ret;
 }
 
+QStringList Project::getIOCells()
+{
+	QStringList ret;
+	foreach(QString k, lefdata.keys()) {
+		foreach(lef::LEFMacro* m, lefdata[k]->getMacros()) {
+			if(m->getSite()=="IO") {
+				ret << m->getName();
+			}
+		}
+	}
+	return ret;
+}
+
+QStringList Project::getCornerCells()
+{
+	QStringList ret;
+	foreach(QString k, lefdata.keys()) {
+		foreach(lef::LEFMacro* m, lefdata[k]->getMacros()) {
+			if((m->getSite()=="corner")||m->getSite()=="CORNER") {
+				ret << m->getName();
+			}
+		}
+	}
+	return ret;
+}
+
 QString Project::getClampPadCell()
 {
 	return "PADFC";

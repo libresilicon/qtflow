@@ -40,6 +40,7 @@ public slots:
 private:
 	void addTables();
 	void refreshTables();
+	void storeTables();
 
 	void refreshNameTable();
 	void storeNameTable();

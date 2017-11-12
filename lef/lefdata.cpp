@@ -116,6 +116,11 @@ namespace lef {
 		m_recentMacro->setClass(QString::fromStdString(s));
 	}
 
+	void LEFData::setMacroSite(std::string s)
+	{
+		m_recentMacro->setSite(QString::fromStdString(s));
+	}
+
 	void LEFData::addMacroPinPortRectangle(double x1, double y1, double x2, double y2)
 	{
 		double x = x1;

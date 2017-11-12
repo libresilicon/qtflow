@@ -24,7 +24,6 @@ void ContactPlacement::setProject(Project *p)
 {
 	project = p;
 	if(project) {
-		m_tableComplete = false;
 		if(m_padInfo) delete m_padInfo;
 		m_padInfo = new PadInfo(project->getPadInfoFile());
 		if(m_blifdata) delete m_blifdata;
@@ -32,7 +31,6 @@ void ContactPlacement::setProject(Project *p)
 		addTables();
 		refreshNameTable();
 		refreshTables();
-		m_tableComplete = true;
 		updatePreview();
 	}
 }
@@ -69,6 +67,7 @@ void ContactPlacement::on_buttonBox_accepted()
 	if(project && m_tableComplete && m_padInfo) {
 		m_padInfo->setSideLength(m_sideLength->text().toDouble());
 		storeNameTable();
+		storeTables();
 		m_padInfo->sync();
 		//project->buildPadFrame();
 	}
@@ -249,7 +248,9 @@ void ContactPlacement::addTables()
 		lay->addWidget(fields);
 		lay->addWidget(m_padNames);
 
-		foreach(QString s, project->getPadCells()) {
+		foreach(QString s, project->getIOCells()) {
+			if(project->getNCPadCell()==s) continue;
+
 			qgb = new QWidget(tb);
 			tb->addItem(qgb,s);
 			lay = new QVBoxLayout(qgb);
@@ -295,6 +296,7 @@ void ContactPlacement::storeNameTable()
 void ContactPlacement::refreshNameTable()
 {
 	if(!m_padInfo) return;
+	m_tableComplete = false;
 
 	QMap<QString,QString> sides;
 	QTableWidgetItem* w;
@@ -313,7 +315,7 @@ void ContactPlacement::refreshNameTable()
 	m_TableHeader << "Type";
 
 	m_padNames->clear();
-	m_padNames->setRowCount(4*m_padInfo->getSideLength());
+	m_padNames->setRowCount(4*m_padInfo->getSideLength()+4);
 	m_padNames->setColumnCount(m_TableHeader.count());
 	m_padNames->setHorizontalHeaderLabels(m_TableHeader);
 
@@ -330,7 +332,7 @@ void ContactPlacement::refreshNameTable()
 			typeSelection = new QComboBox(m_padNames);
 			connect(typeSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(padNames_select_changed(int)));
 
-			foreach(QString k, project->getPadCells())
+			foreach(QString k, project->getIOCells())
 				typeSelection->addItem(k);
 
 			padCellName = m_padInfo->getPadCell(bank+QString::number(j+1));
@@ -342,7 +344,45 @@ void ContactPlacement::refreshNameTable()
 			i++;
 		}
 	}
+	for(int j=0;j<4;j++) {
+		w = new QTableWidgetItem("CORNER"+QString::number(j+1));
+		w->setFlags(w->flags()&~Qt::ItemIsEditable);
+		m_padNames->setItem(i, 0, w); // signal pin
 
+		w = new QTableWidgetItem("n/c");
+		w->setFlags(w->flags()&~Qt::ItemIsEditable);
+		m_padNames->setItem(i, 1, w); // signal pin
+
+		i++;
+	}
+	m_tableComplete = true;
+}
+
+void ContactPlacement::storeTables()
+{
+	QTableWidgetItem* w;
+	QTableWidget* table;
+	QComboBox* selection;
+	QString padName;
+	QString signalName;
+	int fieldID;
+	foreach(QString cellType, m_tables.keys()) {
+		table = m_tables[cellType];
+		for(int i=0;i<table->rowCount();i++) {
+			w = table->item(i,0);
+			if(w) {
+				padName = w->text();
+				foreach(QString pinName, m_tablesPinMapping[cellType].keys()) {
+					fieldID = m_tablesPinMapping[cellType][pinName];
+					selection = (QComboBox*)table->cellWidget(i, fieldID);
+					if(selection) {
+						signalName = selection->currentText();
+						m_padInfo->setPadPinSignal(padName,pinName,signalName);
+					}
+				}
+			}
+		}
+	}
 }
 
 void ContactPlacement::refreshTables()
@@ -361,7 +401,7 @@ void ContactPlacement::refreshTables()
 	QStringList sides;
 	sides << "T" << "B" << "L" << "R";
 	QMap<QString,QStringList> cellMapping;
-	if(m_padNames && m_padInfo) {
+	if(m_padNames && m_padInfo && m_tableComplete) {
 		for(i=0; i<m_padInfo->getSideLength(); i++) {
 			foreach(QString p, sides) {
 				p+=QString::number(i+1);
@@ -370,6 +410,8 @@ void ContactPlacement::refreshTables()
 		}
 
 		foreach(cellType, m_tables.keys()) {
+			if(project->getNCPadCell()==cellType) continue;
+
 			table = m_tables[cellType];
 
 			table->clear();
@@ -404,6 +446,7 @@ void ContactPlacement::refreshTables()
 				if(m_blifdata) {
 					foreach(QString pin, m_tablesPinMapping[cellType].keys()) {
 						signalBox = new QComboBox(table);
+						signalBox->addItem("None","nc");
 						foreach(QString k, m_blifdata->getPadPinsInput())
 							signalBox->addItem(k);
 						foreach(QString k, m_blifdata->getPadPinsOutput())

@@ -19,13 +19,16 @@ namespace lef {
 		LEFPin *getPin(QString name);
 		QString getName();
 		QString getClass();
+		QString getSite();
 		void setClass(QString s);
+		void setSite(QString s);
 		LEFObstruction *getObstruction();
 		bool pinExists(QString n);
 
 	private:
 		QString m_name;
 		QString m_class;
+		QString m_site;
 		QVector<LEFPin*> m_pins;
 		LEFObstruction* m_obstructions;
 

@@ -66,6 +66,15 @@ void PadInfo::sync()
 			out << endl;
 		}
 
+		foreach(QString pad, m_padPinSignalMapping.keys()) {
+			foreach(QString pin, m_padPinSignalMapping[pad].keys()) {
+				out << "pad " << pad;
+				out << " pin " << pin;
+				out << " signal " << m_padPinSignalMapping[pad][pin];
+				out << endl;
+			}
+		}
+
 		outputFile.close();
 	}
 }

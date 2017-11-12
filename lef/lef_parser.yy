@@ -278,7 +278,11 @@ macro_class:
   }
 | CLASS STRING STRING;
 macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
-macro_site: SITE STRING;
+macro_site:
+SITE STRING
+{
+	lefdata->setMacroSite(*$2);
+};
 macro_origin: ORIGIN DOUBLE DOUBLE;
 macro_size:
 SIZE DOUBLE BY DOUBLE

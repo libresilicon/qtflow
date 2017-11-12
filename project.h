@@ -70,6 +70,8 @@ public:
 
 	// pad frame info:
 	QStringList getPadCells();
+	QStringList getIOCells();
+	QStringList getCornerCells();
 
 	QString getFillCell();
 	QString getClampPadCell();

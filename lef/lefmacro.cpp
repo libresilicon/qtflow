@@ -74,9 +74,19 @@ namespace lef {
 		return m_class;
 	}
 
+	QString LEFMacro::getSite()
+	{
+		return m_site;
+	}
+
 	void LEFMacro::setClass(QString s)
 	{
 		m_class = s;
+	}
+
+	void LEFMacro::setSite(QString s)
+	{
+		m_site = s;
 	}
 
 }
