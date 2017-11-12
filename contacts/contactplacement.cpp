@@ -30,44 +30,31 @@ void ContactPlacement::setProject(Project *p)
 		refreshNameTable();
 		refreshTables();
 		m_tableComplete = true;
-		//updatePreview();
+		updatePreview();
 	}
 }
 
-void ContactPlacement::on_m_padNames_cellChanged(int i, int j)
+void ContactPlacement::padNames_select_changed(int i)
 {
-	QTableWidgetItem *w;
-	QComboBox* typeSelection;
-	QString padName;
-	QString cellName;
-	QString padSignalName;
+	storeNameTable();
+	refreshTables();
+	updatePreview();
+}
 
-	w = m_padNames->item(i,0);
-	if(w) padName = w->text();
-
-	w = m_padNames->item(i,1);
-	if(w) padSignalName = w->text();
-
-	typeSelection = (QComboBox*)m_padNames->cellWidget(i, 2);
-	if(typeSelection) {
-		cellName = typeSelection->currentText();
-		if(cellName!=QString())
-			m_padInfo->setPadCell(padName,cellName);
-	}
-
-	if(padName!=QString()) {
-		m_padInfo->setPadCell(padName,cellName);
-		m_padInfo->setPadName(padName,padSignalName);
-	}
-
+void ContactPlacement::m_padNames_cellChanged(int i, int j)
+{
+	storeNameTable();
+	refreshTables();
 	updatePreview();
 }
 
 void ContactPlacement::sideLength_changed(QString s)
 {
 	if(s==QString()) return;
+	if(!m_padInfo) return;
 	if(s.toDouble()>1) {
-		if(m_padInfo) m_padInfo->setSideLenth(s.toDouble());
+		m_padInfo->setSideLenth(s.toDouble());
+		refreshTables();
 		refreshNameTable();
 		updatePreview();
 	}
@@ -98,6 +85,8 @@ void ContactPlacement::open()
 
 void ContactPlacement::updatePreview()
 {
+	if(!m_padInfo) return;
+
 	QPen pen;
 	QGraphicsRectItem* rect;
 	QGraphicsLineItem* line;
@@ -228,6 +217,8 @@ void ContactPlacement::updatePreview()
 
 void ContactPlacement::addTables()
 {
+	if(!m_padInfo) return;
+
 	QWidget* qgb;
 	QWidget* fields;
 	QLabel* label;
@@ -256,7 +247,7 @@ void ContactPlacement::addTables()
 		lay2->addWidget(m_sideLength);
 
 		m_padNames = new QTableWidget(qgb);
-		connect(m_padNames,SIGNAL(cellChanged(int,int)),this,SLOT(on_m_padNames_cellChanged(int,int)));
+		connect(m_padNames,SIGNAL(cellChanged(int,int)),this,SLOT(m_padNames_cellChanged(int,int)));
 
 		lay->addWidget(fields);
 		lay->addWidget(m_padNames);
@@ -276,6 +267,8 @@ void ContactPlacement::addTables()
 
 void ContactPlacement::storeNameTable()
 {
+	if(!m_padInfo) return;
+
 	QTableWidgetItem* w;
 	QComboBox* typeSelection;
 	QString padName;
@@ -284,15 +277,19 @@ void ContactPlacement::storeNameTable()
 	if(m_padNames && m_padInfo) {
 		for(int i=0; i < m_padNames->rowCount(); i++) {
 			w = m_padNames->item(i,0);
-			padName = w->text();
-			typeSelection = (QComboBox*)m_padNames->cellWidget(i, 2);
-			if(typeSelection) {
-				cellName = typeSelection->currentText();
-				m_padInfo->setPadCell(padName,cellName);
+			if(w) {
+				padName = w->text();
+				typeSelection = (QComboBox*)m_padNames->cellWidget(i, 2);
+				if(typeSelection) {
+					cellName = typeSelection->currentText();
+					m_padInfo->setPadCell(padName,cellName);
+				}
+				w = m_padNames->item(i,1);
+				if(w) {
+					padSignalName = w->text();
+					m_padInfo->setPadName(padName,padSignalName);
+				}
 			}
-			w = m_padNames->item(i,1);
-			padSignalName = w->text();
-			m_padInfo->setPadName(padName,padSignalName);
 		}
 		m_padInfo->sync();
 	}
@@ -300,10 +297,13 @@ void ContactPlacement::storeNameTable()
 
 void ContactPlacement::refreshNameTable()
 {
+	if(!m_padInfo) return;
+
 	QMap<QString,QString> sides;
 	QTableWidgetItem* w;
 	QStringList m_TableHeader;
 	QComboBox* typeSelection;
+	QString padCellName;
 
 	sides["T"] = "Top";
 	sides["B"] = "Bottom";
@@ -331,10 +331,13 @@ void ContactPlacement::refreshNameTable()
 			m_padNames->setItem(i, 1, w); // signal pin
 
 			typeSelection = new QComboBox(m_padNames);
+			connect(typeSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(padNames_select_changed(int)));
 
 			foreach(QString k, project->getPadCells())
 				typeSelection->addItem(k);
-			typeSelection->setCurrentText(project->getNCPadCell());
+
+			padCellName = m_padInfo->getPadCell(bank+QString::number(j+1));
+			typeSelection->setCurrentText(padCellName);
 
 			connect(typeSelection,SIGNAL(currentTextChanged(QString)),this,SLOT(updatePreview()));
 			m_padNames->setCellWidget(i, 2, typeSelection);
@@ -347,30 +350,46 @@ void ContactPlacement::refreshNameTable()
 
 void ContactPlacement::refreshTables()
 {
+	if(!m_padInfo) return;
+
 	QTableWidgetItem* w;
 	QTableWidget* table;
 	QString cellType;
 	QString pad;
+	QStringList m_TableHeader;
 	int i;
-	QMap<QString,QStringList> cells;
+	QStringList cells;
+	QMap<QString,QStringList> cellMapping;
 	if(m_padNames && m_padInfo) {
 		foreach(QString p, m_padInfo->getPadList()) {
-			cells[m_padInfo->getPadCell(p)] << p ;
+			cellMapping[m_padInfo->getPadCell(p)].append(p) ;
 		}
-	}
 
-	foreach(cellType, cells.keys()) {
-		if(m_tables.contains(cellType)) {
-			table = m_tables[cellType];
-			table->setRowCount(cells[cellType].count());
-			i = 0;
-			foreach(pad, cells[cellType]) {
-				w = new QTableWidgetItem(pad);
-				w->setFlags(w->flags()&~Qt::ItemIsEditable);
-				table->setItem(i, 0, w); // signal pin
-				i++;
+		foreach(cellType, cellMapping.keys()) {
+			if (m_tables.contains(cellType)) {
+				table = m_tables[cellType];
+				cells = cellMapping[cellType];
+
+				table->clear();
+
+				m_TableHeader.clear();
+				m_TableHeader << "Pad";
+				m_TableHeader << "Name";
+				m_TableHeader << "Type";
+
+				table->setColumnCount(m_TableHeader.count());
+				table->setHorizontalHeaderLabels(m_TableHeader);
+				table->setRowCount(cells.count());
+				//table->setRowCount(10);
+
+				i = 0;
+				foreach(pad, cells) {
+					w = new QTableWidgetItem(pad);
+					w->setFlags(w->flags()&~Qt::ItemIsEditable);
+					table->setItem(i, 0, w); // signal pin
+					i++;
+				}
 			}
 		}
 	}
-
 }

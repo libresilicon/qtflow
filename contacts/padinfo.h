@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QFileInfo>
 #include <QTextStream>
+#include <QDebug>
 
 class PadInfo
 {

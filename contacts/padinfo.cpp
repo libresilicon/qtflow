@@ -16,24 +16,26 @@ PadInfo::PadInfo(QString padpath) :
 				line = in.readLine().split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
 				if(line.count()) {
 					if(line[0]=="side") {
-						s = line[1];
+						s = (line.count()>1)?line[1]:QString();
 						for(int i=2; i<line.count(); i++) {
 							m_sides[s].append(line[i]);
 						}
 					} else if(line[0]=="pad") {
-						padName = line[1];
+						padName = (line.count()>1)?line[1]:QString();
 						if(line.count()>2) {
-							if(line[2]=="cell") {
+							s = (line.count()>2)?line[2]:QString();
+							if(s=="cell") {
 								cellName = (line.count()>3)?line[3]:QString();
 								m_padCellMapping[padName]=cellName;
-							} else if(line[2]=="name") {
+							} else if(s=="name") {
 								cellName = (line.count()>3)?line[3]:QString();
 								m_padNameMapping[padName]=cellName;
 							}
 						}
 					} else if(line[0]=="var") {
-						if(line[1]=="side_length") {
-							m_sideLength = line[2].toDouble();
+						s = (line.count()>1)?line[1]:QString();
+						if(s=="side_length") {
+							m_sideLength = (line.count()>2)?line[2].toDouble():1;
 						}
 					}
 				}

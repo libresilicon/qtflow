@@ -33,7 +33,8 @@ public slots:
 	void updatePreview();
 	void on_buttonBox_accepted();
 	void sideLength_changed(QString);
-	void on_m_padNames_cellChanged(int i, int j);
+	void m_padNames_cellChanged(int i, int j);
+	void padNames_select_changed(int i);
 	void open();
 
 private:
