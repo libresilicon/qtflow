@@ -352,6 +352,7 @@ void ContactPlacement::refreshTables()
 {
 	if(!m_padInfo) return;
 
+	lef::LEFMacro* m;
 	QTableWidgetItem* w;
 	QTableWidget* table;
 	QString cellType;
@@ -365,30 +366,33 @@ void ContactPlacement::refreshTables()
 			cellMapping[m_padInfo->getPadCell(p)].append(p) ;
 		}
 
-		foreach(cellType, cellMapping.keys()) {
-			if (m_tables.contains(cellType)) {
-				table = m_tables[cellType];
-				cells = cellMapping[cellType];
+		foreach(cellType, m_tables.keys()) {
+			table = m_tables[cellType];
 
-				table->clear();
+			table->clear();
+			m_TableHeader.clear();
+			m_TableHeader << "Pad";
+			m_TableHeader << "Name";
 
-				m_TableHeader.clear();
-				m_TableHeader << "Pad";
-				m_TableHeader << "Name";
-				m_TableHeader << "Type";
-
-				table->setColumnCount(m_TableHeader.count());
-				table->setHorizontalHeaderLabels(m_TableHeader);
-				table->setRowCount(cells.count());
-				//table->setRowCount(10);
-
-				i = 0;
-				foreach(pad, cells) {
-					w = new QTableWidgetItem(pad);
-					w->setFlags(w->flags()&~Qt::ItemIsEditable);
-					table->setItem(i, 0, w); // signal pin
-					i++;
+			m = project->getMacro(cellType);
+			if(m) {
+				foreach(QString pin, m->getPinNames()) {
+					m_TableHeader << pin;
 				}
+			}
+
+			cells = cellMapping[cellType];
+			table->setColumnCount(m_TableHeader.count());
+			table->setHorizontalHeaderLabels(m_TableHeader);
+			table->setRowCount(cells.count());
+			//table->setRowCount(10);
+
+			i = 0;
+			foreach(pad, cells) {
+				w = new QTableWidgetItem(pad);
+				w->setFlags(w->flags()&~Qt::ItemIsEditable);
+				table->setItem(i, 0, w); // signal pin
+				i++;
 			}
 		}
 	}
