@@ -6,6 +6,8 @@ PadInfo::PadInfo(QString padpath) :
 {
 	QString s;
 	QString padName;
+	QString pinName;
+	QString signalName;
 	QString cellName;
 	QStringList line;
 	if(QFileInfo(padpath).exists()) {
@@ -30,6 +32,13 @@ PadInfo::PadInfo(QString padpath) :
 							} else if(s=="name") {
 								cellName = (line.count()>3)?line[3]:QString();
 								m_padNameMapping[padName]=cellName;
+							} else if(s=="pin") {
+								pinName = (line.count()>3)?line[3]:QString();
+								s = (line.count()>4)?line[4]:QString();
+								if(s=="signal") {
+									signalName = (line.count()>5)?line[5]:QString();
+									m_padPinSignalMapping[padName][pinName]=signalName;
+								}
 							}
 						}
 					} else if(line[0]=="var") {
@@ -96,10 +105,7 @@ void PadInfo::setPadPinSignal(QString pad, QString pin, QString signal)
 
 QString PadInfo::getPadPinSignal(QString pad, QString pin)
 {
-	if(m_padPinSignalMapping.contains(pad)) {
-		return m_padPinSignalMapping[pad][pin];
-	}
-	return QString();
+	return m_padPinSignalMapping[pad][pin];
 }
 
 QString PadInfo::getPadCell(QString pad)

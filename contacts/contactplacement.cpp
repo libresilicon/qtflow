@@ -438,11 +438,13 @@ void ContactPlacement::refreshTables()
 			table->setRowCount(cells.count());
 
 			i = 0;
-			int j = 0;
 			foreach(pad, cells) {
 				w = new QTableWidgetItem(pad);
 				w->setFlags(w->flags()&~Qt::ItemIsEditable);
 				table->setItem(i, 0, w);
+				w = new QTableWidgetItem(m_padInfo->getPadName(pad));
+				w->setFlags(w->flags()&~Qt::ItemIsEditable);
+				table->setItem(i, 1, w);
 				if(m_blifdata) {
 					foreach(QString pin, m_tablesPinMapping[cellType].keys()) {
 						signalBox = new QComboBox(table);
@@ -451,6 +453,11 @@ void ContactPlacement::refreshTables()
 							signalBox->addItem(k);
 						foreach(QString k, m_blifdata->getPadPinsOutput())
 							signalBox->addItem(k);
+						qDebug() << __FUNCTION__;
+						qDebug() << pad;
+						qDebug() << pin;
+						qDebug() << m_padInfo->getPadPinSignal(pad,pin);
+						signalBox->setCurrentText(m_padInfo->getPadPinSignal(pad,pin));
 						table->setCellWidget(i, m_tablesPinMapping[cellType][pin], signalBox);
 					}
 				}
