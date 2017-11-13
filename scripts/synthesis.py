@@ -109,6 +109,9 @@ command.append("--pad-width")
 command.append("100")
 command.append("--pad-height")
 command.append("100")
+if project_settings.isAsic():
+	print "Is ASIC"
+	command.append("--no-pads") #we will provide our own padframe mapping
 
 p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 

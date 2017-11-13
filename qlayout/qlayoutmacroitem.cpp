@@ -1,39 +1,39 @@
 #include "qlayoutmacroitem.h"
 
-QLayoutMacroItem::QLayoutMacroItem(QLayoutMacroItem *orig) : // cloning the template object and it's children
+QLayoutMacroItem::QLayoutMacroItem(qreal scale, QLayoutMacroItem *orig) : // cloning the template object and it's children
 	QGraphicsRectItem(0),
 	m_dragged(false),
 	m_instanceNameLabel(NULL),
 	m_width(1),
 	m_height(1)
 {
-	QGraphicsRectItem* r;
 	QRectF rect;
 	QPen pen(Qt::black);
 	setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-	pen.setWidth(30);
+	pen.setWidth(10);
 	setPen(pen);
 
-	if(orig) {
-		rect = orig->rect();
-		setRect(rect);
-		m_width = rect.width();
-		m_height = rect.height();
+	rect = orig->rect();
+	rect = QRectF(rect.x()*scale,rect.y()*scale,rect.width()*scale,rect.height()*scale);
+	setRect(rect);
+	m_width = rect.width();
+	m_height = rect.height();
 
-		setInstanceName(orig->m_instanceName);
-		setMacroName(orig->m_macroName);
+	setInstanceName(orig->m_instanceName);
+	setMacroName(orig->m_macroName);
 
-		foreach(QString layer, orig->m_layerList.keys()) {
-			foreach(QGraphicsRectItem* m, orig->m_layerList[layer]) {
-				if(m) {
-					addRectangle(layer,m->brush(),m->rect());
-				}
+	foreach(QString layer, orig->m_layerList.keys()) {
+		foreach(QGraphicsRectItem* m, orig->m_layerList[layer]) {
+			if(m) {
+				rect = m->rect();
+				rect = QRectF(rect.x()*scale,rect.y()*scale,rect.width()*scale,rect.height()*scale);
+				addRectangle(layer,m->brush(),rect);
 			}
 		}
+	}
 
-		foreach(QLayoutMacroPinItem* pi, orig->m_pinList) {
-			m_pinList.append(new QLayoutMacroPinItem(pi,this));
-		}
+	foreach(QLayoutMacroPinItem* pi, orig->m_pinList) {
+		m_pinList.append(new QLayoutMacroPinItem(scale, pi,this));
 	}
 }
 
@@ -112,8 +112,8 @@ void QLayoutMacroItem::setSize(qreal w, qreal h)
 
 	setScale(scaleFactor);
 
-	if(w<0) setPos(pos().x()+w,pos().y());
-	if(h<0) setPos(pos().x(),pos().y()+h);
+	//if(w<0) setPos(pos().x()+w,pos().y());
+	//if(h<0) setPos(pos().x(),pos().y()+h);
 }
 
 QString QLayoutMacroItem::getInstanceName()

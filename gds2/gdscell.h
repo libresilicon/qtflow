@@ -22,21 +22,20 @@ public:
 	qreal getWidth();
 	qreal getHeight();
 
-	void setRectangle(int x, int y, int w, int h);
+	void setRectangle(qreal x, qreal y, qreal w, qreal h);
 
 private:
 	QVector<GDSBoundary*> m_boundaries;
 	QString m_name;
-	int m_x;
-	int m_y;
-	int m_width;
-	int m_height;
+	qreal m_x;
+	qreal m_y;
+	qreal m_width;
+	qreal m_height;
 
-	qreal m_scale_x;
-	qreal m_scale_y;
+	qreal m_scale;
 
-	int m_offset_x;
-	int m_offset_y;
+	qreal m_offset_x;
+	qreal m_offset_y;
 };
 
 #endif // GDSCELL_H

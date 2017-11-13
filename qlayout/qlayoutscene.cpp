@@ -50,6 +50,10 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	basicInit();
 }
 
+void QLayoutScene::setDistanceUnit(qreal u)
+{
+	m_baseUnit = u;
+}
 
 int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
 {
@@ -169,24 +173,18 @@ void QLayoutScene::refreshMacroTable()
 	foreach(QString macroName, macroList) {
 		x = 0;
 		y = 0;
-		w = 1;
-		h = 1;
-		scale = 1;
+		w = m_baseUnit;
+		h = m_baseUnit;
+
 		if(project) {
-			scale = project->getSmallestUnit();
-			w = scale;
-			h = scale;
 			macro = project->getMacro(macroName);
 			cell = project->getGDSMacro(macroName);
 			if(macro) {
 				w = macro->getWidth();
 				h = macro->getHeight();
-			} else if(cell) {
-				w = cell->getWidth();
-				h = cell->getHeight();
 			}
-			w *= scale;
-			h *= scale;
+			w*=m_baseUnit;
+			h*=m_baseUnit;
 		}
 
 		mi = new QLayoutMacroItem(x, y, w, h);
@@ -221,7 +219,7 @@ void QLayoutScene::refreshMacroTable()
 		}
 
 		// fill in GDS data:
-		if(project && cell) {
+		if(project && cell && macro) {
 			cell->setRectangle(x,y,w,h);
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
 				layer_name = project->layerNameFromCIF(b->getLayerIndex());
@@ -233,7 +231,6 @@ void QLayoutScene::refreshMacroTable()
 				} else {
 					color = project->colorMat(layer_name);
 					mi->addPolygon(layer_name, QBrush(color), b->getPolygon());
-
 					emit(registerLayer(layer_name));
 				}
 			}
@@ -598,7 +595,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 {
 	QLayoutMacroItem *mi;
 	if(m_macroTemplateMap.contains(macro_name)) {
-		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
+		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
 		if(orient=="S") {
 			mi->setRotation(180);
@@ -614,16 +611,22 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 	}
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal w, qreal h)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, qreal angle)
 {
 	QLayoutMacroItem *mi;
+	;
 	if(m_macroTemplateMap.contains(macro_name)) {
-		mi = new QLayoutMacroItem(m_macroTemplateMap[macro_name]);
+
+		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
+		//x-=mi->rect().width();
+		//y+=mi->rect().height();
+		mi->setRotation(angle);
 		mi->setPos(x,y);
 		mi->setSize(w,h);
 		macros.append(mi);
 		addItem(mi);
+
 		update();
 	} else {
 		qDebug() << macro_name << "Macro not defined";

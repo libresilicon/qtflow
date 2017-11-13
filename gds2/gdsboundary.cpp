@@ -17,10 +17,10 @@ void GDSBoundary::addPoint(int x, int y)
 	m_points.append(point);
 }
 
-int GDSBoundary::x()
+qreal GDSBoundary::x()
 {
 	GDSPoint* p;
-	int x;
+	qreal x;
 
 	if(m_points.count()==0) return 0;
 
@@ -32,10 +32,10 @@ int GDSBoundary::x()
 	return x;
 }
 
-int GDSBoundary::y()
+qreal GDSBoundary::y()
 {
 	GDSPoint* p;
-	int y;
+	qreal y;
 
 	if(m_points.count()==0) return 0;
 
@@ -47,10 +47,10 @@ int GDSBoundary::y()
 	return y;
 }
 
-int GDSBoundary::width()
+qreal GDSBoundary::width()
 {
 	GDSPoint* p;
-	int x;
+	qreal x;
 	int i = 0;
 
 	if(m_points.count()==0) return 0;
@@ -66,10 +66,10 @@ int GDSBoundary::width()
 	return x-this->x();
 }
 
-int GDSBoundary::height()
+qreal GDSBoundary::height()
 {
 	GDSPoint* p;
-	int y;
+	qreal y;
 	int i = 0;
 
 	if(m_points.count()==0) return 0;
@@ -92,7 +92,7 @@ int GDSBoundary::getLayerIndex()
 
 QVector<QPointF> GDSBoundary::sortPoints()
 {
-	int x, y;
+	qreal x, y;
 
 	QVector<QPointF> pl;
 

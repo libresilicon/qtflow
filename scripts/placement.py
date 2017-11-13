@@ -18,6 +18,7 @@ from subprocess import Popen
 
 from shutil import move
 from shutil import copyfile
+from shutil import copyfileobj
 
 from glob import glob
 from re import search
@@ -39,11 +40,14 @@ command.append("--cel")
 command.append(path.join(project_settings.getLayoutDir(),project_settings.getTopLevel()+".cel"))
 command.append("--units")
 #command.append(str(project_settings.getScaleUnit()))
-command.append(str(100))
+command.append(str(100)) # is constant 100, qrouter can't handle anything else
 command.append("--pad-width")
 command.append("100")
 command.append("--pad-height")
 command.append("100")
+if project_settings.isAsic():
+	print "Is ASIC"
+	command.append("--no-pads") #we will provide our own padframe mapping
 
 p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
@@ -112,6 +116,7 @@ for line in iter(qrouter.stdout.readline, ''):
 qrouter.stdout.close()
 
 copyfile(project_settings.getParametersFile(),project_settings.getTopLevel()+".par")
+
 command = []
 command.append(settings.getGrayWolf())
 command.append("-n")
@@ -121,33 +126,3 @@ graywolf = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 for line in iter(graywolf.stdout.readline, ''):
 	print line
 graywolf.stdout.close()
-
-command = ["/usr/bin/tclsh"]
-command.append("/home/leviathan/qtflow/scripts/place2def.tcl")
-command.append(project_settings.getTopLevel())
-command.append("FILL")
-command.append(str(len(project_settings.getRoutingLayers())))
-command.append(str(100))
-#command.append(str(project_settings.getScaleUnit()))
-
-p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
-
-for line in iter(p.stdout.readline, ''):
-	print line
-
-p.stdout.close()
-
-command = ["/usr/bin/tclsh"]
-command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
-command.append(project_settings.getTopLevel())
-command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
-command.append("FILL")
-
-p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
-
-for line in iter(p.stdout.readline, ''):
-	print line
-
-p.stdout.close()
-
-move("counter_filled.def","counter.def")

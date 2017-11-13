@@ -18,10 +18,10 @@ public:
 	void setScale(qreal x, qreal y);
 	void setOffset(qreal x, qreal y);
 
-	int x();
-	int y();
-	int width();
-	int height();
+	qreal x();
+	qreal y();
+	qreal width();
+	qreal height();
 
 private:
 	QVector<QPointF> sortPoints();

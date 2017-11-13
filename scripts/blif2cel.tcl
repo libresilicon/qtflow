@@ -80,6 +80,10 @@ while {$index < $arglen} {
 	    set power_force 
 	}
 
+	--no-pads {
+	    set no_pads true
+	}
+
 	default  {
 	    set filename [lindex $argv $index]
 	}
@@ -772,13 +776,17 @@ while {[gets $fnet line] >= 0} {
 	set line $rest
     }
 
-    if {$mode == "inputs" || $mode == "outputs"} {
-	foreach pinname $line {
-	    puts $fcel "pad $padnum name twpin_$pinname"
-	    puts $fcel "corners 4 -$px -$py -$px $py $px $py $px -$py"
-	    puts $fcel "pin name $pinname signal $pinname layer 1 0 0"
-	    puts $fcel ""
-	    incr padnum
+    if {[info exists no_pads]} {
+	puts stdout "Not adding pads, because we will get a static pad frame mapping"
+    } else {
+	if {$mode == "inputs" || $mode == "outputs"} {
+	    foreach pinname $line {
+		puts $fcel "pad $padnum name twpin_$pinname"
+		puts $fcel "corners 4 -$px -$py -$px $py $px $py $px -$py"
+		puts $fcel "pin name $pinname signal $pinname layer 1 0 0"
+		puts $fcel ""
+		incr padnum
+	    }
 	}
     }
 }

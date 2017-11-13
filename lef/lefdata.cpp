@@ -128,11 +128,6 @@ namespace lef {
 		double w = x2-x1;
 		double h = y2-y1;
 
-		x *= m_baseUnitMicronsValue;
-		y *= m_baseUnitMicronsValue;
-		w *= m_baseUnitMicronsValue;
-		h *= m_baseUnitMicronsValue;
-
 		lef::LEFPin *pin;
 		lef::LEFPort *port;
 		lef::LEFLayer *layer;
@@ -148,7 +143,7 @@ namespace lef {
 
 		layer = port->getLayer(recentMacroPinPortLayer);
 		layer->addRectangle(x, y, w, h);
-		pin->setBoundingBox(x, y, w, h);
+		pin->setBoundingBox(x1, y1, x2, y2);
 	}
 
 	void LEFData::addMacroPinPortLayer(std::string s)
@@ -194,17 +189,18 @@ namespace lef {
 		return m_divideChar;
 	}
 
+	void LEFData::setMacroPinDirection(std::string s)
+	{
+		LEFPin* pin = m_recentMacro->getPin(recentMacroPinName);
+		pin->setDirection(QString::fromStdString(s));
+	}
+
 	void LEFData::addMacroPinObstructionRectangle(double x1, double y1, double x2, double y2)
 	{
-		double x = x1;
-		double y = y1;
-		double w = x2-x1;
-		double h = y2-y1;
-
-		x *= m_baseUnitMicronsValue;
-		y *= m_baseUnitMicronsValue;
-		w *= m_baseUnitMicronsValue;
-		h *= m_baseUnitMicronsValue;
+		qreal x = x1;
+		qreal y = y1;
+		qreal w = x2-x1;
+		qreal h = y2-y1;
 
 		lef::LEFObstruction *obstruction;
 		lef::LEFLayer *layer;

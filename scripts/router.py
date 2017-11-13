@@ -30,18 +30,50 @@ from threading import Thread
 from Queue import Queue
 
 chdir(project_settings.getLayoutDir())
-command = []
-command.append(settings.getQRouter())
+
+command = ["/usr/bin/tclsh"]
+command.append("/home/leviathan/qtflow/scripts/place2def.tcl")
+command.append(project_settings.getTopLevel())
+command.append("FILL")
+command.append(str(len(project_settings.getRoutingLayers())))
+command.append(str(100))
+#command.append(str(project_settings.getScaleUnit()))
+
+p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+
+for line in iter(p.stdout.readline, ''):
+       print line
+
+p.stdout.close()
+
+#command = ["/usr/bin/tclsh"]
+#command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
+#command.append(project_settings.getTopLevel())
+#command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+#command.append("FILL")
+
+#p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+
+#for line in iter(p.stdout.readline, ''):
+#	print line
+
+#p.stdout.close()
+
+#move("counter_filled.def","counter.def")
+
+
+#command = []
+#command.append(settings.getQRouter())
 #command.append("-f")
-command.append("-c")
-command.append(project_settings.getTopLevel()+".cfg")
-command.append(project_settings.getTopLevel()+".def")
+#command.append("-c")
+#command.append(project_settings.getTopLevel()+".cfg")
+#command.append(project_settings.getTopLevel()+".def")
 
-qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+#qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
-for line in iter(qrouter.stdout.readline, ''):
-	print line
+#for line in iter(qrouter.stdout.readline, ''):
+#	print line
 
-qrouter.stdout.close()
+#qrouter.stdout.close()
 
-move("counter_route.def","counter.def")
+#move("counter_route.def","counter.def")

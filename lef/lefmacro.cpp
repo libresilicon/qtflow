@@ -54,12 +54,12 @@ namespace lef {
 		m_sizeH = h;
 	}
 
-	double LEFMacro::getWidth()
+	qreal LEFMacro::getWidth()
 	{
 		return m_sizeW;
 	}
 
-	double LEFMacro::getHeight()
+	qreal LEFMacro::getHeight()
 	{
 		return m_sizeH;
 	}

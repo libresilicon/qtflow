@@ -53,7 +53,6 @@ private:
 	QLayoutScene *editScene;
 	def::DEFData *defdata;
 	Project *project;
-	qreal m_scale;
 	LayoutVisibles *visibles;
 };
 

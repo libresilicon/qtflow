@@ -39,6 +39,7 @@ public:
 	QLayoutScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 	void basicInit();
+	void setDistanceUnit(qreal u);
 
 	void setProject(Project *p);
 	void showDRC();
@@ -51,7 +52,7 @@ public:
 	void addWire(QString netname, QString layer, QPointF p1, QPointF p2);
 	void addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h);
-	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h);
+	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, qreal angle);
 	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient);
 
 	QStringList getLayers();

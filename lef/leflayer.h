@@ -6,10 +6,10 @@
 
 namespace lef {
 	typedef struct {
-		double x;
-		double y;
-		double w;
-		double h;
+		qreal x;
+		qreal y;
+		qreal w;
+		qreal h;
 	} rect_t;
 
 	class LEFLayer {

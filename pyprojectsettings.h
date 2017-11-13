@@ -40,6 +40,7 @@ public Q_SLOTS:
 
 	QStringList getRoutingLayers();
 	qreal getScaleUnit();
+	bool isAsic();
 
 	// synthesis files:
 	QString getLibertyFile();

@@ -87,6 +87,11 @@ QStringList PyProjectSettings::getLibraryFiles()
 	return project->getLibraryFiles();
 }
 
+bool PyProjectSettings::isAsic()
+{
+	return project->getProjectType().contains("asic");
+}
+
 QStringList PyProjectSettings::getRoutingLayers()
 {
 	return project->getRoutingLayers();

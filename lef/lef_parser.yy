@@ -314,7 +314,13 @@ PIN STRING
 };
 
 macro_pin_use: USE STRING;
-macro_pin_direction: DIRECTION STRING | DIRECTION STRING STRING;
+macro_pin_direction:
+DIRECTION STRING
+{
+	lefdata->setMacroPinDirection(*$2);
+}
+|
+DIRECTION STRING STRING;
 macro_pin_shape: SHAPE STRING;
 macro_pin_port: PORT macro_pin_port_infos END;
 macro_pin_port_infos:

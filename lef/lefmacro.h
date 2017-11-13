@@ -11,8 +11,8 @@ namespace lef {
 		void addPin(QString);
 
 		void setSize(qreal w, qreal h);
-		double getWidth();
-		double getHeight();
+		qreal getWidth();
+		qreal getHeight();
 
 		QVector<QString> getPinNames();
 		QVector<LEFPin*> getPins();

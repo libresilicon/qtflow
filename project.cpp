@@ -614,6 +614,8 @@ void Project::placement()
 	} else {
 		mainContext.evalScript("print \"not defined\"");
 	}
+	if(getProjectType().contains("asic"))
+		buildPadFrame();
 }
 
 void Project::routing()

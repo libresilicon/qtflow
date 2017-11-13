@@ -13,10 +13,6 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	editScene->setBackgroundBrush(Qt::white);
 
 	setScene(editScene);
-	//setRenderHint(QPainter::Antialiasing);
-	//setCacheMode(QGraphicsView::CacheBackground);
-	//setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-	//setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DirectRendering)));
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 }
@@ -35,11 +31,23 @@ void MagicLayoutEditor::addRectangles()
 
 void MagicLayoutEditor::addMacroInstances()
 {
+	qreal x,y,w,h,angle;
 	magic::mods_t mods;
 	mods = magicdata->getModules();
 	foreach (magic::module_info e, mods) {
+		angle = 0;
 		// adding boxes for macros
-		editScene->addMacro(e.module_name, e.instance_name, e.x1+e.c, e.y1+e.f, e.a*(e.x2-e.x1), e.e*(e.y2-e.y1));
+		w = abs(e.x2-e.x1);
+		h = abs(e.y2-e.y1);
+		x = e.x1+e.c;
+		y = e.y1+e.f;
+		x -= e.a*w;
+		y -= e.e*h;
+		//if((e.a<0)&&(e.e<0)) {
+		//	angle = 180;
+		//}
+
+		editScene->addMacro(e.module_name, e.instance_name, x, y, w, h, angle);
 	}
 }
 
@@ -62,6 +70,7 @@ void MagicLayoutEditor::loadFile(QString file)
 	//editScene->setGridSize(gridsize);
 	//editScene->setSceneRect(x*gridsize, y*gridsize, w*gridsize, h*gridsize);
 
+	editScene->setDistanceUnit(100); // assumed because magic doesn't provide this info
 	addMacroInstances();
 	addRectangles();
 

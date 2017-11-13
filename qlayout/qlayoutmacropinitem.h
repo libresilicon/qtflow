@@ -12,7 +12,7 @@ class QLayoutMacroPinItem : public QObject, public QGraphicsRectItem
 {
 	Q_OBJECT
 public:
-	explicit QLayoutMacroPinItem(QLayoutMacroPinItem *orig = Q_NULLPTR, QGraphicsItem *parent = Q_NULLPTR);
+	explicit QLayoutMacroPinItem(qreal scale, QLayoutMacroPinItem *orig = Q_NULLPTR, QGraphicsItem *parent = Q_NULLPTR);
 	explicit QLayoutMacroPinItem(QGraphicsItem *parent = Q_NULLPTR);
 
 	void addRectangle(QString layer, QBrush brush, QRectF rect);

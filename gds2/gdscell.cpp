@@ -1,7 +1,8 @@
 #include "gdscell.h"
 
 GDSCell::GDSCell(QString name):
-	m_name(name)
+	m_name(name),
+	m_scale(1)
 {
 }
 
@@ -26,22 +27,22 @@ qreal GDSCell::getHeight()
 	return m_height;
 }
 
-void GDSCell::setRectangle(int x, int y, int w, int h)
+void GDSCell::setRectangle(qreal x, qreal y, qreal w, qreal h)
 {
-	m_scale_x = abs(m_width/w);
-	m_scale_y = abs(m_height/h);
+	qreal scale_x = (abs(w)>0)?abs(m_width/w):1;
+	qreal scale_y = (abs(h)>0)?abs(m_height/h):1;
+
+	m_scale = scale_x;
+	if((m_scale*m_height)>h) m_scale = scale_y;
 
 	if(w<0) x+=w;
 	if(h<0) y+=h;
 
-	x-=(m_x/m_scale_x);
-	y-=(m_y/m_scale_y);
-
-	//x-=m_x;
-	//y-=m_y;
+	x-=(m_x/m_scale);
+	y-=(m_y/m_scale);
 
 	foreach(GDSBoundary *b, m_boundaries) {
-		b->setScale(m_scale_x,m_scale_y);
+		b->setScale(m_scale,m_scale);
 		b->setOffset(x,y);
 	}
 }

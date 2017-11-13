@@ -7,25 +7,33 @@
 #include "lefport.h"
 
 namespace lef {
+enum pin_direction {
+	PIN_INPUT,
+	PIN_OUTPUT,
+	PIN_INOUT
+};
 class LEFPin {
 public:
 	LEFPin(QString);
-	void setBoundingBox(double x, double y, double w, double h);
+	void setBoundingBox(double x1, double y1, double x2, double y2);
+	void setDirection(QString s);
 
 	QString getName();
 	LEFPort *getPort();
 	QVector<LEFLayer*> getPortLayers();
 	QPointF getCenter();
+	pin_direction getDirection();
 
 private:
 	QString name;
 	LEFPort *port;
+	pin_direction m_direction;
 
 	// bounding box:
-	double m_x;
-	double m_y;
-	double m_w;
-	double m_h;
+	qreal m_x1;
+	qreal m_y1;
+	qreal m_x2;
+	qreal m_y2;
 };
 }
 

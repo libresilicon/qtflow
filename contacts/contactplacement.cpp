@@ -69,7 +69,7 @@ void ContactPlacement::on_buttonBox_accepted()
 		storeNameTable();
 		storeTables();
 		m_padInfo->sync();
-		//project->buildPadFrame();
+		project->buildPadFrame();
 	}
 }
 
@@ -200,11 +200,50 @@ void ContactPlacement::updatePreview()
 
 		// left clamps
 		pad = new QGraphicsRectItem(-h,-h,h,h,rect);
+		padLabel = new QGraphicsSimpleTextItem("CORNER1",pad);
+		rw = padLabel->boundingRect().width();
+		rh = padLabel->boundingRect().height();
+		scale = h/rw;
+		if(scale*rh>h) {
+			scale = w/rh;
+		}
+		padLabel->setScale(scale);
+		padLabel->setPos(-h,-h);
+
 		pad = new QGraphicsRectItem(-h,m_baseRect.width(),h,h,rect);
+		padLabel = new QGraphicsSimpleTextItem("CORNER2",pad);
+		rw = padLabel->boundingRect().width();
+		rh = padLabel->boundingRect().height();
+		scale = h/rw;
+		if(scale*rh>h) {
+			scale = w/rh;
+		}
+		padLabel->setScale(scale);
+		padLabel->setPos(-h,m_baseRect.width());
 
 		// right clamps
 		pad = new QGraphicsRectItem(m_baseRect.width(),-h,h,h,rect);
+		padLabel = new QGraphicsSimpleTextItem("CORNER3",pad);
+		rw = padLabel->boundingRect().width();
+		rh = padLabel->boundingRect().height();
+		scale = h/rw;
+		if(scale*rh>h) {
+			scale = w/rh;
+		}
+		padLabel->setScale(scale);
+		padLabel->setPos(m_baseRect.width(),-h);
+
 		pad = new QGraphicsRectItem(m_baseRect.width(),m_baseRect.width(),h,h,rect);
+		padLabel = new QGraphicsSimpleTextItem("CORNER4",pad);
+		rw = padLabel->boundingRect().width();
+		rh = padLabel->boundingRect().height();
+		scale = h/rw;
+		if(scale*rh>h) {
+			scale = w/rh;
+		}
+		padLabel->setScale(scale);
+		padLabel->setPos(m_baseRect.width(),m_baseRect.width());
+
 
 		scene->addItem(rect);
 		scene->update();
@@ -353,6 +392,16 @@ void ContactPlacement::refreshNameTable()
 		w->setFlags(w->flags()&~Qt::ItemIsEditable);
 		m_padNames->setItem(i, 1, w); // signal pin
 
+		typeSelection = new QComboBox(m_padNames);
+
+		foreach(QString k, project->getCornerCells())
+			typeSelection->addItem(k);
+
+		padCellName = m_padInfo->getPadCell("CORNER"+QString::number(j+1));
+		typeSelection->setCurrentText(padCellName);
+		connect(typeSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(padNames_select_changed(int)));
+		m_padNames->setCellWidget(i, 2, typeSelection);
+
 		i++;
 	}
 	m_tableComplete = true;
@@ -390,6 +439,7 @@ void ContactPlacement::refreshTables()
 	if(!m_padInfo) return;
 
 	lef::LEFMacro* m;
+	lef::LEFPin* p;
 	QComboBox* signalBox;
 	QTableWidgetItem* w;
 	QTableWidget* table;
@@ -449,14 +499,35 @@ void ContactPlacement::refreshTables()
 					foreach(QString pin, m_tablesPinMapping[cellType].keys()) {
 						signalBox = new QComboBox(table);
 						signalBox->addItem("None","nc");
-						foreach(QString k, m_blifdata->getPadPinsInput())
-							signalBox->addItem(k);
-						foreach(QString k, m_blifdata->getPadPinsOutput())
-							signalBox->addItem(k);
-						qDebug() << __FUNCTION__;
-						qDebug() << pad;
-						qDebug() << pin;
-						qDebug() << m_padInfo->getPadPinSignal(pad,pin);
+						if(project->getVDDPadCell()==m_padInfo->getPadCell(pad)) {
+							foreach(QString k, project->getPowerNets())
+								signalBox->addItem(k);
+						} else if(project->getGNDPadCell()==m_padInfo->getPadCell(pad)) {
+							foreach(QString k, project->getGroundNets())
+								signalBox->addItem(k);
+						} else {
+							if(m) {
+								p = m->getPin(pin);
+								if(p->getDirection()==lef::PIN_INPUT) {
+									foreach(QString k, m_blifdata->getPadPinsOutput())
+										signalBox->addItem(k);
+								} else if(p->getDirection()==lef::PIN_OUTPUT) {
+									foreach(QString k, m_blifdata->getPadPinsInput())
+										signalBox->addItem(k);
+								} else {
+									foreach(QString k, m_blifdata->getPadPinsInput())
+										signalBox->addItem(k);
+									foreach(QString k, m_blifdata->getPadPinsOutput())
+										signalBox->addItem(k);
+								}
+
+							} else {
+								foreach(QString k, m_blifdata->getPadPinsInput())
+									signalBox->addItem(k);
+								foreach(QString k, m_blifdata->getPadPinsOutput())
+									signalBox->addItem(k);
+							}
+						}
 						signalBox->setCurrentText(m_padInfo->getPadPinSignal(pad,pin));
 						table->setCellWidget(i, m_tablesPinMapping[cellType][pin], signalBox);
 					}

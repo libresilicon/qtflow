@@ -28,16 +28,19 @@ PadInfo::PadInfo(QString padpath) :
 							s = (line.count()>2)?line[2]:QString();
 							if(s=="cell") {
 								cellName = (line.count()>3)?line[3]:QString();
-								m_padCellMapping[padName]=cellName;
+								if(cellName!=QString())
+									m_padCellMapping[padName]=cellName;
 							} else if(s=="name") {
 								cellName = (line.count()>3)?line[3]:QString();
-								m_padNameMapping[padName]=cellName;
+								if(cellName!=QString())
+									m_padNameMapping[padName]=cellName;
 							} else if(s=="pin") {
 								pinName = (line.count()>3)?line[3]:QString();
 								s = (line.count()>4)?line[4]:QString();
 								if(s=="signal") {
 									signalName = (line.count()>5)?line[5]:QString();
-									m_padPinSignalMapping[padName][pinName]=signalName;
+									if(signalName!=QString())
+										m_padPinSignalMapping[padName][pinName]=signalName;
 								}
 							}
 						}

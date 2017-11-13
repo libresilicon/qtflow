@@ -5,8 +5,7 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	defdata(NULL),
 	project(NULL),
 	filePath(QString()),
-	editScene(new QLayoutScene(this)),
-	m_scale(1)
+	editScene(new QLayoutScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
 
@@ -26,35 +25,21 @@ void DEFLayoutEditor::loadFile(QString file)
 	filePath = file;
 	if(defdata) delete defdata;
 	defdata = new def::DEFData(file);
-	m_scale = project->getSmallestUnit();
-	m_scale /= defdata->getDistanceUnit();
 
 	x = defdata->getLowerX();
 	y = defdata->getLowerY();
 	w = defdata->getUpperX()-x;
 	h = defdata->getUpperY()-y;
 
-	//x *= 10;
-	//y *= 10;
-	//w *= 10;
-	//h *= 10;
-
-	//if(w<this->width()) w = this->width();
-	//if(h<this->height()) h = this->height();
-
-	//editScene->setGridSize(defdata->getDistanceUnit());
-	//editScene->setSceneRect(x/100,y/100,w/100,h/100);
-
-	r = editScene->addRect(x*m_scale,y*m_scale,w*m_scale,h*m_scale);
+	editScene->setDistanceUnit(defdata->getDistanceUnit());
+	r = editScene->addRect(x,y,w,h);
 	pen = r->pen();
-	pen.setWidth(100);
+	pen.setWidth(1);
 	r->setPen(pen);
 
 	addMacroInstances();
 	addSignalWires();
 	addContactPins();
-	//addRectangles();
-	//fitInView(r);
 
 	editScene->update();
 }
@@ -76,7 +61,7 @@ void DEFLayoutEditor::addContactPins()
 	QVector<def::DEFDataPin> pins = defdata->getPins();
 	foreach (def::DEFDataPin p, pins) {
 		qDebug() << "Added pin " << p.m_name;
-		editScene->addPad(p.m_name, p.m_signal, p.m_layer, p.m_x*m_scale, p.m_y*m_scale, p.m_w*m_scale, p.m_h*m_scale);
+		editScene->addPad(p.m_name, p.m_signal, p.m_layer, p.m_x, p.m_y, p.m_w, p.m_h);
 	}
 }
 
@@ -96,12 +81,12 @@ void DEFLayoutEditor::addSignalWires()
 		p1 = points.at(0);
 		foreach(p2, points) {
 			if(p1!=p2) {
-				editScene->addWire(net,route.getLayer(),p1*m_scale,p2*m_scale);
+				editScene->addWire(net,route.getLayer(),p1,p2);
 			}
 			p1 = p2;
 		}
 		if(route.getViaName()!=QString()) {
-			editScene->addVia(net,route.getViaName(),p1*m_scale);
+			editScene->addVia(net,route.getViaName(),p1);
 		}
 	}
 
@@ -113,12 +98,12 @@ void DEFLayoutEditor::addSignalWires()
 			p1 = points.at(0);
 			foreach(p2, points) {
 				if(p1!=p2) {
-					editScene->addWire(net,route.getLayer(),p1*m_scale,p2*m_scale);
+					editScene->addWire(net,route.getLayer(),p1,p2);
 				}
 				p1 = p2;
 			}
 			if(route.getViaName()!=QString()) {
-				editScene->addVia(net,route.getViaName(),p1*m_scale);
+				editScene->addVia(net,route.getViaName(),p1);
 			}
 		}
 	}
@@ -127,13 +112,10 @@ void DEFLayoutEditor::addSignalWires()
 void DEFLayoutEditor::addMacroInstances()
 {
 	qreal count = 0;
-	qreal x, y;
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
-		x = e.x;
-		y = e.y;
-		editScene->addMacro(e.macro_name, e.instance_name, x*m_scale, y*m_scale, e.orient);
+		editScene->addMacro(e.macro_name, e.instance_name, e.x, e.y, e.orient);
 
 		count++;
 		qDebug() << "Added " << count << " of " << mods.count() << " (" << 100*(count/mods.count()) << "%)";

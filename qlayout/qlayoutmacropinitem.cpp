@@ -1,6 +1,6 @@
 #include "qlayoutmacropinitem.h"
 
-QLayoutMacroPinItem::QLayoutMacroPinItem(QLayoutMacroPinItem *orig, QGraphicsItem *parent) :
+QLayoutMacroPinItem::QLayoutMacroPinItem(qreal scale, QLayoutMacroPinItem *orig, QGraphicsItem *parent) :
 	QGraphicsRectItem(parent)
 {
 	QPen p;
@@ -12,6 +12,7 @@ QLayoutMacroPinItem::QLayoutMacroPinItem(QLayoutMacroPinItem *orig, QGraphicsIte
 	foreach(QString layer, orig->m_layerList.keys()) {
 		foreach(QGraphicsRectItem* r, orig->m_layerList[layer]) {
 			rect = r->rect();
+			rect = QRectF(rect.x()*scale,rect.y()*scale,rect.width()*scale,rect.height()*scale);
 			addRectangle(layer,r->brush(),rect);
 			if(m_x1>rect.x()) m_x1 = rect.x();
 			if(m_y1>rect.y()) m_y1 = rect.y();
@@ -20,9 +21,6 @@ QLayoutMacroPinItem::QLayoutMacroPinItem(QLayoutMacroPinItem *orig, QGraphicsIte
 		}
 	}
 	setRect(m_x1,m_y1,m_x2-m_x1,m_y2-m_y1);
-	//p = pen();
-	//p.setWidth(20);
-	//setPen(p);
 	setName(orig->m_name);
 }
 
@@ -33,7 +31,6 @@ QLayoutMacroPinItem::QLayoutMacroPinItem(QGraphicsItem *parent) :
 
 void QLayoutMacroPinItem::addRectangle(QString layer, QBrush brush, QRectF rect)
 {
-	QPen pen;
 	if(layer==QString())
 		return;
 
@@ -41,9 +38,6 @@ void QLayoutMacroPinItem::addRectangle(QString layer, QBrush brush, QRectF rect)
 	r->setVisible(true);
 	r->setBrush(brush);
 	r->setOpacity(0.75);
-	//pen = r->pen();
-	//pen.setWidth(20);
-	//r->setPen(pen);
 	m_layerList[layer].append(r);
 }
 
