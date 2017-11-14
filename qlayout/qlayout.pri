@@ -10,7 +10,8 @@ SOURCES += \
     $$PWD/drcsettings.cpp \
     $$PWD/qlayoutdistancemeasure.cpp \
     $$PWD/qlayoutmacropinitem.cpp \
-    $$PWD/qlayoutviaitem.cpp
+    $$PWD/qlayoutviaitem.cpp \
+    $$PWD/qlayoutcellmanager.cpp
 
 HEADERS += \
 	$$PWD/qlayoutwireitem.h \
@@ -21,9 +22,11 @@ HEADERS += \
     $$PWD/drcsettings.h \
     $$PWD/qlayoutdistancemeasure.h \
     $$PWD/qlayoutmacropinitem.h \
-    $$PWD/qlayoutviaitem.h
+    $$PWD/qlayoutviaitem.h \
+    $$PWD/qlayoutcellmanager.h
 
 FORMS    += \
 	$$PWD/layoutvisibles.ui \
-    $$PWD/drcsettings.ui
+    $$PWD/drcsettings.ui \
+    $$PWD/cellmanager.ui
 

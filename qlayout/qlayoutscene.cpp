@@ -591,17 +591,13 @@ void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal 
 	emit(registerLayer(layer));
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal angle)
 {
 	QLayoutMacroItem *mi;
 	if(m_macroTemplateMap.contains(macro_name)) {
 		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
-		if(orient=="S") {
-			mi->setRotation(180);
-			x+=mi->rect().width();
-			y+=mi->rect().height();
-		}
+		mi->setRotation(angle);
 		mi->setPos(x,y);
 		macros.append(mi);
 		addItem(mi);
