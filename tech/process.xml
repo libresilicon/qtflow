@@ -11,6 +11,7 @@
 			<lef>
 				<file>osu018_stdcells.lef</file>
 			</lef>
+			<stdcells>osu018_stdcells.lef</stdcells>
 			<tech>SCN6M_SUBM.10.tech</tech>
 			<techdisplay>SCN6M_SUBM.10.tech</techdisplay>
 			<liberty>osu018_stdcells.lib</liberty>
