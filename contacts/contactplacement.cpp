@@ -52,8 +52,7 @@ void ContactPlacement::m_padNames_cellChanged(int i, int j)
 void ContactPlacement::sideLength_changed(QString s)
 {
 	if(s==QString()) return;
-	if(!m_padInfo) return;
-	if(s.toDouble()>1) {
+	if((s.toDouble()>1)&&m_padInfo) {
 		m_padInfo->setSideLength(s.toDouble());
 		storeNameTable();
 		refreshNameTable();
@@ -81,8 +80,6 @@ void ContactPlacement::open()
 
 void ContactPlacement::updatePreview()
 {
-	if(!m_padInfo) return;
-
 	QPen pen;
 	QGraphicsRectItem* rect;
 	QGraphicsLineItem* line;
@@ -252,8 +249,6 @@ void ContactPlacement::updatePreview()
 
 void ContactPlacement::addTables()
 {
-	if(!m_padInfo) return;
-
 	QWidget* qgb;
 	QWidget* fields;
 	QLabel* label;
@@ -261,7 +256,7 @@ void ContactPlacement::addTables()
 	QVBoxLayout* lay;
 	QHBoxLayout* lay2;
 	QToolBox* tb;
-	if(project) {
+	if(project && m_padInfo) {
 		tb = new QToolBox(ui->padTables);
 		ui->padTables->layout()->addWidget(tb);
 
@@ -304,8 +299,6 @@ void ContactPlacement::addTables()
 
 void ContactPlacement::storeNameTable()
 {
-	if(!m_padInfo) return;
-
 	QTableWidgetItem* w;
 	QComboBox* typeSelection;
 	QString padName;
@@ -409,6 +402,8 @@ void ContactPlacement::refreshNameTable()
 
 void ContactPlacement::storeTables()
 {
+	if(!m_padInfo) return;
+
 	QTableWidgetItem* w;
 	QTableWidget* table;
 	QComboBox* selection;
@@ -436,8 +431,6 @@ void ContactPlacement::storeTables()
 
 void ContactPlacement::refreshTables()
 {
-	if(!m_padInfo) return;
-
 	lef::LEFMacro* m;
 	lef::LEFPin* p;
 	QComboBox* signalBox;

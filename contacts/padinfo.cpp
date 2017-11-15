@@ -2,7 +2,7 @@
 
 PadInfo::PadInfo(QString padpath) :
 	m_filePath(padpath),
-	m_sideLength(0)
+	m_sideLength(1)
 {
 	QString s;
 	QString padName;

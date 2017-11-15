@@ -28,6 +28,7 @@ set pitchx 0		;# value overridden from LEF file
 set pitchy 0		;# value overridden from LEF file
 set trackskip 0		;# reduce number of implicit feedthroughs
 			;# to avoid routing congestion
+set no_pads 0
 
 set arglen [llength $argv]
 set index 0
@@ -81,7 +82,7 @@ while {$index < $arglen} {
 	}
 
 	--no-pads {
-	    set no_pads true
+	    set no_pads 1
 	}
 
 	default  {
@@ -776,9 +777,10 @@ while {[gets $fnet line] >= 0} {
 	set line $rest
     }
 
-    if {[info exists no_pads]} {
+    if $no_pads {
 	puts stdout "Not adding pads, because we will get a static pad frame mapping"
     } else {
+	puts stdout "Adding pads, because it's not an ASIC"
 	if {$mode == "inputs" || $mode == "outputs"} {
 	    foreach pinname $line {
 		puts $fcel "pad $padnum name twpin_$pinname"

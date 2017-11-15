@@ -6,7 +6,10 @@ void Project::buildPadFrame()
 	lef::LEFPin* p;
 	qreal height_corner = 0;
 	int mx,my;
+	int j;
 	qreal mw,mh;
+	qreal px,py;
+	qreal pw,ph;
 	qreal coreleft,coreright,corebottom,coretop; // die dimensions
 	qreal padframeleft,padframeright,padframebottom,padframetop; // padframe dimensions
 	qreal corew, coreh;
@@ -17,10 +20,12 @@ void Project::buildPadFrame()
 
 	QMap<QString,QString> indexedCellInstance;
 	QString pl1path = QDir(getLayoutDir()).filePath(getTopLevel()+".pl1");
+	QString pl2path = QDir(getLayoutDir()).filePath(getTopLevel()+".pl2");
 	QString pinpath = QDir(getLayoutDir()).filePath(getTopLevel()+".pin");
 	QString padspath = getPadInfoFile();
 
 	QFile pl1file(pl1path);
+	QFile pl2file(pl2path);
 	QFile pinfile(pinpath);
 
 	QString padName;
@@ -30,6 +35,9 @@ void Project::buildPadFrame()
 	QStringList lineList;
 	QMap<QString,int> instanceOrientationMapping;
 	QMap<QString,QRectF> instanceBox;
+
+	pw = 100;
+	ph = 100;
 
 	if(pl1file.open(QIODevice::ReadOnly)) {
 		bool firstLine = true;
@@ -162,11 +170,20 @@ void Project::buildPadFrame()
 				padName=side+QString::number(i+1);
 				cellName = padInfo.getPadCell(padName);
 				m = getMacro(cellName);
-				mw = ((m)?m->getWidth():100)*100;
-				mh = ((m)?m->getHeight():100)*100;
+				switch(instanceOrientationMapping[padName]) {
+					case 6:
+					case 7:
+						mh = ((m)?m->getWidth():100)*100;
+						mw = ((m)?m->getHeight():100)*100;
+						break;
+					default:
+						mw = ((m)?m->getWidth():100)*100;
+						mh = ((m)?m->getHeight():100)*100;
+						break;
+				}
 				instanceBox[padName]=QRectF(mx,my,mw,mh);
 				mx+=((side=="T")||(side=="B"))?mw:0;
-				my+=((side=="R")||(side=="L"))?mw:0;
+				my+=((side=="R")||(side=="L"))?mh:0;
 			}
 		}
 
@@ -201,67 +218,181 @@ void Project::buildPadFrame()
 			return;
 		}
 
-		int j = 0;
-		if(pinfile.open(QIODevice::WriteOnly | QIODevice::Append)) {
-			QTextStream pinstream(&pinfile);
-			foreach(QString side, sides) {
-				for(int i=0;i<padInfo.getSideLength();i++) {
-					padName=side+QString::number(i+1);
-					cellName=padInfo.getPadCell(padName);
-					m = getMacro(cellName);
-					if(m) {
-						foreach(QString pin, m->getPinNames()) {
-							p = m->getPin(pin);
-							pinSignal = padInfo.getPadPinSignal(padName,pin);
-							if(pinSignal=="None") continue; // place holder
+		QMap<QString,QMap<QString,QMap<QString,QPointF>>> signalMacroPinPosition;
 
-							pinstream << pinSignal;
-							pinstream << " ";
-							pinstream << j;
-							pinstream << " ";
-							pinstream << cellName;
-							pinstream << "_";
-							pinstream << indexedCellInstance[padName];
-							pinstream << " ";
-							pinstream << pin;
-							pinstream << " ";
-							if(p) {
-								pinCenter = p->getCenter();
-								pinstream << pinCenter.x();
-								pinstream << " ";
-								pinstream << pinCenter.y();
-							} else {
-								pinstream << 0;
-								pinstream << " ";
-								pinstream << 0;
-							}
+		qreal x,y;
+		foreach(QString padName, instanceBox.keys()) {
+			cellName = padInfo.getPadCell(padName);
+			m = getMacro(cellName);
+			if(m) {
+				foreach(QString pin, m->getPinNames()) {
+					p = m->getPin(pin);
+					if(!p) continue; // can't place this thing
+					pinSignal = padInfo.getPadPinSignal(padName,pin);
+					if(pinSignal=="None") continue; // place holder
+					if(pinSignal==QString()) continue; // none
+					pinCenter = p->getCenter()*100;
+					x = pinCenter.x();
+					y = pinCenter.y();
+					if(instanceOrientationMapping[padName]==3) { // South
+						px=-x;
+						py=-y;
+						px+=instanceBox[padName].width();
+						py+=instanceBox[padName].height();
+					} else if(instanceOrientationMapping[padName]==7) { // East
+						px=-y;
+						py=x;
+						px+=instanceBox[padName].width();
+						px=-px;
+						py=-py;
+						px+=instanceBox[padName].height();
+						py+=instanceBox[padName].width();
+					} else if(instanceOrientationMapping[padName]==6) { // West
+						px=-y;
+						py=x;
+						px+=instanceBox[padName].height();
+						py+=instanceBox[padName].width();
+					} else {
+						px=x;
+						py=y;
+					}
+					px+=instanceBox[padName].x();
+					py+=instanceBox[padName].y();
+					signalMacroPinPosition[pinSignal][padName][pin]=QPointF(px,py);
+				}
+			}
+		}
 
-							pinstream << " ";
-							if(side=="T") {
-								pinstream << "0";
-							}
-							if(side=="R") {
-								pinstream << "7";
-							}
-							if(side=="L") {
-								pinstream << "6";
-							}
-							if(side=="B") {
-								pinstream << "3";
-							}
-							pinstream << " 1 1";
-							pinstream << endl;
+		QString twpinName;
+		QMap<QString,QPointF> twpinPosition;
+		QMap<QString,int> twpinCounter;
+		QMap<QString,int> twpinOrientationMapping;
+		QMap<QString,QString> twpinSignalMapping;
 
-							j++;
-						}
+		foreach(QString signal, signalMacroPinPosition.keys()) {
+			foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
+				foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
+					if(getPowerNets().contains(signal)) continue;
+					if(getGroundNets().contains(signal)) continue;
+					twpinName = "twpin_"+signal;
+					if(!twpinCounter.contains(twpinName)) twpinCounter[twpinName]=0;
+					twpinCounter[twpinName]++;
+					twpinName += QString::number(twpinCounter[twpinName]);
+					px = signalMacroPinPosition[signal][padName][pin].x();
+					py = signalMacroPinPosition[signal][padName][pin].y();
+					//px = ((px-padframeleft)*corew/padframew)+coreleft;
+					//py = ((py-padframebottom)*coreh/padframeh)+corebottom;
+					twpinPosition[twpinName]=QPointF(px,py);
+					twpinOrientationMapping[twpinName]=instanceOrientationMapping[padName];
+					twpinSignalMapping[twpinName]=signal;
+				}
+			}
+
+			for(int mult = 2; mult<(int)padframew/corew; mult++) {
+				foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
+					foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
+						if(getPowerNets().contains(signal)) continue;
+						if(getGroundNets().contains(signal)) continue;
+						twpinName = "twpin_"+signal;
+						if(!twpinCounter.contains(twpinName)) twpinCounter[twpinName]=0;
+						twpinCounter[twpinName]++;
+						twpinName += QString::number(twpinCounter[twpinName]);
+						px = signalMacroPinPosition[signal][padName][pin].x();
+						py = signalMacroPinPosition[signal][padName][pin].y();
+						px = (mult*(px-padframeleft)*corew/padframew)+coreleft;
+						py = (mult*(py-padframebottom)*coreh/padframeh)+corebottom;
+						twpinPosition[twpinName]=QPointF(px,py);
+						twpinOrientationMapping[twpinName]=instanceOrientationMapping[padName];
+						twpinSignalMapping[twpinName]=signal;
 					}
 				}
+			}
+		}
+
+		if(pl2file.open(QIODevice::WriteOnly|QIODevice::Append)) {
+			QTextStream pl2stream(&pl2file);
+			foreach(QString twpinName, twpinPosition.keys()) {
+				pl2stream << twpinName << " ";
+				pl2stream << twpinPosition[twpinName].x()-pw/2;
+				pl2stream << " ";
+				pl2stream << twpinPosition[twpinName].y()-ph/2;
+				pl2stream << " ";
+				pl2stream << twpinPosition[twpinName].x()+pw/2;
+				pl2stream << " ";
+				pl2stream << twpinPosition[twpinName].y()+ph/2;
+				pl2stream << " ";
+				pl2stream << QString::number(twpinOrientationMapping[twpinName]);
+				pl2stream << " 0 0";
+				pl2stream << endl;
+			}
+			pl2file.close();
+		} else {
+			qDebug() << pl1path << " can't be opened";
+			return;
+		}
+
+		j = 0;
+		if(pinfile.open(QIODevice::WriteOnly | QIODevice::Append)) {
+			QTextStream pinstream(&pinfile);
+			foreach(QString signal, signalMacroPinPosition.keys()) {
+				foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
+					foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
+						pinstream << signal << " ";
+						pinstream << j << " ";
+						pinstream << indexedCellInstance[padName] << " ";
+						pinstream << pin << " ";
+						pinstream << signalMacroPinPosition[signal][padName][pin].x();
+						pinstream << " ";
+						pinstream << signalMacroPinPosition[signal][padName][pin].y();
+						pinstream << " ";
+						pinstream << QString::number(instanceOrientationMapping[padName]);
+						pinstream << " 1 1";
+						pinstream << endl;
+						j++;
+					}
+				}
+			}
+			foreach(QString twpinName, twpinPosition.keys()) {
+				pinstream << twpinSignalMapping[twpinName] << " ";
+				pinstream << j << " ";
+				pinstream << "twpin_" << twpinSignalMapping[twpinName] << " ";
+				pinstream << twpinSignalMapping[twpinName] << " ";
+				pinstream << twpinPosition[twpinName].x() << " ";
+				pinstream << twpinPosition[twpinName].y() << " ";
+				pinstream << QString::number(twpinOrientationMapping[padName]);
+				pinstream << " 1 1";
+				pinstream << endl;
+				j++;
 			}
 			pinfile.close();
 		} else {
 			qDebug() << pinpath << " can't be opened";
 			return;
 		}
+
+		/*j = 0;
+		if(pl2file.open(QIODevice::WriteOnly | QIODevice::Append)) {
+			QTextStream pl2stream(&pl2file);
+			foreach(QString signal, signalMacroPinPosition.keys()) {
+				foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
+					foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
+						pl2stream << signal << " " << j << " " << indexedCellInstance[padName] << " " << pin << " ";
+						pl2stream << signalMacroPinPosition[signal][padName][pin].x();
+						pl2stream << " ";
+						pl2stream << signalMacroPinPosition[signal][padName][pin].y();
+						pl2stream << " ";
+						pl2stream << QString::number(instanceOrientationMapping[padName]);
+						pl2stream << " 1 1";
+						pl2stream << endl;
+						j++;
+					}
+				}
+			}
+			pl2file.close();
+		} else {
+			qDebug() << pinpath << " can't be opened";
+			return;
+		}*/
 	}
 }
 

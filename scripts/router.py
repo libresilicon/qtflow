@@ -42,38 +42,39 @@ command.append(str(100))
 p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
 for line in iter(p.stdout.readline, ''):
-       print line
+	print line
 
 p.stdout.close()
 
-#command = ["/usr/bin/tclsh"]
-#command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
-#command.append(project_settings.getTopLevel())
-#command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
-#command.append("FILL")
+if not project_settings.isAsic():
+	command = ["/usr/bin/tclsh"]
+	command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
+	command.append(project_settings.getTopLevel())
+	command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+	command.append("FILL")
 
-#p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+	p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
-#for line in iter(p.stdout.readline, ''):
-#	print line
+	for line in iter(p.stdout.readline, ''):
+		print line
 
-#p.stdout.close()
+	p.stdout.close()
 
-#move("counter_filled.def","counter.def")
+	move("counter_filled.def","counter.def")
 
+command = []
+command.append(settings.getQRouter())
+command.append("-f")
+command.append("-c")
+command.append(project_settings.getTopLevel()+".cfg")
+command.append(project_settings.getTopLevel()+".def")
 
-#command = []
-#command.append(settings.getQRouter())
-#command.append("-f")
-#command.append("-c")
-#command.append(project_settings.getTopLevel()+".cfg")
-#command.append(project_settings.getTopLevel()+".def")
+qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
-#qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+for line in iter(qrouter.stdout.readline, ''):
+	print line
 
-#for line in iter(qrouter.stdout.readline, ''):
-#	print line
+qrouter.stdout.close()
 
-#qrouter.stdout.close()
-
-#move("counter_route.def","counter.def")
+if path.isfile("counter_route.def"):
+	move("counter_route.def","counter.def")
