@@ -112,6 +112,7 @@ void DEFLayoutEditor::addSignalWires()
 void DEFLayoutEditor::addMacroInstances()
 {
 	qreal count = 0;
+	qreal angle = 0;
 	QVector<def::DEFModuleInfo> mods = defdata->getModules();
 	foreach (def::DEFModuleInfo e, mods) {
 		// adding boxes for macros
