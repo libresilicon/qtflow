@@ -31,23 +31,32 @@ void MagicLayoutEditor::addRectangles()
 
 void MagicLayoutEditor::addMacroInstances()
 {
-	qreal x,y,w,h,angle;
+	QString orient;
+	qreal x,y,w,h;
 	magic::mods_t mods;
 	mods = magicdata->getModules();
 	foreach (magic::module_info e, mods) {
-		angle = 0;
 		// adding boxes for macros
+		x = e.c;
+		y = e.f;
 		w = abs(e.x2-e.x1);
 		h = abs(e.y2-e.y1);
-		x = e.x1+e.c;
-		y = e.y1+e.f;
-		x -= e.a*w;
-		y -= e.e*h;
-		//if((e.a<0)&&(e.e<0)) {
-		//	angle = 180;
-		//}
 
-		editScene->addMacro(e.module_name, e.instance_name, x, y, w, h, angle);
+		if((e.a==0)&&(e.b==-1)&&(e.d==1)&&(e.e==0)) {
+			orient = "W";
+			x-=h;
+		} else if((e.a==0)&&(e.b==1)&&(e.d==-1)&&(e.e==0)) {
+			orient = "E";
+			y-=w;
+		} else if((e.a==-1)&&(e.b==0)&&(e.d==0)&&(e.e==-1)) {
+			orient = "S";
+			y-=h;
+			x-=w;
+		} else {
+			orient = "N";
+		}
+
+		editScene->addMacro(e.module_name, e.instance_name, x, y, w, h, orient);
 	}
 }
 
@@ -160,6 +169,11 @@ void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
 void  MagicLayoutEditor::setActiveLayer(QString s)
 {
 	editScene->setActiveLayer(s);
+}
+
+void MagicLayoutEditor::showCellManager()
+{
+	editScene->showCellManager();
 }
 
 void MagicLayoutEditor::zoomIn()

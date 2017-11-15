@@ -8,10 +8,12 @@ QLayoutMacroItem::QLayoutMacroItem(qreal scale, QLayoutMacroItem *orig) : // clo
 	m_height(1)
 {
 	QRectF rect;
-	QPen pen(Qt::black);
+	QPen p = pen();
 	setFlags(QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable);
-	pen.setWidth(10);
-	setPen(pen);
+	p.setWidth(1);
+	p.setColor(Qt::black);
+	p.setCosmetic(true);
+	setPen(p);
 
 	rect = orig->rect();
 	rect = QRectF(rect.x()*scale,rect.y()*scale,rect.width()*scale,rect.height()*scale);
@@ -92,6 +94,8 @@ void QLayoutMacroItem::setInstanceName(QString n)
 
 	m_instanceNameLabel = new QGraphicsSimpleTextItem(m_instanceName,this);
 	m_instanceNameLabel->setVisible(true);
+
+	m_instanceNameLabel->setScale(rect().width()/m_instanceNameLabel->boundingRect().width());
 }
 
 void QLayoutMacroItem::setMacroName(QString n)
@@ -100,6 +104,8 @@ void QLayoutMacroItem::setMacroName(QString n)
 
 	m_macroNameLabel = new QGraphicsSimpleTextItem(m_macroName,this);
 	m_macroNameLabel->setVisible(true);
+
+	m_macroNameLabel->setScale(rect().width()/m_macroNameLabel->boundingRect().width());
 }
 
 void QLayoutMacroItem::setSize(qreal w, qreal h)

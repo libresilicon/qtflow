@@ -8,12 +8,14 @@ void QLayoutScene::basicInit()
 	recentSelectRectangle->setBrush(Qt::gray);
 	addItem(recentSelectRectangle);
 
+	drcDialog = new DRCSettings();
 	connect(drcDialog,SIGNAL(runDRC()),this,SLOT(runDRC()));
+
+	cellManagerDialog = new QLayoutCellManager();
 }
 
 QLayoutScene::QLayoutScene(QObject *parent) :
 	QGraphicsScene(parent),
-	drcDialog(new DRCSettings()),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	recentRectangle(NULL),
@@ -26,7 +28,6 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 
 QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
-	drcDialog(new DRCSettings()),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	recentRectangle(NULL),
@@ -39,7 +40,6 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 
 QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
-	drcDialog(new DRCSettings()),
 	recentOperation(DRAWING_OPERATION_NONE),
 	project(NULL),
 	recentRectangle(NULL),
@@ -193,7 +193,7 @@ void QLayoutScene::refreshMacroTable()
 		mi->setMacroName(macroName);
 
 		// fill in library content from LEF:
-		if(project && macro) {
+		/*if(project && macro) {
 			foreach(pin, macro->getPins()) {
 				pin_name = pin->getName();
 				pi = mi->addPin(pin_name);
@@ -216,10 +216,10 @@ void QLayoutScene::refreshMacroTable()
 				}
 				emit(registerLayer(layer_name));
 			}
-		}
+		}*/
 
 		// fill in GDS data:
-		if(project && cell && macro) {
+		/*if(project && cell && macro) {
 			cell->setRectangle(x,y,w,h);
 			foreach(GDSBoundary *b, cell->getBoundaries()) {
 				layer_name = project->layerNameFromCIF(b->getLayerIndex());
@@ -234,7 +234,7 @@ void QLayoutScene::refreshMacroTable()
 					emit(registerLayer(layer_name));
 				}
 			}
-		}
+		}*/
 
 		m_macroTemplateMap[macroName]=mi;
 
@@ -246,9 +246,17 @@ void QLayoutScene::refreshMacroTable()
 void QLayoutScene::setProject(Project *p)
 {
 	project = p;
-	drcDialog->setProject(project);
-	refreshMacroTable();
-	refreshViaTable();
+	if(project) {
+		drcDialog->setProject(project);
+		refreshMacroTable();
+		refreshViaTable();
+		cellManagerDialog->setProject(project);
+	}
+}
+
+void QLayoutScene::showCellManager()
+{
+	cellManagerDialog->show();
 }
 
 void QLayoutScene::showDRC()
@@ -591,12 +599,26 @@ void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal 
 	emit(registerLayer(layer));
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal angle)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient)
 {
 	QLayoutMacroItem *mi;
+	qreal angle = 0;
 	if(m_macroTemplateMap.contains(macro_name)) {
 		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
+		if(orient=="S") {
+			angle=180;
+			x+=mi->rect().width();
+			y+=mi->rect().height();
+		} else if(orient=="E") {
+			angle=90;
+			x+=mi->rect().height();
+		} else if(orient=="W") {
+			angle=-90;
+			y+=mi->rect().width();
+		} else {
+			angle = 0;
+		}
 		mi->setRotation(angle);
 		mi->setPos(x,y);
 		macros.append(mi);
@@ -607,20 +629,34 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 	}
 }
 
-void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, qreal angle)
+void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, QString orient)
 {
 	QLayoutMacroItem *mi;
-	;
+	qreal angle;
 	if(m_macroTemplateMap.contains(macro_name)) {
 
 		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
-		//x-=mi->rect().width();
-		//y+=mi->rect().height();
+
+		if(orient=="S") {
+			angle=180;
+			x+=w;
+			y+=h;
+		} else if(orient=="E") {
+			angle=90;
+			x+=h;
+		} else if(orient=="W") {
+			angle=-90;
+			y+=w;
+		} else {
+			angle = 0;
+		}
+
 		mi->setRotation(angle);
 		mi->setPos(x,y);
 		mi->setSize(w,h);
 		macros.append(mi);
+		cellManagerDialog->addCell(instance_name,macro_name);
 		addItem(mi);
 
 		update();

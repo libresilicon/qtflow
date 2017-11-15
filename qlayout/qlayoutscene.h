@@ -14,6 +14,8 @@
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
 #include "qlayoutviaitem.h"
+
+#include "qlayoutcellmanager.h"
 #include "drcsettings.h"
 
 #include "project.h"
@@ -43,6 +45,7 @@ public:
 
 	void setProject(Project *p);
 	void showDRC();
+	void showCellManager();
 
 	void setDrawingOperation(drawing_operations o);
 	void setActiveLayer(QString layer);
@@ -52,8 +55,8 @@ public:
 	void addWire(QString netname, QString layer, QPointF p1, QPointF p2);
 	void addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h);
-	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, qreal angle);
-	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, qreal angle);
+	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, QString orient);
+	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient);
 
 	QStringList getLayers();
 	QVector<QLayoutRectItem*> getRectangles(QString n);
@@ -106,6 +109,7 @@ private:
 	QMap<QString,QLayoutViaItem*> m_viaTemplateMap;
 
 	DRCSettings *drcDialog;
+	QLayoutCellManager *cellManagerDialog;
 };
 
 #endif // QLAYOUTSCENE_H

@@ -27,6 +27,10 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showDRC()));
 	toolbar->addAction(button);
 
+	button = new QAction(QPixmap(":/array_module.svg"), "Cell manager", toolbar);
+	connect(button, SIGNAL(triggered(bool)), editArea, SLOT(showCellManager()));
+	toolbar->addAction(button);
+
 	addToolBar(toolbar);
 
 	setCentralWidget(editArea);

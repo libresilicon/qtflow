@@ -49,6 +49,7 @@ public slots:
 	void zoomIn();
 	void zoomOut();
 	void showDRC();
+	void showCellManager();
 
 private:
 	void setRecentVisible(QString s);
