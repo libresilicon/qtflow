@@ -42,6 +42,8 @@ public Q_SLOTS:
 	qreal getScaleUnit();
 	bool isAsic();
 
+	QString getStandardCellsLEF();
+
 	// synthesis files:
 	QString getLibertyFile();
 

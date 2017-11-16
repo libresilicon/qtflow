@@ -244,4 +244,5 @@ DISTFILES += \
 	scripts/vesta.sh \
 	scripts/ybuffer.tcl \
 	scripts/ypostproc.tcl \
-    scripts/padframe.py
+    scripts/padframe.py \
+    scripts/preroute.py

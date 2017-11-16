@@ -72,6 +72,11 @@ QString PyProjectSettings::getTopLevelFile()
 	return project->getTopLevelFile();
 }
 
+QString PyProjectSettings::getStandardCellsLEF()
+{
+	return project->getStandardCellsLEF();
+}
+
 QString PyProjectSettings::getLibertyFile()
 {
 	return QFileInfo(project->getLibertyFile()).absoluteFilePath();

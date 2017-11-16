@@ -267,6 +267,12 @@ QString Project::getRootDir()
 	return rootdir;
 }
 
+QString Project::getStandardCellsLEF()
+{
+	QString ret = oneLevelFilter("stdcells");
+	return (ret==QString())?QDir(QDir(getTechPath()).filePath("osu018")).filePath("osu018_stdcells.lef"):QDir(getProcessPath()).filePath(ret);
+}
+
 QString Project::getTopLevelFile()
 {
 	return QDir(getSourceDir()).filePath(project_settings->value("toplevel").toString()+".v");

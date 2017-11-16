@@ -97,7 +97,7 @@ p.stdout.close()
 command = ["/usr/bin/tclsh"]
 command.append("/home/leviathan/qtflow/scripts/blif2cel.tcl")
 command.append("--lef")
-command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append(project_settings.getStandardCellsLEF())
 command.append("--blif")
 command.append(project_settings.getTopLevel()+".blif")
 command.append("--cel")

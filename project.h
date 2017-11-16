@@ -148,6 +148,7 @@ public:
 	QString getTechPath();
 	QString getProcessPath();
 	QString getParametersFile();
+	QString getStandardCellsLEF();
 
 	QStringList getPlanes();
 	QStringList getRoutingLayers();

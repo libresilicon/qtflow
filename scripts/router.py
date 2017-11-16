@@ -3,7 +3,7 @@
 
 import io
 import time
-#import sys
+import sys
 
 import Tkinter
 
@@ -29,6 +29,9 @@ import commands
 from threading import Thread
 from Queue import Queue
 
+sys.path.append("/home/leviathan/qtflow/scripts")
+import preroute
+
 chdir(project_settings.getLayoutDir())
 
 command = ["/usr/bin/tclsh"]
@@ -50,7 +53,7 @@ if not project_settings.isAsic():
 	command = ["/usr/bin/tclsh"]
 	command.append("/home/leviathan/qtflow/scripts/addspacers.tcl")
 	command.append(project_settings.getTopLevel())
-	command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+	command.append(project_settings.getStandardCellsLEF())
 	command.append("FILL")
 
 	p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
@@ -60,21 +63,27 @@ if not project_settings.isAsic():
 
 	p.stdout.close()
 
-	move("counter_filled.def","counter.def")
+	move(project_settings.getTopLevel()+"_filled.def",project_settings.getTopLevel()+".def")
 
-command = []
-command.append(settings.getQRouter())
-command.append("-f")
-command.append("-c")
-command.append(project_settings.getTopLevel()+".cfg")
-command.append(project_settings.getTopLevel()+".def")
 
-qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+if path.isfile(project_settings.getTopLevel()+".def"):
+	if project_settings.isAsic(): #preroute
+		if path.isfile(project_settings.getTopLevel()+".preroute"):
+			preroute.preroute(project_settings.getTopLevel())
 
-for line in iter(qrouter.stdout.readline, ''):
-	print line
+	command = []
+	command.append(settings.getQRouter())
+	command.append("-f")
+	command.append("-c")
+	command.append(project_settings.getTopLevel()+".cfg")
+	command.append(project_settings.getTopLevel()+".def")
 
-qrouter.stdout.close()
+	qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
-if path.isfile("counter_route.def"):
-	move("counter_route.def","counter.def")
+	for line in iter(qrouter.stdout.readline, ''):
+		print line
+
+	qrouter.stdout.close()
+
+	if path.isfile(project_settings.getTopLevel()+"_route.def"):
+		move(project_settings.getTopLevel()+"_route.def",project_settings.getTopLevel()+".def")

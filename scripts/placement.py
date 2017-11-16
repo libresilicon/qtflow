@@ -33,7 +33,7 @@ chdir(project_settings.getLayoutDir())
 command = ["/usr/bin/tclsh"]
 command.append("/home/leviathan/qtflow/scripts/blif2cel.tcl")
 command.append("--lef")
-command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append(project_settings.getStandardCellsLEF())
 command.append("--blif")
 command.append(project_settings.getTopLevel()+".blif")
 command.append("--cel")
@@ -59,7 +59,7 @@ p.stdout.close()
 command = ["/usr/bin/tclsh"]
 command.append("/home/leviathan/qtflow/scripts/decongest.tcl")
 command.append(project_settings.getTopLevel())
-command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append(project_settings.getStandardCellsLEF())
 command.append("FILL")
 command.append(str(0.1))
 
@@ -74,7 +74,7 @@ p.stdout.close()
 command = ["/usr/bin/tclsh"]
 command.append("/home/leviathan/qtflow/scripts/powerbus.tcl")
 command.append(project_settings.getTopLevel())
-command.append("/home/leviathan/qtflow/tech/osu018/osu018_stdcells.lef")
+command.append(project_settings.getStandardCellsLEF())
 command.append("FILL")
 
 p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)

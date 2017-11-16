@@ -22,11 +22,13 @@ void Project::buildPadFrame()
 	QString pl1path = QDir(getLayoutDir()).filePath(getTopLevel()+".pl1");
 	QString pl2path = QDir(getLayoutDir()).filePath(getTopLevel()+".pl2");
 	QString pinpath = QDir(getLayoutDir()).filePath(getTopLevel()+".pin");
+	QString preroutepath = QDir(getLayoutDir()).filePath(getTopLevel()+".preroute");
 	QString padspath = getPadInfoFile();
 
 	QFile pl1file(pl1path);
 	QFile pl2file(pl2path);
 	QFile pinfile(pinpath);
+	QFile preroutefile(preroutepath);
 
 	QString padName;
 	QString cellName;
@@ -35,6 +37,7 @@ void Project::buildPadFrame()
 	QStringList lineList;
 	QMap<QString,int> instanceOrientationMapping;
 	QMap<QString,QRectF> instanceBox;
+	int orient;
 
 	pw = 100;
 	ph = 100;
@@ -265,45 +268,109 @@ void Project::buildPadFrame()
 
 		QString twpinName;
 		QMap<QString,QPointF> twpinPosition;
-		QMap<QString,int> twpinCounter;
 		QMap<QString,int> twpinOrientationMapping;
 		QMap<QString,QString> twpinSignalMapping;
+		QVector<QStringList> prerouteNodeGroups;
+		qreal cored,padframed;
+		cored = (corew>coreh)?corew:coreh;
+		padframed = (padframew>padframeh)?padframew:padframeh;
 
 		foreach(QString signal, signalMacroPinPosition.keys()) {
+			if(getPowerNets().contains(signal)) continue; // VDDs
+			if(getGroundNets().contains(signal)) continue; // VSSs
 			foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
 				foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
-					if(getPowerNets().contains(signal)) continue;
-					if(getGroundNets().contains(signal)) continue;
-					twpinName = "twpin_"+signal;
-					if(!twpinCounter.contains(twpinName)) twpinCounter[twpinName]=0;
-					twpinCounter[twpinName]++;
-					twpinName += QString::number(twpinCounter[twpinName]);
+					orient = instanceOrientationMapping[padName];
 					px = signalMacroPinPosition[signal][padName][pin].x();
 					py = signalMacroPinPosition[signal][padName][pin].y();
-					//px = ((px-padframeleft)*corew/padframew)+coreleft;
-					//py = ((py-padframebottom)*coreh/padframeh)+corebottom;
+					twpinName = "twpin_"+signal;
 					twpinPosition[twpinName]=QPointF(px,py);
-					twpinOrientationMapping[twpinName]=instanceOrientationMapping[padName];
+					twpinOrientationMapping[twpinName]=orient;
 					twpinSignalMapping[twpinName]=signal;
 				}
 			}
+		}
 
-			for(int mult = 2; mult<(int)padframew/corew; mult++) {
+		QString pinName;
+		QMap<QString,QPointF> preRouteNodePosition;
+		QMap<QString,int> preRouteNodeOrientation;
+		QMap<QString,QString> preRouteSignalMapping;
+		QStringList preRouteGroup;
+		qreal origpx, origpy;
+		qreal origpx2, origpy2;
+		int numPoints = 5;
+		int width = 10;
+		qreal dx,dy;
+		foreach(QString signal, signalMacroPinPosition.keys()) {
+			if(getPowerNets().contains(signal)||getGroundNets().contains(signal)) {
 				foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
 					foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
-						if(getPowerNets().contains(signal)) continue;
-						if(getGroundNets().contains(signal)) continue;
-						twpinName = "twpin_"+signal;
-						if(!twpinCounter.contains(twpinName)) twpinCounter[twpinName]=0;
-						twpinCounter[twpinName]++;
-						twpinName += QString::number(twpinCounter[twpinName]);
-						px = signalMacroPinPosition[signal][padName][pin].x();
-						py = signalMacroPinPosition[signal][padName][pin].y();
-						px = (mult*(px-padframeleft)*corew/padframew)+coreleft;
-						py = (mult*(py-padframebottom)*coreh/padframeh)+corebottom;
-						twpinPosition[twpinName]=QPointF(px,py);
-						twpinOrientationMapping[twpinName]=instanceOrientationMapping[padName];
-						twpinSignalMapping[twpinName]=signal;
+						orient = instanceOrientationMapping[padName];
+						origpx2 = signalMacroPinPosition[signal][padName][pin].x();
+						origpy2 = signalMacroPinPosition[signal][padName][pin].y();
+						if(orient==3) { // South
+							for(int j=0;j<width;j++) {
+								preRouteGroup = QStringList();
+								origpx = origpx2-width/2+j;
+								origpy = origpy2;
+								dx = coreleft-origpx;
+								dy = corebottom-origpy;
+
+								pinName = signal+QString::number(j+1);
+								px=origpx;
+								py=origpy;
+								preRouteNodePosition[pinName]=QPointF(px,py);
+								preRouteNodeOrientation[pinName]=orient;
+								preRouteSignalMapping[pinName]=signal;
+								preRouteGroup.append(pinName);
+
+								pinName = signal+QString::number(j+2);
+								px=origpx;
+								py=corebottom;
+								preRouteNodePosition[pinName]=QPointF(px,py);
+								preRouteNodeOrientation[pinName]=orient;
+								preRouteSignalMapping[pinName]=signal;
+								preRouteGroup.append(pinName);
+
+								prerouteNodeGroups.append(preRouteGroup);
+							}
+						} else if(orient==7) { // East
+						} else if(orient==6) { // West
+						} else { // North
+						}
+					}
+				}
+			} else {
+				foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
+					foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
+						preRouteGroup = QStringList();
+						orient = instanceOrientationMapping[padName];
+						origpx = signalMacroPinPosition[signal][padName][pin].x();
+						origpy = signalMacroPinPosition[signal][padName][pin].y();
+						if(orient==3) { // South
+							dx = coreleft-origpx;
+							dy = corebottom-origpy;
+							/*for(int i=0;i<numPoints;i++) {
+								pinName = signal+QString::number(i);
+								px=origpx+i*(dx/numPoints);
+								py=origpy+i*(dy/numPoints);
+								py+=prerouteNodeGroups.count()*100;
+								preRouteNodePosition[pinName]=QPointF(px,py);
+								preRouteNodeOrientation[pinName]=orient;
+								preRouteSignalMapping[pinName]=signal;
+								preRouteGroup.append(pinName);
+							}*/
+						} else if(orient==7) { // East
+						} else if(orient==6) { // West
+						} else { // North
+							/*pinName = signal+QString::number(i);
+							preRouteNodePosition[pinName]=QPointF(px,py);
+							preRouteNodeOrientation[pinName]=orient;
+							preRouteSignalMapping[pinName]=signal;
+							preRouteGroup.append(pinName);
+							py-=2000;*/
+						}
+						prerouteNodeGroups.append(preRouteGroup);
 					}
 				}
 			}
@@ -370,29 +437,32 @@ void Project::buildPadFrame()
 			return;
 		}
 
-		/*j = 0;
-		if(pl2file.open(QIODevice::WriteOnly | QIODevice::Append)) {
-			QTextStream pl2stream(&pl2file);
-			foreach(QString signal, signalMacroPinPosition.keys()) {
-				foreach(QString padName	, signalMacroPinPosition[signal].keys()) {
-					foreach(QString pin	, signalMacroPinPosition[signal][padName].keys()) {
-						pl2stream << signal << " " << j << " " << indexedCellInstance[padName] << " " << pin << " ";
-						pl2stream << signalMacroPinPosition[signal][padName][pin].x();
-						pl2stream << " ";
-						pl2stream << signalMacroPinPosition[signal][padName][pin].y();
-						pl2stream << " ";
-						pl2stream << QString::number(instanceOrientationMapping[padName]);
-						pl2stream << " 1 1";
-						pl2stream << endl;
-						j++;
+		if(preroutefile.open(QIODevice::WriteOnly)) {
+			QTextStream preroutestream(&preroutefile);
+			preroutestream << "core ";
+			preroutestream << coreleft << " " << coreright << " " << corebottom << " " << coretop << endl;
+			preroutestream << "padframe ";
+			preroutestream << padframeleft << " " << padframeright << " " << padframebottom << " " << padframetop << endl;
+			foreach(QString pinName, preRouteNodePosition.keys()) {
+				preroutestream << "position " << pinName;
+				preroutestream << " " << preRouteNodePosition[pinName].x();
+				preroutestream << " " << preRouteNodePosition[pinName].y();
+				preroutestream << endl;
+			}
+			foreach(QStringList group, prerouteNodeGroups) {
+				if(group.count()) {
+					preroutestream << "net " << preRouteSignalMapping[group[0]];
+					foreach(QString pin, group) {
+						preroutestream << " " << pin;
 					}
+					preroutestream << endl;
 				}
 			}
-			pl2file.close();
+			preroutefile.close();
 		} else {
-			qDebug() << pinpath << " can't be opened";
+			qDebug() << preroutepath << " can't be opened";
 			return;
-		}*/
+		}
 	}
 }
 
