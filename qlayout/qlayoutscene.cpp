@@ -633,25 +633,40 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 {
 	QLayoutMacroItem *mi;
 	qreal angle;
+	qreal tx, ty;
 	if(m_macroTemplateMap.contains(macro_name)) {
 
 		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
 
-		if(orient=="S") {
+		tx = 1;
+		ty = 1;
+
+		if(orient=="N") {
+			angle=0;
+		} else if(orient=="FN") {
+			angle=0;
+			tx = -1;
+		} else if(orient=="S") {
+			angle=180;
+		} else if(orient=="FS") {
 			angle=180;
 			x+=w;
-			y+=h;
+			y-=h;
+			ty = -1;
 		} else if(orient=="E") {
 			angle=90;
 			x+=h;
+			y-=w;
 		} else if(orient=="W") {
 			angle=-90;
+			x-=h;
 			y+=w;
 		} else {
 			angle = 0;
 		}
 
+		mi->setTransform(QTransform::fromScale(tx, ty));
 		mi->setRotation(angle);
 		mi->setPos(x,y);
 		mi->setSize(w,h);

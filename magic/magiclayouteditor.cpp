@@ -42,18 +42,18 @@ void MagicLayoutEditor::addMacroInstances()
 		w = abs(e.x2-e.x1);
 		h = abs(e.y2-e.y1);
 
-		if((e.a==0)&&(e.b==-1)&&(e.d==1)&&(e.e==0)) {
+		if((e.a==0)&&(e.b==-1)&&(e.d==1)&&(e.e==0)) { // West
 			orient = "W";
-			x-=h;
-		} else if((e.a==0)&&(e.b==1)&&(e.d==-1)&&(e.e==0)) {
+		} else if((e.a==0)&&(e.b==1)&&(e.d==-1)&&(e.e==0)) { // East
 			orient = "E";
-			y-=w;
-		} else if((e.a==-1)&&(e.b==0)&&(e.d==0)&&(e.e==-1)) {
+		} else if((e.a==-1)&&(e.b==0)&&(e.d==0)&&(e.e==-1)) { // South
 			orient = "S";
-			y-=h;
-			x-=w;
-		} else {
+		} else if((e.a==1)&&(e.b==0)&&(e.d==0)&&(e.e==-1)) { // South Flipped
+			orient = "FS";
+		} else if((e.a==1)&&(e.b==0)&&(e.d==0)&&(e.e==1)) { // North
 			orient = "N";
+		} else if((e.a==-1)&&(e.b==0)&&(e.d==0)&&(e.e==1)) { // North Flippled
+			orient = "FN";
 		}
 
 		editScene->addMacro(e.module_name, e.instance_name, x, y, w, h, orient);
@@ -68,6 +68,7 @@ void MagicLayoutEditor::loadFile(QString file)
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
 
+	gridsize = 100;
 	x = magicdata->getLowerX();
 	y = magicdata->getLowerY();
 	w = magicdata->getUpperX()-x;
@@ -76,10 +77,9 @@ void MagicLayoutEditor::loadFile(QString file)
 	if(w<this->width()) w = this->width();
 	if(h<this->height()) h = this->height();
 
-	//editScene->setGridSize(gridsize);
-	//editScene->setSceneRect(x*gridsize, y*gridsize, w*gridsize, h*gridsize);
+	editScene->setSceneRect(x, y, w, h);
 
-	editScene->setDistanceUnit(100); // assumed because magic doesn't provide this info
+	editScene->setDistanceUnit(gridsize); // assumed because magic doesn't provide this info
 	addMacroInstances();
 	addRectangles();
 

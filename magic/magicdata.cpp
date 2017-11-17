@@ -137,6 +137,8 @@ namespace magic {
 		recent_module.d = d;
 		recent_module.e = e;
 		recent_module.f = f;
+
+		setBoundaryRectangle(c, f, c, f);
 	}
 
 	void MagicData::addUsedModuleBox(int x1, int y1, int x2, int y2)
@@ -145,6 +147,8 @@ namespace magic {
 		recent_module.y1 = y1;
 		recent_module.x2 = x2;
 		recent_module.y2 = y2;
+
+		setBoundaryRectangle(x1, y1, x2, y2);
 	}
 
 	void MagicData::addUsedModuleNames(std::string *module, std::string *name)

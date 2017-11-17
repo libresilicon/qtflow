@@ -9,7 +9,7 @@
 #include <QDebug>
 #include <QPainter>
 
-class QLayoutRectItem : public QObject, public QGraphicsItem
+class QLayoutRectItem : public QObject, public QGraphicsRectItem
 {
 public:
 	QLayoutRectItem(QGraphicsItem *parent = Q_NULLPTR);

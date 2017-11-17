@@ -32,10 +32,7 @@ void DEFLayoutEditor::loadFile(QString file)
 	h = defdata->getUpperY()-y;
 
 	editScene->setDistanceUnit(defdata->getDistanceUnit());
-	r = editScene->addRect(x,y,w,h);
-	pen = r->pen();
-	pen.setWidth(1);
-	r->setPen(pen);
+	editScene->setSceneRect(x,y,w,h);
 
 	addMacroInstances();
 	addSignalWires();

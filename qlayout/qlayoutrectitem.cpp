@@ -1,7 +1,7 @@
 #include "qlayoutrectitem.h"
 
 QLayoutRectItem::QLayoutRectItem(QGraphicsItem* parent) :
-	QGraphicsItem(parent),
+	QGraphicsRectItem(parent),
 	m_locked(false),
 	m_color(Qt::black),
 	m_recentCutOutRectangle(NULL),
@@ -11,7 +11,7 @@ QLayoutRectItem::QLayoutRectItem(QGraphicsItem* parent) :
 }
 
 QLayoutRectItem::QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent) :
-	QGraphicsItem(parent),
+	QGraphicsRectItem(parent),
 	m_locked(false),
 	m_color(Qt::black),
 	m_externalRect(QRectF(x,y,w,h)),
@@ -37,7 +37,10 @@ void QLayoutRectItem::updateMovingOffset(qreal dx, qreal dy)
 
 void QLayoutRectItem::setColor(QColor c)
 {
+	QPen p = pen();
 	m_color = c;
+	p.setColor(m_color);
+	setPen(p);
 }
 
 qreal QLayoutRectItem::width() const
@@ -276,12 +279,17 @@ QVector<QRectF> QLayoutRectItem::getStripes()
 
 void QLayoutRectItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+	QPen pen = QPen();
 	if(isSelected()) {
-		painter->setPen(QPen(Qt::black));
+		pen.setColor(Qt::black);
+		pen.setCosmetic(true);
+		painter->setPen(pen);
 		painter->setBrush(QBrush(m_color));
 		painter->setOpacity(0.5);
 	} else {
-		painter->setPen(QPen(m_color));
+		pen.setColor(m_color);
+		pen.setCosmetic(true);
+		painter->setPen(pen);
 		painter->setBrush(QBrush(m_color));
 		painter->setOpacity(0.5);
 	}
