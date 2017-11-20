@@ -92,7 +92,7 @@ QStringList Project::getPadCells()
 	QStringList ret;
 	foreach(QString k, lefdata.keys()) {
 		foreach(lef::LEFMacro* m, lefdata[k]->getMacros()) {
-			if(m->getClass()=="PAD") {
+			if((m->getClass()=="PAD")||(m->getClass()=="ENDCAP TOPLEFT")) {
 				ret << m->getName();
 			}
 		}
@@ -620,8 +620,12 @@ void Project::placement()
 	} else {
 		mainContext.evalScript("print \"not defined\"");
 	}
-	if(getProjectType().contains("asic"))
+	if(getProjectType().contains("asic")) {
+		qDebug() << "Is ASIC... adding pad frame";
 		buildPadFrame();
+	} else {
+		qDebug() << "Is a macro cell";
+	}
 }
 
 void Project::routing()
@@ -929,6 +933,18 @@ lef::LEFMacro* Project::getMacro(QString s)
 		}
 	}
 	return NULL;
+}
+
+
+qreal Project::getMacroScale(QString s)
+{
+	foreach(QString key, lefdata.keys()) {
+		foreach(lef::LEFMacro* m, lefdata[key]->getMacros()) {
+			if(m) if(m->getName()==s)
+				return lefdata[key]->getBaseUnits();
+		}
+	}
+	return 1;
 }
 
 qreal Project::getViaScale(QString s)

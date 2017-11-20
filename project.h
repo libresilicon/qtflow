@@ -186,6 +186,7 @@ public:
 	lef::LEFMacro* getMacro(QString s);
 	lef::LEFVia* getVia(QString s);
 	qreal getViaScale(QString s);
+	qreal getMacroScale(QString s);
 	QStringList getMacroList();
 	QStringList getViaList();
 	int getBaseUnits(QString macro_name);

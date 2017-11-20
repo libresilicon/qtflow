@@ -35,12 +35,11 @@ command.append("/home/leviathan/qtflow/scripts/blif2cel.tcl")
 command.append("--lef")
 command.append(project_settings.getStandardCellsLEF())
 command.append("--blif")
-command.append(project_settings.getTopLevel()+".blif")
+command.append(path.join(project_settings.getSynthesisDir(),project_settings.getTopLevel()+".blif"))
 command.append("--cel")
 command.append(path.join(project_settings.getLayoutDir(),project_settings.getTopLevel()+".cel"))
 command.append("--units")
-#command.append(str(project_settings.getScaleUnit()))
-command.append(str(100)) # is constant 100, qrouter can't handle anything else
+command.append("100") # is constant 100, qrouter can't handle anything else
 command.append("--pad-width")
 command.append("100")
 command.append("--pad-height")
@@ -61,7 +60,7 @@ command.append("/home/leviathan/qtflow/scripts/decongest.tcl")
 command.append(project_settings.getTopLevel())
 command.append(project_settings.getStandardCellsLEF())
 command.append("FILL")
-command.append(str(0.1))
+command.append("0.1")
 
 p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 

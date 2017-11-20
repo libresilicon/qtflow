@@ -39,8 +39,7 @@ command.append("/home/leviathan/qtflow/scripts/place2def.tcl")
 command.append(project_settings.getTopLevel())
 command.append("FILL")
 command.append(str(len(project_settings.getRoutingLayers())))
-command.append(str(100))
-#command.append(str(project_settings.getScaleUnit()))
+command.append("100")
 
 p=Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
@@ -78,12 +77,12 @@ if path.isfile(project_settings.getTopLevel()+".def"):
 	command.append(project_settings.getTopLevel()+".cfg")
 	command.append(project_settings.getTopLevel()+".def")
 
-	qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
+	#qrouter = Popen(command, stdout=PIPE, stdin=PIPE, stderr=STDOUT, bufsize=1)
 
-	for line in iter(qrouter.stdout.readline, ''):
-		print line
+	#for line in iter(qrouter.stdout.readline, ''):
+	#	print line
 
-	qrouter.stdout.close()
+	#qrouter.stdout.close()
 
-	if path.isfile(project_settings.getTopLevel()+"_route.def"):
-		move(project_settings.getTopLevel()+"_route.def",project_settings.getTopLevel()+".def")
+	#if path.isfile(project_settings.getTopLevel()+"_route.def"):
+	#	move(project_settings.getTopLevel()+"_route.def",project_settings.getTopLevel()+".def")
