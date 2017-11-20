@@ -18,6 +18,8 @@ public:
 
 	void addRectangle(QString layer, QBrush brush, QRectF rect);
 	void addPolygon(QString layer, QBrush brush, QPolygonF poly);
+	void clearPolygons();
+	void clearRectangles();
 
 	QLayoutMacroPinItem* addPin(QString name);
 
@@ -49,6 +51,7 @@ private:
 	QGraphicsSimpleTextItem *m_instanceNameLabel;
 
 	QMap<QString,QVector<QGraphicsRectItem*>> m_layerList;
+	QMap<QString,QVector<QGraphicsRectItem*>> m_layerGDSList;
 	QVector<QLayoutMacroPinItem*> m_pinList;
 };
 

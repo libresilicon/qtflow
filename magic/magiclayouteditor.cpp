@@ -13,8 +13,10 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	editScene->setBackgroundBrush(Qt::white);
 
 	setScene(editScene);
-	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DirectRendering)));
-	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
+	//setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	setInteractive(true);
+	setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
 void MagicLayoutEditor::addRectangles()

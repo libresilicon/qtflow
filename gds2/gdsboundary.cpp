@@ -50,70 +50,43 @@ qreal GDSBoundary::y()
 qreal GDSBoundary::width()
 {
 	GDSPoint* p;
-	qreal x;
-	int i = 0;
-
+	qreal x1, x2;
 	if(m_points.count()==0) return 0;
 
 	p = m_points.at(0);
-	x = p->x;
+	x2 = p->x;
 	foreach(p, m_points) {
-		if(i) {
-			if(x < p->x) x = p->x;
-		}
-		i++;
+		if(x2 < p->x) x2 = p->x;
 	}
-	return x-this->x();
+	x1 = x2;
+	foreach(p, m_points) {
+		if(x1 > p->x) x1 = p->x;
+	}
+	return abs(x2-x1);
 }
 
 qreal GDSBoundary::height()
 {
 	GDSPoint* p;
-	qreal y;
-	int i = 0;
+	qreal y1, y2;
 
 	if(m_points.count()==0) return 0;
 
 	p = m_points.at(0);
-	y = p->y;
+	y2 = p->y;
 	foreach(p, m_points) {
-		if(i) {
-			if(y < p->y) y = p->y;
-		}
-		i++;
+		if(y2 < p->y) y2 = p->y;
 	}
-	return y-this->y();
+	y1 = y2;
+	foreach(p, m_points) {
+		if(y1 > p->y) y1 = p->y;
+	}
+	return y2-y1;
 }
 
 int GDSBoundary::getLayerIndex()
 {
 	return m_layer;
-}
-
-QVector<QPointF> GDSBoundary::sortPoints()
-{
-	qreal x, y;
-
-	QVector<QPointF> pl;
-
-	int i = 0;
-	foreach(GDSPoint* p, m_points) {
-		if(i) {
-			x = p->x;
-			y = p->y;
-
-			x/=m_scale_x;
-			y/=m_scale_y;
-
-			x += m_offset_x;
-			y += m_offset_y;
-
-			pl.append(QPointF(x,y));
-		}
-		i++;
-	}
-
-	return pl;
 }
 
 void GDSBoundary::setScale(qreal x, qreal y)
@@ -131,8 +104,15 @@ void GDSBoundary::setOffset(qreal x, qreal y)
 QPolygonF GDSBoundary::getPolygon()
 {
 	QPolygonF polygon;
-	foreach(QPointF p, sortPoints()) {
-		polygon << p;
+	qreal x, y;
+	foreach(GDSPoint* p, m_points) {
+		x = p->x;
+		y = p->y;
+		x/=m_scale_x;
+		y/=m_scale_y;
+		x += m_offset_x;
+		y += m_offset_y;
+		polygon << QPointF(x,y);
 	}
 	return polygon;
 }

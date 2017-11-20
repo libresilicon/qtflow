@@ -71,6 +71,8 @@ protected:
 	//void drawBackground(QPainter *painter, const QRectF &rect);
 
 public slots:
+	void setGDS(QString name, bool load);
+	void setLEF(QString name, bool load);
 	void onVisibleLayersChanged(QStringList l);
 	void runDRC();
 

@@ -50,18 +50,56 @@ void QLayoutMacroItem::addRectangle(QString layer, QBrush brush, QRectF rect)
 	if(layer==QString())
 		return;
 
+	QPen p;
 	QGraphicsRectItem* r = new QGraphicsRectItem(rect,this);
 	r->setVisible(true);
 	r->setBrush(brush);
 	r->setOpacity(0.75);
+	p = r->pen();
+	p.setCosmetic(true);
+	r->setPen(p);
 	m_layerList[layer].append(r);
 }
 
 void QLayoutMacroItem::addPolygon(QString layer, QBrush brush, QPolygonF poly)
 {
-	addRectangle(layer, brush, poly.boundingRect());
+	if(layer==QString())
+		return;
+
+	QPen p;
+	QGraphicsRectItem* r = new QGraphicsRectItem(poly.boundingRect(),this);
+	r->setVisible(true);
+	r->setBrush(brush);
+	r->setOpacity(0.75);
+	p = r->pen();
+	p.setCosmetic(true);
+	r->setPen(p);
+	m_layerGDSList[layer].append(r);
 }
 
+void QLayoutMacroItem::clearPolygons()
+{
+	int i;
+	foreach(QString layer, m_layerGDSList.keys()) {
+		foreach(QGraphicsRectItem* r, m_layerGDSList[layer]) {
+			i = m_layerGDSList[layer].indexOf(r);
+			m_layerGDSList[layer].remove(i);
+			delete r;
+		}
+	}
+}
+
+void QLayoutMacroItem::clearRectangles()
+{
+	int i;
+	foreach(QString layer, m_layerList.keys()) {
+		foreach(QGraphicsRectItem* r, m_layerList[layer]) {
+			i = m_layerList[layer].indexOf(r);
+			m_layerList[layer].remove(i);
+			delete r;
+		}
+	}
+}
 
 void QLayoutMacroItem::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {

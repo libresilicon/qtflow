@@ -58,6 +58,7 @@
 %token ASTERISK
 %token NEW
 %token SPECIALNETS
+%token USE
 
 %token <v_int> INTEGER
 %token <v_str> STRING
@@ -169,7 +170,9 @@ component_placement: PLUS PLACED BRACKETOPEN placement_value placement_value BRA
 	defdata->addUsedModuleOrientation(*$7);
 };
 
-pins: PINS INTEGER pin_list END PINS;
+pins:
+	  PINS INTEGER pin_list END PINS
+	| PINS INTEGER END PINS;
 pin_list:
 	  pin_list_element
 	| pin_list pin_list_element
@@ -220,6 +223,7 @@ net_list:
 net_list_element:
 	  net_info
 	| routed_info
+	| use_info_name
 ;
 
 net_name: MINUS STRING
@@ -234,7 +238,13 @@ net_connections:
 	| net_connections net_connection
 ;
 
-net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE
+net_connection:
+BRACKETOPEN STRING DO BRACKETCLOSE
+{
+	defdata->addToNetConnection(*$2,"DO");
+}
+|
+BRACKETOPEN STRING STRING BRACKETCLOSE
 {
 	defdata->addToNetConnection(*$2,*$3);
 };
@@ -242,6 +252,10 @@ net_connection: BRACKETOPEN STRING STRING BRACKETCLOSE
 routed_info_name: PLUS ROUTED STRING
 {
 	defdata->startRoutedInfo(*$3);
+};
+
+use_info_name: PLUS USE STRING
+{
 };
 
 routed_info:
@@ -261,17 +275,16 @@ routed_info_tupels:
 	  routed_info_tupel
 	| routed_info_tupels routed_info_tupel
 ;
-
 routed_info_tupel:
-  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+  BRACKETOPEN placement_value placement_value BRACKETCLOSE
   {
 	  defdata->addRoutedInfoPoint($2,$3);
   }
-| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+| BRACKETOPEN ASTERISK placement_value BRACKETCLOSE
   {
 	  defdata->shiftRoutedInfoPointY($3);
   }
-| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+| BRACKETOPEN placement_value ASTERISK BRACKETCLOSE
   {
 	  defdata->shiftRoutedInfoPointX($2);
   }
@@ -287,15 +300,15 @@ new_metal_tupels:
 ;
 
 new_metal_tupel:
-  BRACKETOPEN INTEGER INTEGER BRACKETCLOSE
+  BRACKETOPEN placement_value placement_value BRACKETCLOSE
   {
 	  defdata->addNewMetalPoint($2,$3);
   }
-| BRACKETOPEN ASTERISK INTEGER BRACKETCLOSE
+| BRACKETOPEN ASTERISK placement_value BRACKETCLOSE
   {
 	  defdata->shiftNewMetalPointY($3);
   }
-| BRACKETOPEN INTEGER ASTERISK BRACKETCLOSE
+| BRACKETOPEN placement_value ASTERISK BRACKETCLOSE
   {
 	  defdata->shiftNewMetalPointX($2);
   }

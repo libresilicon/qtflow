@@ -276,7 +276,10 @@ macro_class:
   {
 	  lefdata->setMacroClass(*$2);
   }
-| CLASS STRING STRING;
+| CLASS STRING STRING
+  {
+	  lefdata->setMacroClass(*$2+" "+*$3);
+  }
 macro_foreign: FOREIGN STRING DOUBLE DOUBLE;
 macro_site:
 SITE STRING

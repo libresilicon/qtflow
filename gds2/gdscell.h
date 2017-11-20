@@ -27,10 +27,10 @@ public:
 private:
 	QVector<GDSBoundary*> m_boundaries;
 	QString m_name;
-	qreal m_x;
-	qreal m_y;
-	qreal m_width;
-	qreal m_height;
+	qreal m_x1;
+	qreal m_y1;
+	qreal m_x2;
+	qreal m_y2;
 
 	qreal m_scale;
 

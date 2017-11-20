@@ -24,8 +24,6 @@ public:
 	qreal height();
 
 private:
-	QVector<QPointF> sortPoints();
-
 	QVector<GDSPoint*> m_points;
 	int m_layer;
 

@@ -39,6 +39,7 @@ public:
 public slots:
 	void zoomIn();
 	void zoomOut();
+	void showCellManager();
 
 signals:
 	void contentChanged();

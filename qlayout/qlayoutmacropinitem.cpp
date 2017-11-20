@@ -3,7 +3,6 @@
 QLayoutMacroPinItem::QLayoutMacroPinItem(qreal scale, QLayoutMacroPinItem *orig, QGraphicsItem *parent) :
 	QGraphicsRectItem(parent)
 {
-	QPen p;
 	QRectF rect;
 	m_x1 = 0;
 	m_x2 = 0;
@@ -34,10 +33,14 @@ void QLayoutMacroPinItem::addRectangle(QString layer, QBrush brush, QRectF rect)
 	if(layer==QString())
 		return;
 
+	QPen p;
 	QGraphicsRectItem* r = new QGraphicsRectItem(rect,this);
 	r->setVisible(true);
 	r->setBrush(brush);
 	r->setOpacity(0.75);
+	p = r->pen();
+	p.setCosmetic(true);
+	r->setPen(p);
 	m_layerList[layer].append(r);
 }
 

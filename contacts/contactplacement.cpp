@@ -87,7 +87,6 @@ void ContactPlacement::updatePreview()
 	QGraphicsSimpleTextItem* padLabel;
 	qreal x,y,w,h;
 	qreal countT, countB, countL, countR;
-	qreal padBorder = 1;
 	qreal scale;
 	qreal rw,rh;
 	QString padname;
@@ -100,6 +99,10 @@ void ContactPlacement::updatePreview()
 
 		// drawing the data:
 		rect = new QGraphicsRectItem(m_baseRect);
+		pen = rect->pen();
+		pen.setWidth(1);
+		pen.setCosmetic(true);
+		rect->setPen(pen);
 
 		w = m_baseRect.width();
 		w /= longestSide;
@@ -157,7 +160,7 @@ void ContactPlacement::updatePreview()
 					scale/=2;
 					padLabel->setScale(scale);
 					padLabel->setRotation(90);
-					padLabel->setPos(x*w+w-rh*scale,y);
+					padLabel->setPos(x*w+w/2,y);
 
 					x++;
 				}
@@ -190,7 +193,8 @@ void ContactPlacement::updatePreview()
 					y++;
 				}
 				pen = pad->pen();
-				pen.setWidth(padBorder);
+				pen.setWidth(1);
+				pen.setCosmetic(true);
 				pad->setPen(pen);
 			}
 		}

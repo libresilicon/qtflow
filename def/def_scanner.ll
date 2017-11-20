@@ -24,7 +24,6 @@ NUMBER			[0-9]
 INTEGER			-{NUMBER}+|{NUMBER}+
 EXPONENT		[eE][+-]?{INTEGER}
 DOUBLE			{INTEGER}("."{INTEGER})?{EXPONENT}?
-
 STRING			[A-Za-z]|[A-Za-z0-9_,.-<>\"\[\]\/]
 
 ASTERISK			"*"
@@ -48,6 +47,7 @@ DIEAREA				"DIEAREA"
 COMPONENTS			"COMPONENTS"
 TRACKS				"TRACKS"
 DO					"DO"
+USE					"USE"
 LAYER				"LAYER"
 STEP				"STEP"
 PLACED				"PLACED"
@@ -76,6 +76,7 @@ SPECIALNETS			"SPECIALNETS"
 {COMPONENTS}+					{ return def::DEFParser::token::COMPONENTS; }
 {TRACKS}+						{ return def::DEFParser::token::TRACKS; }
 {DO}+							{ return def::DEFParser::token::DO; }
+{USE}+							{ return def::DEFParser::token::USE; }
 {LAYER}+						{ return def::DEFParser::token::LAYER; }
 {STEP}+							{ return def::DEFParser::token::STEP; }
 {MINUS}+						{ return def::DEFParser::token::MINUS; }

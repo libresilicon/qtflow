@@ -19,27 +19,29 @@ QVector<GDSBoundary*> GDSCell::getBoundaries()
 
 qreal GDSCell::getWidth()
 {
-	return m_width;
+	return m_x2-m_x1;
 }
 
 qreal GDSCell::getHeight()
 {
-	return m_height;
+	return m_y2-m_y1;
 }
 
 void GDSCell::setRectangle(qreal x, qreal y, qreal w, qreal h)
 {
-	qreal scale_x = (abs(w)>0)?abs(m_width/w):1;
-	qreal scale_y = (abs(h)>0)?abs(m_height/h):1;
+	qreal width = m_x2-m_x1;
+	qreal height = m_y2-m_y1;
+	qreal scale_x = (abs(w)>0)?abs(width/w):1;
+	qreal scale_y = (abs(h)>0)?abs(height/h):1;
 
 	m_scale = scale_x;
-	if((m_scale*m_height)>h) m_scale = scale_y;
+	if((m_scale*height)>h) m_scale = scale_y;
 
 	if(w<0) x+=w;
 	if(h<0) y+=h;
 
-	x-=(m_x/m_scale);
-	y-=(m_y/m_scale);
+	x-=(m_x1/m_scale);
+	y-=(m_y1/m_scale);
 
 	foreach(GDSBoundary *b, m_boundaries) {
 		b->setScale(m_scale,m_scale);
@@ -50,25 +52,21 @@ void GDSCell::setRectangle(qreal x, qreal y, qreal w, qreal h)
 void GDSCell::addBoundary(GDSBoundary* b)
 {
 	int x1,x2,y1,y2;
+	x1 = b->x();
+	x2 = b->x()+b->width();
+	y1 = b->y();
+	y2 = b->y()+b->height();
 	if(m_boundaries.count()) {
 		// update lowest x/y
-		if(b->x() < m_x) m_x = b->x();
-		if(b->y() < m_y) m_y = b->y();
-
-		x1 = m_x + m_width;
-		x2 = b->x() + b->width();
-		y1 = m_y + m_height;
-		y2 = b->y() + b->height();
-
-		if(x2>x1) m_width = x2 - m_x;
-		if(y2>y1) m_height = y2 - m_y;
-
+		if(x1<m_x1) m_x1 = x1;
+		if(y1<m_y1) m_y1 = y1;
+		if(x2>m_x2) m_x2 = x2;
+		if(y2>m_y2) m_y2 = y2;
 	} else { // first box
-		m_x = b->x();
-		m_y = b->y();
-		m_width = b->width();
-		m_height = b->height();
+		m_x1 = x1;
+		m_y1 = y1;
+		m_x2 = x2;
+		m_y2 = y2;
 	}
-
 	m_boundaries.append(b);
 }

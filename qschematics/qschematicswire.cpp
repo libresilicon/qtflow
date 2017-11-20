@@ -5,6 +5,7 @@ QSchematicsWire::QSchematicsWire(QString type, qreal x1, qreal y1, qreal x2, qre
 {
 	QPen pen = this->pen();
 	pen.setWidth(5);
+	pen.setCosmetic(true);
 	setPen(pen);
 	setVisible(true);
 }

@@ -10,8 +10,15 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	editScene->setBackgroundBrush(Qt::white);
 
 	setScene(editScene);
-	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers | QGL::DirectRendering)));
-	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
+	//setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	setInteractive(true);
+	setDragMode(QGraphicsView::ScrollHandDrag);
+}
+
+void DEFLayoutEditor::showCellManager()
+{
+	editScene->showCellManager();
 }
 
 void DEFLayoutEditor::loadFile(QString file)

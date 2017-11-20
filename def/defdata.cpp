@@ -5,8 +5,8 @@ namespace def {
 	DEFData::DEFData(QString filename) :
 		lexer(NULL),
 		parser(NULL),
-		trace_scanning(false),
-		trace_parsing(false),
+		trace_scanning(true),
+		trace_parsing(true),
 		distanceMicrons(false),
 		m_BBLowerX(0),
 		m_BBLowerY(0),
