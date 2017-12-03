@@ -338,7 +338,7 @@ void Project::buildPadFrame()
 				j++;
 			}
 
-			/*j=0;
+			j=0;
 			foreach(QString signal, signalMacroDeadPinPosition.keys()) {
 				foreach(QString padName	, signalMacroDeadPinPosition[signal].keys()) {
 					foreach(QString pin	, signalMacroDeadPinPosition[signal][padName].keys()) {
@@ -357,7 +357,7 @@ void Project::buildPadFrame()
 						j++;
 					}
 				}
-			}*/
+			}
 
 			pl2file.close();
 		} else {

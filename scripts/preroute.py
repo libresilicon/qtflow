@@ -362,6 +362,8 @@ def setup_wiring():
 	global net_ring_dimensions
 	global pins_section
 	dfactor=10000
+	#padoffset=4000
+	padoffset=400
 	get_pad_bank_dimensions()
 	for orient in pad_banks:
 		for part in pad_banks[orient]:
@@ -397,7 +399,7 @@ def setup_wiring():
 						wx = (corew*(wx-pad_banks_offsets[orient][0])/pbw)+corex1
 						point = (wx,wy)
 						points.append(point)
-						wy = corey2+200
+						wy = corey2+padoffset
 						if net in net_ring_dimensions:
 							wy = net_ring_dimensions[net][3]
 						point = (wx,wy)
@@ -419,7 +421,7 @@ def setup_wiring():
 						wx = (corew*(wx-pad_banks_offsets[orient][0])/pbw)+corex1
 						point = (wx,wy)
 						points.append(point)
-						wy = corey1-200
+						wy = corey1-padoffset
 						if net in net_ring_dimensions:
 							wy = net_ring_dimensions[net][1]
 						point = (wx,wy)
@@ -440,7 +442,7 @@ def setup_wiring():
 						wy = (coreh*abs(wy-pad_banks_offsets[orient][1])/pbh)+corey1
 						point = (wx,wy)
 						points.append(point)
-						wx = corex1-200
+						wx = corex1-padoffset
 						if net in net_ring_dimensions:
 							wx = net_ring_dimensions[net][0]
 						point = (wx,wy)
@@ -461,7 +463,7 @@ def setup_wiring():
 						wy = (coreh*abs(wy-pad_banks_offsets[orient][1])/pbh)+corey1
 						point = (wx,wy)
 						points.append(point)
-						wx = corex2+200
+						wx = corex2+padoffset
 						if net in net_ring_dimensions:
 							wx = net_ring_dimensions[net][2]
 						point = (wx,wy)
@@ -526,8 +528,9 @@ def preroute(top):
 								#line = line + "+ FIXED\n"
 								line = line + "+ ROUTED "+metal_layer
 								for point in points:
-									line = line + " ( "+str(point[0])+" "+str(point[1])+" ) "
-									#line = line + "M2_M1"
+									line = line + " ( "+str(point[0])+" "+str(point[1])+" )"
+									#line = line + " via"
+								#line = line + " M2_M1"
 
 							if(len(pointslist)>1):
 								for i in range(1,len(pointslist)):
@@ -536,7 +539,8 @@ def preroute(top):
 										line = line + "\n  NEW "+metal_layer
 										for point in points:
 											line = line + " ( "+str(point[0])+" "+str(point[1])+" )"
-										line = line + " M2_M1"
+											#line = line + " via"
+										#line = line + " M2_M1"
 
 							try:
 								pointslist = power_ring_wiring[net]
@@ -549,7 +553,8 @@ def preroute(top):
 										line = line + "\n  NEW "+metal_layer
 										for point in points:
 											line = line + " ( "+str(point[0])+" "+str(point[1])+" )"
-										line = line + " M2_M1"
+											#line = line + " via"
+										#line = line + " M2_M1"
 
 							line = line + " ;\n"
 							net_begone = False

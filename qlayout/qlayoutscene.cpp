@@ -95,23 +95,30 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 	return QPointF(x,y);
 }*/
 
-/*void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
+void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
+	QPen p;
+	QColor color;
 	QVector<QLineF> lines;
 	qreal left, top;
+	int grid = 100*m_baseUnit;
 
-	left = int(rect.left())-(int(rect.left()) % m_gridSize);
-	top = int(rect.top())-(int(rect.top()) % m_gridSize);
-	for (qreal x = left; x < rect.right(); x += m_gridSize){
+	left = int(rect.left())-(int(rect.left()) % grid);
+	top = int(rect.top())-(int(rect.top()) % grid);
+	for (qreal x = left; x < rect.right(); x += grid) {
 		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
-		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
+		painter->drawText(QPoint(x,0),QString::number(x));
+		for (qreal y = top; y < rect.bottom(); y += grid){
 			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
 		}
 	}
 
-	painter->setPen(QPen(QColor(200, 200, 255, 125)));
+	color = QColor(200, 200, 255, 125);
+	p = QPen(color);
+	p.setCosmetic(true);
+	painter->setPen(p);
 	painter->drawLines(lines.data(), lines.size());
-}*/
+}
 
 void QLayoutScene::refreshViaTable()
 {

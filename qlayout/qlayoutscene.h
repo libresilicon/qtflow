@@ -68,7 +68,7 @@ protected:
 
 	void keyPressEvent(QKeyEvent *event);
 
-	//void drawBackground(QPainter *painter, const QRectF &rect);
+	void drawBackground(QPainter *painter, const QRectF &rect);
 
 public slots:
 	void setGDS(QString name, bool load);
