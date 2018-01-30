@@ -150,7 +150,7 @@ void QLayoutMacroItem::setSize(qreal w, qreal h)
 {
 	qreal scaleFactor;
 
-	scaleFactor = (m_width>m_height)?(abs(w)/m_width):(abs(h)/m_height);
+	scaleFactor = (m_width>m_height)?(qFabs(w)/m_width):(qFabs(h)/m_height);
 	m_width *= scaleFactor;
 	m_height *= scaleFactor;
 

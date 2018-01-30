@@ -31,8 +31,8 @@ void GDSCell::setRectangle(qreal x, qreal y, qreal w, qreal h)
 {
 	qreal width = m_x2-m_x1;
 	qreal height = m_y2-m_y1;
-	qreal scale_x = (abs(w)>0)?abs(width/w):1;
-	qreal scale_y = (abs(h)>0)?abs(height/h):1;
+	qreal scale_x = (qFabs(w)>0)?qFabs(width/w):1;
+	qreal scale_y = (qFabs(h)>0)?qFabs(height/h):1;
 
 	m_scale = scale_x;
 	if((m_scale*height)>h) m_scale = scale_y;
