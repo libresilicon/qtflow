@@ -4,6 +4,7 @@
 #include <QString>
 #include <QPointF>
 #include <QVector>
+#include <QtMath>
 
 #include "gdsboundary.h"
 

@@ -4,6 +4,7 @@
 #include <QGraphicsPolygonItem>
 #include <QGraphicsRectItem>
 #include <QDebug>
+#include <QtMath>
 
 #include "gdspoint.h"
 

@@ -6,6 +6,7 @@
 #include <QAction>
 #include <QMenu>
 #include <QPen>
+#include <QtMath>
 
 #include "qlayoutwireitem.h"
 #include "qlayoutmacropinitem.h"

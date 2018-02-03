@@ -62,7 +62,7 @@ qreal GDSBoundary::width()
 	foreach(p, m_points) {
 		if(x1 > p->x) x1 = p->x;
 	}
-	return abs(x2-x1);
+	return qFabs(x2-x1);
 }
 
 qreal GDSBoundary::height()
