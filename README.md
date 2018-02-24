@@ -72,7 +72,7 @@ Change into it:
 
  cd build
 
-Set qt5 environment and run qmake:
+Run CMake:
 
  cmake ..
 
