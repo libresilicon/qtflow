@@ -26,13 +26,29 @@
  * KTextEditor
 
 ### OpenSUSE
-syntax-highlighting-devel
-ktexteditor-devel
+ sudo zypper in patterns-kde-devel_qt5 
 
 ### Debian
 Install packages:
 
- sudo apt-get install qtbase5-dev qtbase5-dev-tools qttools5-dev-tools qtscript-tools python-all-dev build-essential qt5-default bison flex qtbase5-private-dev qtconnectivity5-dev qtdeclarative5-dev qtdeclarative5-dev-tools qtconnectivity5-dev qt5keychain-dev qt5-style-plugins 
+ sudo apt-get install \
+	qtbase5-dev \
+	qtbase5-dev-tools \
+	qttools5-dev-tools \
+	qtscript-tools \
+	python-all-dev \
+	build-essential \
+	qt5-default \
+	bison \
+	flex \
+	qtbase5-private-dev \
+	qtconnectivity5-dev \
+	qtdeclarative5-dev \
+	qtdeclarative5-dev-tools \
+	qtconnectivity5-dev \
+	qt5keychain-dev \
+	qt5-style-plugins \
+	libkf5texteditor-dev
 
 ## Windows
 TBD
