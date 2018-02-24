@@ -6,8 +6,6 @@
 #include <QGraphicsView>
 #include <QLabel>
 
-#include "ieditor.h"
-
 #include "qschematics/qschematicsscene.h"
 
 #include "schematics_reader/schematicsdata.h"
@@ -16,7 +14,7 @@
 #include "schematicslibraryeditor.h"
 #include "schematicsparametricpartdialog.h"
 
-class SchematicsEditor : public QGraphicsView, public IEditor
+class SchematicsEditor : public QGraphicsView
 {
 	Q_OBJECT
 
@@ -28,8 +26,6 @@ public:
 	QString getFilePath();
 
 	bool changes();
-
-	void setProject(Project *p);
 
 	void setDrawingOperation(schematics_operations o);
 
@@ -51,8 +47,6 @@ private:
 	QString filePath;
 	QSchematicsScene *editScene;
 	schematics::SchematicsData *schematicsdata;
-
-	Project *project;
 
 	SchematicsPartSelection *partSelection;
 	SchematicsLibraryEditor *libraryEditor;

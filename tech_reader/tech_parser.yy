@@ -19,9 +19,9 @@
 #include <string>
 #include <QString>
 
-#include "tech_parser/tech_parser.h"
-#include "tech_reader/techdata.h"
-#include "tech_reader/techscanner.h"
+#include "tech_parser.hpp"
+#include "techdata.h"
+#include "techscanner.h"
 
 #define techlex (techdata->getLexer())->techlex
 #define techlineno (int)(techdata->getLexer())->lineno()

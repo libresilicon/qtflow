@@ -2,7 +2,7 @@
 #define SCHEMATICEDITORWIDGET_H
 
 #include "schematicseditor.h"
-#include "editorwidget.h"
+#include "qeditor/editorwidget.h"
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -18,8 +18,6 @@ public:
 	void loadFile(QString);
 	QString getFilePath();
 
-	void setProject(Project *p);
-
 public slots:
 	void drawingOperation();
 
@@ -30,7 +28,6 @@ private:
 	void addDrawingOperations();
 
 	SchematicsEditor *editArea;
-	Project *project;
 
 	QMap<schematics_operations,QAction*> drawingOperations;
 };

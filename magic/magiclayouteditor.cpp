@@ -1,9 +1,9 @@
 #include "magiclayouteditor.h"
+#include <QDateTime>
 
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	magicdata(NULL),
-	project(NULL),
 	activeLayerSelection(NULL),
 	visibles(NULL),
 	filePath(QString()),
@@ -13,8 +13,8 @@ MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
 	editScene->setBackgroundBrush(Qt::white);
 
 	setScene(editScene);
-	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
-	//setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	//setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
+	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setInteractive(true);
 	setDragMode(QGraphicsView::ScrollHandDrag);
 }
@@ -91,7 +91,7 @@ void MagicLayoutEditor::loadFile(QString file)
 void MagicLayoutEditor::saveFileWriteHeader(QTextStream &outputStream)
 {
 	outputStream << "magic" << endl;
-	outputStream << "tech " << project->getTechnology() << endl;
+	//outputStream << "tech " << project->getTechnology() << endl;
 	outputStream << "magscale 1 2" << endl;
 	outputStream << "timestamp " << QDateTime::currentMSecsSinceEpoch() << endl;
 }
@@ -138,12 +138,6 @@ void MagicLayoutEditor::saveFile()
 		outputStream << "<< end >>" << endl;
 		magicFile.close();
 	}
-}
-
-void MagicLayoutEditor::setProject(Project *p)
-{
-	project = p;
-	editScene->setProject(p);
 }
 
 void MagicLayoutEditor::setRecentVisible(QString s)

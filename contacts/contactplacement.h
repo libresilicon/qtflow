@@ -14,12 +14,11 @@
 
 #include "ui_contactplacement.h"
 
-#include "project.h"
-
 #include "contactsview.h"
 #include "padinfo.h"
 
 #include "blif/blifdata.h"
+#include "lef/lefdata.h"
 
 class ContactPlacement : public QDialog
 {
@@ -27,7 +26,6 @@ class ContactPlacement : public QDialog
 
 public:
 	ContactPlacement(QWidget *parent = Q_NULLPTR);
-	void setProject(Project *p);
 
 public slots:
 	void updatePreview();
@@ -45,7 +43,6 @@ private:
 	void refreshNameTable();
 	void storeNameTable();
 
-	Project* project;
 	Ui::ContactPlacement* ui;
 	QGraphicsScene* scene;
 	ContactsView* view;

@@ -2,7 +2,6 @@
 
 MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
-	project(NULL),
 	editArea(new MagicLayoutEditor(this)),
 	view3D(new Magic3D(this))
 {
@@ -41,6 +40,8 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	editArea->setVisibles(layoutVisibles);
 
 	connect(editArea, SIGNAL(contentChanged()), this, SLOT(onContentChanged()));
+
+	addDrawingOperations();
 }
 
 void MagicLayoutEditorWidget::onContentChanged()
@@ -51,18 +52,16 @@ void MagicLayoutEditorWidget::onContentChanged()
 
 void MagicLayoutEditorWidget::addDrawingLayerSelection()
 {
-	if(!project) return;
-
 	QToolBar *toolbar;
 
 	toolbar = new QToolBar(this);
 	activeLayer = new QComboBox(toolbar);
 
-	foreach(QString layern, project->getPlanes()) {
+	/*foreach(QString layern, project->getPlanes()) {
 		foreach(QString vname, project->getTypes(layern)) {
 			activeLayer->addItem(project->materialIcon(vname),vname);
 		}
-	}
+	}*/
 
 	connect(activeLayer,SIGNAL(currentTextChanged(QString)),editArea,SLOT(setActiveLayer(QString)));
 	connect(layoutVisibles,SIGNAL(setCurrentLayer(QString)),activeLayer,SLOT(setCurrentText(QString)));
@@ -74,8 +73,6 @@ void MagicLayoutEditorWidget::addDrawingLayerSelection()
 
 void MagicLayoutEditorWidget::addDrawingOperations()
 {
-	if(!project) return;
-
 	QAction *button;
 	QToolBar *toolbar;
 
@@ -139,25 +136,13 @@ void MagicLayoutEditorWidget::drawingOperation()
 void MagicLayoutEditorWidget::loadFile(QString path)
 {
 	editArea->setVisibles(layoutVisibles);
-
 	editArea->loadFile(path);
-
-	view3D->setProject(project);
 	view3D->loadFile(path);
 }
 
 void MagicLayoutEditorWidget::show3D()
 {
 	view3D->show();
-}
-
-void MagicLayoutEditorWidget::setProject(Project *p)
-{
-	project = p;
-	layoutVisibles->setProject(project);
-	editArea->setProject(project);
-	addDrawingOperations();
-	addDrawingLayerSelection();
 }
 
 QString MagicLayoutEditorWidget::getFilePath()

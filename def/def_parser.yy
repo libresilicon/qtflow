@@ -16,8 +16,8 @@
 #include <iostream>
 #include <string>
 #include <QString>
-#include "def/defscanner.h"
-#include "def/defdata.h"
+#include "defscanner.h"
+#include "defdata.h"
 
 #define deflex (defdata->getLexer())->deflex
 #define deflineno (int)(defdata->getLexer())->lineno()

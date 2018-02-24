@@ -9,8 +9,6 @@
 
 #include "ui_partselection.h"
 
-#include "project.h"
-
 #include "qschematics/qschematicspart.h"
 
 class SchematicsPartSelection : public QDialog
@@ -19,7 +17,6 @@ class SchematicsPartSelection : public QDialog
 
 public:
 	SchematicsPartSelection(QWidget *parent);
-	void setProject(Project *p);
 
 public slots:
 	void on_buttonBox_accepted();
@@ -33,7 +30,6 @@ private:
 	void updatePartList();
 
 	Ui::PartSelection *ui;
-	Project *project;
 	QGraphicsScene *partPreview;
 
 	QVector<QTreeWidgetItem*> m_libraries;

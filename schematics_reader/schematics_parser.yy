@@ -18,8 +18,8 @@
 #include <QMap>
 #include <QStack>
 
-#include "schematics_reader/schematicsscanner.h"
-#include "schematics_reader/schematicsdata.h"
+#include "schematicsscanner.h"
+#include "schematicsdata.h"
 
 #define schematicslex (schematicsdata->getLexer())->schematicslex
 #define schematicslineno (int)(schematicsdata->getLexer())->lineno()

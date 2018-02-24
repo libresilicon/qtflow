@@ -2,8 +2,7 @@
 
 DRCSettings::DRCSettings(QWidget *parent):
 	QDialog(parent),
-	ui(new Ui::DRCSettings),
-	project(NULL)
+	ui(new Ui::DRCSettings)
 {
 	ui->setupUi(this);
 }
@@ -16,12 +15,6 @@ void DRCSettings::on_buttonBox_accepted()
 void DRCSettings::on_runDRC_pressed()
 {
 	emit(runDRC());
-}
-
-void DRCSettings::setProject(Project *p)
-{
-	project = p;
-	refreshRuleList();
 }
 
 void DRCSettings::refreshRuleList()
@@ -44,7 +37,7 @@ void DRCSettings::refreshRuleList()
 	ui->tableWidths->setItem(1, 0, new QTableWidgetItem("Hello"));
 
 	i=0;
-	if(project) foreach(designRuleName, project->getDesignRules()) {
+	/*if(project) foreach(designRuleName, project->getDesignRules()) {
 		rule = project->getDesignRule(designRuleName);
 		if(rule.getMinimumWidth()) {
 			ui->tableWidths->setRowCount(i+1);
@@ -52,7 +45,7 @@ void DRCSettings::refreshRuleList()
 			ui->tableWidths->setItem(i, 1, new QTableWidgetItem(QString::number(rule.getMinimumWidth())));
 			i++; // next line
 		}
-	}
+	}*/
 
 	header.clear();
 	header << "Layer name";
@@ -65,7 +58,7 @@ void DRCSettings::refreshRuleList()
 	ui->tableSpacings->setHorizontalHeaderLabels(header);
 
 	i=0;
-	if(project) foreach(designRuleName, project->getDesignRules()) {
+	/*if(project) foreach(designRuleName, project->getDesignRules()) {
 		rule = project->getDesignRule(designRuleName);
 		foreach(QString sprn, rule.getSpacingRules()) {
 			spacing = rule.getSpacingRule(sprn);
@@ -76,6 +69,6 @@ void DRCSettings::refreshRuleList()
 			ui->tableSpacings->setItem(i, 3, new QTableWidgetItem(spacing.getTouchingOK()?"Yes":"No"));
 			i++; // next line
 		}
-	}
+	}*/
 
 }

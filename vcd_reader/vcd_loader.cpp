@@ -2,8 +2,8 @@
 #include "vcd_loader.hpp"
 
 #include "vcd_lexer.hpp"
-#include "vcd_parser/vcd_parser.h"
-#include "vcd_parser/location.hh"
+#include "vcd_parser.hpp"
+#include "location.hh"
 
 namespace vcd {
 

@@ -2,8 +2,7 @@
 
 SchematicsEditorWidget::SchematicsEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
-	editArea(new SchematicsEditor(this)),
-	project(NULL)
+	editArea(new SchematicsEditor(this))
 {
 	QAction *button;
 	QToolBar *toolbar = new QToolBar(this);
@@ -43,13 +42,6 @@ void SchematicsEditorWidget::saveFile()
 {
 }
 
-void SchematicsEditorWidget::setProject(Project *p)
-{
-	project = p;
-	editArea->setProject(project);
-	addDrawingOperations();
-}
-
 void SchematicsEditorWidget::drawingOperation()
 {
 	QObject* obj = sender();
@@ -69,8 +61,6 @@ void SchematicsEditorWidget::drawingOperation()
 
 void SchematicsEditorWidget::addDrawingOperations()
 {
-	if(!project) return;
-
 	QAction *button;
 	QToolBar *toolbar;
 

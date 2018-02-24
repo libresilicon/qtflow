@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <QString>
 
-#include "symbol_parser/symbol_parser.h"
-#include "symbol_reader/symbolscanner.h"
+#include "symbol_parser.hpp"
+#include "symbolscanner.h"
 
 #define YY_DECL int symbol::SymbolScanner::symbollex(\
 	symbol::SymbolParser::semantic_type* symbollval,\

@@ -3,7 +3,6 @@
 SchematicsPartSelection::SchematicsPartSelection(QWidget *parent) :
 	QDialog(parent),
 	ui(new Ui::PartSelection),
-	project(NULL),
 	partPreview(NULL)
 {
 	ui->setupUi(this);
@@ -25,12 +24,6 @@ void SchematicsPartSelection::on_buttonBox_rejected()
 	hide();
 }
 
-void SchematicsPartSelection::setProject(Project *p)
-{
-	project = p;
-	updatePartList();
-}
-
 void SchematicsPartSelection::updatePartList()
 {
 	QTreeWidgetItem *lib;
@@ -47,7 +40,7 @@ void SchematicsPartSelection::updatePartList()
 
 	w = 0;
 	h = 0;
-	foreach(QString libname, project->getSchematicsLibraryNames()) {
+	/*foreach(QString libname, project->getSchematicsLibraryNames()) {
 		lib = new QTreeWidgetItem(ui->partList);
 		lib->setText(0,libname);
 		m_libraries.append(lib);
@@ -64,7 +57,7 @@ void SchematicsPartSelection::updatePartList()
 			partPreview->addItem(partWidget);
 			ui->partPreview->fitInView(partWidget,Qt::KeepAspectRatio);
 		}
-	}
+	}*/
 }
 
 void SchematicsPartSelection::on_partList_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous)

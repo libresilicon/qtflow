@@ -4,7 +4,7 @@
 
 #include <QString>
 
-#include "schematics_reader/schematicsscanner.h"
+#include "schematicsscanner.h"
 
 void schematics_error(const char *s);
 #define YY_DECL int schematics::SchematicsScanner::schematicslex( \
@@ -13,14 +13,20 @@ void schematics_error(const char *s);
 %}
 
 %top {
-#include "schematics_parser/schematics_parser.h"
-#include "schematics_reader/schematicsdata.h"
+#include "schematics_parser.hpp"
+#include "schematicsdata.h"
 }
 
-%option yywrap
-%option yylineno
-%option nounput
 %option prefix="schematics"
+%option c++
+%option batch
+%option stack
+%option debug
+%option verbose
+%option pointer
+%option yywrap
+%option nounput
+%option yylineno
 
 STRING				[A-Za-z]|[~A-Za-z0-9_,.\-<>\[\]\/\(\)$\*\'=#?~\"]
 

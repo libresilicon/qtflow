@@ -8,20 +8,18 @@
 #include <QGridLayout>
 #include <QTemporaryDir>
 #include <QAbstractScrollArea>
-#include <QGLWidget>
-#include <QGLFormat>
+//#include <QGLWidget>
+//#include <QGLFormat>
 
 #include "qlayout/qlayoutscene.h"
 #include "qlayout/layoutvisibles.h"
-
-#include "ieditor.h"
 #include "defdata.h"
 
 namespace def {
 	class DEFData;
 }
 
-class DEFLayoutEditor : public QGraphicsView, public IEditor
+class DEFLayoutEditor : public QGraphicsView
 {
 	Q_OBJECT
 
@@ -31,7 +29,6 @@ public:
 	void loadFile(QString);
 	void saveFile();
 	QString getFilePath();
-	void setProject(Project *p);
 	void setVisibles(LayoutVisibles *v);
 
 	bool changes();
@@ -53,7 +50,6 @@ private:
 	QString filePath;
 	QLayoutScene *editScene;
 	def::DEFData *defdata;
-	Project *project;
 	LayoutVisibles *visibles;
 };
 

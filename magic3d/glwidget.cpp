@@ -7,7 +7,6 @@ GLWidget::GLWidget(QWidget *parent):
 	m_offsetX(0),
 	m_offsetY(0),
 	magicdata(NULL),
-	project(NULL),
 	lastOrient(ORIENT_NONE),
 	m_angle1(0),
 	m_angle2(0)
@@ -102,7 +101,7 @@ void GLWidget::addModules()
 		w = e.a*(e.x2-e.x1);
 		h = e.e*(e.y2-e.y1);
 
-		if(project) if(project->isDefinedMacro(macro_name)) {
+		/*if(project) if(project->isDefinedMacro(macro_name)) {
 			macro = project->getMacro(macro_name);
 
 			foreach(pin, macro->getPins()) {
@@ -119,7 +118,7 @@ void GLWidget::addModules()
 					addBox(layer->getName(), rect.x+e.c, rect.y+e.f, rect.x+rect.w+e.c, rect.y+rect.h+e.f);
 				}
 			}
-		}
+		}*/
 
 		// fill in GDS data:
 		QString layer_name;
@@ -182,12 +181,16 @@ void GLWidget::resizeGL(int w, int h) {
 
 void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
 {
-	QColor color = project->colorMat(layerN);
+	//QColor color = project->colorMat(layerN);
+	QColor color;
 	qreal m_wireScaleX = m_highestX-m_lowestX;
 	qreal m_wireScaleY = m_highestY-m_lowestY;
 
-	qreal z = project->posMat(layerN);
-	qreal th = project->thicknessMat(layerN);
+	//qreal z = project->posMat(layerN);
+	//qreal th = project->thicknessMat(layerN);
+	qreal z = 1;
+	qreal th = 1;
+
 
 	x1-=m_lowestX;
 	y1-=m_lowestY;
@@ -253,11 +256,6 @@ void GLWidget::addBox(QString layerN, GLfloat x1, GLfloat y1, GLfloat x2, GLfloa
 	glEnd();
 	glFlush();
 
-}
-
-void GLWidget::setProject(Project *p)
-{
-	project = p;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)

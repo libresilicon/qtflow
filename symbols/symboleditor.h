@@ -6,11 +6,9 @@
 #include <QGraphicsView>
 #include <QLabel>
 
-#include "ieditor.h"
-
 #include "symboleditorscene.h"
 
-class SymbolEditor : public QGraphicsView, public IEditor
+class SymbolEditor : public QGraphicsView
 {
 	Q_OBJECT
 

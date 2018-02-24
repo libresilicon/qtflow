@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <QString>
 
-#include "magic_parser/magic_parser.h"
+#include "magic_parser.hpp"
 #include "magic/magicscanner.h"
 
 #define YY_DECL int magic::MagicScanner::magiclex(\

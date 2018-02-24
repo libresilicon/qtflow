@@ -16,7 +16,8 @@
 #include <qmath.h>
 
 #include "magic/magicdata.h"
-#include "project.h"
+#include "lef/lefdata.h"
+#include "gds2/gdtdata.h"
 
 enum orient_mode {
 	ORIENT_NONE,
@@ -36,7 +37,6 @@ class GLWidget : public QGLWidget
 public:
 	GLWidget(QWidget *parent);
 	void loadFile(QString file);
-	void setProject(Project *p);
 
 public slots:
 	void keyPressEvent(QKeyEvent *event) override;
@@ -75,7 +75,6 @@ private:
 	QPoint lastPos;
 	QString filePath;
 	magic::MagicData *magicdata;
-	Project *project;
 };
 
 #endif // GLWIDGET_H

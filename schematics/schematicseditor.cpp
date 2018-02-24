@@ -5,7 +5,6 @@ SchematicsEditor::SchematicsEditor(QWidget *parent):
 	filePath(QString()),
 	schematicsdata(NULL),
 	editScene(NULL),
-	project(NULL),
 	partSelection(new SchematicsPartSelection(this)),
 	libraryEditor(new SchematicsLibraryEditor(this)),
 	parametricPartSelection(new SchematicsParametricPartDialog(this))
@@ -14,13 +13,6 @@ SchematicsEditor::SchematicsEditor(QWidget *parent):
 	setScene(editScene);
 
 	connect(partSelection,SIGNAL(insertPart(QString)),this,SLOT(onInsertPart(QString)));
-}
-
-void SchematicsEditor::setProject(Project *p)
-{
-	project = p;
-	editScene->setProject(project);
-	partSelection->setProject(project);
 }
 
 void SchematicsEditor::onInsertPart(QString name)

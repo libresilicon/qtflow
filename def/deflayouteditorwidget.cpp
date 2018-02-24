@@ -2,8 +2,7 @@
 
 DEFLayoutEditorWidget::DEFLayoutEditorWidget(QWidget *parent) :
 	EditorWidget(parent),
-	editArea(new DEFLayoutEditor(this)),
-	project(NULL)
+	editArea(new DEFLayoutEditor(this))
 {
 	QToolBar *toolbar = new QToolBar(this);
 	QAction *button;
@@ -38,6 +37,14 @@ void DEFLayoutEditorWidget::loadFile(QString path)
 	editArea->loadFile(path);
 }
 
+void DEFLayoutEditorWidget::loadLEF(QString)
+{
+}
+
+void DEFLayoutEditorWidget::loadGDS2(QString)
+{
+}
+
 QString DEFLayoutEditorWidget::getFilePath()
 {
 	return editArea->getFilePath();
@@ -51,11 +58,3 @@ void DEFLayoutEditorWidget::saveFile()
 {
 }
 
-void DEFLayoutEditorWidget::setProject(Project *p)
-{
-	project = p;
-	layoutVisibles->setProject(project);
-	editArea->setProject(project);
-	//addDrawingOperations();
-	//addDrawingLayerSelection();
-}

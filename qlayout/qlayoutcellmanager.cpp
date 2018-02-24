@@ -2,8 +2,7 @@
 
 QLayoutCellManager::QLayoutCellManager(QWidget *parent) :
 	QDialog(parent),
-	ui(new Ui::CellManager),
-	project(NULL)
+	ui(new Ui::CellManager)
 {
 	ui->setupUi(this);
 }
@@ -12,14 +11,6 @@ void QLayoutCellManager::addCell(QString instance, QString macro)
 {
 	m_macroTable[instance]=macro;
 	refreshTable();
-}
-
-void QLayoutCellManager::setProject(Project *p)
-{
-	project = p;
-	if(project) {
-		refreshTable();
-	}
 }
 
 void QLayoutCellManager::on_treeWidget_itemChanged(QTreeWidgetItem *item, int column)

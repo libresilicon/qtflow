@@ -2,21 +2,18 @@
 
 QSchematicsScene::QSchematicsScene(QObject *parent) :
 	QGraphicsScene(parent),
-	m_project(NULL),
 	m_sheet(NULL)
 {
 }
 
 QSchematicsScene::QSchematicsScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
-	m_project(NULL),
 	m_sheet(NULL)
 {
 }
 
 QSchematicsScene::QSchematicsScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
-	m_project(NULL),
 	m_sheet(NULL)
 {
 }
@@ -44,31 +41,26 @@ void QSchematicsScene::addPart(QString type, QString id, int x, int y)
 {
 	QSchematicsPart* part;
 	symbol::SchematicsSymbol* partsymbol;
-	if(m_project) if(m_project->isDefinedPart(type)) {
+	/*if(m_project) if(m_project->isDefinedPart(type)) {
 		partsymbol = m_project->getSchematicsPart(type);
 		if(partsymbol) {
 			part = new QSchematicsPart(partsymbol, id, x, y, m_sheet);
 			m_parts.append(part);
 		}
-	}
+	}*/
 }
 
 void QSchematicsScene::addPart(QString type, int x, int y)
 {
 	QSchematicsPart* part;
 	symbol::SchematicsSymbol* partsymbol;
-	if(m_project) if(m_project->isDefinedPart(type)) {
+	/*if(m_project) if(m_project->isDefinedPart(type)) {
 		partsymbol = m_project->getSchematicsPart(type);
 		if(partsymbol) {
 			part = new QSchematicsPart(partsymbol, x, y, m_sheet);
 			m_parts.append(part);
 		}
-	}
-}
-
-void QSchematicsScene::setProject(Project *p)
-{
-	m_project = p;
+	}*/
 }
 
 void QSchematicsScene::setDrawingOperation(schematics_operations o)

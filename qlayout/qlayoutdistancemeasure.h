@@ -6,7 +6,6 @@
 class QLayoutDistanceMeasure : public QObject, public QGraphicsItem
 {
 	Q_OBJECT
-
 public:
 	QLayoutDistanceMeasure(QString label, QPointF start, QPointF end, QGraphicsItem *parent = Q_NULLPTR);
 

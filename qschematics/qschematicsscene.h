@@ -10,8 +10,6 @@
 #include <QShortcut>
 #include <QPainter>
 
-#include "project.h"
-
 #include "qschematicswire.h"
 #include "qschematicspart.h"
 
@@ -33,8 +31,6 @@ public:
 	void addPart(QString type, int x, int y);
 	QGraphicsRectItem *setSheet(int w, int h);
 
-	void setProject(Project *p);
-
 	void setDrawingOperation(schematics_operations o);
 
 protected:
@@ -46,8 +42,6 @@ private:
 	QVector<QSchematicsWire*> m_wires;
 	QVector<QSchematicsPart*> m_parts;
 	QGraphicsRectItem *m_sheet;
-
-	Project *m_project;
 
 	QPointF m_lastOrig;
 	bool m_dragging;

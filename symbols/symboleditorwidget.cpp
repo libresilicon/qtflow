@@ -16,7 +16,3 @@ QString SymbolEditorWidget::getFilePath()
 
 }
 
-void SymbolEditorWidget::setProject(Project *p)
-{
-
-}

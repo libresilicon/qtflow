@@ -1,4 +1,4 @@
-#include "tech_parser/tech_parser.h"
+#include "tech_parser.hpp"
 #include "techscanner.h"
 #include "techdata.h"
 

@@ -5,3 +5,12 @@
 [submodule "kdevelop"]
 	path = kdevelop
 	url = https://github.com/foshardware/kdevelop
+[submodule "ktexteditor"]
+	path = ktexteditor
+	url = https://github.com/KDE/ktexteditor.git
+[submodule "syntax-highlighting"]
+	path = syntax-highlighting
+	url = https://github.com/KDE/syntax-highlighting.git
+[submodule "coriolis"]
+	path = coriolis
+	url = https://www-soc.lip6.fr/git/coriolis.git

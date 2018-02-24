@@ -3,7 +3,6 @@
 
 #include <QDebug>
 #include <QGraphicsScene>
-#include <QGLWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
 #include <QRubberBand>
@@ -17,8 +16,9 @@
 
 #include "qlayoutcellmanager.h"
 #include "drcsettings.h"
-
-#include "project.h"
+#include "lef/lefdata.h"
+#include "gds2/gdtdata.h"
+#include "tech_reader/techdesignrule.h"
 
 enum drawing_operations {
 	DRAWING_OPERATION_NONE,
@@ -35,7 +35,6 @@ typedef QVector<QLayoutRectItem*> rects_layer_t;
 class QLayoutScene : public QGraphicsScene
 {
 	Q_OBJECT
-
 public:
 	QLayoutScene(QObject *parent = Q_NULLPTR);
 	QLayoutScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
@@ -43,7 +42,6 @@ public:
 	void basicInit();
 	void setDistanceUnit(qreal u);
 
-	void setProject(Project *p);
 	void showDRC();
 	void showCellManager();
 
@@ -89,8 +87,6 @@ private:
 
 	//QPointF snapGrid(QPointF pt);
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
-
-	Project *project;
 
 	QString activeLayer;
 	QLayoutRectItem *recentRectangle;

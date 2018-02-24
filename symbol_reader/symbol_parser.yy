@@ -19,9 +19,9 @@
 #include <string>
 #include <QString>
 
-#include "symbol_parser/symbol_parser.h"
-#include "symbol_reader/symboldata.h"
-#include "symbol_reader/symbolscanner.h"
+#include "symbol_parser.hpp"
+#include "symboldata.h"
+#include "symbolscanner.h"
 
 #define symbollex (symboldata->getLexer())->symbollex
 #define symbollineno (int)(symboldata->getLexer())->lineno()

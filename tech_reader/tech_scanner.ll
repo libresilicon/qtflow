@@ -2,8 +2,8 @@
 #include <cstdlib>
 #include <QString>
 
-#include "tech_parser/tech_parser.h"
-#include "tech_reader/techscanner.h"
+#include "tech_parser.hpp"
+#include "techscanner.h"
 
 std::string multiline_buf;
 

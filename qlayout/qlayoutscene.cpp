@@ -19,7 +19,6 @@ void QLayoutScene::basicInit()
 QLayoutScene::QLayoutScene(QObject *parent) :
 	QGraphicsScene(parent),
 	recentOperation(DRAWING_OPERATION_NONE),
-	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
@@ -31,7 +30,6 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	QGraphicsScene(sceneRect, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
-	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
@@ -43,7 +41,6 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
 	QGraphicsScene(x, y, width, height, parent),
 	recentOperation(DRAWING_OPERATION_NONE),
-	project(NULL),
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
@@ -127,7 +124,7 @@ void QLayoutScene::refreshViaTable()
 	QColor color;
 	lef::LEFVia* v;
 	m_viaTemplateMap.clear();
-	if(project) {
+	/*if(project) {
 		foreach(QString viaName, project->getViaList()) {
 			v = project->getVia(viaName);
 			if(v) {
@@ -147,15 +144,16 @@ void QLayoutScene::refreshViaTable()
 				m_viaTemplateMap[viaName]=vt;
 			}
 		}
-	}
+	}*/
 }
 
 void QLayoutScene::refreshMacroTable()
 {
-	if(!project) {
-		qDebug() << "No project set!";
-		return;
-	}
+	return;
+	//if(!project) {
+	//	qDebug() << "No project set!";
+	//	return;
+	//}
 
 	QStringList macroList;
 	QString layer_name;
@@ -175,7 +173,7 @@ void QLayoutScene::refreshMacroTable()
 	// fill in GDS data:
 	GDSCell* cell;
 
-	macroList = project->getMacroList();
+	//macroList = project->getMacroList();
 	qreal macro_count = 0;
 
 	m_macroTemplateMap.clear();
@@ -185,7 +183,7 @@ void QLayoutScene::refreshMacroTable()
 		w = m_baseUnit;
 		h = m_baseUnit;
 
-		if(project) {
+		/*if(project) {
 			macro = project->getMacro(macroName);
 			cell = project->getGDSMacro(macroName);
 			if(macro) {
@@ -194,7 +192,7 @@ void QLayoutScene::refreshMacroTable()
 			}
 			w*=m_baseUnit;
 			h*=m_baseUnit;
-		}
+		}*/
 
 		mi = new QLayoutMacroItem(x, y, w, h);
 		mi->setVisible(true);
@@ -212,7 +210,7 @@ void QLayoutScene::refreshMacroTable()
 	}
 }
 
-void QLayoutScene::setProject(Project *p)
+/*void QLayoutScene::setProject(Project *p)
 {
 	project = p;
 	if(project) {
@@ -221,7 +219,7 @@ void QLayoutScene::setProject(Project *p)
 		refreshViaTable();
 		cellManagerDialog->setProject(project);
 	}
-}
+}*/
 
 void QLayoutScene::showCellManager()
 {
@@ -235,6 +233,8 @@ void QLayoutScene::showDRC()
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+	return;
+
 	QMenu  menu;
 	QAction *layerAction;
 
@@ -248,7 +248,7 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
-			if(project) recentRectangle->setColor(project->colorMat(activeLayer));
+			//if(project) recentRectangle->setColor(project->colorMat(activeLayer));
 			addItem(recentRectangle);
 			break;
 
@@ -446,7 +446,7 @@ void QLayoutScene::setGDS(QString name, bool load)
 		if(mi) {
 			if(mi->getInstanceName()==name) {
 				if(load) {
-					if(project) {
+					/*if(project) {
 						cell = project->getGDSMacro(mi->getMacroName());
 						if(cell) {
 							qDebug() << __FUNCTION__ << " Display GDS " << mi->getInstanceName();
@@ -466,7 +466,7 @@ void QLayoutScene::setGDS(QString name, bool load)
 								}
 							}
 						}
-					}
+					}*/
 				} else {
 					mi->clearPolygons();
 				}
@@ -491,7 +491,7 @@ void QLayoutScene::setLEF(QString name, bool load)
 		if(mi) {
 			if(mi->getInstanceName()==name) {
 				if(load) {
-					if(project) {
+					/*if(project) {
 						macro = project->getMacro(mi->getMacroName());
 						if(macro) {
 							qDebug() << __FUNCTION__ << " Display LEF " << mi->getInstanceName();
@@ -518,7 +518,7 @@ void QLayoutScene::setLEF(QString name, bool load)
 								emit(registerLayer(layer_name));
 							}
 						}
-					}
+					}*/
 				} else {
 					mi->clearRectangles();
 				}
@@ -537,7 +537,7 @@ void QLayoutScene::runDRC(QString n, QRectF rect)
 	QGraphicsPolygonItem *p;
 	QLayoutDistanceMeasure *error_line;
 
-	rule = project->getDesignRule(n);
+	//rule = project->getDesignRule(n);
 
 	if(rule.getName()==QString())
 		return;
@@ -617,7 +617,7 @@ void QLayoutScene::addPad(QString name, QString net, QString layer, qreal x, qre
 	t->setScale(w/t->boundingRect().width());
 
 	r->setVisible(true);
-	if(project) r->setColor(project->colorMat(layer));
+	//if(project) r->setColor(project->colorMat(layer));
 	addItem(r);
 	update();
 
@@ -642,7 +642,7 @@ void QLayoutScene::addWire(QString netname, QString layer, QPointF p1, QPointF p
 	pen = l->pen();
 	pen.setWidth(1);
 	pen.setCosmetic(true);
-	if(project) pen.setColor(project->colorMat(layer));
+	//if(project) pen.setColor(project->colorMat(layer));
 	l->setPen(pen);
 	addItem(l);
 }
@@ -654,7 +654,7 @@ void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal 
 	r = new QLayoutRectItem(x, y, w, h);
 
 	r->setVisible(true);
-	if(project) r->setColor(project->colorMat(layer));
+	//if(project) r->setColor(project->colorMat(layer));
 	addItem(r);
 	update();
 

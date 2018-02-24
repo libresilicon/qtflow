@@ -1,9 +1,7 @@
 #ifndef MAGICLAYOUTEDITOR_H
 #define MAGICLAYOUTEDITOR_H
 
-#include "ieditor.h"
 #include "magic/magicdata.h"
-#include "project.h"
 
 #include "qlayout/layoutvisibles.h"
 #include "qlayout/qlayoutscene.h"
@@ -22,15 +20,13 @@ namespace magic {
 	class MagicData;
 }
 
-class MagicLayoutEditor : public QGraphicsView, public IEditor
+class MagicLayoutEditor : public QGraphicsView
 {
 	Q_OBJECT
-
 public:
 	explicit MagicLayoutEditor(QWidget *parent = nullptr);
 
 	void loadFile(QString);
-	void setProject(Project *p);
 	void setVisibles(LayoutVisibles *v);
 	void saveFile();
 
@@ -68,7 +64,6 @@ private:
 	magic::MagicData *magicdata;
 
 	QRectF sceneRect;
-	Project *project;
 	LayoutVisibles *visibles;
 	QComboBox *activeLayerSelection;
 

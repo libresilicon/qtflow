@@ -7,7 +7,7 @@
 #undef yyFlexLexer
 #endif
 
-#include "def_parser/def_parser.h"
+#include "def_parser.hpp"
 
 namespace def {
 	class DEFScanner : public defFlexLexer

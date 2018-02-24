@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "vcd_parser/location.hh"
+#include "location.hh"
 
 namespace vcd {
 

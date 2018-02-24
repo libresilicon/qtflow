@@ -5,7 +5,6 @@ ContactPlacement::ContactPlacement(QWidget *parent) :
 	ui(new Ui::ContactPlacement),
 	scene(NULL),
 	view(NULL),
-	project(NULL),
 	m_padInfo(NULL),
 	m_tableComplete(false),
 	m_padNames(NULL),
@@ -18,21 +17,6 @@ ContactPlacement::ContactPlacement(QWidget *parent) :
 	scene = new QGraphicsScene(view);
 	view->setScene(scene);
 	m_baseRect = QRectF(0,0,400,400);
-}
-
-void ContactPlacement::setProject(Project *p)
-{
-	project = p;
-	if(project) {
-		if(m_padInfo) delete m_padInfo;
-		m_padInfo = new PadInfo(project->getPadInfoFile());
-		if(m_blifdata) delete m_blifdata;
-		m_blifdata = new blif::BLIFData(QDir(project->getSynthesisDir()).filePath(project->getTopLevel()+".blif"));
-		addTables();
-		refreshNameTable();
-		refreshTables();
-		updatePreview();
-	}
 }
 
 void ContactPlacement::padNames_select_changed(int i)
@@ -63,12 +47,11 @@ void ContactPlacement::sideLength_changed(QString s)
 
 void ContactPlacement::on_buttonBox_accepted()
 {
-	if(project && m_tableComplete && m_padInfo) {
+	if(m_tableComplete && m_padInfo) {
 		m_padInfo->setSideLength(m_sideLength->text().toDouble());
 		storeNameTable();
 		storeTables();
 		m_padInfo->sync();
-		project->buildPadFrame();
 	}
 }
 
@@ -260,7 +243,7 @@ void ContactPlacement::addTables()
 	QVBoxLayout* lay;
 	QHBoxLayout* lay2;
 	QToolBox* tb;
-	if(project && m_padInfo) {
+	if(m_padInfo) {
 		tb = new QToolBox(ui->padTables);
 		ui->padTables->layout()->addWidget(tb);
 
@@ -286,7 +269,7 @@ void ContactPlacement::addTables()
 		lay->addWidget(fields);
 		lay->addWidget(m_padNames);
 
-		foreach(QString s, project->getIOCells()) {
+		/*foreach(QString s, project->getIOCells()) {
 			if(project->getNCPadCell()==s) continue;
 
 			qgb = new QWidget(tb);
@@ -297,7 +280,7 @@ void ContactPlacement::addTables()
 			lay->addWidget(tbl);
 			m_tables[s]=tbl;
 			tbl->setRowCount(1);
-		}
+		}*/
 	}
 }
 
@@ -368,8 +351,8 @@ void ContactPlacement::refreshNameTable()
 			typeSelection = new QComboBox(m_padNames);
 			connect(typeSelection,SIGNAL(currentIndexChanged(int)),this,SLOT(padNames_select_changed(int)));
 
-			foreach(QString k, project->getIOCells())
-				typeSelection->addItem(k);
+			//foreach(QString k, project->getIOCells())
+			//	typeSelection->addItem(k);
 
 			padCellName = m_padInfo->getPadCell(bank+QString::number(j+1));
 			typeSelection->setCurrentText(padCellName);
@@ -391,8 +374,8 @@ void ContactPlacement::refreshNameTable()
 
 		typeSelection = new QComboBox(m_padNames);
 
-		foreach(QString k, project->getCornerCells())
-			typeSelection->addItem(k);
+		//foreach(QString k, project->getCornerCells())
+		//	typeSelection->addItem(k);
 
 		padCellName = m_padInfo->getPadCell("CORNER"+QString::number(j+1));
 		typeSelection->setCurrentText(padCellName);
@@ -457,7 +440,7 @@ void ContactPlacement::refreshTables()
 		}
 
 		foreach(cellType, m_tables.keys()) {
-			if(project->getNCPadCell()==cellType) continue;
+			//if(project->getNCPadCell()==cellType) continue;
 
 			table = m_tables[cellType];
 
@@ -470,14 +453,14 @@ void ContactPlacement::refreshTables()
 			m_TableHeader << "Name";
 			i++;
 
-			m = project->getMacro(cellType);
+			/*m = project->getMacro(cellType);
 			if(m) {
 				foreach(QString pin, m->getPinNames()) {
 					m_TableHeader << pin;
 					m_tablesPinMapping[cellType][pin]=i;
 					i++;
 				}
-			}
+			}*/
 
 			cells = cellMapping[cellType];
 			table->setColumnCount(m_TableHeader.count());
@@ -496,7 +479,7 @@ void ContactPlacement::refreshTables()
 					foreach(QString pin, m_tablesPinMapping[cellType].keys()) {
 						signalBox = new QComboBox(table);
 						signalBox->addItem("None","nc");
-						if(project->getVDDPadCell()==m_padInfo->getPadCell(pad)) {
+						/*if(project->getVDDPadCell()==m_padInfo->getPadCell(pad)) {
 							foreach(QString k, project->getPowerNets())
 								signalBox->addItem(k);
 						} else if(project->getGNDPadCell()==m_padInfo->getPadCell(pad)) {
@@ -524,7 +507,7 @@ void ContactPlacement::refreshTables()
 								foreach(QString k, m_blifdata->getPadPinsOutput())
 									signalBox->addItem(k);
 							}
-						}
+						}*/
 						signalBox->setCurrentText(m_padInfo->getPadPinSignal(pad,pin));
 						table->setCellWidget(i, m_tablesPinMapping[cellType][pin], signalBox);
 					}

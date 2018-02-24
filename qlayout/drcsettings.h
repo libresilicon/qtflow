@@ -5,16 +5,13 @@
 #include <QDebug>
 
 #include "ui_drcsettings.h"
-
-#include "project.h"
+#include "tech_reader/techdesignrule.h"
 
 class DRCSettings : public QDialog
 {
 	Q_OBJECT
-
 public:
 	DRCSettings(QWidget *parent = Q_NULLPTR);
-	void setProject(Project *p);
 
 public slots:
 	void on_buttonBox_accepted();
@@ -27,7 +24,6 @@ private:
 	void refreshRuleList();
 
 	Ui::DRCSettings *ui;
-	Project *project;
 };
 
 #endif // DRCSETTINGS_H

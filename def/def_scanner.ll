@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <QString>
 
-#include "def/defscanner.h"
+#include "defscanner.h"
 
 #define YY_DECL int def::DEFScanner::deflex(\
 	def::DEFParser::semantic_type* deflval,\

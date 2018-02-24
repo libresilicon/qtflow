@@ -65,8 +65,8 @@
         class Loader;
     }
 
-	#include "vcd_reader/vcd_error.hpp"
-	#include "vcd_reader/vcd_data.hpp"
+	#include "vcd_error.hpp"
+	#include "vcd_data.hpp"
 
     //This is not defined by default for some reason...
     #define YY_NULLPTR nullptr
@@ -74,8 +74,8 @@
 
 %code top {
 
-	#include "vcd_reader/vcd_lexer.hpp"
-	#include "vcd_reader/vcd_loader.hpp"
+	#include "vcd_lexer.hpp"
+	#include "vcd_loader.hpp"
 
     //Bison calls yylex() to get the next token.
     //Since we have re-defined the equivalent function in the lexer

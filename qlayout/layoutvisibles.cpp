@@ -1,9 +1,9 @@
 #include "layoutvisibles.h"
+#include <QDebug>
 
 LayoutVisibles::LayoutVisibles(QWidget *parent):
 	QDockWidget(parent),
-	ui(new Ui::LayoutVisibles),
-	project(NULL)
+	ui(new Ui::LayoutVisibles)
 {
 	ui->setupUi(this);
 	ui->typesTree->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -41,11 +41,6 @@ void LayoutVisibles::handleSearch(QString s)
 	}
 }
 
-void LayoutVisibles::setProject(Project *p)
-{
-	project = p;
-	refreshLists();
-}
 
 void LayoutVisibles::onRegisterLayer(QString s)
 {
@@ -53,11 +48,11 @@ void LayoutVisibles::onRegisterLayer(QString s)
 	QString planen;
 	QString vname;
 
-	foreach(planen, project->getPlanes()) {
+	/*foreach(planen, project->getPlanes()) {
 		foreach(vname, project->getTypes(planen)) {
 			if(vname==s) return;
 		}
-	}
+	}*/
 	foreach(m, typeEntries){
 		if(m->data(2,0).toString()==s) return;
 	}
@@ -66,7 +61,7 @@ void LayoutVisibles::onRegisterLayer(QString s)
 
 	m = new QTreeWidgetItem(ui->typesTree);
 	m->setCheckState(0,typeIsEnabled(s)?Qt::Checked:Qt::Unchecked);
-	if(project) m->setIcon(1,project->materialIcon(s));
+	//if(project) m->setIcon(1,project->materialIcon(s));
 	m->setText(2,s);
 	m->setFlags(m->flags()|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
 	typeEntries.append(m);
@@ -79,7 +74,7 @@ void LayoutVisibles::refreshLists()
 	QTreeWidgetItem* treeitem;
 	QTreeWidgetItem* treeChileItem;
 
-	if(project) {
+	/*if(project) {
 		ui->typesTree->clear();
 		typeEntries.clear();
 		typeRootEntries.clear();
@@ -108,7 +103,7 @@ void LayoutVisibles::refreshLists()
 				typeEntries.append(treeChileItem);
 			}
 		}
-	}
+	}*/
 }
 
 void LayoutVisibles::on_layerList_customContextMenuRequested(const QPoint &pos)

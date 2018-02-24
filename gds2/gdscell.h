@@ -8,7 +8,7 @@
 
 #include "gdsboundary.h"
 
-#include  "qlayout/qlayoutmacroitem.h"
+//#include  "qlayout/qlayoutmacroitem.h"
 
 typedef QVector<QPointF> path_t;
 

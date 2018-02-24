@@ -1,10 +1,10 @@
 %{
-    #include <iostream>
-    #include <sstream>
-    #include <cassert>
-	#include "vcd_reader/vcd_lexer.hpp"
-	#include "vcd_parser/vcd_parser.h"
-	#include "vcd_parser/location.hh"
+#include <iostream>
+#include <sstream>
+#include <cassert>
+	#include "vcd_lexer.hpp"
+	#include "vcd_parser.hpp"
+	#include "location.hh"
 
     using std::cout;
     using std::stringstream;

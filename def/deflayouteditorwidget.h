@@ -2,19 +2,18 @@
 #define DEFLAYOUTEDITORWIDGET_H
 
 #include "deflayouteditor.h"
-#include "editorwidget.h"
-
+#include "qeditor/editorwidget.h"
 #include "qlayout/layoutvisibles.h"
 
 class DEFLayoutEditorWidget : public EditorWidget
 {
 	Q_OBJECT
-
 public:
 	DEFLayoutEditorWidget(QWidget *parent = nullptr);
 	void loadFile(QString);
+	void loadLEF(QString);
+	void loadGDS2(QString);
 	QString getFilePath();
-	void setProject(Project *p);
 
 public slots:
 	void onContentChanged();
@@ -22,7 +21,6 @@ public slots:
 
 private:
 	DEFLayoutEditor *editArea;
-	Project *project;
 	LayoutVisibles *layoutVisibles;
 };
 

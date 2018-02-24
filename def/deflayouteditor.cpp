@@ -3,15 +3,14 @@
 DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	QGraphicsView(parent),
 	defdata(NULL),
-	project(NULL),
 	filePath(QString()),
 	editScene(new QLayoutScene(this))
 {
 	editScene->setBackgroundBrush(Qt::white);
 
 	setScene(editScene);
-	setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
-	//setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	//setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
+	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setInteractive(true);
 	setDragMode(QGraphicsView::ScrollHandDrag);
 }
@@ -148,12 +147,6 @@ QString DEFLayoutEditor::getFilePath()
 bool DEFLayoutEditor::changes()
 {
 	return false;
-}
-
-void DEFLayoutEditor::setProject(Project *p)
-{
-	project = p;
-	editScene->setProject(p);
 }
 
 void DEFLayoutEditor::zoomIn()

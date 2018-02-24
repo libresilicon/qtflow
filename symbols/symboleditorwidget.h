@@ -1,14 +1,12 @@
 #ifndef SYMBOLEDITORWIDGET_H
 #define SYMBOLEDITORWIDGET_H
 
-#include "editorwidget.h"
+#include "qeditor/editorwidget.h"
 
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QToolBar>
 #include <QFileInfo>
-
-#include "project.h"
 
 class SymbolEditorWidget : public EditorWidget
 {
@@ -18,8 +16,6 @@ public:
 
 	void loadFile(QString);
 	QString getFilePath();
-
-	void setProject(Project *p);
 };
 
 #endif // SYMBOLEDITORWIDGET_H

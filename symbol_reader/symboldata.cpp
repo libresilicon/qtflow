@@ -1,4 +1,4 @@
-#include "symbol_parser/symbol_parser.h"
+#include "symbol_parser.hpp"
 #include "symbolscanner.h"
 #include "symboldata.h"
 

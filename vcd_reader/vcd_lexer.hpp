@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vcd_parser/vcd_parser.h"
+#include "vcd_parser.hpp"
 
 /*
  * Flex requires that yyFlexLexer is equivalent to
@@ -39,7 +39,7 @@
 /*
  * Bison generated location tracking
  */
-#include "vcd_parser/location.hh"
+#include "location.hh"
 
 namespace vcd {
 
