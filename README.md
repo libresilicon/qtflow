@@ -1,4 +1,6 @@
 # qtflow
+A free and open source VLSI development EDA based on Qt5 and C++
+
 ## Depencies
  * Qt5Widgets
  * Qt5Network (required version >= 5.10.0)
