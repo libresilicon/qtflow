@@ -26,10 +26,11 @@ add_library(${TARGET} SHARED
 	${SOURCES}
 )
 
-target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor)
+target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor QLayout)
 
 if(BUILD_STAND_ALONE_BINARIES)
-	add_executable(magic_editor magic_editor.cpp magic_editor_app.cpp)
-	target_link_libraries(magic_editor ${QT5_LIBRARIES} QEditor Magic QLayout TechReader Magic3D)
+	QT5_ADD_RESOURCES(ICONS ${PROJECT_SOURCE_DIR}/icons/icons.qrc)
+	add_executable(magic_editor magic_editor.cpp magic_editor_app.cpp ${ICONS})
+	target_link_libraries(magic_editor ${QT5_LIBRARIES} LEF GDS QEditor Magic QLayout TechReader Magic3D)
 endif(BUILD_STAND_ALONE_BINARIES)
 

@@ -30,7 +30,7 @@ add_library(${TARGET} SHARED
 	${SOURCES}
 )
 
-target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor)
+target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor QLayout)
 
 if(BUILD_STAND_ALONE_BINARIES)
 	add_executable(def_editor def_editor.cpp def_editor_app.cpp)
