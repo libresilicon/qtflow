@@ -28,7 +28,9 @@ A free and open source VLSI development EDA based on Qt5 and C++
  * KTextEditor
 
 ### OpenSUSE
- sudo zypper in patterns-kde-devel_qt5 
+For OpenSUSE just install the Qt5 development pattern:
+
+	sudo zypper in patterns-kde-devel_qt5 
 
 ### Debian
 Install packages:
@@ -58,27 +60,38 @@ However... Will require a whole bunch of the KTextEditor (KDE5) depencies to be 
 
 ## Clone
 Clone submodules as well:
+
 	git clone --recursive https://github.com/leviathanch/qtflow.git
 
 Change into repo:
+
 	cd qtflow
 
 ## Configure
 Create build dir:
+
 	mkdir build
 
 Change into it:
+
 	cd build
 
 In CMake you can choose to build the full EDA (BUILD_FULL_EDA) , only the separate stand alone tools (BUILD_STAND_ALONE_BINARIES) or both:
+
 In order to build everything you can run:
+
 	cmake -DBUILD_FULL_EDA=ON BUILD_STAND_ALONE_BINARIES=ON ..
+
 For only the tools:
+
 	cmake -DBUILD_FULL_EDA=OFF BUILD_STAND_ALONE_BINARIES=ON ..
+
 Or only the EDA:
+
 	cmake -DBUILD_FULL_EDA=ON BUILD_STAND_ALONE_BINARIES=OFF ..
 
 ## Build
 Compile with threads:
+
 	make -j6 
 
