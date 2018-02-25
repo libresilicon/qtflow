@@ -33,24 +33,24 @@ A free and open source VLSI development EDA based on Qt5 and C++
 ### Debian
 Install packages:
 
- sudo apt-get install \
-	qtbase5-dev \
-	qtbase5-dev-tools \
-	qttools5-dev-tools \
-	qtscript-tools \
-	python-all-dev \
-	build-essential \
-	qt5-default \
-	bison \
-	flex \
-	qtbase5-private-dev \
-	qtconnectivity5-dev \
-	qtdeclarative5-dev \
-	qtdeclarative5-dev-tools \
-	qtconnectivity5-dev \
-	qt5keychain-dev \
-	qt5-style-plugins \
-	libkf5texteditor-dev
+	sudo apt-get install \
+		qtbase5-dev \
+		qtbase5-dev-tools \
+		qttools5-dev-tools \
+		qtscript-tools \
+		python-all-dev \
+		build-essential \
+		qt5-default \
+		bison \
+		flex \
+		qtbase5-private-dev \
+		qtconnectivity5-dev \
+		qtdeclarative5-dev \
+		qtdeclarative5-dev-tools \
+		qtconnectivity5-dev \
+		qt5keychain-dev \
+		qt5-style-plugins \
+		libkf5texteditor-dev
 
 ## Windows
 TBD
@@ -58,28 +58,27 @@ However... Will require a whole bunch of the KTextEditor (KDE5) depencies to be 
 
 ## Clone
 Clone submodules as well:
-
- git clone --recursive https://github.com/leviathanch/qtflow.git
+	git clone --recursive https://github.com/leviathanch/qtflow.git
 
 Change into repo:
-
- cd qtflow
+	cd qtflow
 
 ## Configure
 Create build dir:
-
- mkdir build
+	mkdir build
 
 Change into it:
+	cd build
 
- cd build
-
-Run CMake:
-
- cmake ..
+In CMake you can choose to build the full EDA (BUILD_FULL_EDA) , only the separate stand alone tools (BUILD_STAND_ALONE_BINARIES) or both:
+In order to build everything you can run:
+	cmake -DBUILD_FULL_EDA=ON BUILD_STAND_ALONE_BINARIES=ON ..
+For only the tools:
+	cmake -DBUILD_FULL_EDA=OFF BUILD_STAND_ALONE_BINARIES=ON ..
+Or only the EDA:
+	cmake -DBUILD_FULL_EDA=ON BUILD_STAND_ALONE_BINARIES=OFF ..
 
 ## Build
 Compile with threads:
-
- make -j6 
+	make -j6 
 
