@@ -52,7 +52,13 @@ Install packages:
 		qtconnectivity5-dev \
 		qt5keychain-dev \
 		qt5-style-plugins \
-		libkf5texteditor-dev
+		libkf5texteditor-dev \
+                libqt5svg5-dev \
+                gettext \
+                qttools5-dev \
+                libqt5webkit5-dev \
+                qtmultimedia5-dev \
+                libqt5xmlpatterns5-dev
 
 ## Windows
 TBD
