@@ -210,17 +210,6 @@ void QLayoutScene::refreshMacroTable()
 	}
 }
 
-/*void QLayoutScene::setProject(Project *p)
-{
-	project = p;
-	if(project) {
-		drcDialog->setProject(project);
-		refreshMacroTable();
-		refreshViaTable();
-		cellManagerDialog->setProject(project);
-	}
-}*/
-
 void QLayoutScene::showCellManager()
 {
 	cellManagerDialog->show();
@@ -427,6 +416,7 @@ void QLayoutScene::setDrawingOperation(drawing_operations o)
 void QLayoutScene::setActiveLayer(QString layer)
 {
 	activeLayer = layer;
+	qDebug() << __FUNCTION__ << " setting layer " << layer;
 }
 
 void QLayoutScene::onVisibleLayersChanged(QStringList l)
@@ -435,48 +425,34 @@ void QLayoutScene::onVisibleLayersChanged(QStringList l)
 	redraw();
 }
 
-void QLayoutScene::setGDS(QString name, bool load)
+void QLayoutScene::setGDS(QString name)
 {
 	GDSCell* cell;
 	QColor color;
 	QLayoutMacroItem* mi;
 	QLayoutMacroPinItem* pi;
 	QString layer_name;
-	foreach(mi, macros) {
-		if(mi) {
-			if(mi->getInstanceName()==name) {
-				if(load) {
-					/*if(project) {
-						cell = project->getGDSMacro(mi->getMacroName());
-						if(cell) {
-							qDebug() << __FUNCTION__ << " Display GDS " << mi->getInstanceName();
-							qDebug() << __FUNCTION__ << " Display GDS " << name;
-							cell->setRectangle(mi->boundingRect().x(),mi->boundingRect().y(),mi->boundingRect().width(),mi->boundingRect().height());
-							foreach(GDSBoundary *b, cell->getBoundaries()) {
-								layer_name = project->layerNameFromCIF(b->getLayerIndex());
-								if(layer_name==QString()) {
-									layer_name = project->layerNameFromDStyle(b->getLayerIndex());
-								}
-								if(layer_name==QString()) {
-									qDebug() << "Couldn't map layer " << b->getLayerIndex();
-								} else {
-									color = project->colorMat(layer_name);
-									mi->addPolygon(layer_name, QBrush(color), b->getPolygon());
-									emit(registerLayer(layer_name));
-								}
-							}
-						}
-					}*/
-				} else {
-					mi->clearPolygons();
+	GDTData gdsFile(name);
+	QVector<GDSCell*> cells = gdsFile.getCells();
+
+	foreach(cell,cells) {
+		if(cell) {
+			foreach(mi,macros) {
+				if(mi->getMacroName()==cell->getName()) {
+					qDebug() << __FUNCTION__ << " Display GDS " << mi->getInstanceName();
+					cell->setRectangle(mi->boundingRect().x(),mi->boundingRect().y(),mi->boundingRect().width(),mi->boundingRect().height());
+					foreach(GDSBoundary *b, cell->getBoundaries()) {
+						color = QColor("red");
+						mi->addPolygon("poly", QBrush(color), b->getPolygon());
+						emit(registerLayer("poly"));
+					}
 				}
-				break;
 			}
 		}
 	}
 }
 
-void QLayoutScene::setLEF(QString name, bool load)
+void QLayoutScene::setLEF(QString name)
 {
 	lef::LEFMacro* macro;
 	lef::LEFPin* pin;
@@ -490,7 +466,6 @@ void QLayoutScene::setLEF(QString name, bool load)
 	foreach(mi, macros) {
 		if(mi) {
 			if(mi->getInstanceName()==name) {
-				if(load) {
 					/*if(project) {
 						macro = project->getMacro(mi->getMacroName());
 						if(macro) {
@@ -519,10 +494,6 @@ void QLayoutScene::setLEF(QString name, bool load)
 							}
 						}
 					}*/
-				} else {
-					mi->clearRectangles();
-				}
-				break;
 			}
 		}
 	}
@@ -594,7 +565,7 @@ void QLayoutScene::redraw()
 	foreach(layerName, layer_rects.keys()) {
 		visible = m_visibleLayers.contains(layerName);
 		foreach(w, layer_rects[layerName]) {
-			w->setVisible(visible);
+			//w->setVisible(visible);
 		}
 	}
 

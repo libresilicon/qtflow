@@ -46,7 +46,6 @@ public:
 	void showCellManager();
 
 	void setDrawingOperation(drawing_operations o);
-	void setActiveLayer(QString layer);
 	void redraw();
 
 	void addVia(QString netname, QString vianame, QPointF p);
@@ -69,10 +68,11 @@ protected:
 	void drawBackground(QPainter *painter, const QRectF &rect);
 
 public slots:
-	void setGDS(QString name, bool load);
-	void setLEF(QString name, bool load);
+	void setGDS(QString name);
+	void setLEF(QString name);
 	void onVisibleLayersChanged(QStringList l);
 	void runDRC();
+	void setActiveLayer(QString layer);
 
 signals:
 	void contentChanged();

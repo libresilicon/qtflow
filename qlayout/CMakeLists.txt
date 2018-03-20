@@ -24,6 +24,9 @@ set(SOURCES
 	qlayoutscene.cpp
 	qlayoutviaitem.cpp
 	qlayoutwireitem.cpp
+	genericlayouteditorwidget.cpp
+	genericlayouteditor.cpp
+	tech_data_wrapper.cpp
 )
 
 set(UI_SOURCES
@@ -34,11 +37,12 @@ set(UI_SOURCES
 
 qt5_wrap_ui(UI_GENERATED_HEADERS ${UI_SOURCES})
 
+QT5_ADD_RESOURCES(TECH_FILES ${PROJECT_SOURCE_DIR}/tech/tech.qrc)
+
 add_library(${TARGET} SHARED
 	${SOURCES}
 	${UI_GENERATED_HEADERS}
+	${TECH_FILES}
 )
 
 target_link_libraries(${TARGET} ${QT5_LIBRARIES} GDS)
-
-

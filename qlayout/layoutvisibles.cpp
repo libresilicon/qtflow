@@ -23,7 +23,6 @@ void LayoutVisibles::handleClick(QTreeWidgetItem *item, int column)
 			}
 		}
 	}
-
 	emit(setCurrentLayer(item->text(2)));
 	emit(enabledTypesChanged(getEnabledTypes()));
 }
