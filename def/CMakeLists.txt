@@ -33,7 +33,8 @@ add_library(${TARGET} SHARED
 target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor QLayout)
 
 if(BUILD_STAND_ALONE_BINARIES)
-	add_executable(def_editor def_editor.cpp def_editor_app.cpp)
+	QT5_ADD_RESOURCES(ICONS ${PROJECT_SOURCE_DIR}/icons/icons.qrc)
+	add_executable(def_editor def_editor.cpp def_editor_app.cpp ${ICONS})
 	target_link_libraries(def_editor ${QT5_LIBRARIES} QEditor DEF QLayout TechReader)
 endif(BUILD_STAND_ALONE_BINARIES)
 

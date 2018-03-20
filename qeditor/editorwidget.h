@@ -45,6 +45,9 @@ private:
 	bool statusChanged;
 	QString filePath;
 	WidgetType widgetType;
+
+protected:
+	QToolBar *m_toolbar;
 };
 
 #endif // EDITORWIDGET_H

@@ -13,6 +13,7 @@ public:
 	GDTData(QString fileName); // constructor to open (create if WRITE) stream file (calls opstrm())
 	bool containsCell(QString name);
 	GDSCell* getCell(QString name);
+	QVector<GDSCell*> getCells();
 
 private:
 	void goThroughFile();

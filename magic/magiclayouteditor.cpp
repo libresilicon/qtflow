@@ -2,21 +2,9 @@
 #include <QDateTime>
 
 MagicLayoutEditor::MagicLayoutEditor(QWidget *parent) :
-	QGraphicsView(parent),
-	magicdata(NULL),
-	activeLayerSelection(NULL),
-	visibles(NULL),
-	filePath(QString()),
-	editScene(new QLayoutScene(this)),
-	m_scale(1.0)
+	GenericLayoutEditor(parent),
+	magicdata(NULL)
 {
-	editScene->setBackgroundBrush(Qt::white);
-
-	setScene(editScene);
-	//setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
-	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-	setInteractive(true);
-	setDragMode(QGraphicsView::ScrollHandDrag);
 }
 
 void MagicLayoutEditor::addRectangles()
@@ -91,7 +79,6 @@ void MagicLayoutEditor::loadFile(QString file)
 void MagicLayoutEditor::saveFileWriteHeader(QTextStream &outputStream)
 {
 	outputStream << "magic" << endl;
-	//outputStream << "tech " << project->getTechnology() << endl;
 	outputStream << "magscale 1 2" << endl;
 	outputStream << "timestamp " << QDateTime::currentMSecsSinceEpoch() << endl;
 }
@@ -140,66 +127,3 @@ void MagicLayoutEditor::saveFile()
 	}
 }
 
-void MagicLayoutEditor::setRecentVisible(QString s)
-{
-	int index;
-	if(!activeLayerSelection) return;
-
-	index = activeLayerSelection->findText(s);
-	if ( index != -1 ) { // -1 for not found
-		activeLayerSelection->setCurrentIndex(index);
-	}
-
-	editScene->setActiveLayer(s);
-}
-
-void MagicLayoutEditor::setVisibles(LayoutVisibles *v)
-{
-	visibles = v;
-	if(visibles) {
-		connect(visibles, SIGNAL(enabledTypesChanged(QStringList)), editScene, SLOT(onVisibleLayersChanged(QStringList)));
-		connect(editScene, SIGNAL(registerLayer(QString)), visibles, SLOT(onRegisterLayer(QString)));
-	}
-}
-
-void  MagicLayoutEditor::setActiveLayer(QString s)
-{
-	editScene->setActiveLayer(s);
-}
-
-void MagicLayoutEditor::showCellManager()
-{
-	editScene->showCellManager();
-}
-
-void MagicLayoutEditor::zoomIn()
-{
-	scale(1.1, 1.1);
-	editScene->update();
-}
-
-void MagicLayoutEditor::showDRC()
-{
-	editScene->showDRC();
-}
-
-void MagicLayoutEditor::zoomOut()
-{
-	scale(0.9, 0.9);
-	editScene->update();
-}
-
-QString MagicLayoutEditor::getFilePath()
-{
-	return filePath;
-}
-
-bool MagicLayoutEditor::changes()
-{
-	return false;
-}
-
-void MagicLayoutEditor::setDrawingOperation(drawing_operations o)
-{
-	editScene->setDrawingOperation(o);
-}

@@ -5,20 +5,20 @@ EditorWidget::EditorWidget(QWidget *parent) :
 	statusChanged(false),
 	widgetType(BareEditorWidgetType)
 {
-	QToolBar *toolbar = new QToolBar(this);
+	m_toolbar = new QToolBar(this);
 
 	QPixmap pixmap(":/document-save.svg");
 	QAction *button;
 
-	button = new QAction(pixmap,"S&ave", toolbar);
+	button = new QAction(pixmap,"S&ave", m_toolbar);
 	connect(button,SIGNAL(triggered(bool)),this,SLOT(saveFile()));
 
 	QShortcut *saveShortcut = new QShortcut(QKeySequence("Ctrl+S"), this);
 	connect(saveShortcut, SIGNAL(activated()),this,SLOT(saveFile()));
 
-	toolbar->addAction(button);
+	m_toolbar->addAction(button);
 
-	addToolBar(toolbar);
+	addToolBar(m_toolbar);
 }
 
 void EditorWidget::setStatusChanged(bool t)

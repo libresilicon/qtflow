@@ -5,37 +5,22 @@
 #include <QMainWindow>
 
 #include "magiclayouteditor.h"
-#include "qeditor/editorwidget.h"
+#include "qlayout/genericlayouteditorwidget.h"
 #include "magic3d/magic3d.h"
 
 #include "qlayout/layoutvisibles.h"
 
-class MagicLayoutEditorWidget : public EditorWidget
+class MagicLayoutEditorWidget : public GenericLayoutEditorWidget
 {
 	Q_OBJECT
-
 public:
 	MagicLayoutEditorWidget(QWidget *parent = nullptr);
-	void loadFile(QString);
-	QString getFilePath();
 
 public slots:
-	void onContentChanged();
-	void saveFile();
 	void show3D();
 
-	void drawingOperation();
-
 private:
-	void addDrawingOperations();
-	void addDrawingLayerSelection();
-
-	QMap<drawing_operations,QAction*> drawingOperations;
-
-	MagicLayoutEditor *editArea;
 	Magic3D *view3D;
-	LayoutVisibles *layoutVisibles;
-	QComboBox *activeLayer;
 };
 
 #endif // MAGICLAYOUTEDITORWIDGET_H

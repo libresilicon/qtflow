@@ -19,6 +19,11 @@ GDSCell* GDTData::getCell(QString name)
 	return NULL;
 }
 
+QVector<GDSCell*> GDTData::getCells()
+{
+	return m_cells;
+}
+
 bool GDTData::containsCell(QString name)
 {
 	foreach(GDSCell *cell, m_cells) {

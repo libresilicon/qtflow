@@ -1,5 +1,13 @@
 project(QtFlow)
 cmake_minimum_required(VERSION 2.8.10)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt5Core)
+set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "DEBUG")
+#set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
+set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-coverage -g")
+
 option(BUILD_FULL_EDA "Build the full EDA" ON)
 option(BUILD_STAND_ALONE_BINARIES "Build standalone binaries for testint EDA modules" ON)
 
@@ -53,9 +61,10 @@ add_subdirectory(vcd_reader)
 #add_subdirectory(blif)
 add_subdirectory(cmap_reader)
 add_subdirectory(gds2)
-#add_subdirectory(helpers)
+add_subdirectory(helpers)
 add_subdirectory(symbol_reader)
 add_subdirectory(symbols)
-
+add_subdirectory(jsoncpp)
+add_subdirectory(toml11)
 #add_subdirectory(coriolis)
 

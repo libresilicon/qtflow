@@ -2,26 +2,13 @@
 #define DEFLAYOUTEDITORWIDGET_H
 
 #include "deflayouteditor.h"
-#include "qeditor/editorwidget.h"
-#include "qlayout/layoutvisibles.h"
+#include "qlayout/genericlayouteditorwidget.h"
 
-class DEFLayoutEditorWidget : public EditorWidget
+class DEFLayoutEditorWidget : public GenericLayoutEditorWidget
 {
 	Q_OBJECT
 public:
 	DEFLayoutEditorWidget(QWidget *parent = nullptr);
-	void loadFile(QString);
-	void loadLEF(QString);
-	void loadGDS2(QString);
-	QString getFilePath();
-
-public slots:
-	void onContentChanged();
-	void saveFile();
-
-private:
-	DEFLayoutEditor *editArea;
-	LayoutVisibles *layoutVisibles;
 };
 
 #endif // DEFLAYOUTEDITORWIDGET_H

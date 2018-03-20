@@ -8,18 +8,18 @@
 #include <QGridLayout>
 #include <QTemporaryDir>
 #include <QAbstractScrollArea>
-//#include <QGLWidget>
-//#include <QGLFormat>
 
 #include "qlayout/qlayoutscene.h"
 #include "qlayout/layoutvisibles.h"
 #include "defdata.h"
 
+#include "qlayout/genericlayouteditor.h"
+
 namespace def {
 	class DEFData;
 }
 
-class DEFLayoutEditor : public QGraphicsView
+class DEFLayoutEditor : public GenericLayoutEditor
 {
 	Q_OBJECT
 
@@ -28,18 +28,6 @@ public:
 
 	void loadFile(QString);
 	void saveFile();
-	QString getFilePath();
-	void setVisibles(LayoutVisibles *v);
-
-	bool changes();
-
-public slots:
-	void zoomIn();
-	void zoomOut();
-	void showCellManager();
-
-signals:
-	void contentChanged();
 
 private:
 	void addMacroInstances();
@@ -47,10 +35,7 @@ private:
 	void addRectangles();
 	void addSignalWires();
 
-	QString filePath;
-	QLayoutScene *editScene;
 	def::DEFData *defdata;
-	LayoutVisibles *visibles;
 };
 
 #endif // DEFLAYOUTEDITOR_H

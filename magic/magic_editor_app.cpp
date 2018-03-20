@@ -21,7 +21,7 @@ int MagicEditor::exec()
 		qDebug() << "Opening Magic file " << filePath;
 		w.show();
 		if(parser->isSet("lef")) {
-			//w.loadLEF(parser->value("lef"));
+			w.loadLEF(parser->value("lef"));
 		}
 		w.loadFile(filePath);
 		return QApplication::exec();

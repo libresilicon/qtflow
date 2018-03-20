@@ -3,53 +3,21 @@
 
 #include "magic/magicdata.h"
 
-#include "qlayout/layoutvisibles.h"
-#include "qlayout/qlayoutscene.h"
-
-#include <QGridLayout>
-#include <QAbstractScrollArea>
-#include <QFileInfo>
-#include <QResource>
-#include <QDebug>
-#include <QTemporaryDir>
-#include <QAction>
-#include <QComboBox>
-#include <QGraphicsView>
+#include "qlayout/genericlayouteditor.h"
 
 namespace magic {
 	class MagicData;
 }
 
-class MagicLayoutEditor : public QGraphicsView
+class MagicLayoutEditor : public GenericLayoutEditor
 {
 	Q_OBJECT
 public:
 	explicit MagicLayoutEditor(QWidget *parent = nullptr);
-
 	void loadFile(QString);
-	void setVisibles(LayoutVisibles *v);
 	void saveFile();
 
-	QString getFilePath();
-
-	void setDrawingOperation(drawing_operations o);
-
-	bool changes();
-
-signals:
-	void contentSaved();
-
-public slots:
-	void setActiveLayer(QString);
-
-	void zoomIn();
-	void zoomOut();
-	void showDRC();
-	void showCellManager();
-
 private:
-	void setRecentVisible(QString s);
-
 	/* magic output functions */
 	void saveFileWriteHeader(QTextStream &outputStream);
 	void saveFileWriteRects(QTextStream &outputStream);
@@ -59,15 +27,7 @@ private:
 	void addRectangles();
 	void addMacroInstances();
 
-	QString filePath;
-	QLayoutScene *editScene;
 	magic::MagicData *magicdata;
-
-	QRectF sceneRect;
-	LayoutVisibles *visibles;
-	QComboBox *activeLayerSelection;
-
-	qreal m_scale;
 };
 
 #endif // MAGICLAYOUTEDITOR_H

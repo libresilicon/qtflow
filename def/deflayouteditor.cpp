@@ -1,10 +1,8 @@
 #include "deflayouteditor.h"
 
 DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
-	QGraphicsView(parent),
-	defdata(NULL),
-	filePath(QString()),
-	editScene(new QLayoutScene(this))
+	GenericLayoutEditor(parent),
+	defdata(NULL)
 {
 	editScene->setBackgroundBrush(Qt::white);
 
@@ -13,11 +11,6 @@ DEFLayoutEditor::DEFLayoutEditor(QWidget *parent) :
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setInteractive(true);
 	setDragMode(QGraphicsView::ScrollHandDrag);
-}
-
-void DEFLayoutEditor::showCellManager()
-{
-	editScene->showCellManager();
 }
 
 void DEFLayoutEditor::loadFile(QString file)
@@ -126,37 +119,6 @@ void DEFLayoutEditor::addMacroInstances()
 	}
 }
 
-void DEFLayoutEditor::setVisibles(LayoutVisibles *v)
-{
-	visibles = v;
-	if(visibles) {
-		connect(visibles, SIGNAL(enabledTypesChanged(QStringList)), editScene, SLOT(onVisibleLayersChanged(QStringList)));
-		connect(editScene, SIGNAL(registerLayer(QString)), visibles, SLOT(onRegisterLayer(QString)));
-	}
-}
-
 void DEFLayoutEditor::saveFile()
 {
-}
-
-QString DEFLayoutEditor::getFilePath()
-{
-	return filePath;
-}
-
-bool DEFLayoutEditor::changes()
-{
-	return false;
-}
-
-void DEFLayoutEditor::zoomIn()
-{
-	scale(1.1, 1.1);
-	editScene->update();
-}
-
-void DEFLayoutEditor::zoomOut()
-{
-	scale(0.9, 0.9);
-	editScene->update();
 }
