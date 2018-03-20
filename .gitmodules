@@ -5,9 +5,6 @@
 [submodule "coriolis"]
 	path = coriolis
 	url = https://www-soc.lip6.fr/git/coriolis.git
-[submodule "jsoncpp"]
-	path = jsoncpp
-	url = https://github.com/leviathanch/jsoncpp.git
 [submodule "toml11"]
 	path = toml11
 	url = https://github.com/leviathanch/toml11.git
