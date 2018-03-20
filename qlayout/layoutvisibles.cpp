@@ -40,7 +40,6 @@ void LayoutVisibles::handleSearch(QString s)
 	}
 }
 
-
 void LayoutVisibles::onRegisterLayer(QString s)
 {
 	QTreeWidgetItem *m;
@@ -118,6 +117,23 @@ void LayoutVisibles::on_layerList_customContextMenuRequested(const QPoint &pos)
 void LayoutVisibles::changeColor()
 {
 
+}
+
+void LayoutVisibles::setTechData(TechDataWrapper* toml)
+{
+	QTreeWidgetItem *m;
+
+	foreach(QString s, toml->getLayers()) {
+		foreach(m, typeEntries){
+			if(m->data(2,0).toString()==s) return;
+		}
+		m = new QTreeWidgetItem(ui->typesTree);
+		m->setCheckState(0,typeIsEnabled(s)?Qt::Checked:Qt::Unchecked);
+		m->setIcon(1,toml->getLayerIcon(s));
+		m->setText(2,s);
+		m->setFlags(m->flags()|Qt::ItemIsUserCheckable|Qt::ItemIsSelectable);
+		typeEntries.append(m);
+	}
 }
 
 bool LayoutVisibles::typeIsEnabled(QString s)

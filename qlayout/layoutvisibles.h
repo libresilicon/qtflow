@@ -7,6 +7,7 @@
 
 #include "ui_layoutvisibles.h"
 #include "tech_reader/techdesignrule.h"
+#include "qlayout/tech_data_wrapper.hpp"
 
 class LayoutVisibles : public QDockWidget
 {
@@ -15,6 +16,7 @@ public:
 	explicit LayoutVisibles(QWidget *parent = nullptr);
 
 	bool typeIsEnabled(QString s);
+	void setTechData(TechDataWrapper*toml);
 
 public slots:
 	void changeColor();

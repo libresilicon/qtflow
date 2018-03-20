@@ -4,8 +4,6 @@
 GenericLayoutEditorWidget::GenericLayoutEditorWidget(QWidget *parent) :
 	EditorWidget(parent)
 {
-	TechDataWrapper toml(":/ls1u.toml");
-	qDebug() << toml.getLayers();
 }
 
 void GenericLayoutEditorWidget::onContentChanged()
@@ -97,12 +95,14 @@ void GenericLayoutEditorWidget::setUpcentralWidget(GenericLayoutEditor *area)
 	m_toolbar->addAction(button);
 	
 	m_activeLayer = new QComboBox(m_toolbar);
+	
+	TechDataWrapper toml(":/ls1u.toml");
+	
+	m_layoutVisibles->setTechData(&toml);
 
-	/*foreach(QString layern, project->getPlanes()) {
-		foreach(QString vname, project->getTypes(layern)) {
-			activeLayer->addItem(project->materialIcon(vname),vname);
-		}
-	}*/
+	foreach(QString layern, toml.getLayers()) {
+		m_activeLayer->addItem(toml.getLayerIcon(layern),layern);
+	}
 
 	connect(m_activeLayer,SIGNAL(currentTextChanged(QString)),((GenericLayoutEditor*)centralWidget()),SLOT(setActiveLayer(QString)));
 	connect(m_layoutVisibles,SIGNAL(setCurrentLayer(QString)),m_activeLayer,SLOT(setCurrentText(QString)));

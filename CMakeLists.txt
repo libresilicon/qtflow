@@ -64,7 +64,6 @@ add_subdirectory(gds2)
 add_subdirectory(helpers)
 add_subdirectory(symbol_reader)
 add_subdirectory(symbols)
-add_subdirectory(jsoncpp)
 add_subdirectory(toml11)
 #add_subdirectory(coriolis)
 
