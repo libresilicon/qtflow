@@ -1,0 +1,5 @@
+add_executable(blif2BSpice blif2BSpice.c)
+add_executable(blif2Verilog blif2Verilog.c)
+add_executable(blifFanout blifFanout.c hash.c readliberty.c)
+add_executable(spice2delay spice2delay.c hash.c readliberty.c)
+add_executable(vesta vesta.c hash.c)
