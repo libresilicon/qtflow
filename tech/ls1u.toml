@@ -1,0 +1,143 @@
+##  ************    LibreSilicon 1um Process    ***********************
+##
+##  please add header here !!
+##
+##  ************    Tom's Obvious, Minimal Language     ***************
+##
+##  ///////////////////////////////////////////////////////////////////
+##
+##  Copyright (c) 2018 by leviathan <email>
+##
+##  please add license here !!
+##
+##  ///////////////////////////////////////////////////////////////////
+
+title = "LibreSilicon 1um Process"
+[owner]
+name = "leviathan"
+rev = "0.0"
+
+# use common layer definitions, compatible with GDS II and CIF
+# [layer]
+
+[[layer]]
+	name = "n_well"
+	GDS2 = "42"
+	CIF = "CWN"
+	color = ["RGB","#FFBD88"]   # light sky blue
+
+[[layer]]
+	name = "p_well"
+	GDS2 = "41"
+	CIF = "CWP"
+	color = ["RGB", "#87CEEB"]  # macaroni and cheese
+
+[[layer]]
+	name = "active"
+	GDS2 = "43"
+	CIF = "CAA"
+	color = ["RGB", "#E66771"]  # light carmine pink
+
+[[layer]]
+	name = "n_plus_select"
+	GDS2 = "45"
+	CIF = "CSN"
+	color = ["RGB", "#93CCEA"]  # light cornflower blue 
+
+[[layer]]
+	name = "p_plus_select"
+	GDS2 = "44"
+	CIF = "CSP"
+	color = ["RGB", "#FF8243"]  # mango tango
+
+[[layer]]
+	name = "poly"
+	GDS2 = "46"
+	CIF = "CPG"
+	color = ["RGB", "#90EE90"]  # light green
+
+[[layer]]
+	name = "contact"
+	GDS2 = "25"
+	CIF = "CCC"
+	color = ["RGB", "#D3D3D3"]  # light gray
+
+[[layer]]
+	name = "metal1"
+	GDS2 = "49"
+	CIF = "CM1"
+	color = ["RGB", "#6050DC"]  # majorelle blue
+
+[[layer]]
+	name = "via1"
+	GDS2 = "50"
+	CIF = "CV1"
+	color = ["RGB", "#D3D3D3"]  # ligth gray
+
+[[layer]]
+	name = "metal2"
+	GDS2 = "51"
+	CIF = "CM2"
+	color = ["RGB", "#0BDA51"]  # malachite
+
+[[layer]]
+	name = "via2"
+	GDS2 = "61"
+	CIF = "CV2"
+	color = ["RGB", "#D3D3D3"]  # ligth gray
+
+[[layer]]
+	name = "metal3"
+	GDS2 = "62"
+	CIF = "CM3"
+	color = ["RGB", "#FBEC5D"]  # maize
+
+[[layer]]
+	name = "via3"
+	GDS2 = "30"
+	CIF = "CV3"
+	color = ["RGB", "#D3D3D3"]  # ligth gray
+
+[[layer]]
+	name = "metal4"
+	GDS2 = "31"
+	CIF = "CM4"
+	color = ["RGB", "#C04000"]  # mahogany
+
+[[layer]]
+	name = "via4"
+	GDS2 = "32"
+	CIF = "CV4"
+	color = ["RGB", "#D3D3D3"]  # ligth gray
+
+[[layer]]
+	name = "metal5"
+	GDS2 = "33"
+	CIF = "CM5"
+	color = ["RGB", "#CA1F7B"]  # magenta (dye)
+
+[[layer]]
+	name = "via5"
+	GDS2 = "36"
+	CIF = "CV5"
+	color = ["RGB", "#D3D3D3"]  # ligth gray
+
+[[layer]]
+	name = "metal6"
+	GDS2 = "37"
+	CIF = "CM6"
+	color = ["RGB", "#195905"]  # lincoln green
+
+[[layer]]
+	name = "glass"
+	GDS2 = "52"
+	CIF = "COG"
+	color = ["RGB", "#FFFFED"]  # light yellow
+
+[[layer]]
+	name = "pads"
+	GDS2 = "26"
+	CIF = "XP"
+	color = ["RGB", "#BFFF00"]  # lime (color wheel)
+
+# end
