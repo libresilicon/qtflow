@@ -19,6 +19,7 @@ public:
 	void loadFile(QString);
 	void loadLEF(QString);
 	void loadGDS(QString);
+	void setTechnologyData(TechDataWrapper* toml);
 	QString getFilePath();
 
 protected:

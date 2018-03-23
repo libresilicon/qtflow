@@ -22,7 +22,8 @@ QLayoutScene::QLayoutScene(QObject *parent) :
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_baseUnit(1)
+	m_baseUnit(1),
+	m_techData(NULL)
 {
 	basicInit();
 }
@@ -33,7 +34,8 @@ QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_baseUnit(1)
+	m_baseUnit(1),
+	m_techData(NULL)
 {
 	basicInit();
 }
@@ -44,7 +46,8 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	recentRectangle(NULL),
 	recentSelectRectangle(new QGraphicsRectItem()),
 	m_dragging(false),
-	m_baseUnit(1)
+	m_baseUnit(1),
+	m_techData(NULL)
 {
 	basicInit();
 }
@@ -52,6 +55,11 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 void QLayoutScene::setDistanceUnit(qreal u)
 {
 	m_baseUnit = u;
+}
+
+void QLayoutScene::setTechData(TechDataWrapper* toml)
+{
+	m_techData = toml;
 }
 
 int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
@@ -588,7 +596,7 @@ void QLayoutScene::addPad(QString name, QString net, QString layer, qreal x, qre
 	t->setScale(w/t->boundingRect().width());
 
 	r->setVisible(true);
-	//if(project) r->setColor(project->colorMat(layer));
+	if(m_techData) r->setColor(m_techData->getLayerColor(layer));
 	addItem(r);
 	update();
 
@@ -613,7 +621,7 @@ void QLayoutScene::addWire(QString netname, QString layer, QPointF p1, QPointF p
 	pen = l->pen();
 	pen.setWidth(1);
 	pen.setCosmetic(true);
-	//if(project) pen.setColor(project->colorMat(layer));
+	if(m_techData) pen.setColor(m_techData->getLayerColor(layer));
 	l->setPen(pen);
 	addItem(l);
 }
@@ -625,7 +633,7 @@ void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal 
 	r = new QLayoutRectItem(x, y, w, h);
 
 	r->setVisible(true);
-	//if(project) r->setColor(project->colorMat(layer));
+	if(m_techData) r->setColor(m_techData->getLayerColor(layer));
 	addItem(r);
 	update();
 

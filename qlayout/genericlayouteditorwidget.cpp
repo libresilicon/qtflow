@@ -27,6 +27,19 @@ void GenericLayoutEditorWidget::loadGDS(QString path)
 	((GenericLayoutEditor*)centralWidget())->loadGDS(path);
 }
 
+void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
+{
+	if(toml) {
+		if(m_layoutVisibles) m_layoutVisibles->setTechData(toml);
+	
+		if(m_activeLayer) foreach(QString layern, toml->getLayers()) {
+			m_activeLayer->addItem(toml->getLayerIcon(layern),layern);
+		}
+		
+		if(centralWidget()) ((GenericLayoutEditor*)centralWidget())->setTechData(toml);
+	}
+}
+
 void GenericLayoutEditorWidget::setUpcentralWidget(GenericLayoutEditor *area)
 {
 	setCentralWidget(area);
@@ -95,14 +108,6 @@ void GenericLayoutEditorWidget::setUpcentralWidget(GenericLayoutEditor *area)
 	m_toolbar->addAction(button);
 	
 	m_activeLayer = new QComboBox(m_toolbar);
-	
-	TechDataWrapper toml(":/ls1u.toml");
-	
-	m_layoutVisibles->setTechData(&toml);
-
-	foreach(QString layern, toml.getLayers()) {
-		m_activeLayer->addItem(toml.getLayerIcon(layern),layern);
-	}
 
 	connect(m_activeLayer,SIGNAL(currentTextChanged(QString)),((GenericLayoutEditor*)centralWidget()),SLOT(setActiveLayer(QString)));
 	connect(m_layoutVisibles,SIGNAL(setCurrentLayer(QString)),m_activeLayer,SLOT(setCurrentText(QString)));

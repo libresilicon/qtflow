@@ -23,6 +23,11 @@ void GenericLayoutEditor::loadGDS(QString f)
 	editScene->setGDS(f);
 }
 
+void GenericLayoutEditor::setTechData(TechDataWrapper* toml)
+{
+	editScene->setTechData(toml);
+}
+
 void GenericLayoutEditor::onRegisterLayer(QString s)
 {
 	emit registerLayer(s);

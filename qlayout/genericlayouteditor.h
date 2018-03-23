@@ -23,6 +23,7 @@ public:
 	virtual void loadFile(QString) {}
 	void loadGDS(QString);
 	void loadLEF(QString s);
+	void setTechData(TechDataWrapper* toml);
 	virtual void saveFile() {}
     
 	QString getFilePath();

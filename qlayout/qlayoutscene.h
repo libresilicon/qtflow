@@ -13,6 +13,7 @@
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
 #include "qlayoutviaitem.h"
+#include "qlayout/tech_data_wrapper.hpp"
 
 #include "qlayoutcellmanager.h"
 #include "drcsettings.h"
@@ -41,6 +42,7 @@ public:
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 	void basicInit();
 	void setDistanceUnit(qreal u);
+	void setTechData(TechDataWrapper* toml);
 
 	void showDRC();
 	void showCellManager();
@@ -96,6 +98,7 @@ private:
 	QStringList m_visibleLayers;
 	bool m_dragging;
 	qreal m_baseUnit;
+	TechDataWrapper* m_techData;
 
 	QVector<QLayoutMacroItem*> macros;
 	QVector<QGraphicsTextItem*> macro_texts;
