@@ -12,7 +12,7 @@ GenericLayoutEditor::GenericLayoutEditor(QWidget *parent) :
 	//setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setInteractive(true);
-	setDragMode(QGraphicsView::ScrollHandDrag);
+	//setDragMode(QGraphicsView::ScrollHandDrag);
 	connect(editScene, SIGNAL(registerLayer(QString)), this, SLOT(onRegisterLayer(QString)));
 	connect(parent, SIGNAL(enabledTypesChanged(QStringList)), editScene, SLOT(onVisibleLayersChanged(QStringList)));
 	connect(parent, SIGNAL(setCurrentLayer(QString)), editScene, SLOT(setActiveLayer(QString)));

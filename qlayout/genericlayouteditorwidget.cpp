@@ -124,14 +124,13 @@ void GenericLayoutEditorWidget::drawingOperation()
 
 	foreach(drawing_operations k, m_drawingOperations.keys()) {
 		if(k==o) continue;
-
 		m_drawingOperations[k]->setChecked(false);
 	}
 
 	if(m_drawingOperations.contains(o)) {
 		if(m_drawingOperations[o]->isChecked()) {
-			((GenericLayoutEditor*)centralWidget())->setDrawingOperation(o);
 			qDebug() << __FUNCTION__ << " setting drawing operation " << o;
+			((GenericLayoutEditor*)centralWidget())->setDrawingOperation(o);
 		}
 	}
 }

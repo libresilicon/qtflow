@@ -230,8 +230,6 @@ void QLayoutScene::showDRC()
 
 void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-	return;
-
 	QMenu  menu;
 	QAction *layerAction;
 
@@ -245,7 +243,7 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
-			//if(project) recentRectangle->setColor(project->colorMat(activeLayer));
+			if(m_techData) recentRectangle->setColor(m_techData->getLayerColor(activeLayer));
 			addItem(recentRectangle);
 			break;
 
@@ -413,7 +411,6 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		default:
 			break;
 	}
-	Q_UNUSED(event);
 }
 
 void QLayoutScene::setDrawingOperation(drawing_operations o)
@@ -573,7 +570,7 @@ void QLayoutScene::redraw()
 	foreach(layerName, layer_rects.keys()) {
 		visible = m_visibleLayers.contains(layerName);
 		foreach(w, layer_rects[layerName]) {
-			//w->setVisible(visible);
+			w->setVisible(visible);
 		}
 	}
 
