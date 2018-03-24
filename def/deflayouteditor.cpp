@@ -30,7 +30,6 @@ void DEFLayoutEditor::loadFile(QString file)
 	w = defdata->getUpperX()-x;
 	h = defdata->getUpperY()-y;
 
-	editScene->setDistanceUnit(defdata->getDistanceUnit());
 	editScene->setSceneRect(x,y,w,h);
 
 	addMacroInstances();

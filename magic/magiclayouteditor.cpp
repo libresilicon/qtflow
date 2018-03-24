@@ -58,7 +58,6 @@ void MagicLayoutEditor::loadFile(QString file)
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
 
-	gridsize = 100;
 	x = magicdata->getLowerX();
 	y = magicdata->getLowerY();
 	w = magicdata->getUpperX()-x;
@@ -69,7 +68,6 @@ void MagicLayoutEditor::loadFile(QString file)
 
 	editScene->setSceneRect(x, y, w, h);
 
-	editScene->setDistanceUnit(gridsize); // assumed because magic doesn't provide this info
 	addMacroInstances();
 	addRectangles();
 

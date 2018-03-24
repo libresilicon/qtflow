@@ -24,7 +24,7 @@ public:
 
 protected:
 	QAction *addToolbarAction(QPixmap pm, QString str);
-	void setUpcentralWidget(GenericLayoutEditor *area);
+	void setUpCentralWidget(GenericLayoutEditor *area);
 
 public slots:
 	void onContentChanged();

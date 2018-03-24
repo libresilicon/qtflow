@@ -2,11 +2,7 @@
 
 void QLayoutScene::basicInit()
 {
-	recentSelectRectangle->setZValue(1000);
-	recentSelectRectangle->hide();
-	recentSelectRectangle->setOpacity(0.25);
-	recentSelectRectangle->setBrush(Qt::gray);
-	addItem(recentSelectRectangle);
+	m_gridSize = 100;
 
 	drcDialog = new DRCSettings();
 	connect(drcDialog,SIGNAL(runDRC()),this,SLOT(runDRC()));
@@ -14,47 +10,36 @@ void QLayoutScene::basicInit()
 	cellManagerDialog = new QLayoutCellManager();
 	connect(cellManagerDialog,SIGNAL(setGDS(QString,bool)),this,SLOT(setGDS(QString,bool)));
 	connect(cellManagerDialog,SIGNAL(setLEF(QString,bool)),this,SLOT(setLEF(QString,bool)));
+
+	recentOperation = DRAWING_OPERATION_NONE;
+	recentRectangle = NULL;
+	m_dragging = false;
+	m_techData = NULL;
+
+	recentSelectRectangle = new QGraphicsRectItem();
+	recentSelectRectangle->setZValue(1000);
+	recentSelectRectangle->hide();
+	recentSelectRectangle->setOpacity(0.25);
+	recentSelectRectangle->setBrush(Qt::gray);
+	addItem(recentSelectRectangle);
 }
 
 QLayoutScene::QLayoutScene(QObject *parent) :
-	QGraphicsScene(parent),
-	recentOperation(DRAWING_OPERATION_NONE),
-	recentRectangle(NULL),
-	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false),
-	m_baseUnit(1),
-	m_techData(NULL)
+	QGraphicsScene(parent)
 {
 	basicInit();
 }
 
 QLayoutScene::QLayoutScene(const QRectF &sceneRect, QObject *parent) :
-	QGraphicsScene(sceneRect, parent),
-	recentOperation(DRAWING_OPERATION_NONE),
-	recentRectangle(NULL),
-	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false),
-	m_baseUnit(1),
-	m_techData(NULL)
+	QGraphicsScene(sceneRect, parent)
 {
 	basicInit();
 }
 
 QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent) :
-	QGraphicsScene(x, y, width, height, parent),
-	recentOperation(DRAWING_OPERATION_NONE),
-	recentRectangle(NULL),
-	recentSelectRectangle(new QGraphicsRectItem()),
-	m_dragging(false),
-	m_baseUnit(1),
-	m_techData(NULL)
+	QGraphicsScene(x, y, width, height, parent)
 {
 	basicInit();
-}
-
-void QLayoutScene::setDistanceUnit(qreal u)
-{
-	m_baseUnit = u;
 }
 
 void QLayoutScene::setTechData(TechDataWrapper* toml)
@@ -89,16 +74,16 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 				}
 			}
 		}
-		layer_rects[activeLayer] = l;
+		layer_rects[activeLayer]=l;
 	}
 }
 
-/*QPointF QLayoutScene::snapGrid(QPointF pt) {
+QPointF QLayoutScene::snapGrid(QPointF pt) {
 	qreal x, y;
 	x = round(pt.x()/m_gridSize)*m_gridSize;
 	y = round(pt.y()/m_gridSize)*m_gridSize;
 	return QPointF(x,y);
-}*/
+}
 
 void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
@@ -106,18 +91,16 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 	QColor color;
 	QVector<QLineF> lines;
 	qreal left, top;
-	int grid = 100*m_baseUnit;
 
-	left = int(rect.left())-(int(rect.left()) % grid);
-	top = int(rect.top())-(int(rect.top()) % grid);
-	for (qreal x = left; x < rect.right(); x += grid) {
+	left = int(rect.left())-(int(rect.left()) % m_gridSize);
+	top = int(rect.top())-(int(rect.top()) % m_gridSize);
+	for (qreal x = left; x < rect.right(); x += m_gridSize) {
 		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
-		painter->drawText(QPoint(x,0),QString::number(x));
-		for (qreal y = top; y < rect.bottom(); y += grid){
+		painter->drawText(QPoint(x,0),QString::number(x/m_gridSize));
+		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
 			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
 		}
 	}
-
 	color = QColor(200, 200, 255, 125);
 	p = QPen(color);
 	p.setCosmetic(true);
@@ -188,8 +171,8 @@ void QLayoutScene::refreshMacroTable()
 	foreach(QString macroName, macroList) {
 		x = 0;
 		y = 0;
-		w = m_baseUnit;
-		h = m_baseUnit;
+		w = 1;
+		h = 1;
 
 		/*if(project) {
 			macro = project->getMacro(macroName);
@@ -232,14 +215,12 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QMenu  menu;
 	QAction *layerAction;
-
-	//lastOrig = snapGrid(event->scenePos());
-	lastOrig = event->scenePos();
-
+	lastOrig = snapGrid(event->scenePos());
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
+			if(activeLayer==ALL_LAYERS) return; // no layer selected
 			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
 			recentRectangle->setVisible(true);
 			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -251,17 +232,20 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			if(activeLayer=="") return; // no layer selected
 			if(m_dragging) return;
 			m_dragging = true;
-			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-				if(!m->isLocked()) {
-					if(m->contains(lastOrig)||m->isSelected()) {
-						if(!m->isSelected()) {
-							foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-								m->setSelected(false);
+			foreach(QString lay, layer_rects.keys()) {
+				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				foreach(QLayoutRectItem *m, layer_rects[lay]) {
+					if(!m->isLocked()) {
+						if(m->contains(lastOrig)||m->isSelected()) {
+							if(!m->isSelected()) {
+								foreach(QLayoutRectItem *m, layer_rects[lay]) {
+									m->setSelected(false);
+								}
 							}
+							m->setSelected(true);
+							m->setDragMode(true);
+							m->setCursor(QCursor(Qt::ClosedHandCursor));
 						}
-						m->setSelected(true);
-						m->setDragMode(true);
-						m->setCursor(QCursor(Qt::ClosedHandCursor));
 					}
 				}
 			}
@@ -269,10 +253,12 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 		case DRAWING_OPERATION_SELECT:
 			if(activeLayer=="") return; // no layer selected
-			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-				m->setSelected(false);
+			foreach(QString lay, layer_rects.keys()) {
+				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				foreach(QLayoutRectItem *m, layer_rects[lay]) {
+					m->setSelected(false);
+				}
 			}
-
 			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), 1, 1));
 			recentSelectRectangle->show();
 			break;
@@ -280,10 +266,13 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		case DRAWING_OPERATION_CUT_OUT:
 			if(!recentRectangle) {
 				if(activeLayer=="") return; // no layer selected
-				foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-					if(!m->isLocked()) if(m->contains(lastOrig)) {
-						recentRectangle = m;
-						recentRectangle->setCutOutStart(lastOrig.x(),lastOrig.y());
+				foreach(QString lay, layer_rects.keys()) {
+					if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+					foreach(QLayoutRectItem *m, layer_rects[lay]) {
+						if(!m->isLocked()) if(m->contains(lastOrig)) {
+							recentRectangle = m;
+							recentRectangle->setCutOutStart(lastOrig.x(),lastOrig.y());
+						}
 					}
 				}
 			}
@@ -291,10 +280,11 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 		case DRAWING_OPERATION_SELECT_LAYER:
 			menu.clear();
-			foreach(QString k, layer_rects.keys()) {
-				foreach(QLayoutRectItem *m, layer_rects[k]) {
+			foreach(QString lay, layer_rects.keys()) {
+				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				foreach(QLayoutRectItem *m, layer_rects[lay]) {
 					if(m->contains(lastOrig)) {
-						layerAction = menu.addAction(k);
+						layerAction = menu.addAction(lay);
 						break;
 					}
 				}
@@ -312,34 +302,32 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
 	qreal dx, dy;
-	QPointF pt;
 	QRectF srect;
-
-	//pt = snapGrid(event->scenePos());
-	pt = event->scenePos();
-
+	QPointF pt = snapGrid(event->scenePos());
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(recentRectangle) {
 				dx=pt.x()-lastOrig.x();
 				dy=pt.y()-lastOrig.y();
-				recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
+				if((abs(dx)>0)&&(abs(dy)>0))
+					recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
 			}
-			update();
 			break;
 
 		case DRAWING_OPERATION_DRAG:
 			if(activeLayer=="") return; // no layer selected
 			if(!m_dragging) return;
-			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-				if(m->isSelected()) {
-					dx=pt.x()-lastOrig.x();
-					dy=pt.y()-lastOrig.y();
-					m->updateMovingOffset(dx,dy);
+			foreach(QString lay, layer_rects.keys()) {
+				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				foreach(QLayoutRectItem *m, layer_rects[lay]) {
+					if(m->isSelected()) {
+						dx=pt.x()-lastOrig.x();
+						dy=pt.y()-lastOrig.y();
+						m->updateMovingOffset(dx,dy);
+					}
 				}
 			}
-			update();
 			break;
 
 		case DRAWING_OPERATION_SELECT:
@@ -347,14 +335,15 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			dy=pt.y()-lastOrig.y();
 			srect = QRectF(lastOrig.x(), lastOrig.y(), dx, dy);
 			recentSelectRectangle->setRect(srect);
-
 			if(activeLayer=="") return; // no layer selected
-			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-				if(srect.contains(m->offsetRect())) {
-					m->setSelected(true);
+			foreach(QString lay, layer_rects.keys()) {
+				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				foreach(QLayoutRectItem *m, layer_rects[lay]) {
+					if(m) if(srect.contains(m->offsetRect())) {
+						m->setSelected(true);
+					}
 				}
 			}
-			update();
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
@@ -362,26 +351,23 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 				dx=pt.x()-lastOrig.x();
 				dy=pt.y()-lastOrig.y();
 				recentRectangle->updateRecentCutOut(dx,dy);
-				update();
 			}
 			break;
 
 		default:
 			break;
 	}
+	update();
 }
 
 void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-	QPointF pt;
-
-	//pt = snapGrid(event->scenePos());
-	pt = event->scenePos();
-
+	QPointF pt = snapGrid(event->scenePos());
 	switch(recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
 			if(activeLayer=="") return; // no layer selected
+			if(activeLayer==ALL_LAYERS) return; // no layer selected
 			layer_rects[activeLayer].append(recentRectangle);
 			recentRectangle = NULL;
 			update();
@@ -389,10 +375,13 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 		case DRAWING_OPERATION_DRAG:
 			if(activeLayer=="") return; // no layer selected
-			foreach(QLayoutRectItem *m, layer_rects[activeLayer]) {
-				m->setCursor(QCursor(Qt::ArrowCursor));
-				m->setDragMode(false);
-				m_dragging = false;
+			foreach(QString lay, layer_rects.keys()) {
+				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				foreach(QLayoutRectItem *m, layer_rects[lay]) {
+					m->setCursor(QCursor(Qt::ArrowCursor));
+					m->setDragMode(false);
+					m_dragging = false;
+				}
 			}
 			update();
 			break;
@@ -643,7 +632,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 	QLayoutMacroItem *mi;
 	qreal angle = 0;
 	if(m_macroTemplateMap.contains(macro_name)) {
-		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
+		mi = new QLayoutMacroItem(1,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
 		if(orient=="S") {
 			angle=180;
@@ -676,7 +665,7 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 	qreal tx, ty;
 	if(m_macroTemplateMap.contains(macro_name)) {
 
-		mi = new QLayoutMacroItem(m_baseUnit,m_macroTemplateMap[macro_name]);
+		mi = new QLayoutMacroItem(1,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
 
 		tx = 1;

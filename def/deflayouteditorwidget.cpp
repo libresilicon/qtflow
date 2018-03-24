@@ -7,7 +7,7 @@ DEFLayoutEditorWidget::DEFLayoutEditorWidget(QWidget *parent) :
 	setType(DEFLayoutEditorWidgetType);
 
 	// setting up all the tool bar content
-	setUpcentralWidget(new DEFLayoutEditor(this));
+	setUpCentralWidget(new DEFLayoutEditor(this));
 
 	//button = addToolbarAction(QPixmap(":/icon_3d.svg"), "3D view");
 	//connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));

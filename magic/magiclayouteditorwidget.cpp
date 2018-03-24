@@ -8,7 +8,7 @@ MagicLayoutEditorWidget::MagicLayoutEditorWidget(QWidget *parent) :
 	setType(MagicLayoutEditorWidgetType);
 
 	// setting up all the tool bar content
-	setUpcentralWidget(new MagicLayoutEditor(this));
+	setUpCentralWidget(new MagicLayoutEditor(this));
 
 	button = addToolbarAction(QPixmap(":/icon_3d.svg"), "3D view");
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(show3D()));

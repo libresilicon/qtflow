@@ -32,6 +32,8 @@ void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
 	if(toml) {
 		if(m_layoutVisibles) m_layoutVisibles->setTechData(toml);
 	
+		m_activeLayer->addItem("all layers");
+
 		if(m_activeLayer) foreach(QString layern, toml->getLayers()) {
 			m_activeLayer->addItem(toml->getLayerIcon(layern),layern);
 		}
@@ -40,7 +42,7 @@ void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
 	}
 }
 
-void GenericLayoutEditorWidget::setUpcentralWidget(GenericLayoutEditor *area)
+void GenericLayoutEditorWidget::setUpCentralWidget(GenericLayoutEditor *area)
 {
 	setCentralWidget(area);
 	QAction *button;

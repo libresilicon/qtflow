@@ -31,6 +31,8 @@ enum drawing_operations {
 	DRAWING_OPERATION_DRAG
 };
 
+#define ALL_LAYERS "all layers"
+
 typedef QVector<QLayoutRectItem*> rects_layer_t;
 
 class QLayoutScene : public QGraphicsScene
@@ -41,7 +43,6 @@ public:
 	QLayoutScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 	void basicInit();
-	void setDistanceUnit(qreal u);
 	void setTechData(TechDataWrapper* toml);
 
 	void showDRC();
@@ -87,7 +88,7 @@ private:
 	void refreshViaTable();
 	void runDRC(QString n, QRectF rect);
 
-	//QPointF snapGrid(QPointF pt);
+	QPointF snapGrid(QPointF pt);
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
 	QString activeLayer;
@@ -97,7 +98,6 @@ private:
 	QPointF lastOrig;
 	QStringList m_visibleLayers;
 	bool m_dragging;
-	qreal m_baseUnit;
 	TechDataWrapper* m_techData;
 
 	QVector<QLayoutMacroItem*> macros;
@@ -108,6 +108,7 @@ private:
 	QVector<QLayoutDistanceMeasure*> distance_errors;
 	QMap<QString,QLayoutMacroItem*> m_macroTemplateMap;
 	QMap<QString,QLayoutViaItem*> m_viaTemplateMap;
+	int m_gridSize;
 
 	DRCSettings *drcDialog;
 	QLayoutCellManager *cellManagerDialog;
