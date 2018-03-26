@@ -15,6 +15,8 @@ void QLayoutScene::basicInit()
 	recentRectangle = NULL;
 	m_dragging = false;
 	m_techData = NULL;
+	m_lambaValue = 1;
+	m_lambaUnit = "um";
 
 	recentSelectRectangle = new QGraphicsRectItem();
 	recentSelectRectangle->setZValue(1000);
@@ -44,7 +46,11 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 
 void QLayoutScene::setTechData(TechDataWrapper* toml)
 {
-	m_techData = toml;
+	if(toml) {
+		m_techData = toml;
+		m_lambaUnit = toml->getLambdaUnit();
+		m_lambaValue = toml->getLambdaValue();
+	}
 }
 
 int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
@@ -96,9 +102,11 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 	top = int(rect.top())-(int(rect.top()) % m_gridSize);
 	for (qreal x = left; x < rect.right(); x += m_gridSize) {
 		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
-		painter->drawText(QPoint(x,0),QString::number(x/m_gridSize));
+		painter->drawText(QPoint(x,0),QString::number(m_lambaValue*x/m_gridSize)+m_lambaUnit);
 		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
 			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
+			if(x==0)
+				painter->drawText(QPoint(x,y),QString::number(m_lambaValue*y/m_gridSize)+m_lambaUnit);	
 		}
 	}
 	color = QColor(200, 200, 255, 125);
@@ -288,7 +296,6 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 						break;
 					}
 				}
-
 			}
 
 			menu.exec(event->screenPos());

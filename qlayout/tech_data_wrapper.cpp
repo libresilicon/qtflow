@@ -48,6 +48,27 @@ QColor TechDataWrapper::getLayerColor(QString s)
 	return QColor(Qt::black);
 }
 
+QString TechDataWrapper::getLambdaUnit()
+{
+	std::string s;
+	QString ret="";
+	if(pr.find("lambda_unit")!=pr.end()) {
+		s = toml::get<std::string>(pr.at("lambda_unit"));
+		ret=QString(s.c_str());	
+	}
+	return ret;
+}
+
+qreal TechDataWrapper::getLambdaValue()
+{
+	qreal ret=1;
+	if(pr.find("lambda")!=pr.end()) {
+		ret = toml::get<int>(pr.at("lambda"));
+	}
+	return ret;
+	
+}
+
 QIcon TechDataWrapper::getLayerIcon(QString n)
 {
 	QPixmap pm;

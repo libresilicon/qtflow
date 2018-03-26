@@ -109,6 +109,8 @@ private:
 	QMap<QString,QLayoutMacroItem*> m_macroTemplateMap;
 	QMap<QString,QLayoutViaItem*> m_viaTemplateMap;
 	int m_gridSize;
+	QString m_lambaUnit;
+	qreal m_lambaValue;
 
 	DRCSettings *drcDialog;
 	QLayoutCellManager *cellManagerDialog;

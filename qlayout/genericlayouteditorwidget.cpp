@@ -37,7 +37,9 @@ void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
 		if(m_activeLayer) foreach(QString layern, toml->getLayers()) {
 			m_activeLayer->addItem(toml->getLayerIcon(layern),layern);
 		}
-		
+
+		if(m_lambdaInfo) m_lambdaInfo->setText(QString::number(toml->getLambdaValue())+toml->getLambdaUnit());
+
 		if(centralWidget()) ((GenericLayoutEditor*)centralWidget())->setTechData(toml);
 	}
 }
@@ -115,6 +117,10 @@ void GenericLayoutEditorWidget::setUpCentralWidget(GenericLayoutEditor *area)
 	connect(m_layoutVisibles,SIGNAL(setCurrentLayer(QString)),m_activeLayer,SLOT(setCurrentText(QString)));
 	connect(m_layoutVisibles,SIGNAL(setCurrentLayer(QString)),((GenericLayoutEditor*)centralWidget()),SLOT(setActiveLayer(QString)));
 	m_toolbar->addWidget(m_activeLayer);
+
+	// lambda info
+	m_lambdaInfo = new QLabel("none");
+	m_toolbar->addWidget(m_lambdaInfo);
 }
 
 void GenericLayoutEditorWidget::drawingOperation()

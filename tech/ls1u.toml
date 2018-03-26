@@ -13,13 +13,16 @@
 ##  ///////////////////////////////////////////////////////////////////
 
 title = "LibreSilicon 1um Process"
+rev = 0.1
+lambda = 500
+lambda_unit = "nm"
+
 [owner]
-name = "leviathan"
-rev = "0.0"
+name = "David Lanzendörfer"
+company = "Lanceville Technology"
+nick = "leviathan"
 
 # use common layer definitions, compatible with GDS II and CIF
-# [layer]
-
 [[layer]]
 	name = "n_well"
 	GDS2 = "42"

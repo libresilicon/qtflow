@@ -8,6 +8,7 @@
 #include <QShortcut>
 #include <QVBoxLayout>
 #include <QMainWindow>
+#include <QLabel>
 
 enum WidgetType {
 	BareEditorWidgetType,
@@ -48,6 +49,7 @@ private:
 
 protected:
 	QToolBar *m_toolbar;
+	QLabel *m_lambdaInfo;
 };
 
 #endif // EDITORWIDGET_H

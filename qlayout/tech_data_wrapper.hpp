@@ -15,6 +15,8 @@ public:
 	QStringList getLayers();
 	QColor getLayerColor(QString);
 	QIcon getLayerIcon(QString n);
+	QString getLambdaUnit();
+	qreal getLambdaValue();
 private:
 	QTemporaryDir tmp;
 	QString tempFile;
