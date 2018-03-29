@@ -32,6 +32,7 @@ enum drawing_operations {
 };
 
 #define ALL_LAYERS "all layers"
+#define LAYOUT_SCALE_FACTOR 100
 
 typedef QVector<QLayoutRectItem*> rects_layer_t;
 

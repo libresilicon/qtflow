@@ -14,7 +14,7 @@ void MagicLayoutEditor::addRectangles()
 	foreach(QString layerN, rects.keys()) {
 		layer = rects[layerN];
 		foreach (magic::rect_t e, layer) {
-			editScene->addRectangle(layerN, e.x1, e.y1, e.x2-e.x1, e.y2-e.y1);
+			editScene->addRectangle(layerN, abs(e.x1), -abs(e.y1), abs(e.x2-e.x1), -abs(e.y2-e.y1));
 		}
 	}
 }
@@ -52,21 +52,21 @@ void MagicLayoutEditor::addMacroInstances()
 
 void MagicLayoutEditor::loadFile(QString file)
 {
-	int x, y, w, h, gridsize;
+	int x, y, w, h;
 
 	filePath = file;
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
 
-	x = magicdata->getLowerX();
-	y = magicdata->getLowerY();
-	w = magicdata->getUpperX()-x;
-	h = magicdata->getUpperY()-y;
+	x = abs(magicdata->getLowerX());
+	y = abs(magicdata->getLowerY());
+	w = abs(magicdata->getUpperX()-x);
+	h = abs(magicdata->getUpperY()-y);
 
-	if(w<this->width()) w = this->width();
-	if(h<this->height()) h = this->height();
+	//if(w<this->width()) w = this->width();
+	//if(h<this->height()) h = this->height();
 
-	editScene->setSceneRect(x, y, w, h);
+	editScene->setSceneRect(0, 0, w*LAYOUT_SCALE_FACTOR, -h*LAYOUT_SCALE_FACTOR);
 
 	addMacroInstances();
 	addRectangles();
@@ -89,13 +89,13 @@ void MagicLayoutEditor::saveFileWriteRects(QTextStream &outputStream)
 			foreach(QRectF r, m->getStripes()) {
 				outputStream
 						<< "rect "
-						<< r.x()
+						<< (int)(r.x()/LAYOUT_SCALE_FACTOR)
 						<< " "
-						<< r.y()
+						<< -(int)(r.y()/LAYOUT_SCALE_FACTOR)
 						<< " "
-						<< r.x() + r.width()
+						<< (int)((r.x()+r.width())/LAYOUT_SCALE_FACTOR)
 						<< " "
-						<< r.y() + r.height()
+						<< -(int)((r.y()+r.height())/LAYOUT_SCALE_FACTOR)
 						<< endl;
 			}
 		}

@@ -2,7 +2,7 @@
 
 void QLayoutScene::basicInit()
 {
-	m_gridSize = 100;
+	m_gridSize = LAYOUT_SCALE_FACTOR;
 
 	drcDialog = new DRCSettings();
 	connect(drcDialog,SIGNAL(runDRC()),this,SLOT(runDRC()));
@@ -16,7 +16,7 @@ void QLayoutScene::basicInit()
 	m_dragging = false;
 	m_techData = NULL;
 	m_lambaValue = 1;
-	m_lambaUnit = "um";
+	m_lambaUnit = "";
 
 	recentSelectRectangle = new QGraphicsRectItem();
 	recentSelectRectangle->setZValue(1000);
@@ -106,7 +106,7 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
 			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
 			if(x==0)
-				painter->drawText(QPoint(x,y),QString::number(m_lambaValue*y/m_gridSize)+m_lambaUnit);	
+				painter->drawText(QPoint(x,y),QString::number(abs(m_lambaValue*y/m_gridSize))+m_lambaUnit);	
 		}
 	}
 	color = QColor(200, 200, 255, 125);
@@ -622,6 +622,10 @@ void QLayoutScene::addWire(QString netname, QString layer, QPointF p1, QPointF p
 void QLayoutScene::addRectangle(QString layer, qreal x, qreal y, qreal w, qreal h)
 {
 	QLayoutRectItem *r;
+	x*=m_gridSize;
+	y*=m_gridSize;
+	w*=m_gridSize;
+	h*=m_gridSize;
 
 	r = new QLayoutRectItem(x, y, w, h);
 
@@ -638,6 +642,8 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 {
 	QLayoutMacroItem *mi;
 	qreal angle = 0;
+	x*=m_gridSize;
+	y*=m_gridSize;
 	if(m_macroTemplateMap.contains(macro_name)) {
 		mi = new QLayoutMacroItem(1,m_macroTemplateMap[macro_name]);
 		mi->setInstanceName(instance_name);
@@ -670,6 +676,10 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 	QLayoutMacroItem *mi;
 	qreal angle;
 	qreal tx, ty;
+	x*=m_gridSize;
+	y*=m_gridSize;
+	w*=m_gridSize;
+	h*=m_gridSize;
 	if(m_macroTemplateMap.contains(macro_name)) {
 
 		mi = new QLayoutMacroItem(1,m_macroTemplateMap[macro_name]);
@@ -718,10 +728,21 @@ void QLayoutScene::addMacro(QString macro_name, QString instance_name, qreal x, 
 
 QStringList QLayoutScene::getLayers()
 {
-	return layer_rects.keys();
+	QStringList ret;
+	foreach(QString s, layer_rects.keys())
+		if(s!=ALL_LAYERS)
+			ret.append(s);
+	return ret;
 }
 
 QVector<QLayoutRectItem*> QLayoutScene::getRectangles(QString n)
 {
-	return (layer_rects.contains(n))?layer_rects[n]:QVector<QLayoutRectItem*>();
+	QVector<QLayoutRectItem*> rects;
+	QLayoutRectItem *m;
+	if(layer_rects.contains(n)) {
+		foreach(m, layer_rects[n]) {
+			if(m) rects.append(m);
+		}
+	}
+	return rects;
 }

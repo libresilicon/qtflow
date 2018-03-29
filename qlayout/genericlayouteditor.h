@@ -10,6 +10,7 @@
 #include <QAction>
 #include <QComboBox>
 #include <QGraphicsView>
+#include <QGLWidget>
 
 #include "qlayoutscene.h"
 #include "layoutvisibles.h"

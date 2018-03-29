@@ -7,9 +7,11 @@ GenericLayoutEditor::GenericLayoutEditor(QWidget *parent) :
 	editScene(new QLayoutScene(this)),
 	m_scale(1.0)
 {
+	QGLWidget *glw;
 	editScene->setBackgroundBrush(Qt::white);
 	setScene(editScene);
-	//setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering)));
+	glw = new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering));
+	setViewport(glw);
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setInteractive(true);
 	//setDragMode(QGraphicsView::ScrollHandDrag);
@@ -44,15 +46,15 @@ void GenericLayoutEditor::zoomIn()
 	editScene->update();
 }
 
-void GenericLayoutEditor::showDRC()
-{
-	editScene->showDRC();
-}
-
 void GenericLayoutEditor::zoomOut()
 {
 	scale(0.9, 0.9);
 	editScene->update();
+}
+
+void GenericLayoutEditor::showDRC()
+{
+	editScene->showDRC();
 }
 
 void  GenericLayoutEditor::setActiveLayer(QString s)
