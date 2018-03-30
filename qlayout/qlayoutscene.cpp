@@ -97,16 +97,20 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 	QColor color;
 	QVector<QLineF> lines;
 	qreal left, top;
-
 	left = int(rect.left())-(int(rect.left()) % m_gridSize);
 	top = int(rect.top())-(int(rect.top()) % m_gridSize);
-	for (qreal x = left; x < rect.right(); x += m_gridSize) {
-		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
+	//for (qreal x = left; x < rect.right(); x += m_gridSize) {
+	for (qreal x = 0; x < rect.right(); x += m_gridSize) {
+		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,0)));
+		//lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
 		painter->drawText(QPoint(x,0),QString::number(m_lambaValue*x/m_gridSize)+m_lambaUnit);
-		for (qreal y = top; y < rect.bottom(); y += m_gridSize){
-			lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
-			if(x==0)
-				painter->drawText(QPoint(x,y),QString::number(abs(m_lambaValue*y/m_gridSize))+m_lambaUnit);	
+		//for (qreal y = top; y < rect.bottom(); y += m_gridSize){
+		for (qreal y = top; y < 0; y += m_gridSize) {
+			lines.append(QLineF(QPointF(0,y),QPointF(rect.right(),y)));
+			//lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
+			if(x==0) {
+				painter->drawText(QPoint(x,y),QString::number(abs(m_lambaValue*y/m_gridSize))+m_lambaUnit);
+			}
 		}
 	}
 	color = QColor(200, 200, 255, 125);

@@ -14,6 +14,7 @@ GenericLayoutEditor::GenericLayoutEditor(QWidget *parent) :
 	setViewport(glw);
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 	setInteractive(true);
+	setAlignment( Qt::AlignBottom | Qt::AlignLeft );
 	//setDragMode(QGraphicsView::ScrollHandDrag);
 	connect(editScene, SIGNAL(registerLayer(QString)), this, SLOT(onRegisterLayer(QString)));
 	connect(parent, SIGNAL(enabledTypesChanged(QStringList)), editScene, SLOT(onVisibleLayersChanged(QStringList)));
