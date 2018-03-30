@@ -38,7 +38,7 @@ void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
 			m_activeLayer->addItem(toml->getLayerIcon(layern),layern);
 		}
 
-		if(m_lambdaInfo) m_lambdaInfo->setText(QString::number(toml->getLambdaValue())+toml->getLambdaUnit());
+		if(m_lambdaInfo) m_lambdaInfo->setText(QString(QChar(0xbb, 0x03))+"="+QString::number(toml->getLambdaValue())+toml->getLambdaUnit());
 
 		if(centralWidget()) ((GenericLayoutEditor*)centralWidget())->setTechData(toml);
 	}
@@ -110,7 +110,14 @@ void GenericLayoutEditorWidget::setUpCentralWidget(GenericLayoutEditor *area)
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
 	m_drawingOperations[DRAWING_OPERATION_SELECT_LAYER] = button;
 	m_toolbar->addAction(button);
-	
+
+	button = new QAction(QPixmap(":/add_dimension.svg"), "Add dimension", m_toolbar);
+	button->setCheckable(true);
+	button->setData(DRAWING_OPERATION_DIMENSION);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
+	m_drawingOperations[DRAWING_OPERATION_DIMENSION] = button;
+	m_toolbar->addAction(button);
+
 	m_activeLayer = new QComboBox(m_toolbar);
 
 	connect(m_activeLayer,SIGNAL(currentTextChanged(QString)),((GenericLayoutEditor*)centralWidget()),SLOT(setActiveLayer(QString)));
