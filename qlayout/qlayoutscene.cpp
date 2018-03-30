@@ -99,15 +99,11 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 	qreal left, top;
 	left = int(rect.left())-(int(rect.left()) % m_gridSize);
 	top = int(rect.top())-(int(rect.top()) % m_gridSize);
-	//for (qreal x = left; x < rect.right(); x += m_gridSize) {
 	for (qreal x = 0; x < rect.right(); x += m_gridSize) {
 		lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,0)));
-		//lines.append(QLineF(QPointF(x,rect.top()),QPointF(x,rect.bottom())));
 		painter->drawText(QPoint(x,0),QString::number(m_lambaValue*x/m_gridSize)+m_lambaUnit);
-		//for (qreal y = top; y < rect.bottom(); y += m_gridSize){
 		for (qreal y = top; y < 0; y += m_gridSize) {
 			lines.append(QLineF(QPointF(0,y),QPointF(rect.right(),y)));
-			//lines.append(QLineF(QPointF(rect.left(),y),QPointF(rect.right(),y)));
 			if(x==0) {
 				painter->drawText(QPoint(x,y),QString::number(abs(m_lambaValue*y/m_gridSize))+m_lambaUnit);
 			}
@@ -426,8 +422,14 @@ void QLayoutScene::setActiveLayer(QString layer)
 
 void QLayoutScene::onVisibleLayersChanged(QStringList l)
 {
-	m_visibleLayers = l;
-	redraw();
+	bool visible = true;
+	foreach(QString layerName, layer_rects.keys()) {
+		visible = l.contains(layerName);
+		foreach(QLayoutRectItem* w, layer_rects[layerName]) {
+			w->setVisible(visible);
+		}
+	}
+	update();
 }
 
 void QLayoutScene::setGDS(QString name)
@@ -554,32 +556,6 @@ void  QLayoutScene::runDRC()
 			runDRC(layerName, rect);
 		}
 	}
-}
-
-void QLayoutScene::redraw()
-{
-	QString layerName;
-	QString altName;
-	QGraphicsRectItem *m;
-	QLayoutRectItem *w;
-	QGraphicsTextItem *t;
-	QGraphicsPolygonItem *p;
-	bool visible;
-
-	visible = true;
-	foreach(layerName, layer_rects.keys()) {
-		visible = m_visibleLayers.contains(layerName);
-		foreach(w, layer_rects[layerName]) {
-			w->setVisible(visible);
-		}
-	}
-
-	//visible = visibleLayers.contains("comment");
-	//foreach(t, macro_texts) {
-	//	t->setVisible(visible);
-	//}
-
-	update();
 }
 
 void QLayoutScene::addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h)

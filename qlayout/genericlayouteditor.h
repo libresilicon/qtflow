@@ -40,6 +40,7 @@ signals:
 public slots:
 	void onRegisterLayer(QString s);
 	void setActiveLayer(QString);
+	void onVisibleLayersChanged(QStringList l);
 
 	void zoomIn();
 	void zoomOut();

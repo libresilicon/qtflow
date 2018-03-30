@@ -50,7 +50,6 @@ public:
 	void showCellManager();
 
 	void setDrawingOperation(drawing_operations o);
-	void redraw();
 
 	void addVia(QString netname, QString vianame, QPointF p);
 	void addWire(QString netname, QString layer, QPointF p1, QPointF p2);

@@ -116,6 +116,7 @@ void GenericLayoutEditorWidget::setUpCentralWidget(GenericLayoutEditor *area)
 	connect(m_activeLayer,SIGNAL(currentTextChanged(QString)),((GenericLayoutEditor*)centralWidget()),SLOT(setActiveLayer(QString)));
 	connect(m_layoutVisibles,SIGNAL(setCurrentLayer(QString)),m_activeLayer,SLOT(setCurrentText(QString)));
 	connect(m_layoutVisibles,SIGNAL(setCurrentLayer(QString)),((GenericLayoutEditor*)centralWidget()),SLOT(setActiveLayer(QString)));
+	connect(m_layoutVisibles,SIGNAL(enabledTypesChanged(QStringList)),((GenericLayoutEditor*)centralWidget()),SLOT(onVisibleLayersChanged(QStringList)));
 	m_toolbar->addWidget(m_activeLayer);
 
 	// lambda info

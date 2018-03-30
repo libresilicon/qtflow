@@ -58,7 +58,12 @@ void GenericLayoutEditor::showDRC()
 	editScene->showDRC();
 }
 
-void  GenericLayoutEditor::setActiveLayer(QString s)
+void GenericLayoutEditor::onVisibleLayersChanged(QStringList l)
+{
+	editScene->onVisibleLayersChanged(l);	
+}
+
+void GenericLayoutEditor::setActiveLayer(QString s)
 {
 	editScene->setActiveLayer(s);
 }
