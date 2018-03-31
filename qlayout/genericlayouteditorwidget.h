@@ -20,6 +20,8 @@ public:
 	void loadLEF(QString);
 	void loadGDS(QString);
 	void setTechnologyData(TechDataWrapper* toml);
+	void setLambdaUnit(QString s);
+	void setLambdaValue(qreal i);
 	QString getFilePath();
 
 protected:

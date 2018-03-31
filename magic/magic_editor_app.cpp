@@ -37,6 +37,8 @@ int MagicEditor::exec()
 		qDebug() << "Using technology: " << tech_name;
 		TechDataWrapper toml(":/"+tech_name+".toml");
 		w.setTechnologyData(&toml);
+		w.setLambdaUnit(toml.getLambdaUnit());
+		w.setLambdaValue(toml.getLambdaValue());
 		w.loadFile(filePath);
 		return QApplication::exec();
 	} else {

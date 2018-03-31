@@ -45,7 +45,6 @@ public:
 	QLayoutScene(const QRectF &sceneRect, QObject *parent = Q_NULLPTR);
 	QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = Q_NULLPTR);
 	void basicInit();
-	void setTechData(TechDataWrapper* toml);
 
 	void showDRC();
 	void showCellManager();
@@ -58,6 +57,10 @@ public:
 	void addPad(QString name, QString net, QString layer, qreal x, qreal y, qreal w, qreal h);
 	void addMacro(QString module_name, QString instance_name, qreal x, qreal y, qreal w, qreal h, QString orient);
 	void addMacro(QString macro_name, QString instance_name, qreal x, qreal y, QString orient);
+
+	void setLambdaUnit(QString s);
+	void setLambdaValue(qreal i);
+	void setTechData(TechDataWrapper*t);
 
 	QStringList getLayers();
 	QVector<QLayoutRectItem*> getRectangles(QString n);
@@ -92,11 +95,12 @@ private:
 	QPointF snapGrid(QPointF pt);
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
-	QString activeLayer;
-	QLayoutRectItem *recentRectangle;
-	QGraphicsRectItem *recentSelectRectangle;
-	drawing_operations recentOperation;
-	QPointF lastOrig;
+	QString m_activeLayer;
+	QLayoutRectItem *m_recentRectangle;
+	QGraphicsRectItem *m_recentSelectRectangle;
+	QLayoutDistanceMeasure *m_recentDistanceMeasure;
+	drawing_operations m_recentOperation;
+	QPointF m_lastOrig;
 	QStringList m_visibleLayers;
 	bool m_dragging;
 	TechDataWrapper* m_techData;

@@ -24,7 +24,9 @@ public:
 	virtual void loadFile(QString) {}
 	void loadGDS(QString);
 	void loadLEF(QString s);
-	void setTechData(TechDataWrapper* toml);
+	void setLambdaUnit(QString s);
+	void setLambdaValue(qreal i);
+	void setTechData(TechDataWrapper* t);
 	virtual void saveFile() {}
     
 	QString getFilePath();

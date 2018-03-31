@@ -40,8 +40,24 @@ void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
 
 		if(m_lambdaInfo) m_lambdaInfo->setText(QString(QChar(0xbb, 0x03))+"="+QString::number(toml->getLambdaValue())+toml->getLambdaUnit());
 
-		if(centralWidget()) ((GenericLayoutEditor*)centralWidget())->setTechData(toml);
+		if(centralWidget()) {
+			((GenericLayoutEditor*)centralWidget())->setTechData(toml);
+		}
 	}
+}
+
+void GenericLayoutEditorWidget::setLambdaUnit(QString s)
+{
+	if(centralWidget()) {
+		((GenericLayoutEditor*)centralWidget())->setLambdaUnit(s);	
+	}
+}
+
+void GenericLayoutEditorWidget::setLambdaValue(qreal i)
+{
+	if(centralWidget()) {
+		((GenericLayoutEditor*)centralWidget())->setLambdaValue(i);
+	}	
 }
 
 void GenericLayoutEditorWidget::setUpCentralWidget(GenericLayoutEditor *area)

@@ -10,9 +10,10 @@ GenericLayoutEditor::GenericLayoutEditor(QWidget *parent) :
 	QGLWidget *glw;
 	editScene->setBackgroundBrush(Qt::white);
 	setScene(editScene);
-	glw = new QGLWidget(QGLFormat(QGL::SampleBuffers |QGL::DirectRendering));
+	glw = new QGLWidget(QGLFormat(QGL::SampleBuffers|QGL::DirectRendering));
 	setViewport(glw);
 	setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
+	//setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 	setInteractive(true);
 	setAlignment( Qt::AlignBottom | Qt::AlignLeft );
 	//setDragMode(QGraphicsView::ScrollHandDrag);
@@ -26,9 +27,19 @@ void GenericLayoutEditor::loadGDS(QString f)
 	editScene->setGDS(f);
 }
 
-void GenericLayoutEditor::setTechData(TechDataWrapper* toml)
+void GenericLayoutEditor::setLambdaUnit(QString s)
 {
-	editScene->setTechData(toml);
+	editScene->setLambdaUnit(s);
+}
+
+void GenericLayoutEditor::setLambdaValue(qreal i)
+{
+	editScene->setLambdaValue(i);
+}
+
+void GenericLayoutEditor::setTechData(TechDataWrapper* t)
+{
+	editScene->setTechData(t);
 }
 
 void GenericLayoutEditor::onRegisterLayer(QString s)

@@ -11,19 +11,20 @@ void QLayoutScene::basicInit()
 	connect(cellManagerDialog,SIGNAL(setGDS(QString,bool)),this,SLOT(setGDS(QString,bool)));
 	connect(cellManagerDialog,SIGNAL(setLEF(QString,bool)),this,SLOT(setLEF(QString,bool)));
 
-	recentOperation = DRAWING_OPERATION_NONE;
-	recentRectangle = NULL;
+	m_recentOperation = DRAWING_OPERATION_NONE;
+	m_recentRectangle = NULL;
+	m_recentDistanceMeasure = NULL;
 	m_dragging = false;
 	m_techData = NULL;
 	m_lambaValue = 1;
 	m_lambaUnit = "";
 
-	recentSelectRectangle = new QGraphicsRectItem();
-	recentSelectRectangle->setZValue(1000);
-	recentSelectRectangle->hide();
-	recentSelectRectangle->setOpacity(0.25);
-	recentSelectRectangle->setBrush(Qt::gray);
-	addItem(recentSelectRectangle);
+	m_recentSelectRectangle = new QGraphicsRectItem();
+	m_recentSelectRectangle->setZValue(1000);
+	m_recentSelectRectangle->hide();
+	m_recentSelectRectangle->setOpacity(0.25);
+	m_recentSelectRectangle->setBrush(Qt::gray);
+	addItem(m_recentSelectRectangle);
 }
 
 QLayoutScene::QLayoutScene(QObject *parent) :
@@ -44,13 +45,19 @@ QLayoutScene::QLayoutScene(qreal x, qreal y, qreal width, qreal height, QObject 
 	basicInit();
 }
 
-void QLayoutScene::setTechData(TechDataWrapper* toml)
+void QLayoutScene::setLambdaUnit(QString s)
 {
-	if(toml) {
-		m_techData = toml;
-		m_lambaUnit = toml->getLambdaUnit();
-		m_lambaValue = toml->getLambdaValue();
-	}
+	m_lambaUnit = s;
+}
+
+void QLayoutScene::setLambdaValue(qreal i)
+{
+	m_lambaValue = i;
+}
+
+void QLayoutScene::setTechData(TechDataWrapper* t)
+{
+	m_techData = t;
 }
 
 int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
@@ -67,9 +74,9 @@ int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
 void QLayoutScene::keyPressEvent(QKeyEvent *event)
 {
 	if(event->key()==Qt::Key_Delete) {
-		if(activeLayer=="") return; // no layer selected
+		if(m_activeLayer=="") return; // no layer selected
 		QLayoutRectItem *m;
-		QVector<QLayoutRectItem*> l = layer_rects[activeLayer];
+		QVector<QLayoutRectItem*> l = layer_rects[m_activeLayer];
 		while(countSelectedRectItems(l)) {
 			for(int i=0; i<l.count(); i++) {
 				m = l.at(i);
@@ -80,7 +87,7 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 				}
 			}
 		}
-		layer_rects[activeLayer]=l;
+		layer_rects[m_activeLayer]=l;
 	}
 }
 
@@ -223,28 +230,28 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
 	QMenu  menu;
 	QAction *layerAction;
-	lastOrig = snapGrid(event->scenePos());
-	switch(recentOperation) {
+	m_lastOrig = snapGrid(event->scenePos());
+	switch(m_recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
-			if(activeLayer=="") return; // no layer selected
-			if(activeLayer==ALL_LAYERS) return; // no layer selected
-			recentRectangle = new QLayoutRectItem(lastOrig.x(), lastOrig.y(), 1, 1);
-			recentRectangle->setVisible(true);
-			recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
-			if(m_techData) recentRectangle->setColor(m_techData->getLayerColor(activeLayer));
-			addItem(recentRectangle);
+			if(m_activeLayer=="") return; // no layer selected
+			if(m_activeLayer==ALL_LAYERS) return; // no layer selected
+			m_recentRectangle = new QLayoutRectItem(m_lastOrig.x(), m_lastOrig.y(), 1, 1);
+			m_recentRectangle->setVisible(true);
+			m_recentRectangle->setFlag(QGraphicsItem::ItemIsMovable, true);
+			if(m_techData) m_recentRectangle->setColor(m_techData->getLayerColor(m_activeLayer));
+			addItem(m_recentRectangle);
 			break;
 
 		case DRAWING_OPERATION_DRAG:
-			if(activeLayer=="") return; // no layer selected
+			if(m_activeLayer=="") return; // no layer selected
 			if(m_dragging) return;
 			m_dragging = true;
 			foreach(QString lay, layer_rects.keys()) {
-				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 				foreach(QLayoutRectItem *m, layer_rects[lay]) {
 					if(!m->isLocked()) {
-						if(m->contains(lastOrig)||m->isSelected()) {
+						if(m->contains(m_lastOrig)||m->isSelected()) {
 							if(!m->isSelected()) {
 								foreach(QLayoutRectItem *m, layer_rects[lay]) {
 									m->setSelected(false);
@@ -260,26 +267,26 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		case DRAWING_OPERATION_SELECT:
-			if(activeLayer=="") return; // no layer selected
+			if(m_activeLayer=="") return; // no layer selected
 			foreach(QString lay, layer_rects.keys()) {
-				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 				foreach(QLayoutRectItem *m, layer_rects[lay]) {
 					m->setSelected(false);
 				}
 			}
-			recentSelectRectangle->setRect(QRectF(lastOrig.x(), lastOrig.y(), 1, 1));
-			recentSelectRectangle->show();
+			m_recentSelectRectangle->setRect(QRectF(m_lastOrig.x(), m_lastOrig.y(), 1, 1));
+			m_recentSelectRectangle->show();
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
-			if(!recentRectangle) {
-				if(activeLayer=="") return; // no layer selected
+			if(!m_recentRectangle) {
+				if(m_activeLayer=="") return; // no layer selected
 				foreach(QString lay, layer_rects.keys()) {
-					if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+					if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 					foreach(QLayoutRectItem *m, layer_rects[lay]) {
-						if(!m->isLocked()) if(m->contains(lastOrig)) {
-							recentRectangle = m;
-							recentRectangle->setCutOutStart(lastOrig.x(),lastOrig.y());
+						if(!m->isLocked()) if(m->contains(m_lastOrig)) {
+							m_recentRectangle = m;
+							m_recentRectangle->setCutOutStart(m_lastOrig.x(),m_lastOrig.y());
 						}
 					}
 				}
@@ -289,9 +296,9 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 		case DRAWING_OPERATION_SELECT_LAYER:
 			menu.clear();
 			foreach(QString lay, layer_rects.keys()) {
-				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 				foreach(QLayoutRectItem *m, layer_rects[lay]) {
-					if(m->contains(lastOrig)) {
+					if(m->contains(m_lastOrig)) {
 						layerAction = menu.addAction(lay);
 						break;
 					}
@@ -301,6 +308,14 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			menu.exec(event->screenPos());
 			break;
 
+		case DRAWING_OPERATION_DIMENSION:
+			m_recentDistanceMeasure = new QLayoutDistanceMeasure();
+			if(m_recentDistanceMeasure) {
+				m_recentDistanceMeasure->setLine(m_lastOrig.x(), m_lastOrig.y(), m_lastOrig.x(), m_lastOrig.y());
+				addItem(m_recentDistanceMeasure);
+			}
+			break;
+
 		default:
 			break;
 	}
@@ -308,29 +323,29 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-	qreal dx, dy;
+	qreal dx, dy, d;
 	QRectF srect;
 	QPointF pt = snapGrid(event->scenePos());
-	switch(recentOperation) {
+	switch(m_recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
-			if(recentRectangle) {
-				dx=pt.x()-lastOrig.x();
-				dy=pt.y()-lastOrig.y();
+			if(m_recentRectangle) {
+				dx=pt.x()-m_lastOrig.x();
+				dy=pt.y()-m_lastOrig.y();
 				if((abs(dx)>0)&&(abs(dy)>0))
-					recentRectangle->setRect(lastOrig.x(),lastOrig.y(),dx,dy);;
+					m_recentRectangle->setRect(m_lastOrig.x(),m_lastOrig.y(),dx,dy);;
 			}
 			break;
 
 		case DRAWING_OPERATION_DRAG:
-			if(activeLayer=="") return; // no layer selected
+			if(m_activeLayer=="") return; // no layer selected
 			if(!m_dragging) return;
 			foreach(QString lay, layer_rects.keys()) {
-				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 				foreach(QLayoutRectItem *m, layer_rects[lay]) {
 					if(m->isSelected()) {
-						dx=pt.x()-lastOrig.x();
-						dy=pt.y()-lastOrig.y();
+						dx=pt.x()-m_lastOrig.x();
+						dy=pt.y()-m_lastOrig.y();
 						m->updateMovingOffset(dx,dy);
 					}
 				}
@@ -338,13 +353,13 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		case DRAWING_OPERATION_SELECT:
-			dx=pt.x()-lastOrig.x();
-			dy=pt.y()-lastOrig.y();
-			srect = QRectF(lastOrig.x(), lastOrig.y(), dx, dy);
-			recentSelectRectangle->setRect(srect);
-			if(activeLayer=="") return; // no layer selected
+			dx=pt.x()-m_lastOrig.x();
+			dy=pt.y()-m_lastOrig.y();
+			srect = QRectF(m_lastOrig.x(), m_lastOrig.y(), dx, dy);
+			m_recentSelectRectangle->setRect(srect);
+			if(m_activeLayer=="") return; // no layer selected
 			foreach(QString lay, layer_rects.keys()) {
-				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 				foreach(QLayoutRectItem *m, layer_rects[lay]) {
 					if(m) if(srect.contains(m->offsetRect())) {
 						m->setSelected(true);
@@ -354,10 +369,20 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
-			if(recentRectangle) {
-				dx=pt.x()-lastOrig.x();
-				dy=pt.y()-lastOrig.y();
-				recentRectangle->updateRecentCutOut(dx,dy);
+			if(m_recentRectangle) {
+				dx=pt.x()-m_lastOrig.x();
+				dy=pt.y()-m_lastOrig.y();
+				m_recentRectangle->updateRecentCutOut(dx,dy);
+			}
+			break;
+
+		case DRAWING_OPERATION_DIMENSION:
+			if(m_recentDistanceMeasure) {
+				m_recentDistanceMeasure->setLine(m_lastOrig.x(), m_lastOrig.y(), pt.x(), pt.y());
+				dx=pt.x()-m_lastOrig.x();
+				dy=pt.y()-m_lastOrig.y();
+				d=sqrt(pow(dx,2)+pow(dy,2));
+				m_recentDistanceMeasure->updateLabel(QString::number(d*m_lambaValue)+m_lambaUnit);
 			}
 			break;
 
@@ -370,20 +395,20 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
 	QPointF pt = snapGrid(event->scenePos());
-	switch(recentOperation) {
+	switch(m_recentOperation) {
 
 		case DRAWING_OPERATION_RECTANGLE:
-			if(activeLayer=="") return; // no layer selected
-			if(activeLayer==ALL_LAYERS) return; // no layer selected
-			layer_rects[activeLayer].append(recentRectangle);
-			recentRectangle = NULL;
+			if(m_activeLayer=="") return; // no layer selected
+			if(m_activeLayer==ALL_LAYERS) return; // no layer selected
+			layer_rects[m_activeLayer].append(m_recentRectangle);
+			m_recentRectangle = NULL;
 			update();
 			break;
 
 		case DRAWING_OPERATION_DRAG:
-			if(activeLayer=="") return; // no layer selected
+			if(m_activeLayer=="") return; // no layer selected
 			foreach(QString lay, layer_rects.keys()) {
-				if((activeLayer!=ALL_LAYERS)&&(activeLayer!=lay)) continue;
+				if((m_activeLayer!=ALL_LAYERS)&&(m_activeLayer!=lay)) continue;
 				foreach(QLayoutRectItem *m, layer_rects[lay]) {
 					m->setCursor(QCursor(Qt::ArrowCursor));
 					m->setDragMode(false);
@@ -394,13 +419,13 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 			break;
 
 		case DRAWING_OPERATION_SELECT:
-			if(activeLayer=="") return; // no layer selected
-			recentSelectRectangle->hide();
+			if(m_activeLayer=="") return; // no layer selected
+			m_recentSelectRectangle->hide();
 			update();
 			break;
 
 		case DRAWING_OPERATION_CUT_OUT:
-			recentRectangle = NULL;
+			m_recentRectangle = NULL;
 			update();
 			break;
 
@@ -411,12 +436,12 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void QLayoutScene::setDrawingOperation(drawing_operations o)
 {
-	recentOperation = o;
+	m_recentOperation = o;
 }
 
 void QLayoutScene::setActiveLayer(QString layer)
 {
-	activeLayer = layer;
+	m_activeLayer = layer;
 	qDebug() << __FUNCTION__ << " setting layer " << layer;
 }
 
