@@ -1,16 +1,16 @@
 magic
 magscale 1 2
-timestamp 1522416530754
+timestamp 1522513697758
 << contact >>
 rect 2 9 4 11
 rect 2 13 4 15
-rect 2 17 4 19
+rect 18 21 20 23
 rect 6 9 8 11
 rect 6 13 8 15
-rect 6 17 8 19
+rect 24 21 26 23
 rect 12 9 14 11
 rect 12 13 14 15
-rect 12 17 14 19
+rect 28 21 30 23
 rect 18 9 20 11
 rect 18 13 20 15
 rect 18 17 20 19
@@ -26,39 +26,39 @@ rect 13 3 15 5
 rect 5 3 5 4
 rect 10 5 10 6
 rect 18 14 18 15
-rect 11 8 21 24
-rect 1 1 9 24
 rect 30 1 30 1
 rect 29 1 29 1
 rect 30 21 30 22
-rect 23 1 31 24
 rect 11 1 21 6
 rect 20 0 20 0
+rect 1 1 9 28
+rect 11 8 21 28
+rect 23 1 31 28
 << n_plus_select >>
 rect 3 4 3 4
-rect 27 8 31 20
-rect 5 8 15 20
+rect 27 8 31 24
+rect 5 8 15 16
 << n_well >>
-rect 1 8 15 20
+rect 1 8 15 16
 << p_plus_select >>
-rect 17 8 27 20
 rect 0 9 0 10
-rect 1 8 5 20
+rect 17 8 27 24
+rect 1 8 5 16
 << p_well >>
-rect 17 8 31 20
+rect 17 8 31 24
 << poly >>
-rect 9 8 11 20
-rect 21 8 23 20
 rect 9 1 23 8
+rect 9 8 11 16
+rect 21 8 23 24
 << via1 >>
-rect 2 21 4 23
-rect 6 21 8 23
+rect 2 25 4 27
+rect 6 25 8 27
 rect 2 3 4 5
 rect 6 3 8 5
 rect 24 3 26 5
 rect 28 3 30 5
-rect 24 21 26 23
-rect 28 21 30 23
-rect 13 21 15 23
-rect 17 21 19 23
+rect 24 25 26 27
+rect 28 25 30 27
+rect 13 25 15 27
+rect 17 25 19 27
 << end >>
