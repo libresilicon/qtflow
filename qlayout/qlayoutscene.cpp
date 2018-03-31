@@ -382,7 +382,7 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 				dx=pt.x()-m_lastOrig.x();
 				dy=pt.y()-m_lastOrig.y();
 				d=sqrt(pow(dx,2)+pow(dy,2));
-				m_recentDistanceMeasure->updateLabel(QString::number(d*m_lambaValue)+m_lambaUnit);
+				m_recentDistanceMeasure->updateLabel(QString::number(d*m_lambaValue/m_gridSize)+m_lambaUnit);
 			}
 			break;
 
