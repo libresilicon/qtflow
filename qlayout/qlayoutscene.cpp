@@ -73,10 +73,15 @@ int QLayoutScene::countSelectedRectItems(QVector<QLayoutRectItem*> l)
 
 void QLayoutScene::keyPressEvent(QKeyEvent *event)
 {
+	QStringList sar;
+	QString layerName;
+	QString shapeString;
+	QLayoutRectItem *m;
+	QVector<QLayoutRectItem*> l = layer_rects[m_activeLayer];
+	QClipboard *cb =QApplication::clipboard();
+	qreal rx,ry,rw,rh;
+
 	if(event->key()==Qt::Key_Delete) {
-		if(m_activeLayer=="") return; // no layer selected
-		QLayoutRectItem *m;
-		QVector<QLayoutRectItem*> l = layer_rects[m_activeLayer];
 		while(countSelectedRectItems(l)) {
 			for(int i=0; i<l.count(); i++) {
 				m = l.at(i);
@@ -88,6 +93,39 @@ void QLayoutScene::keyPressEvent(QKeyEvent *event)
 			}
 		}
 		layer_rects[m_activeLayer]=l;
+	} else if(event->modifiers()==Qt::ControlModifier) {
+		if(cb) {
+			if(event->key()==Qt::Key_C) {
+				shapeString="";
+				foreach(QString lay, layer_rects.keys()) {
+					foreach(QLayoutRectItem *m, layer_rects[lay]) {
+						if(m->isSelected()) {
+							shapeString+=m->text();
+							shapeString+=" ";
+							shapeString+=lay;
+							shapeString+=";";
+						}
+					}
+				}
+				cb->setText(shapeString);
+			} else if(event->key()==Qt::Key_V) {
+				shapeString = cb->text();
+				foreach(QString recs, shapeString.split(";")) {
+					sar=recs.split(" ");
+					if(sar[0]=="rect") {
+						rx=sar[1].toInt();
+						ry=sar[2].toInt();
+						rw=sar[3].toInt();
+						rh=sar[4].toInt();
+						layerName = sar[5];
+						m = new QLayoutRectItem(rx,ry,rw,rh);
+						m->setColor(m_techData->getLayerColor(layerName));
+						layer_rects[layerName].append(m);
+						addItem(m);
+					}
+				}
+			}
+		}
 	}
 }
 

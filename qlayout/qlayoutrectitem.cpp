@@ -21,6 +21,22 @@ QLayoutRectItem::QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsIt
 	setFlags(QGraphicsItem::ItemIsSelectable| QGraphicsItem::ItemIsMovable);
 }
 
+QString QLayoutRectItem::text()
+{
+	QString ret;
+	ret="rect";
+	ret+=" ";
+	ret+=QString::number(pos().x());
+	ret+=" ";
+	ret+=QString::number(pos().y());
+	ret+=" ";
+	ret+=QString::number(width());
+	ret+=" ";
+	ret+=QString::number(height());
+
+	return ret;
+}
+
 bool QLayoutRectItem::contains(const QPointF &point) const
 {
 	QPointF offsetOrig;

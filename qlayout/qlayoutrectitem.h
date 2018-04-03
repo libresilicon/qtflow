@@ -15,6 +15,8 @@ public:
 	QLayoutRectItem(QGraphicsItem *parent = Q_NULLPTR);
 	QLayoutRectItem(qreal x, qreal y, qreal w, qreal h, QGraphicsItem *parent = Q_NULLPTR);
 
+	QString text();
+
 	bool contains(const QPointF &point) const Q_DECL_OVERRIDE;
 	bool isLocked();
 	bool setDragMode(bool m);

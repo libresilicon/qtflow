@@ -8,6 +8,8 @@
 #include <QRubberBand>
 #include <QGraphicsProxyWidget>
 #include <QShortcut>
+#include <QClipboard>
+#include <QMimeData>
 
 #include "qlayoutdistancemeasure.h"
 #include "qlayoutrectitem.h"
