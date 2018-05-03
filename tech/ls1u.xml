@@ -1,0 +1,209 @@
+<!--
+************    LibreSilicon 1um Process    ***********************
+
+Copyright (c) 2018 by leviathan david.lanzendoerfer@lanceville.cn
+
+Licensed under the LibreSilicon license version 1
+-->
+
+<xml version="1.0" encoding="UTF-8">
+	<title>LibreSilicon 1um Process</title> 
+	<rev>0.1</rev>
+
+	<!-- lambda information -->
+	<lambda>
+		<factor>500</factor>
+		<unit>nm</unit>
+	</lambda>
+
+	<!-- all the authors listed below -->
+	<owner>
+		<name>David Lanzendörfer</name>
+		<company>Lanceville Technology</company>
+		<nick>leviathan</nick>
+	</owner>
+
+	<!-- use common layer definitions, compatible with GDS II and CIF -->
+	<layers>
+		<layer>
+			<name>n_well</name>
+			<gds2>42</gds2>
+			<cif>CWN</cif>
+			<color>
+				<type>RGB</type>
+				<code>#FFBD88</code> <!-- light sky blue -->
+			</color>
+		</layer>
+		<layer>
+			<name>p_well</name>
+			<gds2>41</gds2>
+			<cif>CWP</cif>
+			<color>
+				<type>RGB</type>
+				<code>#87CEEB</code> <!-- macaroni and cheese -->
+			</color>
+		</layer>
+		<layer>
+			<name>active</name>
+			<gds2>43</gds2>
+			<cif>CAA</cif>
+			<color>
+				<type>RGB</type>
+				<code>#E66771</code> <!-- light carmine pink -->
+			</color>
+		</layer>
+		<layer>
+			<name>n_plus_select</name>
+			<gds2>45</gds2>
+			<cif>CSN</cif>
+			<color>
+				<type>RGB</type>
+				<code>#93CCEA</code> <!-- light cornflower blue --> 
+			</color>
+		</layer>
+		<layer>
+			<name>p_plus_select</name>
+			<gds2>44</gds2>
+			<cif>CSP</cif>
+			<color>
+				<type>RGB</type>
+				<code>#FF8243</code> <!-- mango tango -->
+			</color>
+		</layer>
+		<layer>
+			<name>poly</name>
+			<gds2>46</gds2>
+			<cif>CPG</cif>
+			<color>
+				<type>RGB</type>
+				<code>#90EE90</code> <!-- light green -->
+			</color>
+		</layer>
+		<layer>
+			<name>contact</name>
+			<gds2>25</gds2>
+			<cif>CCC</cif>
+			<color>
+				<type>RGB</type>
+				<code>#D3D3D3</code> <!-- light gray -->
+			</color>
+		</layer>
+		<layer>
+			<name>metal1</name>
+			<gds2>49</gds2>
+			<cif>CM1</cif>
+			<color>
+				<type>RGB</type>
+				<code>#6050DC</code> <!-- majorelle blue -->
+			</color>
+		</layer>
+		<layer>
+			<name>via1</name>
+			<gds2>50</gds2>
+			<cif>CV1</cif>
+			<color>
+				<type>RGB</type>
+				<code>#D3D3D3</code> <!-- ligth gray -->
+			</color>
+		</layer>
+		<layer>
+			<name>metal2</name>
+			<gds2>51</gds2>
+			<cif>CM2</cif>
+			<color>
+				<type>RGB</type>
+				<code>#0BDA51</code> <!-- malachite -->
+			</color>
+		</layer>
+		<layer>
+			<name>via2</name>
+			<gds2>61</gds2>
+			<cif>CV2</cif>
+			<color>
+				<type>RGB</type>
+				<code>#D3D3D3</code> <!-- ligth gray -->
+			</color>
+		</layer>
+		<layer>
+			<name>metal3</name>
+			<gds2>62</gds2>
+			<cif>CM3</cif>
+			<color>
+				<type>RGB</type>
+				<code>#FBEC5D</code> <!-- maize -->
+			</color>
+		</layer>
+		<layer>
+			<name>via3</name>
+			<gds2>30</gds2>
+			<cif>CV3</cif>
+			<color>
+				<type>RGB</type>
+				<code>#D3D3D3</code> <!-- ligth gray -->
+			</color>
+		</layer>
+		<layer>
+			<name>metal4</name>
+			<gds2>31</gds2>
+			<cif>CM4</cif>
+			<color>
+				<type>RGB</type>
+				<code>#C04000</code> <!-- mahogany -->
+			</color>
+		</layer>
+		<layer>
+			<name>via4</name>
+			<gds2>32</gds2>
+			<cif>CV4</cif>
+			<color>
+				<type>RGB</type>
+				<code>#D3D3D3</code> <!-- ligth gray -->
+			</color>
+		</layer>
+		<layer>
+			<name>metal5</name>
+			<gds2>33</gds2>
+			<cif>CM5</cif>
+			<color>
+				<type>RGB</type>
+				<code>#CA1F7B</code> <!-- magenta (dye) -->
+			</color>
+		</layer>
+		<layer>
+			<name>via5</name>
+			<gds2>36</gds2>
+			<cif>CV5</cif>
+			<color>
+				<type>RGB</type>
+				<code>#D3D3D3</code> <!-- ligth gray -->
+			</color>
+		</layer>
+		<layer>
+			<name>metal6</name>
+			<gds2>37</gds2>
+			<cif>CM6</cif>
+			<color>
+				<type>RGB</type>
+				<code>#195905</code> <!-- lincoln green -->
+			</color>
+		</layer>
+		<layer>
+			<name>glass</name>
+			<gds2>52</gds2>
+			<cif>COG</cif>
+			<color>
+				<type>RGB</type>
+				<code>#FFFFED</code> <!-- light yellow -->
+			</color>
+		</layer>
+		<layer>
+			<name>pads</name>
+			<gds2>26</gds2>
+			<cif>XP</cif>
+			<color>
+				<type>RGB</type>
+				<code>#BFFF00</code> <!-- lime (color wheel) -->
+			</color>
+		</layer>
+	</layers>
+</xml>
