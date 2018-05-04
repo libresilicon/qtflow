@@ -8,13 +8,14 @@ FLEX_TARGET(DEFScanner def_scanner.ll ${CMAKE_CURRENT_BINARY_DIR}/def_scanner.cp
 ADD_FLEX_BISON_DEPENDENCY(DEFScanner DEFParser)
 
 find_package(PythonLibs REQUIRED)
+
 include_directories(
 	"${CMAKE_CURRENT_BINARY_DIR}/../schematics"
 	"${CMAKE_CURRENT_BINARY_DIR}/../qlayout"
 	"${CMAKE_CURRENT_BINARY_DIR}/../contacts"
+	"${CMAKE_CURRENT_SOURCE_DIR}/../PythonQt/src"
 	"${CMAKE_CURRENT_BINARY_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/.."
-#	"${CMAKE_CURRENT_SOURCE_DIR}/../PythonQt/src"
 	${PYTHON_INCLUDE_DIRS}
 )
 
@@ -94,4 +95,3 @@ target_link_libraries(${TARGET}
 	Magic
 	Magic3D
 )
-
