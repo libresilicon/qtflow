@@ -30,16 +30,18 @@ void GenericLayoutEditorWidget::loadGDS(QString path)
 void GenericLayoutEditorWidget::setTechnologyData(TechDataWrapper* toml)
 {
 	if(toml) {
-		if(m_layoutVisibles) m_layoutVisibles->setTechData(toml);
-	
-		m_activeLayer->addItem("all layers");
-
-		if(m_activeLayer) foreach(QString layern, toml->getLayers()) {
-			m_activeLayer->addItem(toml->getLayerIcon(layern),layern);
+		if(m_layoutVisibles) {
+			m_layoutVisibles->setTechData(toml);
 		}
-
-		if(m_lambdaInfo) m_lambdaInfo->setText(QString(QChar(0xbb, 0x03))+"="+QString::number(toml->getLambdaValue())+toml->getLambdaUnit());
-
+		if(m_activeLayer) {
+			m_activeLayer->addItem("all layers");
+			foreach(QString layern, toml->getLayers()) {
+				m_activeLayer->addItem(toml->getLayerIcon(layern),layern);
+			}
+		}
+		if(m_lambdaInfo) {
+			m_lambdaInfo->setText(QString(QChar(0xbb, 0x03))+"="+QString::number(toml->getLambdaValue())+toml->getLambdaUnit());
+		}
 		if(centralWidget()) {
 			((GenericLayoutEditor*)centralWidget())->setTechData(toml);
 		}
@@ -132,6 +134,13 @@ void GenericLayoutEditorWidget::setUpCentralWidget(GenericLayoutEditor *area)
 	button->setData(DRAWING_OPERATION_DIMENSION);
 	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
 	m_drawingOperations[DRAWING_OPERATION_DIMENSION] = button;
+	m_toolbar->addAction(button);
+
+	button = new QAction(QPixmap(":/label.svg"), "Add label", m_toolbar);
+	button->setCheckable(true);
+	button->setData(DRAWING_OPERATION_LABEL);
+	connect(button, SIGNAL(triggered(bool)), this, SLOT(drawingOperation()));
+	m_drawingOperations[DRAWING_OPERATION_LABEL] = button;
 	m_toolbar->addAction(button);
 
 	m_activeLayer = new QComboBox(m_toolbar);

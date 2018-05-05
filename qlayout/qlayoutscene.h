@@ -15,7 +15,8 @@
 #include "qlayoutrectitem.h"
 #include "qlayoutmacroitem.h"
 #include "qlayoutviaitem.h"
-#include "qlayout/tech_data_wrapper.hpp"
+#include "tech_data_wrapper.hpp"
+#include "qlayoutlabel.h"
 
 #include "qlayoutcellmanager.h"
 #include "drcsettings.h"
@@ -31,7 +32,8 @@ enum drawing_operations {
 	DRAWING_OPERATION_POLYGON,
 	DRAWING_OPERATION_CUT_OUT,
 	DRAWING_OPERATION_DRAG,
-	DRAWING_OPERATION_DIMENSION
+	DRAWING_OPERATION_DIMENSION,
+	DRAWING_OPERATION_LABEL
 };
 
 #define ALL_LAYERS "all layers"
@@ -98,6 +100,7 @@ private:
 	int countSelectedRectItems(QVector<QLayoutRectItem*> l);
 
 	QString m_activeLayer;
+	QLayoutLabel *m_recentLabel;
 	QLayoutRectItem *m_recentRectangle;
 	QGraphicsRectItem *m_recentSelectRectangle;
 	QLayoutDistanceMeasure *m_recentDistanceMeasure;

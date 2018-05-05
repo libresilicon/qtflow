@@ -14,6 +14,7 @@ void QLayoutScene::basicInit()
 	m_recentOperation = DRAWING_OPERATION_NONE;
 	m_recentRectangle = NULL;
 	m_recentDistanceMeasure = NULL;
+	m_recentLabel = NULL;
 	m_dragging = false;
 	m_techData = NULL;
 	m_lambaValue = 1;
@@ -354,6 +355,12 @@ void QLayoutScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 			}
 			break;
 
+		case DRAWING_OPERATION_LABEL:
+			m_recentLabel = new QLayoutLabel();
+			if(m_recentLabel) {
+			}
+			break;
+
 		default:
 			break;
 	}
@@ -424,6 +431,9 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			}
 			break;
 
+		case DRAWING_OPERATION_LABEL:
+			break;
+
 		default:
 			break;
 	}
@@ -465,6 +475,9 @@ void QLayoutScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 		case DRAWING_OPERATION_CUT_OUT:
 			m_recentRectangle = NULL;
 			update();
+			break;
+
+		case DRAWING_OPERATION_LABEL:
 			break;
 
 		default:

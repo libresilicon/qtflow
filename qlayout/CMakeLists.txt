@@ -24,6 +24,7 @@ set(SOURCES
 	qlayoutscene.cpp
 	qlayoutviaitem.cpp
 	qlayoutwireitem.cpp
+	qlayoutlabel.cpp
 	genericlayouteditorwidget.cpp
 	genericlayouteditor.cpp
 	tech_data_wrapper.cpp
