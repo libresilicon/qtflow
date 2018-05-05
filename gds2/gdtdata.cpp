@@ -1,3 +1,4 @@
+#include "gdsfile.h"
 #include "gdtdata.h"
 
 GDTData::GDTData(QString fileName)

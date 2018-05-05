@@ -4,9 +4,9 @@
 #include <QString>
 #include <QDebug>
 
-#include "gdsfile.h"
 #include "gdscell.h"
 
+class GDSFile;
 class GDTData
 {
 public:
