@@ -151,7 +151,7 @@ void QLayoutScene::drawBackground(QPainter *painter, const QRectF &rect)
 		for (qreal y = top; y < 0; y += m_gridSize) {
 			lines.append(QLineF(QPointF(0,y),QPointF(rect.right(),y)));
 			if(x==0) {
-				painter->drawText(QPoint(x,y),QString::number(abs(m_lambaValue*y/m_gridSize))+m_lambaUnit);
+				painter->drawText(QPoint(x,y),QString::number(qFabs(m_lambaValue*y/m_gridSize))+m_lambaUnit);
 			}
 		}
 	}
@@ -377,7 +377,7 @@ void QLayoutScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 			if(m_recentRectangle) {
 				dx=pt.x()-m_lastOrig.x();
 				dy=pt.y()-m_lastOrig.y();
-				if((abs(dx)>0)&&(abs(dy)>0))
+				if((qFabs(dx)>0)&&(qFabs(dy)>0))
 					m_recentRectangle->setRect(m_lastOrig.x(),m_lastOrig.y(),dx,dy);;
 			}
 			break;
