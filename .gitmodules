@@ -2,6 +2,3 @@
 	path = PythonQt
 	url = https://github.com/leviathanch/PythonQt.git
 	#url = git@github.com:leviathanch/PythonQt.git
-[submodule "coriolis"]
-	path = coriolis
-	url = https://www-soc.lip6.fr/git/coriolis.git
