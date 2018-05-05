@@ -1,5 +1,4 @@
 set(TARGET "QtFlow")
-
 set (CMAKE_AUTOMOC ON)
 set (CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -14,10 +13,16 @@ include_directories(
 	"${CMAKE_CURRENT_BINARY_DIR}/../qlayout"
 	"${CMAKE_CURRENT_BINARY_DIR}/../contacts"
 	"${CMAKE_CURRENT_SOURCE_DIR}/../PythonQt/src"
+	"${CMAKE_CURRENT_BINARY_DIR}/../PythonQt/src"
 	"${CMAKE_CURRENT_BINARY_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/.."
 	${PYTHON_INCLUDE_DIRS}
 )
+
+link_directories(
+	"${CMAKE_CURRENT_BINARY_DIR}/../PythonQt/src"
+)
+
 
 set(SOURCES
 	buildflow.cpp
@@ -72,10 +77,13 @@ qt5_wrap_ui(UI_GENERATED_HEADERS ${UI_SOURCES})
 
 QT5_ADD_RESOURCES(ICONS ${PROJECT_SOURCE_DIR}/icons/icons.qrc)
 
-add_executable(${TARGET} ${SOURCES} ${UI_GENERATED_HEADERS} ${ICONS})
+add_executable(${TARGET}
+	${SOURCES}
+	${UI_GENERATED_HEADERS}
+	${ICONS}
+)
 
 target_link_libraries(${TARGET}
-	${QT5_LIBRARIES}
 	${PythonQt}
 	QEditor
 	QLayout

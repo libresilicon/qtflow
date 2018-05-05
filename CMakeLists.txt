@@ -14,22 +14,6 @@ find_package(Qt5OpenGL REQUIRED)
 find_package(KF5TextEditor REQUIRED)
 
 if(BUILD_FULL_EDA)
-	set(PythonQtAll OFF)
-	add_subdirectory(PythonQt)
-	find_package(PythonLibs REQUIRED)
-
-	#-----------------------------------------------------------------------------
-	# Find Python
-	find_package(PythonLibs REQUIRED)
-	include_directories(${PYTHON_INCLUDE_DIRS})
-	add_definitions(-DPYTHONQT_USE_RELEASE_PYTHON_FALLBACK)
-
-	#-----------------------------------------------------------------------------
-	# Library Name
-	# To maintain ABI compatibility, the Qt major version as well as the Python major and minor version are needed
-	string(SUBSTRING ${PYTHONLIBS_VERSION_STRING} 0 1 python_major)
-	string(SUBSTRING ${PYTHONLIBS_VERSION_STRING} 2 1 python_minor)
-	set(PythonQt Qt${QT_VERSION_MAJOR}Python${python_major}${python_minor} CACHE INTERNAL "")
 endif(BUILD_FULL_EDA)
 
 set(QT5_LIBRARIES
@@ -39,6 +23,23 @@ set(QT5_LIBRARIES
 	Qt5::Gui
 	KF5::TextEditor
 )
+
+
+if(BUILD_FULL_EDA)
+	find_package(PythonLibs REQUIRED)
+	#-----------------------------------------------------------------------------
+	# Find Python
+	find_package(PythonLibs REQUIRED)
+	include_directories(${PYTHON_INCLUDE_DIRS})
+	add_definitions(-DPYTHONQT_USE_RELEASE_PYTHON_FALLBACK)
+	#-----------------------------------------------------------------------------
+	# Library Name
+	# To maintain ABI compatibility, the Qt major version as well as the Python major and minor version are needed
+	string(SUBSTRING ${PYTHONLIBS_VERSION_STRING} 0 1 python_major)
+	string(SUBSTRING ${PYTHONLIBS_VERSION_STRING} 2 1 python_minor)
+	set(PythonQt Qt${QT_VERSION_MAJOR}Python${python_major}${python_minor} CACHE INTERNAL "")
+	add_subdirectory(PythonQt)
+endif(BUILD_FULL_EDA)
 
 set(CMAKE_AUTOMOC ON)
 
