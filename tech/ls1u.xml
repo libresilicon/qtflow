@@ -6,7 +6,7 @@ Copyright (c) 2018 by leviathan david.lanzendoerfer@lanceville.cn
 Licensed under the LibreSilicon license version 1
 -->
 
-<xml version="1.0" encoding="UTF-8">
+<xml>
 	<title>LibreSilicon 1um Process</title> 
 	<rev>0.1</rev>
 
@@ -207,3 +207,4 @@ Licensed under the LibreSilicon license version 1
 		</layer>
 	</layers>
 </xml>
+

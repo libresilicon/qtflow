@@ -1,72 +1,72 @@
 #include "tech_data_wrapper.hpp"
 
-#include <typeinfo>
-
 TechDataWrapper::TechDataWrapper(QString s)
 {
-	std::string layer_name;
-	tempFile = tmp.filePath("tech.toml");
-	QFile::copy(s, tempFile);
-	QFileInfo d(tempFile);
-	if(d.exists()) {
-		pr = toml::parse(d.absoluteFilePath().toStdString());
-	} else {
-		qDebug() << d.absoluteFilePath() << " doesn't exist";
+	QString errorStr;
+	int errorLine;
+	int errorColumn;
+	QFile file(s);
+	if(file.open(QIODevice::ReadOnly)) {
+		doc = QDomDocument("xml");
+		if (!doc.setContent(&file, false, &errorStr, &errorLine, &errorColumn)) {
+			qDebug()
+			<< "Error: Parse error at line " << errorLine << ", "
+			<< "column " << errorColumn << ": "
+			<< qPrintable(errorStr);
+		}
+		file.close();
 	}
 }
 
 QStringList TechDataWrapper::getLayers()
 {
-	toml::Table t;
-	toml::Array l;
 	QStringList ret;
-	l = toml::get<toml::Array>(pr.at("layer"));
-	for(toml::value i : l) {
-		t = toml::get<toml::Table>(i);
-		auto lv = t["name"];
-		ret << toml::get<std::string>(lv).c_str();
+	QDomNode n;
+	QDomElement e;
+	QDomNodeList ll = doc.elementsByTagName("layer"); // layer list
+	for(int i=0; i<ll.count(); i++) {
+		n = ll.at(i);
+		e = n.toElement().firstChildElement("name"); // name (only one entry by specification and logic!)
+		ret << e.text();
 	}
 	return ret;
 }
 
 QColor TechDataWrapper::getLayerColor(QString s)
 {
-	toml::Table t;
-	toml::Array l;
-	l = toml::get<toml::Array>(pr.at("layer"));
-	for(toml::value i : l) {
-		t = toml::get<toml::Table>(i);
-		auto lv = t["name"];
-		if(QString(toml::get<std::string>(lv).c_str())==s) {
-			auto lc = t["color"];
-			auto lcc = toml::get<toml::Array>(lc);
-			if(toml::get<std::string>(lcc[0])=="RGB") {
-				return QColor(QString(toml::get<std::string>(lcc[1]).c_str()));
-			}
+	QString colorType, colorCode;
+	QColor ret = QColor(Qt::black);
+	QDomNode n;
+	QDomElement e;
+	QDomNodeList ll = doc.elementsByTagName("layer"); // layer list
+	for(int i=0; i<ll.count(); i++) {
+		n = ll.at(i);
+		e = n.toElement().firstChildElement("name"); // name (only one entry by specification and logic!)
+		if(e.text()==s) {
+			e = n.toElement().firstChildElement("color").firstChildElement("type"); // type (only one entry by specification and logic!)
+			colorType = e.text();
+			e = n.toElement().firstChildElement("color").firstChildElement("code"); // type (only one entry by specification and logic!)
+			colorCode = e.text();
+			if(colorType=="RGB") ret = QColor(colorCode);
+			break; // we've found a color. save time.
 		}
 	}
-	return QColor(Qt::black);
+	return ret;
 }
 
 QString TechDataWrapper::getLambdaUnit()
 {
-	std::string s;
-	QString ret="";
-	if(pr.find("lambda_unit")!=pr.end()) {
-		s = toml::get<std::string>(pr.at("lambda_unit"));
-		ret=QString(s.c_str());	
-	}
-	return ret;
+	return doc.documentElement().firstChildElement("lambda").firstChildElement("unit").text();
 }
 
 qreal TechDataWrapper::getLambdaValue()
 {
-	qreal ret=1;
-	if(pr.find("lambda")!=pr.end()) {
-		ret = toml::get<int>(pr.at("lambda"));
+	qreal ret = 1;
+	QString s = doc.documentElement().firstChildElement("lambda").firstChildElement("factor").text();
+	if(s.toInt()) {
+		ret=s.toInt();
 	}
 	return ret;
-	
 }
 
 QIcon TechDataWrapper::getLayerIcon(QString n)

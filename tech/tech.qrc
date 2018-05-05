@@ -1,5 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
 <file>./ls1u.toml</file>
+<file>./ls1u.xml</file>
 </qresource>
 </RCC>

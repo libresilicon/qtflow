@@ -7,7 +7,11 @@
 #include <QColor>
 #include <QIcon>
 
-#include "toml11/toml.hpp"
+#include <QDomDocument>
+
+#include <typeinfo>
+#include <iostream>
+#include <cassert>
 
 class TechDataWrapper {
 public:
@@ -18,9 +22,7 @@ public:
 	QString getLambdaUnit();
 	qreal getLambdaValue();
 private:
-	QTemporaryDir tmp;
-	QString tempFile;
-	toml::Table pr;
+	QDomDocument doc;
 };
 
 #endif
