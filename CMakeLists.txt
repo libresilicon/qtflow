@@ -1,12 +1,9 @@
 project(QtFlow)
-cmake_minimum_required(VERSION 2.8.10)
+cmake_minimum_required(VERSION 3.2.0)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
-
 find_package(Qt5Core)
 set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "DEBUG")
-#set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
-set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_RELEASE} -fprofile-arcs -ftest-coverage -g")
 
 option(BUILD_FULL_EDA "Build the full EDA" ON)
 option(BUILD_STAND_ALONE_BINARIES "Build standalone binaries for testint EDA modules" ON)
@@ -18,6 +15,7 @@ find_package(Qt5OpenGL REQUIRED)
 find_package(KF5TextEditor REQUIRED)
 
 if(BUILD_FULL_EDA)
+	set(PythonQtAll OFF)
 	add_subdirectory(QtFlow)
 	add_subdirectory(PythonQt)
 	find_package(PythonLibs REQUIRED)
@@ -64,6 +62,5 @@ add_subdirectory(gds2)
 add_subdirectory(helpers)
 add_subdirectory(symbol_reader)
 add_subdirectory(symbols)
-add_subdirectory(toml11)
 #add_subdirectory(coriolis)
 
