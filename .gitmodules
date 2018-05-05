@@ -5,9 +5,3 @@
 [submodule "coriolis"]
 	path = coriolis
 	url = https://www-soc.lip6.fr/git/coriolis.git
-[submodule "toml11"]
-	path = toml11
-	url = https://github.com/leviathanch/toml11.git
-[submodule "cpptoml"]
-	path = cpptoml
-	url = https://github.com/leviathanch/cpptoml.git
