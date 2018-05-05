@@ -63,9 +63,7 @@ qreal TechDataWrapper::getLambdaValue()
 {
 	qreal ret = 1;
 	QString s = doc.documentElement().firstChildElement("lambda").firstChildElement("factor").text();
-	if(s.toInt()) {
-		ret=s.toInt();
-	}
+	if(s.toInt()) ret=s.toInt();
 	return ret;
 }
 
