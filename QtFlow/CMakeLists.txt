@@ -81,7 +81,7 @@ target_link_libraries(${TARGET}
 	Contact
 	LEF
 	DEF
-	Qt5Python36_QtAll
+	Qt5Python36
 	VCD
 	VCDReader
 	TechReader
