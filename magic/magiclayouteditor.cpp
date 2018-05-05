@@ -14,7 +14,7 @@ void MagicLayoutEditor::addRectangles()
 	foreach(QString layerN, rects.keys()) {
 		layer = rects[layerN];
 		foreach (magic::rect_t e, layer) {
-			editScene->addRectangle(layerN, abs(e.x1), -abs(e.y1), abs(e.x2-e.x1), -abs(e.y2-e.y1));
+			editScene->addRectangle(layerN, qFabs(e.x1), -qFabs(e.y1), qFabs(e.x2-e.x1), -qFabs(e.y2-e.y1));
 		}
 	}
 }
@@ -29,8 +29,8 @@ void MagicLayoutEditor::addMacroInstances()
 		// adding boxes for macros
 		x = e.c;
 		y = e.f;
-		w = abs(e.x2-e.x1);
-		h = abs(e.y2-e.y1);
+		w = qFabs(e.x2-e.x1);
+		h = qFabs(e.y2-e.y1);
 
 		if((e.a==0)&&(e.b==-1)&&(e.d==1)&&(e.e==0)) { // West
 			orient = "W";
@@ -58,10 +58,10 @@ void MagicLayoutEditor::loadFile(QString file)
 	if(magicdata) delete magicdata;
 	magicdata = new magic::MagicData(file);
 
-	x = abs(magicdata->getLowerX());
-	y = abs(magicdata->getLowerY());
-	w = abs(magicdata->getUpperX()-x);
-	h = abs(magicdata->getUpperY()-y);
+	x = qFabs(magicdata->getLowerX());
+	y = qFabs(magicdata->getLowerY());
+	w = qFabs(magicdata->getUpperX()-x);
+	h = qFabs(magicdata->getUpperY()-y);
 
 	//if(w<this->width()) w = this->width();
 	//if(h<this->height()) h = this->height();
