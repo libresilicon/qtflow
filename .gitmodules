@@ -8,3 +8,6 @@
 [submodule "toml11"]
 	path = toml11
 	url = https://github.com/leviathanch/toml11.git
+[submodule "cpptoml"]
+	path = cpptoml
+	url = https://github.com/leviathanch/cpptoml.git
