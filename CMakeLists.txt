@@ -1,7 +1,6 @@
 project(QtFlow)
 cmake_minimum_required(VERSION 3.2.0)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOMOC ON)
 find_package(Qt5Core)
 set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "DEBUG")
 
@@ -16,7 +15,6 @@ find_package(KF5TextEditor REQUIRED)
 
 if(BUILD_FULL_EDA)
 	set(PythonQtAll OFF)
-	add_subdirectory(QtFlow)
 	add_subdirectory(PythonQt)
 	find_package(PythonLibs REQUIRED)
 
@@ -41,6 +39,12 @@ set(QT5_LIBRARIES
 	Qt5::Gui
 	KF5::TextEditor
 )
+
+set(CMAKE_AUTOMOC ON)
+
+if(BUILD_FULL_EDA)
+	add_subdirectory(QtFlow)
+endif(BUILD_FULL_EDA)
 
 add_subdirectory(qeditor)
 add_subdirectory(qlayout)

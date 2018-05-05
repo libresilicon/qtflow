@@ -76,12 +76,12 @@ add_executable(${TARGET} ${SOURCES} ${UI_GENERATED_HEADERS} ${ICONS})
 
 target_link_libraries(${TARGET}
 	${QT5_LIBRARIES}
+	${PythonQt}
 	QEditor
 	QLayout
 	Contact
 	LEF
 	DEF
-	Qt5Python36
 	VCD
 	VCDReader
 	TechReader
