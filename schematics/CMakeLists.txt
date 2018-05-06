@@ -31,6 +31,9 @@ add_library(${TARGET} SHARED
 	${UI_GENERATED_HEADERS}
 )
 
-target_link_libraries(${TARGET} ${QT5_LIBRARIES})
+target_link_libraries(${TARGET}
+	"QSchematics"
+	${QT5_LIBRARIES}
+)
 
 install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

@@ -30,7 +30,11 @@ add_library(${TARGET} SHARED
 	${SOURCES}
 )
 
-target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor QLayout)
+target_link_libraries(${TARGET}
+	${QT5_LIBRARIES}
+	QEditor
+	QLayout
+)
 
 if(BUILD_STAND_ALONE_BINARIES)
 	QT5_ADD_RESOURCES(ICONS ${PROJECT_SOURCE_DIR}/icons/icons.qrc)
