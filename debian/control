@@ -40,6 +40,7 @@ Build-Depends:
 	qtmultimedia5-dev,
 	libqt5xmlpatterns5-dev,
 	libboost-all-dev,
+	libfam0,
 	cmake,
 	debhelper (>=9)
 Standards-Version: 3.9.8
