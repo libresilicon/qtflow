@@ -26,6 +26,7 @@ add_library(${TARGET} SHARED
 )
 
 target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor)
+install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 #if(BUILD_STAND_ALONE_BINARIES)
 #	add_executable(schematics_editor schematics_editor.cpp schematics_editor_app.cpp)

@@ -22,4 +22,5 @@ add_library(${TARGET} SHARED
 
 target_link_libraries(${TARGET} ${QT5_LIBRARIES})
 
+install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 

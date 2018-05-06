@@ -28,9 +28,12 @@ add_library(${TARGET} SHARED
 
 target_link_libraries(${TARGET} ${QT5_LIBRARIES} QEditor QLayout)
 
+install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
 if(BUILD_STAND_ALONE_BINARIES)
 	QT5_ADD_RESOURCES(ICONS ${PROJECT_SOURCE_DIR}/icons/icons.qrc)
 	add_executable(magic_editor magic_editor.cpp magic_editor_app.cpp ${ICONS})
 	target_link_libraries(magic_editor ${QT5_LIBRARIES} LEF GDS QEditor Magic QLayout TechReader Magic3D)
+	install(TARGETS magic_editor RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif(BUILD_STAND_ALONE_BINARIES)
 

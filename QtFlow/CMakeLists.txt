@@ -82,7 +82,6 @@ add_executable(${TARGET}
 	${UI_GENERATED_HEADERS}
 	${ICONS}
 )
-
 target_link_libraries(${TARGET}
 	${PythonQt}
 	QEditor
@@ -103,3 +102,4 @@ target_link_libraries(${TARGET}
 	Magic
 	Magic3D
 )
+install(TARGETS ${TARGET} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

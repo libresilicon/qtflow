@@ -7,14 +7,13 @@ set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "DEBUG")
 option(BUILD_FULL_EDA "Build the full EDA" ON)
 option(BUILD_STAND_ALONE_BINARIES "Build standalone binaries for testint EDA modules" ON)
 
+include(GNUInstallDirs)
+
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
 find_package(KF5TextEditor REQUIRED)
-
-if(BUILD_FULL_EDA)
-endif(BUILD_FULL_EDA)
 
 set(QT5_LIBRARIES
 	Qt5::Widgets
@@ -24,6 +23,14 @@ set(QT5_LIBRARIES
 	KF5::TextEditor
 )
 
+if ("${LIB64}" STREQUAL "TRUE")
+	set(LIBSUFFIX 64)
+else()
+	set(LIBSUFFIX "")
+endif()
+
+set(INSTALL_LIB_DIR lib${LIBSUFFIX} CACHE PATH "Installation directory for libraries")
+mark_as_advanced(INSTALL_LIB_DIR)
 
 if(BUILD_FULL_EDA)
 	find_package(PythonLibs REQUIRED)

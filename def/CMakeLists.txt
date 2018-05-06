@@ -38,5 +38,5 @@ if(BUILD_STAND_ALONE_BINARIES)
 	target_link_libraries(def_editor ${QT5_LIBRARIES} QEditor DEF QLayout TechReader)
 endif(BUILD_STAND_ALONE_BINARIES)
 
-
+install(TARGETS ${TARGET} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
