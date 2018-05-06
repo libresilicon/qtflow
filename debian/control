@@ -41,6 +41,7 @@ Build-Depends:
 	libqt5xmlpatterns5-dev,
 	libboost-all-dev,
 	libfam0,
+	libfl-dev,
 	cmake,
 	debhelper (>=9)
 Standards-Version: 3.9.8
