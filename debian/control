@@ -3,7 +3,9 @@ Section: unknown
 Priority: extra
 Maintainer: David Lanzendörfer <david.lanzendoerfer@lanceville.cn
 Build-Depends:
-	qtbase5-dev, qtbase5-dev-tools,
+	libqt5opengl5-dev,
+	qtbase5-dev,
+	qtbase5-dev-tools,
 	qttools5-dev-tools,
 	qtscript-tools,
 	python-all-dev,
@@ -38,7 +40,8 @@ Build-Depends:
 	qtmultimedia5-dev,
 	libqt5xmlpatterns5-dev,
 	libboost-all-dev,
-	cmake, debhelper (>=9)
+	cmake,
+	debhelper (>=9)
 Standards-Version: 3.9.8
 Homepage: https://libresilicon.com
 
