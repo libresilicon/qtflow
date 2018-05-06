@@ -76,3 +76,18 @@ add_subdirectory(symbol_reader)
 add_subdirectory(symbols)
 #add_subdirectory(coriolis)
 
+install(FILES
+	tech/ls1u.toml
+	tech/ls1u.xml
+	tech/mos.cmap
+	tech/mos.dstyle
+	tech/osu018
+	tech/osu035
+	tech/osu050
+	tech/process.xml
+	tech/scmos.par
+	tech/scmos.tech
+	tech/sxlib
+	DESTINATION
+	${CMAKE_INSTALL_DATADIR}/qtflow/
+)
