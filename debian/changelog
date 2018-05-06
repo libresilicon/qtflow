@@ -1,7 +1,0 @@
-qtflow (0.1+gitb2890f9-1) unstable; urgency=low
-
-  * Initial release. Closes: #nnnn
-    <nnnn is the bug number of your ITP>
-  * Auto fetched most recent revision from GIT
-
- -- root <root@077bc405f963>  Sun, 06 May 2018 11:27:06 +0000
