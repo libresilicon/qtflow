@@ -76,18 +76,76 @@ add_subdirectory(symbol_reader)
 add_subdirectory(symbols)
 #add_subdirectory(coriolis)
 
+install(DIRECTORY DESTINATION ${CMAKE_INSTALL_DATADIR}/qtflow)
 install(FILES
 	tech/ls1u.toml
 	tech/ls1u.xml
 	tech/mos.cmap
 	tech/mos.dstyle
-	tech/osu018
-	tech/osu035
-	tech/osu050
 	tech/process.xml
 	tech/scmos.par
 	tech/scmos.tech
-	tech/sxlib
 	DESTINATION
 	${CMAKE_INSTALL_DATADIR}/qtflow/
+)
+
+install(DIRECTORY DESTINATION ${CMAKE_INSTALL_DATADIR}/qtflow/osu018)
+install(FILES
+	tech/osu018/SCN6M_SUBM.10.tech
+	tech/osu018/osu018.magicrc
+	tech/osu018/osu018.par
+	tech/osu018/osu018.prm
+	tech/osu018/osu018.sh
+	tech/osu018/osu018_stdcells.gds
+	tech/osu018/osu018_stdcells.lef
+	tech/osu018/osu018_stdcells.lib
+	tech/osu018/osu018_stdcells.slib
+	tech/osu018/osu018_stdcells.sp
+	tech/osu018/osu018_stdcells.v
+	tech/osu018/osu035_pads.gds2
+	DESTINATION
+	${CMAKE_INSTALL_DATADIR}/qtflow/osu018
+)
+
+install(DIRECTORY DESTINATION ${CMAKE_INSTALL_DATADIR}/qtflow/osu035)
+install(FILES
+	tech/osu035/SCN4M_SUBM.20.tech
+	tech/osu035/osu035.magicrc
+	tech/osu035/osu035.par
+	tech/osu035/osu035.prm
+	tech/osu035/osu035.sh
+	tech/osu035/osu035_pads.gds2
+	tech/osu035/osu035_stdcells.gds2
+	tech/osu035/osu035_stdcells.lef
+	tech/osu035/osu035_stdcells.lib
+	tech/osu035/osu035_stdcells.slib
+	tech/osu035/osu035_stdcells.sp
+	tech/osu035/osu035_stdcells.v
+	DESTINATION
+	${CMAKE_INSTALL_DATADIR}/qtflow/osu035
+)
+
+install(DIRECTORY DESTINATION ${CMAKE_INSTALL_DATADIR}/qtflow/osu050)
+install(FILES
+	tech/osu050/SCN3ME_SUBM.30.tech
+	tech/osu050/osu050.magicrc
+	tech/osu050/osu050.par
+	tech/osu050/osu050.prm
+	tech/osu050/osu050.sh
+	tech/osu050/osu050_stdcells.lef
+	tech/osu050/osu050_stdcells.sp
+	tech/osu050/osu05_stdcells.lib
+	tech/osu050/osu05_stdcells.v
+	DESTINATION
+	${CMAKE_INSTALL_DATADIR}/qtflow/osu050
+)
+
+install(DIRECTORY DESTINATION ${CMAKE_INSTALL_DATADIR}/qtflow/sxlib)
+install(FILES
+	tech/sxlib/sxlib.alliance.lib
+	tech/sxlib/sxlib.lef
+	tech/sxlib/sxlib.lib
+	tech/sxlib/sxlib.slib
+	DESTINATION
+	${CMAKE_INSTALL_DATADIR}/qtflow/sxlib
 )
