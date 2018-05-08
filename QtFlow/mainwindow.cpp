@@ -13,6 +13,12 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	ui->setupUi(this);
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
+	if(!QFileInfo(settings->fileName()).exists()) {
+		QFile::copy(":/qtflow.linux.ini",settings->fileName());
+		delete settings;
+		settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
+	}
+
 	settingsDialog = new Settings(this, settings);
 	connect(settingsDialog, SIGNAL(syncSettings()), this, SLOT(syncSettings()));
 	mainContext.addObject("settings", new PySettings(this, settings));

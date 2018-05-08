@@ -23,7 +23,6 @@ link_directories(
 	"${CMAKE_CURRENT_BINARY_DIR}/../PythonQt/src"
 )
 
-
 set(SOURCES
 	buildflow.cpp
 	editortabmanager.cpp
@@ -76,11 +75,13 @@ set(UI_SOURCES
 qt5_wrap_ui(UI_GENERATED_HEADERS ${UI_SOURCES})
 
 QT5_ADD_RESOURCES(ICONS ${PROJECT_SOURCE_DIR}/icons/icons.qrc)
+QT5_ADD_RESOURCES(DEFAULT_CONFIG qtflow.qrc)
 
 add_executable(${TARGET}
 	${SOURCES}
 	${UI_GENERATED_HEADERS}
 	${ICONS}
+	${DEFAULT_CONFIG}
 )
 target_link_libraries(${TARGET}
 	${PythonQt}

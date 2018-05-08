@@ -19,6 +19,8 @@ int MainApplication::runHeadless()
 	}
 
 	settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, "qtflow");
+	qDebug() << "Getting config file " << settings->fileName();
+
 	mainContext.addObject("settings", new PySettings(this, settings));
 
 	if(parser->isSet("top-level")) {
