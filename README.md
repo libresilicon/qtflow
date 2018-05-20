@@ -32,10 +32,14 @@ For OpenSUSE just install the Qt5 development pattern:
 
 	sudo zypper in patterns-kde-devel_qt5 
 
-### Debian
+### Ubuntu 18.04 LTS
+Tested, works on Ubuntu 18.04 LTS out of the box. On Ubuntu 16.04 LTS the package Gt is too old.
+
 Install packages:
 
-	sudo apt-get install \
+	sudo apt-get cmake 
+		git \ 
+		install \
 		qtbase5-dev \
 		qtbase5-dev-tools \
 		qttools5-dev-tools \
@@ -67,7 +71,7 @@ However... Will require a whole bunch of the KTextEditor (KDE5) depencies to be 
 ## Clone
 Clone submodules as well:
 
-	git clone --recursive https://github.com/leviathanch/qtflow.git
+	git clone --recursive https://github.com/libresilicon/qtflow.git
 
 Change into repo:
 
@@ -99,5 +103,5 @@ Or only the EDA:
 ## Build
 Compile with threads:
 
-	make -j6 
+	make -j 
 
