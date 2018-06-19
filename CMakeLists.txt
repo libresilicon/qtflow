@@ -15,6 +15,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
 find_package(KF5TextEditor REQUIRED)
 
+set (CMAKE_CXX_STANDARD 11)
 set(QT5_LIBRARIES
 	Qt5::Widgets
 	Qt5::Core
