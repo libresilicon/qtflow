@@ -1,0 +1,12 @@
+[General]
+layout=layout
+process=osu018
+projectType=asic_mixed
+search_dirs=source
+simulation_script=simulation.py
+sourcedir=/source
+synthesis=synthesis
+synthesis_script=synthesis.py
+technology=scmos
+testbench=counter_test
+toplevel=counter
