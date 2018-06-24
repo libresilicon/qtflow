@@ -18,11 +18,13 @@ Project::Project(QSettings *s, QString path, PythonQtObjectPtr main) :
 	if(QFile(path).exists()) {
 		project_settings = new QSettings(path, QSettings::NativeFormat);
 		rootdir = QFileInfo(project_settings->fileName()).absolutePath();
+		qDebug() << "Got root dir " << rootdir;
 		if(project_settings->value("sourcedir","").toString()=="") {
-			QTextStream(stdout) << "No variable called sourcedir set!!\n";
+			qDebug() << "No variable called sourcedir set!!";
 		}
 		if(project_settings->value("projectType","").toString()=="") {
-			QTextStream(stdout) << "No variable called projectType set!!\n\tSetting to default";
+			qDebug() << "No variable called projectType set!!";
+			qDebug() << "Setting to default";
 			project_settings->setValue("projectType","asic_mixed");
 			project_settings->sync();
 		}
@@ -249,17 +251,29 @@ void Project::setSearchDirectories(QStringList l)
 
 QString Project::getSourceDir()
 {
-	return QDir(rootdir).filePath(project_settings->value("sourcedir").toString());
+	QString subdir;
+	subdir = project_settings->value("sourcedir").toString();
+	subdir = rootdir+QDir::separator()+subdir;
+	qDebug() << subdir;
+	return subdir;
 }
 
 QString Project::getSynthesisDir()
 {
-	return QDir(rootdir).filePath(project_settings->value("synthesis").toString());
+	QString subdir = project_settings->value("synthesis").toString();
+	subdir = project_settings->value("sourcedir").toString();
+	subdir = rootdir+QDir::separator()+subdir;
+	qDebug() << subdir;
+	return subdir;
 }
 
 QString Project::getLayoutDir()
 {
-	return QDir(rootdir).filePath(project_settings->value("layout").toString());
+	QString subdir = project_settings->value("layout").toString();
+	subdir = project_settings->value("sourcedir").toString();
+	subdir = rootdir+QDir::separator()+subdir;
+	qDebug() << subdir;
+	return subdir;
 }
 
 QString Project::getRootDir()

@@ -92,8 +92,15 @@ MainWindow::MainWindow(QCommandLineParser *p, PythonQtObjectPtr context ) :
 	disableAllFunctions();
 
 	if(parser) {
-		if(parser->isSet("top-level")) {
-			openProject(QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro");
+		QString file_name;
+		if(parser->isSet("project")) {
+			file_name = parser->value("project");
+			qDebug() << "Opening project file: " << file_name;
+			openProject(file_name);
+		} else if(parser->isSet("top-level")) {
+			file_name = QDir(".").absolutePath()+"/"+parser->value("top-level")+".pro";
+			qDebug() << "Opening project file: " << file_name;
+			openProject(file_name);
 		}
 	}
 }
@@ -170,6 +177,7 @@ void MainWindow::openProject(QString path)
 {
 	QFile project_path(path);
 	if (project_path.exists()) {
+		qDebug() << "Project " << path << " exists";
 		if(project) delete project;
 		project = new Project(settings, path, mainContext);
 		connect(project,SIGNAL(simulationDone()),this,SLOT(on_menuSimulation_triggered()));

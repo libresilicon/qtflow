@@ -105,6 +105,7 @@ int MainApplication::exec()
 
 	// semi interactivity:
 	parser->addOption(QCommandLineOption(QStringList() << "c" << "console", QCoreApplication::translate("main", "Show Python console")));
+	parser->addOption(QCommandLineOption(QStringList() << "f" << "project", QCoreApplication::translate("main", "Project file"),"1"));
 
 	parser->process(*this);
 
