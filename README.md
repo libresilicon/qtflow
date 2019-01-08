@@ -37,9 +37,9 @@ Tested, works on Ubuntu 18.04 LTS out of the box. On Ubuntu 16.04 LTS the packag
 
 Install packages:
 
-	sudo apt-get cmake 
-		git \ 
-		install \
+	sudo apt-get install \
+        cmake \
+		git \
 		qtbase5-dev \
 		qtbase5-dev-tools \
 		qttools5-dev-tools \
@@ -57,12 +57,12 @@ Install packages:
 		qt5keychain-dev \
 		qt5-style-plugins \
 		libkf5texteditor-dev \
-                libqt5svg5-dev \
-                gettext \
-                qttools5-dev \
-                libqt5webkit5-dev \
-                qtmultimedia5-dev \
-                libqt5xmlpatterns5-dev
+        libqt5svg5-dev \
+        gettext \
+        qttools5-dev \
+        libqt5webkit5-dev \
+        qtmultimedia5-dev \
+        libqt5xmlpatterns5-dev
 
 ## Windows
 TBD
