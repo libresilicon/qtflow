@@ -1,10 +1,10 @@
 %define api.prefix {symbol}
-%error-verbose
+%define parse.error verbose
 %language "c++"
 %glr-parser
 %debug
 %token-table
-%define "parser_class_name" {SymbolParser}
+%define api.parser.class {SymbolParser}
 
 %code requires {
 	namespace symbol {

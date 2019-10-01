@@ -1,10 +1,10 @@
 %define api.prefix {magic}
-%error-verbose
+%define parse.error verbose
 %language "c++"
 %glr-parser
 %debug
 %token-table
-%define "parser_class_name" {MagicParser}
+%define api.parser.class {MagicParser}
 
 %code requires {
 	namespace magic {

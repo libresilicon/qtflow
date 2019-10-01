@@ -1,10 +1,10 @@
 %define api.prefix {lef}
-%error-verbose
+%define parse.error verbose
 %language "c++"
 %glr-parser
 %debug
 %token-table
-%define "parser_class_name" {LEFParser}
+%define api.parser.class {LEFParser}
 
 %code requires {
 	namespace lef {

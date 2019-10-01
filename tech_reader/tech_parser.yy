@@ -1,10 +1,10 @@
 %define api.prefix {tech}
-%error-verbose
+%define parse.error verbose
 %language "c++"
 %glr-parser
 %debug
 %token-table
-%define "parser_class_name" {TechParser}
+%define api.parser.class {TechParser}
 
 %code requires {
 	namespace tech {

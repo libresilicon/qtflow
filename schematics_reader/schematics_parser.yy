@@ -1,5 +1,5 @@
-%error-verbose
-%define "parser_class_name" {SchematicsParser}
+%define parse.error verbose
+%define api.parser.class {SchematicsParser}
 %define api.prefix {schematics}
 %language "c++"
 

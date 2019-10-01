@@ -2,7 +2,7 @@
 %language "c++"
 %glr-parser
 %token-table
-%define "parser_class_name" {DEFParser}
+%define api.parser.class {DEFParser}
 
 %code requires {
 	namespace def {
